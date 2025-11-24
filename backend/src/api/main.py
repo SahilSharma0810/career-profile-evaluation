@@ -4,14 +4,16 @@ Handles HTTP endpoints for profile evaluation.
 """
 import logging
 import os
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 
-from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi import FastAPI, HTTPException, APIRouter, Depends, Security
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel, ConfigDict
 
 from src.models import FullProfileEvaluationResponse
 from src.services.run_poc import run_poc
 from src.config.logging_config import setup_logging, get_logger
+from src.config.settings import get_settings
 
 # Setup logging
 setup_logging()
@@ -51,6 +53,7 @@ class EvaluationRequest(BaseModel):
     background: str
     quizResponses: QuizResponses
     goals: Goals
+    questionsAndAnswers: Optional[list[Dict[str, Any]]] = None
 
     model_config = ConfigDict(extra="forbid")
 
@@ -64,6 +67,37 @@ api_router = APIRouter()
 # - Dev: React dev server proxies /api/* to localhost:8000
 # - Prod: Nginx proxies /api/* to backend:8000
 # Both configurations result in same-origin requests, eliminating CORS issues
+
+# Basic Auth for admin endpoints
+security = HTTPBasic()
+
+
+def verify_admin_credentials(credentials: HTTPBasicCredentials = Security(security)) -> str:
+    """
+    Verify admin credentials for protected endpoints.
+    
+    Args:
+        credentials: HTTP Basic Auth credentials
+        
+    Returns:
+        Username if credentials are valid
+        
+    Raises:
+        HTTPException: If credentials are invalid
+    """
+    settings = get_settings()
+    correct_username = settings.admin_username
+    correct_password = settings.admin_password
+    
+    if credentials.username != correct_username or credentials.password != correct_password:
+        logger.warning(f"Failed admin authentication attempt for username: {credentials.username}")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid authentication credentials",
+            # Removed WWW-Authenticate header to prevent browser's native popup
+        )
+    
+    return credentials.username
 
 
 @api_router.post("/evaluate", response_model=FullProfileEvaluationResponse)
@@ -91,6 +125,42 @@ async def evaluate_profile(request: EvaluationRequest) -> FullProfileEvaluationR
 @api_router.head("/health")
 async def healthcheck() -> Dict[str, str]:
     return {"status": "ok"}
+
+
+@api_router.get("/admin/view/response/{cache_key}")
+async def get_response_by_cache_key(
+    cache_key: str,
+    username: str = Depends(verify_admin_credentials)
+) -> Dict[str, Any]:
+    """
+    Admin endpoint to view a cached response by its cache key.
+    
+    Args:
+        cache_key: The SHA256 hash key (response_id) from response_cache table
+        
+    Returns:
+        Dictionary containing the cached response and input payload
+    """
+    from src.repositories.cache_repository import CacheRepository
+    
+    logger.info(f"Admin view request for cache_key: {cache_key[:16]}...")
+    
+    cache_repo = CacheRepository()
+    model_name = "gpt-4o"  # Default model
+    
+    cache_entry = cache_repo.get_by_key(cache_key, model_name)
+    
+    if not cache_entry:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Response not found for cache_key: {cache_key}"
+        )
+    
+    return {
+        "user_input": cache_entry["user_input"],
+        "response": cache_entry["response_json"],
+    }
+
 
 app.include_router(api_router, prefix="/career-profile-tool/api")
 

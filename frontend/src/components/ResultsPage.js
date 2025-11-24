@@ -219,6 +219,7 @@ const ResultsPage = () => {
     quizResponses,
     goals,
     background,
+    questionsAndAnswers,
     evaluationResults,
     setEvaluationResults
   } = useProfile();
@@ -296,6 +297,7 @@ const ResultsPage = () => {
           quizResponses,
           goals,
           background,
+          questionsAndAnswers,
           { signal: controller.signal }
         );
 

@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import QuizPage from "../../components/QuizPage";
 import ResultsPage from "../../components/ResultsPage";
+import AdminViewPage from "../../components/admin/AdminViewPage";
 
 const AppRoutes = ({
   quizMode,
@@ -20,6 +21,7 @@ const AppRoutes = ({
       }
     />
     <Route path="/results" element={<ResultsPage />} />
+    <Route path="/admin/view/response/:response_id" element={<AdminViewPage />} />
   </Routes>
 );
 

@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     aws_secret_access_key: Optional[str] = None
     enable_metrics: bool = True
     sentry_dsn: Optional[str] = None
+    admin_username: str
+    admin_password: str
 
     model_config = SettingsConfigDict(
         env_file=".env",

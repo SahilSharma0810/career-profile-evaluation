@@ -763,6 +763,7 @@ const FinalModeQuiz = ({ onProgressChange }) => {
     setBackground,
     quizResponses,
     setQuizResponse,
+    addQAPair,
     clearQuizResponses,
     goals,
     evaluationResults
@@ -808,17 +809,35 @@ const FinalModeQuiz = ({ onProgressChange }) => {
 
   const handleBackgroundSelect = (selectedBackground) => {
     setBackground(selectedBackground);
+    const backgroundLabels = {
+      'tech': 'Tech Professional (Already working in tech)',
+      'non-tech': 'Non-Tech / Career Switcher (Looking to transition into tech)'
+    };
+    addQAPair(
+      "What's your current background?",
+      backgroundLabels[selectedBackground] || selectedBackground,
+      'background'
+    );
     setTimeout(() => {
       handleNext();
     }, 1000);
   };
 
-  const handleQuizResponse = (questionId, option) => {
+  const handleQuizResponse = (questionId, option, question) => {
     setQuizResponse(questionId, option.value);
 
     const labelFields = ['currentRole', 'targetRole', 'targetCompany'];
     if (labelFields.includes(questionId)) {
       setQuizResponse(`${questionId}Label`, option.label);
+    }
+
+    // Add Q&A pair if question object is provided
+    if (question && question.question) {
+      addQAPair(
+        question.question,
+        option.label || option.value,
+        questionId
+      );
     }
   };
 

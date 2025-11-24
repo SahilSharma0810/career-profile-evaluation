@@ -610,7 +610,10 @@ def run_poc(
 
     if cached_json:
         logger.info("✅ CACHE HIT - Returning cached response (no OpenAI API call, instant response!)")
-        return FullProfileEvaluationResponse.model_validate_json(cached_json)
+        cache_repo.backfill_user_input(cache_key, model_name, payload)
+        result = FullProfileEvaluationResponse.model_validate_json(cached_json)
+        result.response_id = cache_key
+        return result
 
     logger.info("🔴 CACHE MISS - Calling OpenAI API (this will cost money and take 2-5 seconds)")
 
@@ -707,10 +710,12 @@ def run_poc(
     result = FullProfileEvaluationResponse.model_validate(result_dict)
 
     result_json = result.model_dump_json()
-    cache_repo.set(cache_key, model_name, result_json)
+    cache_repo.set(cache_key, model_name, result_json, user_input=payload)
     logger.info("💾 Response cached successfully - next identical request will be instant!")
 
-    return FullProfileEvaluationResponse.model_validate_json(result_json)
+    final_result = FullProfileEvaluationResponse.model_validate_json(result_json)
+    final_result.response_id = cache_key
+    return final_result
 
 
 def main() -> int:

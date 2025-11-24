@@ -124,7 +124,7 @@ const normaliseGoals = (goals = {}) => ({
     : []
 });
 
-const buildEvaluationPayload = (quizResponses, goals, background) => {
+const buildEvaluationPayload = (quizResponses, goals, background, questionsAndAnswers = []) => {
   if (!background) {
     throw new Error(
       'User background is required before requesting evaluation.'
@@ -138,10 +138,13 @@ const buildEvaluationPayload = (quizResponses, goals, background) => {
       ? mapTechQuizResponses(sanitizedResponses)
       : mapNonTechQuizResponses(sanitizedResponses);
 
+  const cleanedQuestionsAndAnswers = (questionsAndAnswers || []).map(({ field, ...qa }) => qa);
+
   return {
     background,
     quizResponses: mappedQuizResponses,
-    goals: normaliseGoals(goals)
+    goals: normaliseGoals(goals),
+    questionsAndAnswers: cleanedQuestionsAndAnswers
   };
 };
 
@@ -149,10 +152,11 @@ export const evaluateProfile = async (
   quizResponses,
   goals,
   background,
+  questionsAndAnswers = [],
   options = {}
 ) => {
   const { signal } = options;
-  const payload = buildEvaluationPayload(quizResponses, goals, background);
+  const payload = buildEvaluationPayload(quizResponses, goals, background, questionsAndAnswers);
   const baseUrl = process.env.PUBLIC_URL || '';
   const response = await fetch(`${baseUrl}/api/evaluate`, {
     method: 'POST',

@@ -28,6 +28,7 @@ const defaultState = {
   // Quiz responses
   background: null, // 'non-tech' or 'tech'
   quizResponses: {},
+  questionsAndAnswers: [],
 
   // Goals and requirements
   goals: {
@@ -43,17 +44,20 @@ const defaultState = {
 const persistedState = loadStateFromStorage();
 const initialState = persistedState
   ? {
-    ...defaultState,
-    ...persistedState,
-    goals: {
-      ...defaultState.goals,
-      ...(persistedState.goals || {})
-    },
-    quizResponses: {
-      ...defaultState.quizResponses,
-      ...(persistedState.quizResponses || {})
+      ...defaultState,
+      ...persistedState,
+      goals: {
+        ...defaultState.goals,
+        ...(persistedState.goals || {})
+      },
+      quizResponses: {
+        ...defaultState.quizResponses,
+        ...(persistedState.quizResponses || {})
+      },
+      questionsAndAnswers: Array.isArray(persistedState.questionsAndAnswers)
+        ? persistedState.questionsAndAnswers
+        : defaultState.questionsAndAnswers
     }
-  }
   : defaultState;
 
 const profileReducer = (state, action) => {
@@ -73,10 +77,28 @@ const profileReducer = (state, action) => {
         }
       };
 
+    case 'ADD_QA_PAIR':
+      const existingIndex = state.questionsAndAnswers.findIndex(
+        qa => qa.field === action.payload.field
+      );
+      const updatedQA = existingIndex >= 0
+        ? [
+            ...state.questionsAndAnswers.slice(0, existingIndex),
+            action.payload,
+            ...state.questionsAndAnswers.slice(existingIndex + 1)
+          ]
+        : [...state.questionsAndAnswers, action.payload];
+      
+      return {
+        ...state,
+        questionsAndAnswers: updatedQA
+      };
+
     case 'CLEAR_QUIZ_RESPONSES':
       return {
         ...state,
-        quizResponses: {}
+        quizResponses: {},
+        questionsAndAnswers: []
       };
     
     case 'SET_GOALS':
@@ -121,6 +143,13 @@ export const ProfileProvider = ({ children }) => {
     dispatch({ type: 'SET_QUIZ_RESPONSE', payload: { question, answer } });
   }, [dispatch]);
 
+  const addQAPair = useCallback((question, answer, field) => {
+    dispatch({ 
+      type: 'ADD_QA_PAIR', 
+      payload: { question, answer, field } 
+    });
+  }, [dispatch]);
+
   const clearQuizResponses = useCallback(() => {
     dispatch({ type: 'CLEAR_QUIZ_RESPONSES' });
   }, [dispatch]);
@@ -147,11 +176,12 @@ export const ProfileProvider = ({ children }) => {
     ...state,
     setBackground,
     setQuizResponse,
+    addQAPair,
     clearQuizResponses,
     setGoals,
     setEvaluationResults,
     resetProfile
-  }), [state, setBackground, setQuizResponse, clearQuizResponses, setGoals, setEvaluationResults, resetProfile]);
+  }), [state, setBackground, setQuizResponse, addQAPair, clearQuizResponses, setGoals, setEvaluationResults, resetProfile]);
 
   return (
     <ProfileContext.Provider value={value}>

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, TYPE_CHECKING, Any, Dict
+from typing import List, TYPE_CHECKING, Any, Dict, Optional
 
 from pydantic import BaseModel, Field
 
@@ -287,6 +287,10 @@ class ProfileEvaluation(BaseModel):
 # Full response model
 class FullProfileEvaluationResponse(BaseModel):
     profile_evaluation: ProfileEvaluation
+    response_id: Optional[str] = Field(
+        default=None,
+        description="SHA256 hash key (cache_key) for this evaluation response (for admin/view access)"
+    )
 
 
 # --- Helpers to hydrate derived fields -----------------------------------------------------
@@ -380,6 +384,8 @@ def enrich_full_profile_evaluation(
     success["status"] = success_status
     success["label"] = _success_label_from_status(success_status)
 
+    # Rebuild model to ensure all type hints are resolved (required when using Optional)
+    FullProfileEvaluationResponse.model_rebuild()
     return FullProfileEvaluationResponse.model_validate(data)
 
 
