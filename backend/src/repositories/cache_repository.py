@@ -155,7 +155,7 @@ class CacheRepository:
     def backfill_user_input(self, cache_key: str, model: str, user_input: Dict[str, Any]) -> bool:
         """
         Update user_input for existing cache entries.
-        Always updates user_input on cache hits to ensure it's current.
+        Only updates if user_input is not already present (NULL).
         
         Args:
             cache_key: The cache key
@@ -180,6 +180,7 @@ class CacheRepository:
                             updated_at = CURRENT_TIMESTAMP
                         WHERE cache_key = %s 
                           AND model = %s
+                          AND user_input IS NULL
                         """,
                         (user_input_json, cache_key, model)
                     )

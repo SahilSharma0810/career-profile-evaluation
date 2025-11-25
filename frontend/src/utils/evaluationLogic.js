@@ -4,6 +4,22 @@ import attribution from './attribution';
 import { getURLWithUTMParams } from './url';
 import { generateJWT } from './api';
 import tracker from './tracker';
+import { sendLSQActivity } from './leadSquared';
+
+export const getAdminPageLink = (responseId) => {
+  if (!responseId) {
+    return '';
+  }
+  
+  let origin = window.location.origin;
+  
+  const basePath = '/career-profile-tool';
+  const adminPath = `/admin/view/response/${responseId}`;
+  const path = `${basePath}${adminPath}`;
+  
+  const cleanOrigin = origin.replace(/\/$/, '');
+  return `${cleanOrigin}${path}`;
+};
 
 const deriveCurrentCompany = (currentRole) => {
   const roleToCompanyMap = {
@@ -144,7 +160,7 @@ const buildEvaluationPayload = (quizResponses, goals, background, questionsAndAn
     background,
     quizResponses: mappedQuizResponses,
     goals: normaliseGoals(goals),
-    questionsAndAnswers: cleanedQuestionsAndAnswers
+    questionsAndAnswers: cleanedQuestionsAndAnswers.length > 0 ? cleanedQuestionsAndAnswers : null
   };
 };
 
@@ -157,6 +173,7 @@ export const evaluateProfile = async (
 ) => {
   const { signal } = options;
   const payload = buildEvaluationPayload(quizResponses, goals, background, questionsAndAnswers);
+
   const baseUrl = process.env.PUBLIC_URL || '';
   const response = await fetch(`${baseUrl}/api/evaluate`, {
     method: 'POST',
@@ -181,6 +198,14 @@ export const evaluateProfile = async (
     throw new Error(
       'Evaluation response missing "profile_evaluation" payload.'
     );
+  }
+
+  if (data?.response_id) {
+    const adminPageLink = getAdminPageLink(data.response_id);
+    await sendLSQActivity({ 
+      activityName: 'cpe_evaluated',
+      fields: ['cpe', adminPageLink]
+    });
   }
 
   try {
@@ -219,7 +244,10 @@ export const evaluateProfile = async (
   }
 
 
-  return data.profile_evaluation;
+  return {
+    ...data.profile_evaluation,
+    response_id: data.response_id || null
+  };
 };
 
 export { buildEvaluationPayload };

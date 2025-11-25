@@ -11,6 +11,8 @@ import { apiRequest } from "../../utils/api";
 import tracker from "../../utils/tracker";
 import attribution from "../../utils/attribution";
 import { generateJWT } from "../../utils/api";
+import { getURLWithUTMParams } from "../../utils/url";
+import { sendLSQActivity } from "../../utils/leadSquared";
 
 const RequestCallbackContext = createContext({
   open: () => {},
@@ -30,6 +32,13 @@ const SUBMISSION_STATUS = {
 
 const PROGRAMS_MAPPING = {
   academy: "software_development",
+};
+
+const PROGRAM_NAME_MAPPING = {
+  data_science: "Data Science",
+  academy: "Software Development",
+  devops: "DevOps",
+  ai_ml: "AI/ML",
 };
 
 export const RequestCallbackProvider = ({ children }) => {
@@ -73,7 +82,7 @@ export const RequestCallbackProvider = ({ children }) => {
     }));
   }, []);
 
-  const submit = useCallback(async () => {
+  const submit = useCallback(async (adminPageLink = null) => {
     setSubmissionStatus(SUBMISSION_STATUS.LOADING);
     setErrorMessage("");
 
@@ -83,21 +92,37 @@ export const RequestCallbackProvider = ({ children }) => {
         formState.program ||
         "software_development",
     });
+
+    const programName = PROGRAM_NAME_MAPPING[formState.program] || formState.program || "";
+    
+    await sendLSQActivity({ 
+      activityName: 'rcb_from_cpe',
+      fields: [programName, adminPageLink]
+    });
+
     try {
       const jwt = await generateJWT();
+      const refererUrl = getURLWithUTMParams();
+    
       await apiRequest(
-        "POST",
-        "/api/v3/callbacks",
+        'POST', 
+        '/api/v3/analytics/attributions/', 
         {
-          program: formState.program || "academy",
-          rcb_prams: {
-            attributions: attribution.getAttribution(),
+          attributions: {
+            ...attribution.getAttribution(),
+            product: 'scaler',
+            sub_product: 'career_profile_tool',
+          },
+          owner: {
+            id: 1,
+            type: 'CareerProfileRCB',
           },
         },
         {
           headers: {
-            "X-User-Token": jwt,
-          },
+            'X-user-token': jwt,
+            'X-REFERER': refererUrl.toString()
+          }
         }
       );
 

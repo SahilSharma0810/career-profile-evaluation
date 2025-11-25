@@ -1,7 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+
+import { useProfile } from '../../context/ProfileContext';
+import { getAdminPageLink } from '../../utils/evaluationLogic';
 
 const OVERLAY_ID = "request-callback-modal";
 
@@ -206,6 +209,9 @@ const RequestCallbackModal = ({
   const isLoading = submissionStatus === "loading";
   const isSuccess = submissionStatus === "success";
   const isError = submissionStatus === "error";
+
+  const { evaluationResults } = useProfile();
+
   useEffect(() => {
     if (!isOpen) {
       return undefined;
@@ -227,6 +233,13 @@ const RequestCallbackModal = ({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
+
+  const submitHandler = useCallback((event) => {
+    event.preventDefault();
+    
+    const adminPageLink = getAdminPageLink(evaluationResults?.response_id);
+    onSubmit(adminPageLink);
+  }, [onSubmit, evaluationResults]);
 
   if (!isOpen) {
     return null;
@@ -264,10 +277,7 @@ const RequestCallbackModal = ({
           </ErrorMessage>
         )}
         <Form
-          onSubmit={(event) => {
-            event.preventDefault();
-            onSubmit();
-          }}
+          onSubmit={submitHandler}
         >
           <Field>
             Program
