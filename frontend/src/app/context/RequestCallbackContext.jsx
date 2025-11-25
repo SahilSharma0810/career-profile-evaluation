@@ -94,13 +94,13 @@ export const RequestCallbackProvider = ({ children }) => {
     });
 
     const programName = PROGRAM_NAME_MAPPING[formState.program] || formState.program || "";
-    
-    await sendLSQActivity({ 
-      activityName: 'rcb_from_cpe',
-      fields: [programName, adminPageLink]
-    });
 
     try {
+      await sendLSQActivity({ 
+        activityName: 'rcb_from_cpe',
+        fields: [programName, adminPageLink]
+      });
+
       const jwt = await generateJWT();
       const refererUrl = getURLWithUTMParams();
     

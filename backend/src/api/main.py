@@ -6,9 +6,10 @@ import logging
 import os
 from typing import Dict, Optional, Any
 
-from fastapi import FastAPI, HTTPException, APIRouter, Depends, Security
+from fastapi import FastAPI, HTTPException, APIRouter, Depends, Security, Header, Query, Request
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 from src.models import FullProfileEvaluationResponse
 from src.services.run_poc import run_poc
@@ -68,16 +69,25 @@ api_router = APIRouter()
 # - Prod: Nginx proxies /api/* to backend:8000
 # Both configurations result in same-origin requests, eliminating CORS issues
 
-# Basic Auth for admin endpoints
+# Basic Auth for admin endpoints (primary method)
 security = HTTPBasic()
 
 
-def verify_admin_credentials(credentials: HTTPBasicCredentials = Security(security)) -> str:
+def verify_admin_credentials(
+    request: Request,
+    admin_token: Optional[str] = Query(None, alias="admin_token"),
+    x_admin_token: Optional[str] = Header(None, alias="X-Admin-Token")
+) -> str:
     """
-    Verify admin credentials for protected endpoints.
+    Verify admin credentials using multiple methods (for CloudFront compatibility):
+    1. Basic Auth (if available)
+    2. Token in query parameter (works with CloudFront)
+    3. Token in X-Admin-Token header
     
     Args:
-        credentials: HTTP Basic Auth credentials
+        credentials: HTTP Basic Auth credentials (optional)
+        admin_token: Token from query parameter
+        x_admin_token: Token from X-Admin-Token header
         
     Returns:
         Username if credentials are valid
@@ -89,15 +99,67 @@ def verify_admin_credentials(credentials: HTTPBasicCredentials = Security(securi
     correct_username = settings.admin_username
     correct_password = settings.admin_password
     
-    if credentials.username != correct_username or credentials.password != correct_password:
-        logger.warning(f"Failed admin authentication attempt for username: {credentials.username}")
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid authentication credentials",
-            # Removed WWW-Authenticate header to prevent browser's native popup
-        )
+    # Method 1: Try token-based auth (works better with CloudFront)
+    if admin_token or x_admin_token:
+        import hashlib
+        expected_token = hashlib.sha256(
+            f"{correct_username}:{correct_password}".encode()
+        ).hexdigest()
+        
+        provided_token = admin_token or x_admin_token
+        if provided_token == expected_token:
+            logger.info("Successful admin token authentication")
+            return correct_username
+        else:
+            logger.warning("Failed admin token authentication attempt")
+            raise HTTPException(
+                status_code=401,
+                detail="Authentication failed"
+            )
     
-    return credentials.username
+    # Method 2: Try Basic Auth (fallback)
+    # Manually extract Basic Auth credentials from header
+    authorization = request.headers.get("Authorization", "")
+    if authorization.startswith("Basic "):
+        try:
+            import base64
+            encoded = authorization.split(" ")[1]
+            decoded = base64.b64decode(encoded).decode("utf-8")
+            username, password = decoded.split(":", 1)
+            credentials = HTTPBasicCredentials(username=username, password=password)
+        except Exception:
+            credentials = None
+    else:
+        credentials = None
+    
+    if credentials:
+        logger.info(
+            f"Auth check: provided_username='{credentials.username}', "
+            f"expected_username='{correct_username}', "
+            f"username_match={credentials.username == correct_username}, "
+            f"password_length_provided={len(credentials.password)}, "
+            f"password_length_expected={len(correct_password)}, "
+            f"password_match={credentials.password == correct_password}"
+        )
+        
+        if credentials.username == correct_username and credentials.password == correct_password:
+            logger.info(f"Successful admin authentication for username: {credentials.username}")
+            return credentials.username
+        else:
+            logger.warning(
+                f"Failed admin authentication attempt: "
+                f"username='{credentials.username}' (expected '{correct_username}')"
+            )
+            raise HTTPException(
+                status_code=401,
+                detail="Authentication failed"
+            )
+    
+    # No valid authentication method provided
+    raise HTTPException(
+        status_code=401,
+        detail="Authentication failed"
+    )
 
 
 @api_router.post("/evaluate", response_model=FullProfileEvaluationResponse)

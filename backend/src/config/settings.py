@@ -1,8 +1,11 @@
 import os
+import logging
 from typing import List, Optional
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -43,6 +46,31 @@ class Settings(BaseSettings):
         case_sensitive=False,
         extra="ignore"
     )
+
+    def model_post_init(self, __context) -> None:
+        """Validate required settings after initialization."""
+        # Check if admin credentials are set
+        if not self.admin_username or not self.admin_password:
+            error_msg = (
+                "CRITICAL: ADMIN_USERNAME and ADMIN_PASSWORD environment variables are required! "
+                "Please set them in your Elastic Beanstalk environment configuration or .env file. "
+                "Admin authentication will not work without these credentials."
+            )
+            logger.error(error_msg)
+            raise ValueError(error_msg)
+        
+        # Log admin username (safe to log) and password length (for debugging)
+        logger.info(
+            f"Admin credentials loaded: username='{self.admin_username}', "
+            f"password_length={len(self.admin_password)}"
+        )
+        
+        # Log a warning if using weak credentials (but don't fail)
+        if len(self.admin_password) < 12:
+            logger.warning(
+                f"Admin password is less than 12 characters. "
+                f"Consider using a stronger password for production environments."
+            )
 
     @property
     def is_production(self) -> bool:
