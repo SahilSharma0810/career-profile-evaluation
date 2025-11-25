@@ -154,9 +154,8 @@ class CacheRepository:
 
     def backfill_user_input(self, cache_key: str, model: str, user_input: Dict[str, Any]) -> bool:
         """
-        Backfill user_input for existing cache entries that don't have it.
-        This is useful when we have a cache HIT but the entry was created before
-        we started storing user_input.
+        Update user_input for existing cache entries.
+        Always updates user_input on cache hits to ensure it's current.
         
         Args:
             cache_key: The cache key
@@ -177,21 +176,21 @@ class CacheRepository:
                     cur.execute(
                         """
                         UPDATE response_cache
-                        SET user_input = %s::jsonb
+                        SET user_input = %s::jsonb,
+                            updated_at = CURRENT_TIMESTAMP
                         WHERE cache_key = %s 
                           AND model = %s
-                          AND user_input IS NULL
                         """,
                         (user_input_json, cache_key, model)
                     )
                     
                     if cur.rowcount > 0:
-                        logger.info(f"🔄 Backfilled user_input for cache key: {cache_key[:16]}...")
+                        logger.info(f"🔄 Updated user_input for cache key: {cache_key[:16]}...")
                         return True
                     return False
 
         except Exception as exc:
-            logger.warning(f"Failed to backfill user_input: {exc}")
+            logger.warning(f"Failed to update user_input: {exc}")
             return False
 
     def set(self, cache_key: str, model: str, response_json: str, user_input: Optional[Dict[str, Any]] = None) -> bool:
