@@ -115,7 +115,7 @@ export const RequestCallbackProvider = ({ children }) => {
           },
           owner: {
             id: 1,
-            type: 'CareerProfileRCB',
+            type: 'CareerProfileEvaluation',
           },
         },
         {
