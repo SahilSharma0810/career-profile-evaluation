@@ -1,13 +1,13 @@
-import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import React from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import QuizPage from "../../components/QuizPage";
-import ResultsPage from "../../components/ResultsPage";
-import AdminViewPage from "../../components/admin/AdminViewPage";
+import QuizPage from '../../components/QuizPage';
+import ResultsPage from '../../components/ResultsPage';
+import AdminViewPage from '../../components/admin/AdminViewPage';
 
 const AppRoutes = ({
   quizMode,
-  onQuizProgressChange,
+  onQuizProgressChange
 }) => (
   <Routes>
     <Route path="/" element={<Navigate to="/quiz" replace />} />

@@ -26,221 +26,109 @@ Database (PostgreSQL)
 
 ### Backend Structure (`backend/src/`)
 
-- **`api/main.py`**: FastAPI application with API routes mounted under `/api` prefix:
-  - `POST /api/evaluate` - Main evaluation endpoint
-  - `GET /api/health` - Health check for monitoring/load balancers
-
-- **`services/`**: Business logic modules
-  - `run_poc.py` - Orchestrates entire evaluation pipeline, handles OpenAI API calls and caching
-  - `quick_wins_logic.py`, `scoring_logic.py`, `timeline_logic.py`, etc. - Specialized evaluation components
-
-- **`repositories/`**: Data access layer
-  - `cache_repository.py` - PostgreSQL cache operations with connection pooling
-
-- **`models/`**: Pydantic data models
-  - `models.py` - Validated response schemas
-  - `models_raw.py` - Raw OpenAI response schemas
-
-- **`config/`**: Centralized configuration
-  - `settings.py` - Environment-based settings using pydantic-settings
-  - `exceptions.py` - Custom exception hierarchy
-  - `logging_config.py` - Structured JSON/text logging
-
-- **`utils/`**: Helper utilities
-  - `label_mappings.py` - Role/company label conversions
-  - `validate_response.py` - Response validation
+- **`api/main.py`**: FastAPI application with API routes under `/career-profile-tool/api` prefix
+- **`services/`**: Business logic - `run_poc.py` orchestrates pipeline, specialized logic modules
+- **`repositories/`**: Data access - `cache_repository.py` for PostgreSQL cache operations
+- **`models/`**: Pydantic schemas - `models.py` (validated), `models_raw.py` (raw OpenAI)
+- **`config/`**: Configuration - `settings.py`, `exceptions.py`, `logging_config.py`
+- **`utils/`**: Helpers - `label_mappings.py`, `validate_response.py`
 
 ### Hash-Based Caching System
 
-**How it Works**:
 1. User submits profile evaluation request
-2. Backend normalizes payload (sorted JSON keys) and generates SHA256 hash
+2. Backend generates SHA256 hash of normalized payload (`json.dumps(payload, sort_keys=True)`)
 3. Check PostgreSQL cache using `cache_key` + `model` composite lookup
 4. Cache HIT: Return stored response (instant, zero OpenAI cost)
 5. Cache MISS: Call OpenAI API, store response with hash, return result
 
-**Implementation Details**:
-- Cache key: SHA256 of `json.dumps(payload, sort_keys=True)`
-- Storage: JSONB column in PostgreSQL for efficient querying
-- Schema: `response_cache` table with composite unique constraint on (cache_key, model)
-- Critical: JSONB returns as dict from psycopg2, must convert to JSON string before validation
-
-### Frontend
-
-React SPA with development proxy and production Nginx routing. All API calls use `/api/*` prefix.
-
-### API Routing Architecture
-
-**Base Path**: All application routes are under `/career-profile-tool`
-
-**Development Environment**:
-- Frontend: `http://localhost:3000/career-profile-tool/`
-- Backend: `http://localhost:8000/career-profile-tool/api/*`
-- Request flow: Frontend → React dev proxy → `localhost:8000/career-profile-tool/api/*` → FastAPI
-
-**Production Environment (Elastic Beanstalk + CloudFront)**:
-- Frontend: `scaler.com/career-profile-tool/` (routed via CloudFront)
-- API: `scaler.com/career-profile-tool/api/*`
-- Request flow: CloudFront → Elastic Beanstalk → Nginx → `backend:8000/career-profile-tool/api/*` → FastAPI
-- Root (`/`) returns 404 (handled by Scaler's main infrastructure)
-
-**CloudFront Routing Setup**:
-- `scaler.com/` → Scaler's main infrastructure
-- `scaler.com/career-profile-tool/*` → This Elastic Beanstalk deployment
-- Path pattern: `/career-profile-tool/*` routes to this infrastructure
-- This allows multiple apps to coexist on the same domain
-
-**Key Benefits**:
-- No CORS configuration needed (same-origin in both environments)
-- Consistent routing between dev and production
-- Can be deployed as subdirectory alongside other applications
-- Clean separation of frontend and API routes
-- Industry-standard pattern used by Next.js, Vite, etc.
-
-**Implementation Details**:
-- React Router: `basename="/career-profile-tool"` in App.js
-- React build: `homepage` field in package.json sets PUBLIC_URL
-- React dev proxy: Configured in `frontend/src/setupProxy.js` for `/career-profile-tool/api/*`
-- Nginx: Serves static files from `/career-profile-tool`, proxies API requests
-- FastAPI: All routes mounted under `/career-profile-tool/api` prefix via `APIRouter`
-
-## Development Commands
-
-### Initial Setup
-
-```bash
-# 1. Create .env file (copy from .env.example)
-echo "OPENAI_API_KEY=sk-proj-xxxxx" > .env
-
-# 2. Start all services
-docker compose up --build
-```
-
-**Services will be available at**:
-- Frontend: http://localhost/career-profile-tool/ (production via Nginx)
-- Backend API: http://localhost:8000/career-profile-tool/api/*
-- Database: localhost:5432
-- Root: http://localhost/ returns 404 (by design - CloudFront routes only `/career-profile-tool/*`)
-
-### Daily Development
-
-```bash
-# Start services (uses cached builds)
-docker compose up
-
-# Stop services
-docker compose down
-
-# Rebuild after code changes
-docker compose up --build
-
-# Rebuild specific service
-docker compose up --build backend
-```
-
-### Monitoring & Debugging
-
-```bash
-# View logs (all services)
-docker compose logs -f
-
-# View specific service logs
-docker compose logs -f backend
-docker compose logs -f frontend
-
-# Check service health
-curl http://localhost:8000/health
-
-# Check service status
-docker compose ps
-
-# Access database
-docker compose exec postgres psql -U postgres -d profile_cache
-```
-
-### Database Operations
-
-```bash
-# Connect to PostgreSQL
-docker compose exec postgres psql -U postgres -d profile_cache
-
-# Inside psql:
-# View cache entries
-SELECT cache_key, model, created_at FROM response_cache ORDER BY created_at DESC LIMIT 10;
-
-# Check cache statistics
-SELECT * FROM cache_statistics;
-
-# View cache hit details
-SELECT
-  cache_key,
-  model,
-  jsonb_pretty(response_json) as response,
-  created_at
-FROM response_cache
-WHERE cache_key = 'your_hash_here';
-
-# Count total cache entries
-SELECT COUNT(*) FROM response_cache;
-```
-
-### Docker Cleanup
-
-```bash
-# Remove containers and volumes (clears cache)
-docker compose down -v
-
-# Remove all unused Docker resources
-docker system prune -a -f
-
-# Remove build cache (largest space saver)
-docker builder prune -a -f
-
-# Check Docker disk usage
-docker system df
-```
-
-## Important Implementation Notes
-
-### Configuration Management
-
-All configuration comes from environment variables via `src/config/settings.py`. Never hardcode:
-- API keys
-- Database URLs
-- Port numbers
-
-Access settings via:
-```python
-from src.config.settings import settings
-
-api_key = settings.openai_api_key
-```
+**Critical**: JSONB returns as dict from psycopg2, must convert to JSON string before validation.
 
 ### API Routing
 
-All API endpoints are mounted under `/api` prefix using FastAPI's `APIRouter`:
-```python
-api_router = APIRouter()
+**Base Path**: All routes under `/career-profile-tool`
 
-@api_router.post("/evaluate")
-async def evaluate_profile(...):
-    ...
+- **Development**: Frontend at `localhost:3000/career-profile-tool/`, Backend at `localhost:8000/career-profile-tool/api/*`
+- **Production**: CloudFront routes `scaler.com/career-profile-tool/*` to Elastic Beanstalk
 
-app.include_router(api_router, prefix="/api")
+No CORS needed (same-origin in both environments). Root (`/`) returns 404 by design.
+
+## Development Commands
+
+### Docker Development (Recommended)
+
+```bash
+# First time setup
+docker compose up --build
+
+# Daily development (uses cached builds)
+docker compose up
+
+# Live code reloading (best for active development)
+docker compose watch
+
+# View logs
+docker compose logs -f backend
+docker compose logs -f frontend
+
+# Rebuild specific service
+docker compose up --build backend
+
+# Stop services
+docker compose down
 ```
 
-This creates endpoints at `/api/evaluate`, `/api/health`, etc.
+### Backend-Only Development (without Docker)
 
-### OpenAI API Calls
+```bash
+cd backend
 
-**Only one place calls OpenAI**: `src/services/run_poc.py` in `call_openai_structured()` function.
+# Install dependencies (uses uv package manager)
+uv sync --all-extras
 
-Before calling OpenAI, ALWAYS:
-1. Generate cache key: `cache_repo.generate_cache_key(payload, model)`
-2. Check cache: `cache_repo.get(cache_key, model)`
-3. If cached, return immediately (log "Cache HIT")
-4. If not cached, call OpenAI
-5. Store result: `cache_repo.set(cache_key, model, response_json)`
+# Run server with auto-reload
+uv run uvicorn backend.main:app --reload --port 8000
+
+# Run tests
+uv run pytest backend/tests --maxfail=1
+uv run pytest --cov=src
+
+# Linting and formatting
+uv run black backend/src backend/tests
+uv run ruff check backend
+```
+
+### Frontend-Only Development (without Docker)
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Run dev server
+npm start
+
+# Run tests
+npm test
+
+# Linting
+npm run lint
+npm run lint:fix
+```
+
+### Health Check
+
+```bash
+curl http://localhost:8000/career-profile-tool/api/health
+```
+
+### Clear Cache (for testing)
+
+```sql
+DELETE FROM response_cache;
+```
+
+## Implementation Guidelines
 
 ### Import Paths
 
@@ -253,99 +141,61 @@ from src.repositories.cache_repository import CacheRepository
 
 Never use relative imports like `from models import ...` or `from ..services import ...`
 
-### Entry Point
+### Configuration
 
-`backend/main.py` is the entry point that imports the FastAPI app from `src.api.main`:
+Access all configuration via `src.config.settings`:
 ```python
-from src.api.main import app
+from src.config.settings import settings
+api_key = settings.openai_api_key
 ```
 
-This separation allows proper package structure while maintaining uvicorn compatibility.
+### OpenAI API Calls
+
+**Only one place calls OpenAI**: `src/services/run_poc.py` in `call_openai_structured()`.
+
+Always follow this pattern:
+1. Generate cache key: `cache_repo.generate_cache_key(payload, model)`
+2. Check cache: `cache_repo.get(cache_key, model)`
+3. If cached, return immediately
+4. If not cached, call OpenAI, then store result
 
 ### Error Handling
 
 Use custom exceptions from `src.config.exceptions`:
-- `DatabaseError` - Database connection/query failures
-- `OpenAIError` - OpenAI API failures
-- `CacheError` - Caching layer failures
-- `ValidationError` - Pydantic validation failures
-
-All exceptions include status codes and are caught at API layer to return proper HTTP responses.
+- `DatabaseError`, `OpenAIError`, `CacheError`, `ValidationError`
 
 ### Logging
 
-Structured logging configured in `src/config/logging_config.py`:
-- Development: text format, INFO level
-- Production: JSON format for log aggregation
-
-Never use print statements. Always use logger:
+Use structured logging (never print statements):
 ```python
 from src.config.logging_config import get_logger
 logger = get_logger(__name__)
-
-logger.info("Cache HIT for key: ...")
-logger.error("OpenAI API call failed", exc_info=True)
 ```
+
+### Coding Style
+
+- Python: 4-space indent, full type hints, `snake_case` files
+- Format with Black, lint with Ruff
+- Frontend: PascalCase component files, camelCase hooks/stores
 
 ## Common Issues
 
-### Import Errors After File Changes
+- **Import errors**: Ensure all use `src.*` absolute paths, rebuild containers
+- **Cache not working**: Check database logs, look for "Cache HIT/MISS" in backend logs
+- **JSONB validation errors**: PostgreSQL JSONB returns dict, convert to JSON string before validation
+- **Backend won't start**: Check `OPENAI_API_KEY` and `DATABASE_URL` in `.env`
 
-If you move files or rename modules:
-1. Update all imports to use `src.*` absolute paths
-2. Check `__init__.py` files for exported symbols
-3. Rebuild Docker containers: `docker compose up --build`
+## Production
 
-### Cache Not Working
+AWS Elastic Beanstalk + CloudFront. CloudFront routes `scaler.com/career-profile-tool/*` to EB.
 
-Check:
-1. Database connection: `docker compose logs postgres`
-2. Cache repository logs for "Cache HIT" or "Cache MISS"
-3. Verify cache entries: `SELECT COUNT(*) FROM response_cache;`
-
-### JSONB Validation Errors
-
-If seeing "JSON input should be string, bytes or bytearray":
-- PostgreSQL JSONB returns dict, not string
-- Ensure `cache_repository.py` converts dict to JSON string before returning
-
-### Backend Won't Start
-
-Common causes:
-1. Missing `OPENAI_API_KEY` in `.env`
-2. Missing `DATABASE_URL` environment variable
-3. Import errors (check all use `src.*` paths)
-4. Database not ready (check `depends_on` in docker-compose.yml)
-
-## Production Deployment
-
-Designed for AWS Elastic Beanstalk + CloudFront deployment:
-
-### Architecture
-- **CloudFront**: Routes `scaler.com/career-profile-tool/*` to Elastic Beanstalk
-- **Elastic Beanstalk**: Multi-container Docker (frontend Nginx + backend FastAPI)
-- **Nginx**: Serves React app at `/career-profile-tool`, proxies API to backend
-- **Backend**: FastAPI on port 8000 with `/career-profile-tool/api/*` routes
-- **Database**: PostgreSQL RDS for caching
-
-### CloudFront Configuration
-```
-# Path pattern behavior:
-Path Pattern: /career-profile-tool/*
-Origin: your-elasticbeanstalk-env.elasticbeanstalk.com
-```
-
-### Environment Variables
+Environment variables:
 ```
 OPENAI_API_KEY=sk-proj-xxxxx
 DATABASE_URL=postgresql://user:pass@rds-endpoint:5432/dbname
 ENVIRONMENT=production
 LOG_LEVEL=INFO
 LOG_FORMAT=json
+ADMIN_USERNAME=xxx
+ADMIN_PASSWORD=xxx
 ```
-
-**Important Notes**:
-- Root (`/`) returns 404 by design - only `/career-profile-tool/*` is served
-- CORS not needed (same-origin requests via CloudFront)
-- All routes must include `/career-profile-tool` base path
-- Static assets cached by CloudFront for performance

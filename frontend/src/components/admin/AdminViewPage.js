@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle, keyframes } from 'styled-components';
+import { MagnifyingGlass, FileText, CheckCircle, House } from 'phosphor-react';
 import ProfileMatchHeroV2 from '../results/ProfileMatchHeroV2';
 import BasicAuthModal from '../auth/BasicAuthModal';
 import { fetchAdminResponse } from '../../utils/adminAuth';
@@ -18,23 +19,13 @@ const PrintStyles = createGlobalStyle`
   }
 `;
 
-const PageHeader = styled.div`
-  background: white;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 24px 0;
-  margin-bottom: 32px;
-`;
-
-const PageTitle = styled.h1`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0;
-  text-align: center;
+const pulse = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 `;
 
 const ResultsContainer = styled.div`
-  min-height: 100vh;
+  min-height: calc(100vh - 70px);
   background: #f8fafc;
   padding: 40px 20px;
 
@@ -69,86 +60,200 @@ const Container = styled.div`
   }
 `;
 
+const PageHeader = styled.div`
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 24px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  @media print {
+    display: none;
+  }
+`;
+
+const PageTitle = styled.h1`
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
 const Section = styled.div`
   background: white;
-  border-radius: 8px;
   padding: 24px;
   margin-bottom: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 700;
   color: #1e293b;
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 2px solid #e2e8f0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 `;
 
 const LoadingContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+`;
+
+const LoadingContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  animation: ${pulse} 2s ease-in-out infinite;
+`;
+
+const LoadingIcon = styled.div`
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
-  gap: 16px;
+  width: 48px;
+  height: 48px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #c71f69;
+  flex-shrink: 0;
 `;
 
-const LoadingText = styled.p`
+const LoadingText = styled.div`
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+`;
+
+const LoadingSubtext = styled.div`
+  font-size: 0.875rem;
   color: #64748b;
-  font-size: 1rem;
+  margin-top: 4px;
+  text-align: center;
 `;
 
-const ErrorContainer = styled.div`
-  background: #fee2e2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  padding: 24px;
-  color: #991b1b;
+const ProgressBarContainer = styled.div`
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  overflow: hidden;
+  margin-top: 24px;
+`;
+
+const ProgressBarFill = styled.div`
+  height: 100%;
+  background: linear-gradient(90deg, #c71f69 0%, #e11d48 100%);
+  transition: width 0.3s ease;
+  width: ${props => props.progress}%;
+`;
+
+const ErrorContainer = styled(LoadingContainer)`
+  flex-direction: column;
+  gap: 16px;
+  color: #dc2626;
+  text-align: center;
 `;
 
 const ErrorTitle = styled.h2`
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin: 0;
+  color: #b91c1c;
 `;
 
 const ErrorMessage = styled.p`
-  font-size: 0.9375rem;
+  font-size: 0.95rem;
+  color: #7f1d1d;
+  margin: 0;
 `;
 
-const AdminButton = styled.button`
-  background: ${props => props.primary ? '#c71f69' : 'white'};
-  color: ${props => props.primary ? 'white' : '#1e293b'};
-  border: 1px solid ${props => props.primary ? '#c71f69' : '#e2e8f0'};
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.875rem;
+const PrimaryButton = styled.button`
+  background: #c71f69;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
   &:hover {
-    background: ${props => props.primary ? '#a01855' : '#f8fafc'};
+    background: #a01855;
+  }
+
+  @media print {
+    display: none;
+  }
+`;
+
+const SecondaryButton = styled.button`
+  background: transparent;
+  color: #c71f69;
+  border: 2px solid #c71f69;
+  padding: 10px 22px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: #c71f69;
+    color: white;
+  }
+
+  @media print {
+    display: none;
   }
 `;
 
 const QASection = styled.div`
   background: white;
-  border-radius: 8px;
   padding: 24px;
   margin-bottom: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 `;
 
 const QATitle = styled.h3`
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 700;
   color: #1e293b;
   margin: 0 0 20px 0;
   padding-bottom: 12px;
   border-bottom: 2px solid #e2e8f0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 const QAList = styled.div`
@@ -160,7 +265,6 @@ const QAList = styled.div`
 const QAItem = styled.div`
   padding: 16px;
   background: #f8fafc;
-  border-radius: 6px;
   border-left: 3px solid #c71f69;
 `;
 
@@ -169,6 +273,8 @@ const QuestionText = styled.div`
   font-weight: 600;
   color: #475569;
   margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 `;
 
 const AnswerText = styled.div`
@@ -186,6 +292,47 @@ const AdminViewPage = () => {
   const [error, setError] = useState(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingStep, setLoadingStep] = useState(0);
+
+  const loadingSteps = [
+    { icon: <MagnifyingGlass size={28} weight="bold" />, text: 'Authenticating...', subtext: 'Verifying your credentials' },
+    { icon: <FileText size={28} weight="bold" />, text: 'Loading response data...', subtext: 'Fetching user profile evaluation' },
+    { icon: <CheckCircle size={28} weight="bold" />, text: 'Preparing results...', subtext: 'Almost there!' }
+  ];
+
+  // Loading animation effect
+  useEffect(() => {
+    if (loading && !showAuthModal) {
+      setLoadingProgress(0);
+      setLoadingStep(0);
+
+      const progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 95) {
+            clearInterval(progressInterval);
+            return 95;
+          }
+          return prev + 2;
+        });
+      }, 100);
+
+      const stepInterval = setInterval(() => {
+        setLoadingStep(prev => {
+          if (prev >= loadingSteps.length - 1) {
+            clearInterval(stepInterval);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 1500);
+
+      return () => {
+        clearInterval(progressInterval);
+        clearInterval(stepInterval);
+      };
+    }
+  }, [loading, showAuthModal]);
 
   // Fetch response data using the admin auth utility
   const fetchResponse = async (authUsername, authPassword) => {
@@ -210,7 +357,7 @@ const AdminViewPage = () => {
         onAuthError: (errorJson) => {
           setShowAuthModal(true);
           setAuthError(errorJson.detail || 'Invalid username or password. Please try again.');
-        },
+        }
       }
     );
   };
@@ -247,11 +394,23 @@ const AdminViewPage = () => {
   }
 
   if (loading) {
+    const currentStep = loadingSteps[loadingStep];
     return (
       <ResultsContainer>
         <Container>
           <LoadingContainer>
-            <LoadingText>Loading response data...</LoadingText>
+            <LoadingContent>
+              <LoadingIcon>
+                {currentStep.icon}
+              </LoadingIcon>
+              <div>
+                <LoadingText>{currentStep.text}</LoadingText>
+                <LoadingSubtext>{currentStep.subtext}</LoadingSubtext>
+              </div>
+            </LoadingContent>
+            <ProgressBarContainer>
+              <ProgressBarFill progress={loadingProgress} />
+            </ProgressBarContainer>
           </LoadingContainer>
         </Container>
       </ResultsContainer>
@@ -263,9 +422,12 @@ const AdminViewPage = () => {
       <ResultsContainer>
         <Container>
           <ErrorContainer>
-            <ErrorTitle>Error Loading Response</ErrorTitle>
+            <ErrorTitle>We ran into a problem</ErrorTitle>
             <ErrorMessage>{error}</ErrorMessage>
-            <AdminButton primary onClick={() => navigate('/')} style={{ marginTop: '16px' }}>← Back to Home</AdminButton>
+            <PrimaryButton onClick={() => navigate('/')}>
+              <House size={20} weight="bold" />
+              Back to Home
+            </PrimaryButton>
           </ErrorContainer>
         </Container>
       </ResultsContainer>
@@ -276,9 +438,14 @@ const AdminViewPage = () => {
     return (
       <ResultsContainer>
         <Container>
-          <LoadingContainer>
-            <LoadingText>Invalid response data format</LoadingText>
-          </LoadingContainer>
+          <ErrorContainer>
+            <ErrorTitle>Invalid Data Format</ErrorTitle>
+            <ErrorMessage>Unable to display evaluation results. The response data may be corrupted.</ErrorMessage>
+            <PrimaryButton onClick={() => navigate('/')}>
+              <House size={20} weight="bold" />
+              Back to Home
+            </PrimaryButton>
+          </ErrorContainer>
         </Container>
       </ResultsContainer>
     );
@@ -289,10 +456,10 @@ const AdminViewPage = () => {
   const background = userInput.background || 'non-tech';
   const quizResponses = userInput.quizResponses || {};
   const goals = userInput.goals || {};
-  
+
   // Use questionsAndAnswers directly from the payload
-  const qaPairs = Array.isArray(userInput.questionsAndAnswers) 
-    ? userInput.questionsAndAnswers 
+  const qaPairs = Array.isArray(userInput.questionsAndAnswers)
+    ? userInput.questionsAndAnswers
     : [];
 
   return (
@@ -300,23 +467,30 @@ const AdminViewPage = () => {
       <PrintStyles />
       <Container>
         <PageHeader>
-          <PageTitle>Career Profile Tool Result Analysis</PageTitle>
+          <PageTitle>Admin Response Viewer</PageTitle>
+          <SecondaryButton onClick={() => navigate('/')}>
+            <House size={18} weight="bold" />
+            Back to Home
+          </SecondaryButton>
         </PageHeader>
 
         <QASection>
-          <QATitle>Quiz Questions & Answers</QATitle>
+          <QATitle>
+            <FileText size={20} weight="bold" color="#c71f69" />
+            Quiz Questions & Answers
+          </QATitle>
           <QAList>
             {qaPairs.map((qa, index) => (
               <QAItem key={index}>
-                <QuestionText>Q: {qa.question}</QuestionText>
-                <AnswerText>A: {qa.answer}</AnswerText>
+                <QuestionText>Q{index + 1}: {qa.question}</QuestionText>
+                <AnswerText>{qa.answer}</AnswerText>
               </QAItem>
             ))}
           </QAList>
         </QASection>
 
         <Section>
-          <SectionTitle>Output</SectionTitle>
+          <SectionTitle>Evaluation Output</SectionTitle>
           <ProfileMatchHeroV2
             score={evaluationResults.profile_strength_score}
             notes={evaluationResults.profile_strength_notes}
