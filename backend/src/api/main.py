@@ -83,35 +83,48 @@ def verify_admin_credentials(
     1. Basic Auth (if available)
     2. Token in query parameter (works with CloudFront)
     3. Token in X-Admin-Token header
-    
+
     Args:
         credentials: HTTP Basic Auth credentials (optional)
         admin_token: Token from query parameter
         x_admin_token: Token from X-Admin-Token header
-        
+
     Returns:
         Username if credentials are valid
-        
+
     Raises:
         HTTPException: If credentials are invalid
     """
     settings = get_settings()
     correct_username = settings.admin_username
     correct_password = settings.admin_password
-    
+
+    # Debug logging
+    logger.info(f"[AUTH DEBUG] Request path: {request.url.path}")
+    logger.info(f"[AUTH DEBUG] admin_token from query: {admin_token[:16] if admin_token else 'None'}...")
+    logger.info(f"[AUTH DEBUG] x_admin_token from header: {x_admin_token[:16] if x_admin_token else 'None'}...")
+    logger.info(f"[AUTH DEBUG] Expected username: '{correct_username}'")
+    logger.info(f"[AUTH DEBUG] Expected password length: {len(correct_password)}")
+
     # Method 1: Try token-based auth (works better with CloudFront)
     if admin_token or x_admin_token:
         import hashlib
         expected_token = hashlib.sha256(
             f"{correct_username}:{correct_password}".encode()
         ).hexdigest()
-        
+
         provided_token = admin_token or x_admin_token
+
+        # Debug: Log token comparison
+        logger.info(f"[AUTH DEBUG] Expected token: {expected_token[:16]}...{expected_token[-16:]}")
+        logger.info(f"[AUTH DEBUG] Provided token: {provided_token[:16]}...{provided_token[-16:]}")
+        logger.info(f"[AUTH DEBUG] Tokens match: {provided_token == expected_token}")
+
         if provided_token == expected_token:
-            logger.info("Successful admin token authentication")
+            logger.info("[AUTH DEBUG] SUCCESS - Token authentication passed")
             return correct_username
         else:
-            logger.warning("Failed admin token authentication attempt")
+            logger.warning(f"[AUTH DEBUG] FAILED - Token mismatch. Expected hash of '{correct_username}:<password>'")
             raise HTTPException(
                 status_code=401,
                 detail="Authentication failed"
