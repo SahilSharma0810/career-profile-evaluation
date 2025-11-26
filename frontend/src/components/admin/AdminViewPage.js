@@ -468,10 +468,6 @@ const AdminViewPage = () => {
       <Container>
         <PageHeader>
           <PageTitle>Admin Response Viewer</PageTitle>
-          <SecondaryButton onClick={() => navigate('/')}>
-            <House size={18} weight="bold" />
-            Back to Home
-          </SecondaryButton>
         </PageHeader>
 
         <QASection>
