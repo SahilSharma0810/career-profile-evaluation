@@ -190,11 +190,11 @@ const LoadingSpinner = styled.div`
 `;
 
 const programOptions = [
-  { value: "", label: "Select a program" },
-  { value: "data_science", label: "Data Science" },
-  { value: "academy", label: "Software Development" },
-  { value: "devops", label: "DevOps" },
-  { value: "ai_ml", label: "AI/ML" },
+  { value: '', label: 'Select a program' },
+  { value: 'data_science', label: 'Data Science' },
+  { value: 'academy', label: 'Software Development' },
+  { value: 'devops', label: 'DevOps' },
+  { value: 'ai_ml', label: 'AI/ML' }
 ];
 
 const RequestCallbackModal = ({
@@ -203,8 +203,8 @@ const RequestCallbackModal = ({
   onChangeField,
   onClose,
   onSubmit,
-  submissionStatus = "idle",
-  errorMessage = "",
+  submissionStatus = 'idle',
+  errorMessage = ''
 }) => {
   const isLoading = submissionStatus === "loading";
   const isSuccess = submissionStatus === "success";
@@ -218,19 +218,19 @@ const RequestCallbackModal = ({
     }
 
     const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.body.style.overflow = originalOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
 
@@ -273,7 +273,7 @@ const RequestCallbackModal = ({
         )}
         {isError && (
           <ErrorMessage>
-            {errorMessage || "Something went wrong. Please try again."}
+            {errorMessage || 'Something went wrong. Please try again.'}
           </ErrorMessage>
         )}
         <Form
@@ -283,12 +283,12 @@ const RequestCallbackModal = ({
             Program
             <Select
               value={program}
-              onChange={(event) => onChangeField("program", event.target.value)}
+              onChange={(event) => onChangeField('program', event.target.value)}
               required
               disabled={isLoading || isSuccess}
             >
               {programOptions.map((option) => (
-                <option key={option.value || "empty"} value={option.value}>
+                <option key={option.value || 'empty'} value={option.value}>
                   {option.label}
                 </option>
               ))}
@@ -307,7 +307,7 @@ const RequestCallbackModal = ({
               disabled={!program || isLoading || isSuccess}
             >
               {isLoading && <LoadingSpinner />}
-              {isLoading ? "Submitting..." : "Request callback"}
+              {isLoading ? 'Submitting...' : 'Request callback'}
             </PrimaryButton>
           </Actions>
         </Form>
@@ -324,8 +324,8 @@ RequestCallbackModal.propTypes = {
   onChangeField: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  submissionStatus: PropTypes.oneOf(["idle", "loading", "success", "error"]),
-  errorMessage: PropTypes.string,
+  submissionStatus: PropTypes.oneOf(['idle', 'loading', 'success', 'error']),
+  errorMessage: PropTypes.string
 };
 
 export default RequestCallbackModal;

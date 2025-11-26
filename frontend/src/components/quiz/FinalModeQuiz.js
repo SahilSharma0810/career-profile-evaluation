@@ -15,6 +15,7 @@ import chatBot from '../../assets/ChatBot.png';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import { useProfile } from '../../context/ProfileContext';
 import tracker from '../../utils/tracker';
+import { getPathWithQueryParams } from '../../utils/url';
 import BackgroundSelectionSplit2 from './BackgroundSelectionSplit2';
 import {
   NON_TECH_QUIZ_SCREENS,
@@ -771,7 +772,7 @@ const FinalModeQuiz = ({ onProgressChange }) => {
 
   useEffect(() => {
     if (evaluationResults) {
-      navigate('/results', { replace: true });
+      navigate(getPathWithQueryParams('/results'), { replace: true });
     }
   }, [evaluationResults, navigate]);
 
@@ -852,7 +853,7 @@ const FinalModeQuiz = ({ onProgressChange }) => {
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      navigate('/results');
+      navigate(getPathWithQueryParams('/results'));
     }
   }, [currentStep, totalSteps, navigate]);
 
@@ -865,7 +866,7 @@ const FinalModeQuiz = ({ onProgressChange }) => {
     });
 
     if (currentStep === 0) {
-      navigate('/');
+      navigate(getPathWithQueryParams('/'));
       return;
     }
 
