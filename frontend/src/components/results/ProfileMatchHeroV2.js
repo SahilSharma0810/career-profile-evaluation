@@ -1289,7 +1289,8 @@ const ProfileMatchHeroV2 = ({
   background: backgroundProp,
   quizResponses,
   goals,
-  userName = 'There'
+  userName = "There",
+  hideCTAs = false,
 }) => {
   const { open: openCallbackModal } = useRequestCallback();
   const [displayScore, setDisplayScore] = useState(0);
@@ -2025,7 +2026,7 @@ const ProfileMatchHeroV2 = ({
             </CareerTransitionContainer>
           )}
 
-          {recommendedRoles.length > 0 && (
+          {recommendedRoles.length > 0 && !hideCTAs && (
             <CTASection>
               <CTAContent>
                 <CTATitle>Ready to Deep Dive In?</CTATitle>
@@ -2181,15 +2182,17 @@ const ProfileMatchHeroV2 = ({
             <PeerComparisonCard peerComparison={peerComparison} />
           )}
 
-          <CTASection>
-            <CTAContent>
-              <CTATitle>Ready to take the next step?</CTATitle>
-              <CTAText>
-                Get personalized guidance from our career advisors
-              </CTAText>
-            </CTAContent>
-            <CTAButton onClick={handleRCBClick}>Book Free 1:1 Career Call</CTAButton>
-          </CTASection>
+          {!hideCTAs && (
+            <CTASection>
+              <CTAContent>
+                <CTATitle>Ready to take the next step?</CTATitle>
+                <CTAText>
+                  Get personalized guidance from our career advisors
+                </CTAText>
+              </CTAContent>
+              <CTAButton onClick={handleRCBClick}>Book Free 1:1 Career Call</CTAButton>
+            </CTASection>
+          )}
         </>
       </RightPanel>
     </HeroContainer>

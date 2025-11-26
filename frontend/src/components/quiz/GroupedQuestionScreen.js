@@ -381,7 +381,7 @@ const GroupedQuestionScreen = ({
       }
     });
 
-    onResponse(questionId, option);
+    onResponse(questionId, option, question);
 
     // Check if all questions on this screen will be answered after this selection
     const updatedResponses = { ...responses, [questionId]: option.value };

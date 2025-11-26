@@ -7,8 +7,12 @@
 ## 🚀 Quick Start
 
 ```bash
-# 1. Set your OpenAI API key
-echo "OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxx" > .env
+# 1. Set your environment variables (create .env file)
+cat > .env << EOF
+OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxx
+ADMIN_USERNAME=your_admin_username
+ADMIN_PASSWORD=your_secure_password
+EOF
 
 # 2. Start everything
 docker compose up --build
@@ -18,6 +22,8 @@ docker compose up --build
 # Backend:  http://localhost:8000
 # Health:   http://localhost:8000/health
 ```
+
+**⚠️ Security Note**: `ADMIN_USERNAME` and `ADMIN_PASSWORD` are **required** environment variables. Set strong values - these credentials protect admin endpoints.
 
 ---
 

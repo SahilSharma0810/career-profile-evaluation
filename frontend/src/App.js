@@ -23,7 +23,7 @@ function AppContent() {
   useGTMSectionTracking();
   const shouldShowNav = !(
     quizMode === 'final' && location.pathname === '/quiz'
-  );
+  ) && !location.pathname.startsWith('/admin');
 
   const navigationProps = useMemo(
     () => ({

@@ -80,7 +80,7 @@ class CacheRepository:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
                     cur.execute(
                         """
-                        SELECT response_json
+                        SELECT response_json, user_input
                         FROM response_cache
                         WHERE cache_key = %s AND model = %s
                         """,
@@ -102,23 +102,120 @@ class CacheRepository:
             logger.warning(f"Cache read failed: {exc}")
             return None
 
-    def set(self, cache_key: str, model: str, response_json: str) -> bool:
+    def get_by_key(self, cache_key: str, model: str) -> Optional[Dict[str, Any]]:
+        """
+        Get full cache entry including user_input and response_json.
+        Reuses the same query pattern as get() but returns additional metadata.
+        
+        Args:
+            cache_key: The cache key
+            model: The model name
+            
+        Returns:
+            Dictionary with response_json, user_input, created_at, updated_at, or None if not found
+        """
+        # First check if entry exists using get() - reuse the same logic
+        response_json_str = self.get(cache_key, model)
+        if not response_json_str:
+            return None
+
+        # If entry exists, fetch additional fields (user_input, timestamps)
+        try:
+            with self._get_connection() as conn:
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    cur.execute(
+                        """
+                        SELECT user_input, created_at, updated_at
+                        FROM response_cache
+                        WHERE cache_key = %s AND model = %s
+                        """,
+                        (cache_key, model)
+                    )
+                    result = cur.fetchone()
+
+                    if result:
+                        # Parse response_json from get() result
+                        try:
+                            response_json = json.loads(response_json_str) if isinstance(response_json_str, str) else response_json_str
+                        except (json.JSONDecodeError, TypeError):
+                            response_json = response_json_str
+                        
+                        return {
+                            "response_json": response_json,
+                            "user_input": result['user_input'],
+                            "created_at": result['created_at'].isoformat() if result['created_at'] else None,
+                            "updated_at": result['updated_at'].isoformat() if result['updated_at'] else None,
+                        }
+                    return None
+
+        except Exception as exc:
+            logger.warning(f"Failed to get cache metadata: {exc}")
+            return None
+
+    def backfill_user_input(self, cache_key: str, model: str, user_input: Dict[str, Any]) -> bool:
+        """
+        Update user_input for existing cache entries.
+        Only updates if user_input is not already present (NULL).
+        
+        Args:
+            cache_key: The cache key
+            model: The model name
+            user_input: The user input payload to store
+            
+        Returns:
+            True if updated, False otherwise
+        """
         if self._disabled or not settings.cache_enabled:
             return False
 
         try:
+            user_input_json = json.dumps(user_input)
+            
             with self._get_connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        INSERT INTO response_cache (cache_key, model, response_json)
-                        VALUES (%s, %s, %s::jsonb)
+                        UPDATE response_cache
+                        SET user_input = %s::jsonb,
+                            updated_at = CURRENT_TIMESTAMP
+                        WHERE cache_key = %s 
+                          AND model = %s
+                          AND user_input IS NULL
+                        """,
+                        (user_input_json, cache_key, model)
+                    )
+                    
+                    if cur.rowcount > 0:
+                        logger.info(f"🔄 Updated user_input for cache key: {cache_key[:16]}...")
+                        return True
+                    return False
+
+        except Exception as exc:
+            logger.warning(f"Failed to update user_input: {exc}")
+            return False
+
+    def set(self, cache_key: str, model: str, response_json: str, user_input: Optional[Dict[str, Any]] = None) -> bool:
+        if self._disabled or not settings.cache_enabled:
+            return False
+
+        try:
+            user_input_json = None
+            if user_input is not None:
+                user_input_json = json.dumps(user_input)
+
+            with self._get_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        INSERT INTO response_cache (cache_key, model, user_input, response_json)
+                        VALUES (%s, %s, %s::jsonb, %s::jsonb)
                         ON CONFLICT (cache_key, model)
                         DO UPDATE SET
+                            user_input = COALESCE(EXCLUDED.user_input, response_cache.user_input),
                             response_json = EXCLUDED.response_json,
                             updated_at = CURRENT_TIMESTAMP
                         """,
-                        (cache_key, model, response_json)
+                        (cache_key, model, user_input_json, response_json)
                     )
 
             logger.info(f"💾 Cache WRITE for key: {cache_key[:16]}...")

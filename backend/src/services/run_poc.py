@@ -600,17 +600,28 @@ def run_poc(
 
     payload_input = input_payload if input_payload is not None else DEFAULT_INPUT
     payload = _normalise_payload(payload_input)
+    
+    # Store original payload for user_input column (includes questionsAndAnswers)
+    original_payload = payload.copy()
+    
+    # Create payload without questionsAndAnswers for cache key and OpenAI
+    # This ensures cache hits even if questionsAndAnswers differ
+    payload_for_cache = payload.copy()
+    payload_for_cache.pop("questionsAndAnswers", None)
 
     model_name = "gpt-4o"
 
     cache_repo = CacheRepository()
 
-    cache_key = cache_repo.generate_cache_key(payload, model_name)
+    cache_key = cache_repo.generate_cache_key(payload_for_cache, model_name)
     cached_json = cache_repo.get(cache_key, model_name)
 
     if cached_json:
         logger.info("✅ CACHE HIT - Returning cached response (no OpenAI API call, instant response!)")
-        return FullProfileEvaluationResponse.model_validate_json(cached_json)
+        cache_repo.backfill_user_input(cache_key, model_name, original_payload)
+        result = FullProfileEvaluationResponse.model_validate_json(cached_json)
+        result.response_id = cache_key
+        return result
 
     logger.info("🔴 CACHE MISS - Calling OpenAI API (this will cost money and take 2-5 seconds)")
 
@@ -618,8 +629,8 @@ def run_poc(
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY is not set. Provide it via the environment variable.")
 
-    background = payload.get("background", "")
-    quiz_responses = payload.get("quizResponses", {})
+    background = payload_for_cache.get("background", "")
+    quiz_responses = payload_for_cache.get("quizResponses", {})
 
     scoring_result = calculate_profile_strength(background, quiz_responses)
     calculated_score = scoring_result["score"]
@@ -634,7 +645,7 @@ def run_poc(
     result = call_openai_structured(
         api_key=api_key,
         openai_model=model_name,
-        input_payload=payload,
+        input_payload=payload_for_cache,  # Use payload without questionsAndAnswers
         calculated_profile_score=calculated_score,
         calculated_interview_readiness=interview_readiness_result,
         target_company_label=target_company_label,
@@ -707,10 +718,12 @@ def run_poc(
     result = FullProfileEvaluationResponse.model_validate(result_dict)
 
     result_json = result.model_dump_json()
-    cache_repo.set(cache_key, model_name, result_json)
+    cache_repo.set(cache_key, model_name, result_json, user_input=original_payload)  # Store original payload with questionsAndAnswers
     logger.info("💾 Response cached successfully - next identical request will be instant!")
 
-    return FullProfileEvaluationResponse.model_validate_json(result_json)
+    final_result = FullProfileEvaluationResponse.model_validate_json(result_json)
+    final_result.response_id = cache_key
+    return final_result
 
 
 def main() -> int:

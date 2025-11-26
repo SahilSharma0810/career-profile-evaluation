@@ -6,6 +6,8 @@ import ResultsPage from '../../components/ResultsPage';
 import MasterclassNudge from '../../components/MasterclassNudge';
 import { getPathWithQueryParams, hasNudgeBeenShown } from '../../utils/url';
 
+import AdminViewPage from '../../components/admin/AdminViewPage';
+
 const RoutesComponent = ({ quizMode, onQuizProgressChange }) => {
   return (
     <Routes>
@@ -23,6 +25,7 @@ const RoutesComponent = ({ quizMode, onQuizProgressChange }) => {
         }
       />
       <Route path="/results" element={<ResultsPage />} />
+      <Route path="/admin/view/response/:response_id" element={<AdminViewPage />} />
     </Routes>
   );
 };
