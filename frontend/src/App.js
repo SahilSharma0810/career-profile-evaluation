@@ -11,6 +11,7 @@ import LoadingScreen from './app/screens/LoadingScreen';
 import LoggedOutScreen from './app/screens/LoggedOutScreen';
 import { RequestCallbackProvider } from './app/context/RequestCallbackContext';
 import useGTMSectionTracking from './hooks/useGTMSectionTracking';
+import AuthFlow from './components/auth/AuthFlow';
 
 import '@vectord/ui/dist/style.css';
 import '@vectord/fp-styles';
@@ -34,31 +35,9 @@ function AppContent() {
     [quizProgress, quizMode]
   );
 
-  useEffect(() => {
-    if (!error) {
-      return;
-    }
-
-    const timeoutId = setTimeout(() => {
-      window.location.replace(`${window.location.origin}/users/sign_in/mobile`);
-    }, 2500);
-
-    return () => clearTimeout(timeoutId);
-  }, [error]);
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
-
-  if (error) {
+  if (true) {
     return (
-      <LoggedOutScreen
-        onRetry={() => {
-          window.location.replace(
-            `${window.location.origin}/users/sign_in/mobile`
-          );
-        }}
-      />
+      <AuthFlow initialMode="login" />
     );
   }
 
