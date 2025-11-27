@@ -3,30 +3,6 @@ import attribution from '../utils/attribution';
 import { getURLWithUTMParams } from '../utils/url';
 import { apiRequest, ApiError } from '../utils/api';
 
-
-async function getErrorMessage(response, status, flashError) {
-  if (flashError) return flashError;
-
-  let json = {};
-  try {
-    json = await response.json();
-  } catch (e) {
-  }
-
-  const errorMessages = {
-    400: json.message || 'Invalid request. Please check your details.',
-    403: 'Email already registered with another account.',
-    404: 'Account not found. Please sign up first.',
-    406: 'Verification expired. Please refresh and try again.',
-    409: 'Phone number is linked to a different email.',
-    422: json.message || 'Please fill all required fields correctly.',
-    429: 'Too many requests. Please try again in a few minutes.',
-    500: 'Server error. Please try again later.'
-  };
-
-  return errorMessages[status] || json.message || 'Something went wrong. Please try again.';
-}
-
 export async function signUp(userData, intent = 'career_profile_signup') {
   attribution.setAttribution(intent, {
     program: userData.program
@@ -247,25 +223,10 @@ export async function resendOtp(phoneNumber, type = 'signup') {
   }
 }
 
-export async function getCurrentUser() {
-  try {
-    const data = await apiRequest('GET', AUTH_ENDPOINTS.USER_OPTIONS);
-    return {
-      isLoggedIn: true,
-      user: data
-    };
-
-  } catch (error) {
-    console.error('Get current user error:', error);
-    return { isLoggedIn: false };
-  }
-}
-
 export default {
   signUp,
   verifySignUpOtp,
   login,
   verifyLoginOtp,
-  resendOtp,
-  getCurrentUser
+  resendOtp
 };

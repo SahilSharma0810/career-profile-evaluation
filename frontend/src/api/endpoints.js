@@ -11,10 +11,6 @@ export const AUTH_ENDPOINTS = {
   
   ACCOUNT_VERIFY: `/users/v2/account/verify`,
   
-  CSRF_TOKEN: `/csrf-token`,
-  
-  USER_OPTIONS: `/get_user_options`,
-  
   REQUEST_CALLBACK: `/request-callback`,
 };
 
