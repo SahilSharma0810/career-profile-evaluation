@@ -28,10 +28,6 @@ export const AuthProvider = ({ children }) => {
     flow: null // 'signup' | 'login'
   });
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
   const checkAuthStatus = useCallback(async () => {
     // Sync from initial-data store; no separate API call needed
     setIsLoggedIn(Boolean(data?.isLoggedIn));
@@ -41,10 +37,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Keep local auth state in sync whenever initial-data updates
-    setIsLoggedIn(Boolean(data?.isLoggedIn));
-    setUser(data?.userData || null);
-    setIsLoading(Boolean(loading));
-  }, [data, loading]);
+    checkAuthStatus();
+  }, [data, loading, checkAuthStatus]);
 
   const handleSignUp = useCallback(async (formData, intent = 'career_profile_signup') => {
     tracker.click({

@@ -6,12 +6,6 @@ export const AUTH_ENDPOINTS = {
   LOGIN: `/users/v2/sessions`,
   
   LOGIN_VERIFY: `/users/v2/sessions/verify`,
-  
-  UPDATE_ACCOUNT: `/users/v2/account`,
-  
-  ACCOUNT_VERIFY: `/users/v2/account/verify`,
-  
-  REQUEST_CALLBACK: `/request-callback`,
 };
 
 export default AUTH_ENDPOINTS;

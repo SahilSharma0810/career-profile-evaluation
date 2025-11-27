@@ -11,6 +11,8 @@ import {
   Buildings,
   Briefcase
 } from 'phosphor-react';
+import { PrimaryButton, LoadingSpinner } from './ui';
+import { validateEmail, validatePhone } from '../../utils/validation';
 
 const shake = keyframes`
   0%, 100% { transform: translateX(0); }
@@ -237,7 +239,7 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const SuccessMessage = styled.div`
+const SuccessMessage = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -251,7 +253,7 @@ const SuccessMessage = styled.div`
   margin-bottom: 16px;
 `;
 
-const ErrorBanner = styled.div`
+const ErrorBanner = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -274,40 +276,6 @@ const ButtonGroup = styled.div`
   margin-top: 8px;
 `;
 
-const PrimaryButton = styled.button`
-  width: 100%;
-  padding: 16px 24px;
-  background: linear-gradient(135deg, #b30158 0%, #8a0145 100%);
-  color: white;
-  border: none;
-  border-radius: 0;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  &:hover:not(:disabled) {
-    background: linear-gradient(135deg, #8a0145 0%, #b30158 100%);
-    box-shadow: 0 4px 12px rgba(179, 1, 88, 0.3);
-    transform: translateY(-1px);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-`;
-
 const SecondaryLink = styled.button`
   background: transparent;
   border: none;
@@ -326,21 +294,6 @@ const SecondaryLink = styled.button`
   span {
     color: #b30158;
     font-weight: 600;
-  }
-`;
-
-const LoadingSpinner = styled.div`
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 0.6s linear infinite;
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
   }
 `;
 
@@ -407,16 +360,6 @@ const positionOptions = [
   { value: 'Fresher', label: 'Fresher / Student' },
   { value: 'Other', label: 'Other' }
 ];
-
-const validateEmail = (email) => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
-};
-
-const validatePhone = (phone) => {
-  const cleaned = phone.replace(/\D/g, '');
-  return cleaned.length === 10;
-};
 
 const SignUpForm = ({
   onSubmit,

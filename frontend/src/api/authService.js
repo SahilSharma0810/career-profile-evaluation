@@ -1,7 +1,28 @@
 import { AUTH_ENDPOINTS } from './endpoints';
 import attribution from '../utils/attribution';
-import { getURLWithUTMParams } from '../utils/url';
 import { apiRequest, ApiError } from '../utils/api';
+
+const BASE_ERROR_MESSAGES = {
+  400: 'Invalid request. Please check your details.',
+  403: 'Email already registered with another account.',
+  404: 'Account not found. Please sign up first.',
+  406: 'Verification expired. Please refresh and try again.',
+  409: 'Phone number is linked to a different email.',
+  422: 'Please fill all required fields correctly.',
+  429: 'Too many requests. Please try again in a few minutes.',
+  500: 'Server error. Please try again later.'
+};
+
+function resolveApiError(error, fallbackMessage = 'Something went wrong. Please try again.') {
+  if (!(error instanceof ApiError)) {
+    return { message: 'Network error. Please check your connection.' };
+  }
+  const status = error.response?.status;
+  const json = error.responseJson || {};
+  const flashError = json?.flashError;
+  const statusMessage = json.message || BASE_ERROR_MESSAGES[status];
+  return { message: flashError || statusMessage || fallbackMessage, status };
+}
 
 export async function signUp(userData, intent = 'career_profile_signup') {
   attribution.setAttribution(intent, {
@@ -35,28 +56,8 @@ export async function signUp(userData, intent = 'career_profile_signup') {
 
   } catch (error) {
     console.error('Sign up error:', error);
-    if (error instanceof ApiError) {
-      const status = error.response?.status;
-      const json = error.responseJson || {};
-      const flashError = json?.flashError;
-      const errorMessages = {
-        400: json.message || 'Invalid request. Please check your details.',
-        403: 'Email already registered with another account.',
-        404: 'Account not found. Please sign up first.',
-        406: 'Verification expired. Please refresh and try again.',
-        409: 'Phone number is linked to a different email.',
-        422: json.message || 'Please fill all required fields correctly.',
-        429: 'Too many requests. Please try again in a few minutes.',
-        500: 'Server error. Please try again later.'
-      };
-      const errorMessage =
-        flashError || errorMessages[status] || json.message || 'Something went wrong. Please try again.';
-      return { success: false, error: errorMessage };
-    }
-    return {
-      success: false,
-      error: 'Network error. Please check your connection.'
-    };
+    const { message } = resolveApiError(error);
+    return { success: false, error: message };
   }
 }
 
@@ -77,31 +78,11 @@ export async function verifySignUpOtp(phoneNumber, otp, email) {
 
   } catch (error) {
     console.error('Verify sign up OTP error:', error);
-    if (error instanceof ApiError) {
-      const status = error.response?.status;
-      const json = error.responseJson || {};
-      const flashError = json?.flashError;
-      if (status === 422) {
-        return { success: false, error: 'Invalid OTP. Please try again.' };
-      }
-      const errorMessages = {
-        400: json.message || 'Invalid request. Please check your details.',
-        403: 'Email already registered with another account.',
-        404: 'Account not found. Please sign up first.',
-        406: 'Verification expired. Please refresh and try again.',
-        409: 'Phone number is linked to a different email.',
-        422: json.message || 'Please fill all required fields correctly.',
-        429: 'Too many requests. Please try again in a few minutes.',
-        500: 'Server error. Please try again later.'
-      };
-      const errorMessage =
-        flashError || errorMessages[status] || json.message || 'Something went wrong. Please try again.';
-      return { success: false, error: errorMessage };
+    const { status, message } = resolveApiError(error);
+    if (status === 422) {
+      return { success: false, error: 'Invalid OTP. Please try again.' };
     }
-    return {
-      success: false,
-      error: 'Network error. Please check your connection.'
-    };
+    return { success: false, error: message };
   }
 }
 
@@ -123,35 +104,15 @@ export async function login(phoneNumber) {
 
   } catch (error) {
     console.error('Login error:', error);
-    if (error instanceof ApiError) {
-      const status = error.response?.status;
-      const json = error.responseJson || {};
-      const flashError = json?.flashError;
-      if (status === 404) {
-        return {
-          success: false,
-          error: 'Account not found. Please sign up first.',
-          notFound: true
-        };
-      }
-      const errorMessages = {
-        400: json.message || 'Invalid request. Please check your details.',
-        403: 'Email already registered with another account.',
-        404: 'Account not found. Please sign up first.',
-        406: 'Verification expired. Please refresh and try again.',
-        409: 'Phone number is linked to a different email.',
-        422: json.message || 'Please fill all required fields correctly.',
-        429: 'Too many requests. Please try again in a few minutes.',
-        500: 'Server error. Please try again later.'
+    const { status, message } = resolveApiError(error);
+    if (status === 404) {
+      return {
+        success: false,
+        error: 'Account not found. Please sign up first.',
+        notFound: true
       };
-      const errorMessage =
-        flashError || errorMessages[status] || json.message || 'Something went wrong. Please try again.';
-      return { success: false, error: errorMessage };
     }
-    return {
-      success: false,
-      error: 'Network error. Please check your connection.'
-    };
+    return { success: false, error: message };
   }
 }
 
@@ -171,31 +132,11 @@ export async function verifyLoginOtp(phoneNumber, otp) {
 
   } catch (error) {
     console.error('Verify login OTP error:', error);
-    if (error instanceof ApiError) {
-      const status = error.response?.status;
-      const json = error.responseJson || {};
-      const flashError = json?.flashError;
-      if (status === 422) {
-        return { success: false, error: 'Invalid OTP. Please try again.' };
-      }
-      const errorMessages = {
-        400: json.message || 'Invalid request. Please check your details.',
-        403: 'Email already registered with another account.',
-        404: 'Account not found. Please sign up first.',
-        406: 'Verification expired. Please refresh and try again.',
-        409: 'Phone number is linked to a different email.',
-        422: json.message || 'Please fill all required fields correctly.',
-        429: 'Too many requests. Please try again in a few minutes.',
-        500: 'Server error. Please try again later.'
-      };
-      const errorMessage =
-        flashError || errorMessages[status] || json.message || 'Something went wrong. Please try again.';
-      return { success: false, error: errorMessage };
+    const { status, message } = resolveApiError(error);
+    if (status === 422) {
+      return { success: false, error: 'Invalid OTP. Please try again.' };
     }
-    return {
-      success: false,
-      error: 'Network error. Please check your connection.'
-    };
+    return { success: false, error: message };
   }
 }
 
@@ -213,13 +154,8 @@ export async function resendOtp(phoneNumber, type = 'signup') {
 
   } catch (error) {
     console.error('Resend OTP error:', error);
-    if (error instanceof ApiError) {
-      const json = error.responseJson || {};
-      const flashError = json?.flashError;
-      const message = flashError || json.message || 'Failed to resend OTP. Please try again.';
-      return { success: false, error: message };
-    }
-    return { success: false, error: 'Failed to resend OTP. Please try again.' };
+    const { message } = resolveApiError(error, 'Failed to resend OTP. Please try again.');
+    return { success: false, error: message };
   }
 }
 
