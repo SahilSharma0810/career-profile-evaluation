@@ -8,7 +8,6 @@ import InitialDataBootstrapper from './app/bootstrap/InitialDataBootstrapper';
 import AppLayout from './app/layouts/AppLayout';
 import AppRoutes from './app/routing/AppRoutes';
 import LoadingScreen from './app/screens/LoadingScreen';
-import LoggedOutScreen from './app/screens/LoggedOutScreen';
 import { RequestCallbackProvider } from './app/context/RequestCallbackContext';
 import useGTMSectionTracking from './hooks/useGTMSectionTracking';
 import AuthFlow from './components/auth/AuthFlow';
@@ -19,7 +18,7 @@ import '@vectord/fp-styles';
 function AppContent() {
   const [quizProgress, setQuizProgress] = useState(0);
   const [quizMode, setQuizMode] = useState('final');
-  const { error, loading } = useStore($initialData);
+  const { data, loading } = useStore($initialData);
   const location = useLocation();
   useGTMSectionTracking();
   const shouldShowNav = !(
@@ -35,11 +34,8 @@ function AppContent() {
     [quizProgress, quizMode]
   );
 
-  if (true) {
-    return (
-      <AuthFlow initialMode="login" />
-    );
-  }
+  if (loading) return <LoadingScreen />;
+  if (!data?.isLoggedIn) return <AuthFlow initialMode="login" />;
 
   return (
     <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>

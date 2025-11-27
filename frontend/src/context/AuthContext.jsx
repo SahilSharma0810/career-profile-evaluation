@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { useStore } from '@nanostores/react';
+import { $initialData } from '../store/initial-data';
 import authService from '../api/authService';
 import tracker from '../utils/tracker';
 
@@ -17,6 +19,8 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { data, loading } = useStore($initialData);
+
   const [pendingAuth, setPendingAuth] = useState({
     phoneNumber: '',
     email: '',
@@ -29,19 +33,18 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const checkAuthStatus = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const { isLoggedIn: loggedIn, user: userData } = await authService.getCurrentUser();
-      setIsLoggedIn(loggedIn);
-      setUser(userData || null);
-    } catch (error) {
-      console.error('Auth check failed:', error);
-      setIsLoggedIn(false);
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    // Sync from initial-data store; no separate API call needed
+    setIsLoggedIn(Boolean(data?.isLoggedIn));
+    setUser(data?.userData || null);
+    setIsLoading(Boolean(loading));
+  }, [data, loading]);
+
+  useEffect(() => {
+    // Keep local auth state in sync whenever initial-data updates
+    setIsLoggedIn(Boolean(data?.isLoggedIn));
+    setUser(data?.userData || null);
+    setIsLoading(Boolean(loading));
+  }, [data, loading]);
 
   const handleSignUp = useCallback(async (formData, intent = 'career_profile_signup') => {
     tracker.click({

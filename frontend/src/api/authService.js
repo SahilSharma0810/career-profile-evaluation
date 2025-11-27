@@ -3,72 +3,6 @@ import attribution from '../utils/attribution';
 import { getURLWithUTMParams } from '../utils/url';
 import { apiRequest, ApiError } from '../utils/api';
 
-let csrfToken = null;
-
-export async function fetchCsrfToken(forceRefresh = false) {
-  if (csrfToken && !forceRefresh) {
-    return csrfToken;
-  }
-
-  try {
-    const data = await apiRequest('GET', AUTH_ENDPOINTS.CSRF_TOKEN);
-    if (data?.csrf_token) {
-      csrfToken = data.csrf_token;
-      return csrfToken;
-    }
-  } catch (error) {
-    console.error('Failed to fetch CSRF token:', error);
-  }
-
-  const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-  return csrfMeta?.content || null;
-}
-
-export async function authApiRequest(url, options = {}) {
-  const token = await fetchCsrfToken();
-
-  const defaultHeaders = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-Accept-Flash': 'true',
-    ...(token ? { 'X-CSRF-Token': token } : {})
-  };
-
-  const finalOptions = {
-    ...options,
-    credentials: 'include',
-    headers: {
-      ...defaultHeaders,
-      ...(options.headers || {})
-    }
-  };
-
-  if (typeof window !== 'undefined') {
-    finalOptions.referrer = getURLWithUTMParams();
-  }
-
-  const response = await fetch(url, finalOptions);
-
-  let flashError = null;
-  if (response.headers.has('X-Flash-Messages')) {
-    try {
-      const flashHeader = response.headers.get('X-Flash-Messages') || '{}';
-      const { error, notice } = JSON.parse(flashHeader) || {};
-      flashError = error || notice || null;
-    } catch (e) {
-
-    }
-  }
-
-  return {
-    response,
-    flashError,
-    ok: response.ok,
-    status: response.status
-  };
-}
-
 
 async function getErrorMessage(response, status, flashError) {
   if (flashError) return flashError;
@@ -328,8 +262,6 @@ export async function getCurrentUser() {
 }
 
 export default {
-  fetchCsrfToken,
-  authApiRequest,
   signUp,
   verifySignUpOtp,
   login,
