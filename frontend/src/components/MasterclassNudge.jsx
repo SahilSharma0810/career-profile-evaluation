@@ -74,10 +74,11 @@ const MasterclassNudge = ({ eventId }) => {
   }, [whatsappLink]);
 
   const handleOnClose = useCallback(() => {
+    markNudgeAsShown(id);
     tracker.click({
       click_type: 'mc_nudge_close_btn_click'
     });
-  }, []);
+  }, [id]);
 
   if (isEventLoading) {
     return (
