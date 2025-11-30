@@ -10,7 +10,7 @@ import AppRoutes from './app/routing/AppRoutes';
 import LoadingScreen from './app/screens/LoadingScreen';
 import { RequestCallbackProvider } from './app/context/RequestCallbackContext';
 import useGTMSectionTracking from './hooks/useGTMSectionTracking';
-import AuthFlow from './components/auth/AuthFlow';
+import AuthSplitPage from './components/auth/AuthSplitPage';
 
 import '@vectord/ui/dist/style.css';
 import '@vectord/fp-styles';
@@ -35,7 +35,7 @@ function AppContent() {
   );
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthFlow initialMode="login" />;
+  if (!data?.isLoggedIn) return <AuthSplitPage />;
 
   return (
     <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
