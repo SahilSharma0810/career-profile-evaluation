@@ -459,6 +459,12 @@ const SignUpForm = ({
       phone_number: cleanedPhone,
       turnstile_token: turnstileToken
     });
+    if (turnstileRef.current
+      && typeof turnstileRef.current.reset === 'function'
+    ) {
+      turnstileRef.current.reset();
+    }
+    setTurnstileToken('');
   }, [formData, validateForm, onSubmit]);
 
   const handlePhoneInput = useCallback((e) => {

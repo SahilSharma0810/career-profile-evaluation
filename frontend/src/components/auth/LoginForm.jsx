@@ -345,6 +345,12 @@ const LoginForm = ({
     }
 
     onSubmit?.(phoneNumber, turnstileToken);
+    if (turnstileRef.current
+      && typeof turnstileRef.current.reset === 'function'
+    ) {
+      turnstileRef.current.reset();
+    }
+    setTurnstileToken('');
   }, [phoneNumber, onSubmit]);
 
   const displayError = touched && (error || (isError && errorMessage));

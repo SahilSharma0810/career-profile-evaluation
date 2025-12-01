@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Turnstile from 'react-turnstile';
 
 const TurnstileWidget = React.forwardRef(({
