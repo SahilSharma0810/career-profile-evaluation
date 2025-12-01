@@ -24,10 +24,8 @@ function resolveApiError(error, fallbackMessage = 'Something went wrong. Please 
   return { message: flashError || statusMessage || fallbackMessage, status };
 }
 
-export async function signUp(userData, intent = 'career_profile_signup') {
-  attribution.setAttribution(intent, {
-    program: userData.program
-  });
+export async function signUp(userData, intent = 'sign_up') {
+  attribution.setAttribution(intent, {element: 'sign_up_form_cpe'});
 
   const payload = {
     user: {
@@ -35,10 +33,7 @@ export async function signUp(userData, intent = 'career_profile_signup') {
       email: userData.email,
       phone_number: `+91-${userData.phone_number}`,
       country_code: '+91',
-      program: userData.program,
       orgyear: userData.grad_year || '',
-      orgname: userData.company || '',
-      position: userData.position || '',
       whatsapp_consent: 'whatsapp_consent_yes',
       skip_existing_user_check: true
     },
@@ -87,7 +82,7 @@ export async function verifySignUpOtp(phoneNumber, otp, email) {
 }
 
 export async function login(phoneNumber) {
-  attribution.setAttribution('career_profile_login');
+  attribution.setAttribution('login', {element: 'login_form_cpe'});
 
   const formattedPhone = `+91-${phoneNumber}`;
   const payload = {
