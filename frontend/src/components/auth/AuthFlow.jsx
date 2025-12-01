@@ -10,7 +10,6 @@ import {
   verifySignUpOtp,
   login,
   verifyLoginOtp,
-  resendOtp,
   loginWithEmailPassword
 } from '../../api/authService';
 import tracker from '../../utils/tracker';
@@ -33,27 +32,35 @@ const AuthFlow = ({
   reloadOnSuccess = true,
   showProfessionalFields = true
 }) => {
-  const [step, setStep] = useState(initialMode);
-  const [authFlow, setAuthFlow] = useState(initialMode);
   const [pendingData, setPendingData] = useState({
     phoneNumber: '',
     email: '',
     userData: null
   });
 
-  const [signUpStatus, setSignUpStatus] = useState('idle');
-  const [signUpError, setSignUpError] = useState('');
-  const [loginStatus, setLoginStatus] = useState('idle');
-  const [loginError, setLoginError] = useState('');
-  const [emailLoginStatus, setEmailLoginStatus] = useState('idle');
-  const [emailLoginError, setEmailLoginError] = useState('');
-  const [otpStatus, setOtpStatus] = useState('idle');
-  const [otpError, setOtpError] = useState('');
-  const [resendStatus, setResendStatus] = useState('idle');
+  const [formState, setFormState] = useState({
+    step: 'login',
+    authFlow: 'login',
+    signup: {
+      status: 'idle',
+      error: ''
+    },
+    login: {
+      status: 'idle',
+      error: ''
+    },
+    otp: {
+      status: 'idle',
+      error: ''
+    },
+    email_login: {
+      status: 'idle',
+      error: ''
+    }
+  });
 
   const handleSignUp = useCallback(async (formData) => {
-    setSignUpStatus('loading');
-    setSignUpError('');
+    setFormState(prev => ({ ...prev, signup: { status: 'loading', error: '' } }));
 
     tracker.click({
       click_type: 'signup_form_submitted',
@@ -63,17 +70,15 @@ const AuthFlow = ({
     const result = await signUp(formData);
 
     if (result.success) {
-      setSignUpStatus('success');
+      setFormState(prev => ({ ...prev, authFlow: 'signup', signup: { status: 'success', error: '' } }));
       setPendingData({
         phoneNumber: result.phone_number,
         email: result.email,
         userData: formData
       });
-      setAuthFlow('signup');
       
       setTimeout(() => {
-        setStep('otp');
-        setSignUpStatus('idle');
+        setFormState(prev => ({ ...prev, step: 'otp', signup: { status: 'idle', error: '' } }));
       }, 500);
 
       tracker.click({
@@ -81,16 +86,14 @@ const AuthFlow = ({
         click_source: 'auth_flow'
       });
     } else {
-      setSignUpStatus('error');
-      setSignUpError(result.error || 'Sign up failed. Please try again.');
+      setFormState(prev => ({ ...prev, signup: { status: 'error', error: result.error || 'Sign up failed. Please try again.' } }));
     }
 
     return result;
   }, []);
 
   const handleLogin = useCallback(async (phoneNumber, turnstileToken) => {
-    setLoginStatus('loading');
-    setLoginError('');
+    setFormState(prev => ({ ...prev, login: { status: 'loading', error: '' } }));
 
     tracker.click({
       click_type: 'login_form_submitted',
@@ -100,17 +103,15 @@ const AuthFlow = ({
     const result = await login(phoneNumber, turnstileToken);
 
     if (result.success) {
-      setLoginStatus('success');
+      setFormState(prev => ({ ...prev, login: { status: 'success', error: '' } }));
       setPendingData({
         phoneNumber: result.phone_number,
         email: '',
         userData: null
       });
-      setAuthFlow('login');
       
       setTimeout(() => {
-        setStep('otp');
-        setLoginStatus('idle');
+        setFormState(prev => ({ ...prev, step: 'otp', login: { status: 'idle', error: '' } }));
       }, 500);
 
       tracker.click({
@@ -118,16 +119,16 @@ const AuthFlow = ({
         click_source: 'auth_flow'
       });
     } else {
-      setLoginStatus('error');
+      setFormState(prev => ({ ...prev, login: { status: 'error', error: result.error || 'Login failed. Please try again.' } }));
       
       if (result.notFound) {
-        setLoginError('Account not found. Please sign up first.');
+        setFormState(prev => ({ ...prev, login: { error: 'Account not found. Please sign up first.' } }));
         tracker.click({
           click_type: 'login_user_not_found',
           click_source: 'auth_flow'
         });
       } else {
-        setLoginError(result.error || 'Login failed. Please try again.');
+        setFormState(prev => ({ ...prev, login: { error: result.error || 'Login failed. Please try again.' } }));
       }
     }
 
@@ -135,8 +136,7 @@ const AuthFlow = ({
   }, []);
 
   const handleEmailPasswordLogin = useCallback(async (email, password, turnstileToken) => {
-    setEmailLoginStatus('loading');
-    setEmailLoginError('');
+    setFormState(prev => ({ ...prev, email_login: { status: 'loading', error: '' } }));
 
     tracker.click({
       click_type: 'email_login_form_submitted',
@@ -146,8 +146,7 @@ const AuthFlow = ({
     const result = await loginWithEmailPassword(email, password, turnstileToken);
 
     if (result.success) {
-      setEmailLoginStatus('success');
-      setAuthFlow('email_login');
+      setFormState(prev => ({ ...prev, email_login: { status: 'success', error: '' } }));
 
       tracker.click({
         click_type: 'email_login_success',
@@ -169,8 +168,7 @@ const AuthFlow = ({
         }, 500);
       }
     } else {
-      setEmailLoginStatus('error');
-      setEmailLoginError(result.error || 'Login failed. Please try again.');
+      setFormState(prev => ({ ...prev, email_login: { status: 'error', error: result.error || 'Login failed. Please try again.' } }));
       tracker.click({
         click_type: 'email_login_failed',
         click_source: 'auth_flow'
@@ -181,34 +179,33 @@ const AuthFlow = ({
   }, [onSuccess, reloadOnSuccess]);
 
   const handleVerifyOtp = useCallback(async (otp) => {
-    setOtpStatus('loading');
-    setOtpError('');
+    setFormState(prev => ({ ...prev, otp: { status: 'loading', error: '' } }));
 
     tracker.click({
       click_type: 'otp_submitted',
       click_source: 'auth_flow',
-      custom: { flow: authFlow }
+      custom: { flow: formState.authFlow }
     });
 
     let result;
 
-    if (authFlow === 'signup') {
+    if (formState.authFlow === 'signup') {
       result = await verifySignUpOtp(pendingData.phoneNumber, otp, pendingData.email);
     } else {
       result = await verifyLoginOtp(pendingData.phoneNumber, otp);
     }
 
     if (result.success) {
-      setOtpStatus('success');
+      setFormState(prev => ({ ...prev, otp: { status: 'success', error: '' } }));
 
       tracker.click({
-        click_type: authFlow === 'signup' ? 'signup_success' : 'login_success',
+        click_type: formState.authFlow === 'signup' ? 'signup_success' : 'login_success',
         click_source: 'auth_flow'
       });
 
       if (onSuccess) {
         onSuccess({
-          flow: authFlow,
+          flow: formState.authFlow,
           phoneNumber: pendingData.phoneNumber,
           email: pendingData.email,
           userData: pendingData.userData
@@ -221,69 +218,26 @@ const AuthFlow = ({
         }, 500);
       }
     } else {
-      setOtpStatus('error');
-      setOtpError(result.error || 'Invalid OTP. Please try again.');
+      setFormState(prev => ({ ...prev, otp: { status: 'error', error: result.error || 'Invalid OTP. Please try again.' } }));
     }
 
     return result;
-  }, [authFlow, pendingData, onSuccess, reloadOnSuccess]);
-
-  const handleResendOtp = useCallback(async () => {
-    setResendStatus('loading');
-    setOtpError('');
-
-    tracker.click({
-      click_type: 'resend_otp_requested',
-      click_source: 'auth_flow',
-      custom: { flow: authFlow }
-    });
-
-    const result = await resendOtp(pendingData.phoneNumber, authFlow);
-
-    if (result.success) {
-      setResendStatus('success');
-      tracker.click({
-        click_type: 'resend_otp_success',
-        click_source: 'auth_flow'
-      });
-      
-      setTimeout(() => setResendStatus('idle'), 2000);
-    } else {
-      setResendStatus('error');
-      setOtpError(result.error || 'Failed to resend OTP.');
-      setTimeout(() => setResendStatus('idle'), 2000);
-    }
-
-    return result;
-  }, [authFlow, pendingData.phoneNumber]);
+  }, [formState.authFlow, pendingData, onSuccess, reloadOnSuccess]);
 
   const handleBackFromOtp = useCallback(() => {
-    setOtpStatus('idle');
-    setOtpError('');
-    setStep(authFlow);
-  }, [authFlow]);
+    setFormState(prev => ({ ...prev, step: formState.authFlow, otp: { status: 'idle', error: '' } }));
+  }, [formState.authFlow]);
 
   const handleSwitchToSignUp = useCallback(() => {
-    setStep('signup');
-    setAuthFlow('signup');
-    setLoginStatus('idle');
-    setLoginError('');
+    setFormState(prev => ({ ...prev, step: 'signup', login: { status: 'idle', error: '' } }));
   }, []);
 
   const handleSwitchToLogin = useCallback(() => {
-    setStep('login');
-    setAuthFlow('login');
-    setSignUpStatus('idle');
-    setSignUpError('');
-    setEmailLoginStatus('idle');
-    setEmailLoginError('');
+    setFormState(prev => ({ ...prev, step: 'login', signup: { status: 'idle', error: '' }, email_login: { status: 'idle', error: '' } }));
   }, []);
 
   const handleSwitchToEmailLogin = useCallback(() => {
-    setStep('email_login');
-    setAuthFlow('email_login');
-    setLoginStatus('idle');
-    setLoginError('');
+    setFormState(prev => ({ ...prev, step: 'email_login', login: { status: 'idle', error: '' }, email_login: { status: 'idle', error: '' } }));
     tracker.click({
       click_type: 'switch_to_email_login_clicked',
       click_source: 'auth_flow'
@@ -291,10 +245,7 @@ const AuthFlow = ({
   }, []);
 
   const handleSwitchToPhoneLogin = useCallback(() => {
-    setStep('login');
-    setAuthFlow('login');
-    setEmailLoginStatus('idle');
-    setEmailLoginError('');
+    setFormState(prev => ({ ...prev, step: 'login', signup: { status: 'idle', error: '' }, email_login: { status: 'idle', error: '' } }));
     tracker.click({
       click_type: 'switch_to_phone_login_clicked',
       click_source: 'auth_flow'
@@ -305,48 +256,46 @@ const AuthFlow = ({
 
   return (
     <Container>
-      {step === 'signup' && (
+      {formState.step === 'signup' && (
         <SignUpForm
           onSubmit={handleSignUp}
           onLoginClick={handleSwitchToLogin}
-          submitStatus={signUpStatus}
-          errorMessage={signUpError}
-          successMessage={signUpStatus === 'success' ? 'OTP sent to your phone!' : ''}
+          submitStatus={formState.signup.status}
+          errorMessage={formState.signup.error}
+          successMessage={formState.signup.status === 'success' ? 'OTP sent to your phone!' : ''}
           showProfessionalFields={showProfessionalFields}
         />
       )}
 
-      {step === 'login' && (
+      {formState.step === 'login' && (
         <LoginForm
           onSubmit={handleLogin}
           onSignUpClick={handleSwitchToSignUp}
           onEmailLoginClick={handleSwitchToEmailLogin}
-          submitStatus={loginStatus}
-          errorMessage={loginError}
-          successMessage={loginStatus === 'success' ? 'OTP sent to your phone!' : ''}
+          submitStatus={formState.login.status}
+          errorMessage={formState.login.error}
+          successMessage={formState.login.status === 'success' ? 'OTP sent to your phone!' : ''}
         />
       )}
 
-      {step === 'email_login' && (
+      {formState.step === 'email_login' && (
         <EmailPasswordLoginForm
           onSubmit={handleEmailPasswordLogin}
           onPhoneLoginClick={handleSwitchToPhoneLogin}
-          submitStatus={emailLoginStatus}
-          errorMessage={emailLoginError}
-          successMessage={emailLoginStatus === 'success' ? 'Logged in successfully!' : ''}
+          submitStatus={formState.email_login.status}
+          errorMessage={formState.email_login.error}
+          successMessage={formState.email_login.status === 'success' ? 'Logged in successfully!' : ''}
         />
       )}
 
-      {step === 'otp' && (
+      {formState.step === 'otp' && (
         <OtpVerificationForm
           phoneNumber={displayPhoneNumber}
           onSubmit={handleVerifyOtp}
-          onResend={handleResendOtp}
           onBack={handleBackFromOtp}
-          submitStatus={otpStatus}
-          resendStatus={resendStatus}
-          errorMessage={otpError}
-          successMessage={otpStatus === 'success' ? 'Verified successfully!' : ''}
+          submitStatus={formState.otp.status}
+          errorMessage={formState.otp.error}
+          successMessage={formState.otp.status === 'success' ? 'Verified successfully!' : ''}
         />
       )}
     </Container>

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { ShieldCheck, ArrowLeft, CheckCircle, WarningCircle, ArrowClockwise } from 'phosphor-react';
+import { ShieldCheck, ArrowLeft, CheckCircle, WarningCircle } from 'phosphor-react';
 import { PrimaryButton, LoadingSpinner } from './ui';
 
 const shake = keyframes`
@@ -204,47 +204,6 @@ const ErrorBanner = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
   animation: ${shake} 0.4s ease-in-out;
 `;
 
-const ResendContainer = styled.div`
-  text-align: center;
-  margin-top: 8px;
-`;
-
-const ResendText = styled.p`
-  font-size: 0.875rem;
-  color: #64748b;
-  margin: 0;
-`;
-
-const ResendButton = styled.button`
-  background: transparent;
-  border: none;
-  color: #b30158;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  &:hover:not(:disabled) {
-    color: #8a0145;
-    text-decoration: underline;
-  }
-
-  &:disabled {
-    color: #94a3b8;
-    cursor: not-allowed;
-  }
-`;
-
-const Timer = styled.span`
-  color: #1e293b;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-`;
-
 const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
@@ -258,10 +217,8 @@ const RESEND_COOLDOWN = 30;
 const OtpVerificationForm = ({
   phoneNumber = '',
   onSubmit,
-  onResend,
   onBack,
   submitStatus = 'idle',
-  resendStatus = 'idle',
   errorMessage = '',
   successMessage = ''
 }) => {
@@ -272,7 +229,6 @@ const OtpVerificationForm = ({
 
   const isLoading = submitStatus === 'loading';
   const isSuccess = submitStatus === 'success';
-  const isResending = resendStatus === 'loading';
   const displayError = errorMessage || localError;
 
   useEffect(() => {
@@ -291,12 +247,6 @@ const OtpVerificationForm = ({
       inputRefs.current[0].focus();
     }
   }, []);
-
-  useEffect(() => {
-    if (resendStatus === 'success') {
-      setResendTimer(RESEND_COOLDOWN);
-    }
-  }, [resendStatus]);
 
   const formatPhoneDisplay = (phone) => {
     if (!phone) return '';
@@ -381,13 +331,6 @@ const OtpVerificationForm = ({
     onSubmit?.(otpString);
   }, [otp, onSubmit]);
 
-  const handleResend = useCallback(() => {
-    if (resendTimer > 0 || isResending) return;
-    setOtp(Array(OTP_LENGTH).fill(''));
-    setLocalError('');
-    onResend?.();
-  }, [resendTimer, isResending, onResend]);
-
   const otpFilled = otp.every(digit => digit !== '');
 
   return (
@@ -445,32 +388,6 @@ const OtpVerificationForm = ({
             />
           ))}
         </OtpContainer>
-
-        <ResendContainer>
-          {resendTimer > 0 ? (
-            <ResendText>
-              Resend code in <Timer>{resendTimer}s</Timer>
-            </ResendText>
-          ) : (
-            <ResendText>
-              Didn't receive the code?{' '}
-              <ResendButton 
-                type="button" 
-                onClick={handleResend}
-                disabled={isResending}
-              >
-                {isResending ? (
-                  'Sending...'
-                ) : (
-                  <>
-                    <ArrowClockwise size={14} weight="bold" />
-                    Resend OTP
-                  </>
-                )}
-              </ResendButton>
-            </ResendText>
-          )}
-        </ResendContainer>
 
         <ButtonGroup>
           <PrimaryButton 
