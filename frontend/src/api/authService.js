@@ -4,6 +4,7 @@ import { apiRequest, ApiError } from '../utils/api';
 
 const BASE_ERROR_MESSAGES = {
   400: 'Invalid request. Please check your details.',
+  401: 'Incorrect email or password.',
   403: 'Email already registered with another account.',
   404: 'Account not found. Please sign up first.',
   406: 'Verification expired. Please refresh and try again.',
@@ -133,6 +134,31 @@ export async function verifyLoginOtp(phoneNumber, otp) {
   }
 }
 
+export async function loginWithEmailPassword(email, password, turnstileToken) {
+  attribution.setAttribution('career_profile_login_email');
+  
+  const payload = {
+    user: { email, password },
+    attributions: attribution.getAttribution(),
+    'cf-turnstile-response': turnstileToken
+  };
+
+  try {
+    await apiRequest('POST', AUTH_ENDPOINTS.LOGIN_WITH_EMAIL_PASSWORD, payload);
+    return { success: true };
+  } catch (error) {
+    console.error('Email/password login error:', error);
+    const { status, message } = resolveApiError(error);
+    if (status === 401) {
+      return { success: false, error: BASE_ERROR_MESSAGES[401] };
+    }
+    if (status === 404) {
+      return { success: false, error: BASE_ERROR_MESSAGES[404], notFound: true };
+    }
+    return { success: false, error: message };
+  }
+}
+
 export async function resendOtp(phoneNumber, type = 'signup') {
   const endpoint = type === 'login' ? AUTH_ENDPOINTS.LOGIN : AUTH_ENDPOINTS.SIGN_UP;
   
@@ -157,5 +183,6 @@ export default {
   verifySignUpOtp,
   login,
   verifyLoginOtp,
+  loginWithEmailPassword,
   resendOtp
 };

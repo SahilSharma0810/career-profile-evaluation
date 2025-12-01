@@ -4,12 +4,14 @@ import styled from 'styled-components';
 import SignUpForm from './SignUpForm';
 import LoginForm from './LoginForm';
 import OtpVerificationForm from './OtpVerificationForm';
+import EmailPasswordLoginForm from './EmailPasswordLoginForm';
 import {
   signUp,
   verifySignUpOtp,
   login,
   verifyLoginOtp,
-  resendOtp
+  resendOtp,
+  loginWithEmailPassword
 } from '../../api/authService';
 import tracker from '../../utils/tracker';
 
@@ -43,6 +45,8 @@ const AuthFlow = ({
   const [signUpError, setSignUpError] = useState('');
   const [loginStatus, setLoginStatus] = useState('idle');
   const [loginError, setLoginError] = useState('');
+  const [emailLoginStatus, setEmailLoginStatus] = useState('idle');
+  const [emailLoginError, setEmailLoginError] = useState('');
   const [otpStatus, setOtpStatus] = useState('idle');
   const [otpError, setOtpError] = useState('');
   const [resendStatus, setResendStatus] = useState('idle');
@@ -129,6 +133,52 @@ const AuthFlow = ({
 
     return result;
   }, []);
+
+  const handleEmailPasswordLogin = useCallback(async (email, password, turnstileToken) => {
+    setEmailLoginStatus('loading');
+    setEmailLoginError('');
+
+    tracker.click({
+      click_type: 'email_login_form_submitted',
+      click_source: 'auth_flow'
+    });
+
+    const result = await loginWithEmailPassword(email, password, turnstileToken);
+
+    if (result.success) {
+      setEmailLoginStatus('success');
+      setAuthFlow('email_login');
+
+      tracker.click({
+        click_type: 'email_login_success',
+        click_source: 'auth_flow'
+      });
+
+      if (onSuccess) {
+        onSuccess({
+          flow: 'email_login',
+          phoneNumber: '',
+          email: email,
+          userData: null
+        });
+      }
+
+      if (reloadOnSuccess) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      }
+    } else {
+      setEmailLoginStatus('error');
+      setEmailLoginError(result.error || 'Login failed. Please try again.');
+      tracker.click({
+        click_type: 'email_login_failed',
+        click_source: 'auth_flow'
+      });
+    }
+
+    return result;
+  }, [onSuccess, reloadOnSuccess]);
 
   const handleVerifyOtp = useCallback(async (otp) => {
     setOtpStatus('loading');
@@ -225,6 +275,30 @@ const AuthFlow = ({
     setAuthFlow('login');
     setSignUpStatus('idle');
     setSignUpError('');
+    setEmailLoginStatus('idle');
+    setEmailLoginError('');
+  }, []);
+
+  const handleSwitchToEmailLogin = useCallback(() => {
+    setStep('email_login');
+    setAuthFlow('email_login');
+    setLoginStatus('idle');
+    setLoginError('');
+    tracker.click({
+      click_type: 'switch_to_email_login_clicked',
+      click_source: 'auth_flow'
+    });
+  }, []);
+
+  const handleSwitchToPhoneLogin = useCallback(() => {
+    setStep('login');
+    setAuthFlow('login');
+    setEmailLoginStatus('idle');
+    setEmailLoginError('');
+    tracker.click({
+      click_type: 'switch_to_phone_login_clicked',
+      click_source: 'auth_flow'
+    });
   }, []);
 
   const displayPhoneNumber = pendingData.phoneNumber.replace('+91-', '');
@@ -246,9 +320,20 @@ const AuthFlow = ({
         <LoginForm
           onSubmit={handleLogin}
           onSignUpClick={handleSwitchToSignUp}
+          onEmailLoginClick={handleSwitchToEmailLogin}
           submitStatus={loginStatus}
           errorMessage={loginError}
           successMessage={loginStatus === 'success' ? 'OTP sent to your phone!' : ''}
+        />
+      )}
+
+      {step === 'email_login' && (
+        <EmailPasswordLoginForm
+          onSubmit={handleEmailPasswordLogin}
+          onPhoneLoginClick={handleSwitchToPhoneLogin}
+          submitStatus={emailLoginStatus}
+          errorMessage={emailLoginError}
+          successMessage={emailLoginStatus === 'success' ? 'Logged in successfully!' : ''}
         />
       )}
 

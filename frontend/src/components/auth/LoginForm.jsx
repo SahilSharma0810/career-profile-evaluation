@@ -282,6 +282,7 @@ const Divider = styled.div`
 const LoginForm = ({
   onSubmit,
   onSignUpClick,
+  onEmailLoginClick,
   submitStatus = 'idle',
   errorMessage = '',
   successMessage = '',
@@ -459,21 +460,34 @@ const LoginForm = ({
             )}
           </PrimaryButton>
 
+          {(onEmailLoginClick || onSignUpClick) && <Divider>or</Divider>}
+
+          {onEmailLoginClick && (
+            <SecondaryLink
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onEmailLoginClick?.();
+              }}
+            >
+              Use <span>email & password</span> instead
+            </SecondaryLink>
+          )}
+
           {onSignUpClick && (
-            <>
-              <Divider>or</Divider>
-              <SecondaryLink
-                type="button"
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onSignUpClick?.();
-                }}
-              >
-                Don't have an account? <span>Sign up</span>
-              </SecondaryLink>
-            </>
+            <SecondaryLink
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onSignUpClick?.();
+              }}
+            >
+              Don't have an account? <span>Sign up</span>
+            </SecondaryLink>
           )}
         </ButtonGroup>
       </Form>
