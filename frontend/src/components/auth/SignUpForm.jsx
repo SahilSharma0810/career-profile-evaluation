@@ -447,6 +447,11 @@ const SignUpForm = ({
       return;
     }
 
+    if (!turnstileToken) {
+      setTurnstileAppearance('always');
+      return;
+    }
+
     const cleanedPhone = formData.phone_number.replace(/\D/g, '');
     
     onSubmit?.({
@@ -574,7 +579,12 @@ const SignUpForm = ({
                 value={formData.phone_number}
                 onChange={handlePhoneInput}
                 onBlur={() => handleBlur('phone_number')}
-                onFocus={() => handleFocus('phone_number')}
+                onFocus={() => {
+                  handleFocus('phone_number');
+                  if (!turnstileToken) {
+                    setTurnstileAppearance('always');
+                  }
+                }}
                 hasError={touched.phone_number && errors.phone_number}
                 disabled={isLoading || isSuccess}
                 autoComplete="tel"

@@ -329,6 +329,11 @@ const LoginForm = ({
     e.preventDefault();
     setTouched(true);
 
+    if (!turnstileToken) {
+      setTurnstileAppearance('always');
+      return;
+    }
+
     if (!phoneNumber.trim()) {
       setError('Phone number is required');
       return;
@@ -393,7 +398,12 @@ const LoginForm = ({
                 value={phoneNumber}
                 onChange={handlePhoneChange}
                 onBlur={handleBlur}
-                onFocus={handleFocus}
+                onFocus={() => {
+                  handleFocus();
+                  if (!turnstileToken) {
+                    setTurnstileAppearance('always');
+                  }
+                }}
                 hasError={!!displayError}
                 disabled={isLoading || isSuccess}
                 autoComplete="tel"
