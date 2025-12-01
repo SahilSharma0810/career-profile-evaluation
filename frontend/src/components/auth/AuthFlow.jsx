@@ -29,7 +29,6 @@ const AuthFlow = ({
   initialMode = 'login',
   onSuccess,
   reloadOnSuccess = true,
-  signupIntent = 'career_profile_signup',
   showProfessionalFields = true
 }) => {
   const [step, setStep] = useState(initialMode);
@@ -57,7 +56,7 @@ const AuthFlow = ({
       click_source: 'auth_flow'
     });
 
-    const result = await signUp(formData, signupIntent);
+    const result = await signUp(formData);
 
     if (result.success) {
       setSignUpStatus('success');
@@ -83,7 +82,7 @@ const AuthFlow = ({
     }
 
     return result;
-  }, [signupIntent]);
+  }, []);
 
   const handleLogin = useCallback(async (phoneNumber, turnstileToken) => {
     setLoginStatus('loading');

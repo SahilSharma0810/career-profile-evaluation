@@ -462,7 +462,15 @@ const LoginForm = ({
           {onSignUpClick && (
             <>
               <Divider>or</Divider>
-              <SecondaryLink type="button" onClick={onSignUpClick}>
+              <SecondaryLink
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSignUpClick?.();
+                }}
+              >
                 Don't have an account? <span>Sign up</span>
               </SecondaryLink>
             </>

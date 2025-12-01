@@ -24,18 +24,15 @@ function resolveApiError(error, fallbackMessage = 'Something went wrong. Please 
   return { message: flashError || statusMessage || fallbackMessage, status };
 }
 
-export async function signUp(userData, intent = 'sign_up') {
-  attribution.setAttribution(intent, {element: 'sign_up_form_cpe'});
+export async function signUp(userData) {
+  attribution.setAttribution('sign_up', {element: 'sign_up_form_cpe'});
 
   const payload = {
     user: {
       name: userData.name,
       email: userData.email,
       phone_number: `+91-${userData.phone_number}`,
-      country_code: '+91',
-      orgyear: userData.grad_year || '',
-      whatsapp_consent: 'whatsapp_consent_yes',
-      skip_existing_user_check: true
+      orgyear: userData.grad_year || ''
     },
     'cf-turnstile-response': userData.turnstile_token,
     type: 'marketing',
@@ -63,7 +60,7 @@ export async function verifySignUpOtp(phoneNumber, otp, email) {
       phone_number: phoneNumber,
       otp: otp,
       email: email,
-      skip_existing_user_check: true
+      type: 'marketing'
     },
     attributions: attribution.getAttribution()
   };
@@ -117,8 +114,7 @@ export async function verifyLoginOtp(phoneNumber, otp) {
   const payload = {
     user: {
       phone_number: phoneNumber,
-      otp: otp,
-      skip_existing_user_check: true
+      otp: otp
     },
     attributions: attribution.getAttribution()
   };

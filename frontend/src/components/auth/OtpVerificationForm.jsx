@@ -146,6 +146,10 @@ const OtpInput = styled.input`
     font-size: 1.25rem;
   }
 
+  @media (max-width: 480px) {
+    width: 46px;
+  }
+
   /* Hide spinner for number input */
   -moz-appearance: textfield;
   &::-webkit-outer-spin-button,
