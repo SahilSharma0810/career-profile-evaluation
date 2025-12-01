@@ -401,7 +401,6 @@ const ModalOverlay = styled.div`
   right: 0;
   bottom: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
   z-index: 2000;
   backdrop-filter: blur(3px);
@@ -409,13 +408,17 @@ const ModalOverlay = styled.div`
 
 const ModalCard = styled.div`
   background: #ffffff;
-  width: 92%;
+  width: 100%;
   max-width: 560px;
   border-radius: 0;
   border: 1px solid #e2e8f0;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   position: relative;
   padding: 0;
+
+  @media (max-width: 768px) {
+    min-height: 100%;
+  }
 `;
 
 const ModalHeader = styled.div`
@@ -448,6 +451,10 @@ const CloseButton = styled.button`
 
 const ModalBody = styled.div`
   padding: 16px;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 `;
 
 const AuthSplitPage = () => {
