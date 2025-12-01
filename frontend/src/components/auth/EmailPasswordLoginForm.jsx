@@ -18,40 +18,40 @@ const fadeIn = keyframes`
 
 const FormContainer = styled.div`
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-  padding: 40px;
+  padding: 28px;
   animation: ${fadeIn} 0.4s ease-out;
 
   @media (max-width: 540px) {
-    padding: 24px 20px;
+    padding: 20px 16px;
     max-width: 100%;
   }
 `;
 
 const FormHeader = styled.div`
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 `;
 
 const IconWrapper = styled.div`
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
   border: 2px solid #f9a8d4;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px;
+  margin: 0 auto 12px;
   color: #b30158;
 `;
 
 const FormTitle = styled.h2`
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 8px 0;
@@ -59,7 +59,7 @@ const FormTitle = styled.h2`
 `;
 
 const FormSubtitle = styled.p`
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #64748b;
   margin: 0;
   line-height: 1.5;
@@ -68,7 +68,7 @@ const FormSubtitle = styled.p`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
 `;
 
 const FieldGroup = styled.div`
@@ -110,11 +110,11 @@ const InputIcon = styled.div`
 
 const Input = styled.input`
   width: 100%;
-  padding: 14px 46px 14px 46px;
+  padding: 12px 44px 12px 44px;
   border: 2px solid ${props => props.hasError ? '#dc2626' : '#e2e8f0'};
   border-radius: 0;
   background: #ffffff;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #1e293b;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -157,11 +157,11 @@ const SuccessMessage = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' }
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: #dcfce7;
   border: 1px solid #86efac;
   border-radius: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #166534;
   font-weight: 500;
 `;
@@ -170,12 +170,12 @@ const ErrorBanner = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: #fee2e2;
   border: 1px solid #fca5a5;
   border-left: 4px solid #dc2626;
   border-radius: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #991b1b;
   font-weight: 500;
   animation: ${shake} 0.4s ease-in-out;
@@ -184,8 +184,8 @@ const ErrorBanner = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
 const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 10px;
+  margin-top: 6px;
 `;
 
 const SecondaryLink = styled.button`

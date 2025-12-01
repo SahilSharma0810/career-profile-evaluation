@@ -2,12 +2,12 @@ import styled from 'styled-components';
 
 export const PrimaryButton = styled.button`
   width: 100%;
-  padding: 16px 24px;
+  padding: 14px 20px;
   background: linear-gradient(135deg, #b30158 0%, #8a0145 100%);
   color: white;
   border: none;
   border-radius: 0;
-  font-size: 0.9375rem;
+  font-size: 0.9rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;

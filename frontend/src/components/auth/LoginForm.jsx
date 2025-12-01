@@ -24,40 +24,40 @@ const fadeIn = keyframes`
 
 const FormContainer = styled.div`
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-  padding: 40px;
+  padding: 28px;
   animation: ${fadeIn} 0.4s ease-out;
 
   @media (max-width: 540px) {
-    padding: 24px 20px;
+    padding: 20px 16px;
     max-width: 100%;
   }
 `;
 
 const FormHeader = styled.div`
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 `;
 
 const IconWrapper = styled.div`
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
   border: 2px solid #f9a8d4;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px;
+  margin: 0 auto 12px;
   color: #b30158;
 `;
 
 const FormTitle = styled.h2`
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 8px 0;
@@ -65,7 +65,7 @@ const FormTitle = styled.h2`
 `;
 
 const FormSubtitle = styled.p`
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #64748b;
   margin: 0;
   line-height: 1.5;
@@ -74,13 +74,13 @@ const FormSubtitle = styled.p`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
 `;
 
 const FieldGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 `;
 
 const Label = styled.label`
@@ -106,11 +106,11 @@ const PhoneInputWrapper = styled.div`
 const CountryCode = styled.div`
   display: flex;
   align-items: center;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border: 2px solid #e2e8f0;
   border-radius: 0;
   background: #f8fafc;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #1e293b;
   font-weight: 500;
   white-space: nowrap;
@@ -136,11 +136,11 @@ const InputIcon = styled.div`
 
 const Input = styled.input`
   width: 100%;
-  padding: 14px 16px 14px 46px;
+  padding: 12px 14px 12px 44px;
   border: 2px solid ${props => props.hasError ? '#dc2626' : '#e2e8f0'};
   border-radius: 0;
   background: #ffffff;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #1e293b;
   font-family: inherit;
   font-weight: 500;
@@ -190,11 +190,11 @@ const SuccessMessage = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' }
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: #dcfce7;
   border: 1px solid #86efac;
   border-radius: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #166534;
   font-weight: 500;
 `;
@@ -203,12 +203,12 @@ const ErrorBanner = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: #fee2e2;
   border: 1px solid #fca5a5;
   border-left: 4px solid #dc2626;
   border-radius: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #991b1b;
   font-weight: 500;
   animation: ${shake} 0.4s ease-in-out;
@@ -218,11 +218,11 @@ const InfoBox = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 0;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   color: #64748b;
   line-height: 1.5;
 
@@ -236,8 +236,8 @@ const InfoBox = styled.div`
 const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 10px;
+  margin-top: 6px;
 `;
 
 const SecondaryLink = styled.button`
@@ -247,7 +247,6 @@ const SecondaryLink = styled.button`
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  padding: 8px;
   transition: color 0.2s ease;
   text-align: center;
 
@@ -264,7 +263,7 @@ const SecondaryLink = styled.button`
 const Divider = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   color: #94a3b8;
   font-size: 0.8125rem;
   text-transform: uppercase;
@@ -277,6 +276,12 @@ const Divider = styled.div`
     height: 1px;
     background: #e2e8f0;
   }
+`;
+
+const SecondaryLinkContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 
 const LoginForm = ({
@@ -462,33 +467,35 @@ const LoginForm = ({
 
           {(onEmailLoginClick || onSignUpClick) && <Divider>or</Divider>}
 
-          {onEmailLoginClick && (
-            <SecondaryLink
-              type="button"
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onEmailLoginClick?.();
-              }}
-            >
+          <SecondaryLinkContainer>
+            {onEmailLoginClick && (
+              <SecondaryLink
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onEmailLoginClick?.();
+                }}
+              >
               Use <span>email & password</span> instead
-            </SecondaryLink>
-          )}
+              </SecondaryLink>
+            )}
 
-          {onSignUpClick && (
-            <SecondaryLink
-              type="button"
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onSignUpClick?.();
-              }}
-            >
+            {onSignUpClick && (
+              <SecondaryLink
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSignUpClick?.();
+                }}
+              >
               Don't have an account? <span>Sign up</span>
-            </SecondaryLink>
-          )}
+              </SecondaryLink>
+            )}
+          </SecondaryLinkContainer>
         </ButtonGroup>
       </Form>
     </FormContainer>

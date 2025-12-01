@@ -259,7 +259,7 @@ const CompanyLogo = styled.img`
 
 const AuthCard = styled.div`
   width: 100%;
-  max-width: 560px;
+  max-width: 520px;
   animation: ${fadeIn} 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 `;
 
@@ -604,7 +604,6 @@ const AuthSplitPage = () => {
           <AuthFlow
             initialMode="login"
             reloadOnSuccess={true}
-            showProfessionalFields={true}
           />
         </AuthCard>
       </RightPanel>

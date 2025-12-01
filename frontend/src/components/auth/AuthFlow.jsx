@@ -29,8 +29,7 @@ const Container = styled.div`
 const AuthFlow = ({
   initialMode = 'login',
   onSuccess,
-  reloadOnSuccess = true,
-  showProfessionalFields = true
+  reloadOnSuccess = true
 }) => {
   const [pendingData, setPendingData] = useState({
     phoneNumber: '',
@@ -263,7 +262,6 @@ const AuthFlow = ({
           submitStatus={formState.signup.status}
           errorMessage={formState.signup.error}
           successMessage={formState.signup.status === 'success' ? 'OTP sent to your phone!' : ''}
-          showProfessionalFields={showProfessionalFields}
         />
       )}
 

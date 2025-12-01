@@ -27,16 +27,16 @@ const pulse = keyframes`
 
 const FormContainer = styled.div`
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-  padding: 40px;
+  padding: 28px;
   animation: ${fadeIn} 0.4s ease-out;
 
   @media (max-width: 540px) {
-    padding: 24px 20px;
+    padding: 20px 16px;
     max-width: 100%;
   }
 `;
@@ -52,7 +52,7 @@ const BackButton = styled.button`
   font-weight: 500;
   cursor: pointer;
   padding: 0;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   transition: color 0.2s ease;
 
   &:hover {
@@ -62,24 +62,24 @@ const BackButton = styled.button`
 
 const FormHeader = styled.div`
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 `;
 
 const IconWrapper = styled.div`
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border: 2px solid #86efac;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px;
+  margin: 0 auto 12px;
   color: #059669;
 `;
 
 const FormTitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 8px 0;
@@ -101,26 +101,26 @@ const PhoneHighlight = styled.span`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
 `;
 
 const OtpContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
 
   @media (max-width: 400px) {
-    gap: 8px;
+    gap: 6px;
   }
 `;
 
 const OtpInput = styled.input`
-  width: 52px;
-  height: 60px;
+  width: 48px;
+  height: 56px;
   border: 2px solid ${props => props.hasError ? '#dc2626' : props.filled ? '#b30158' : '#e2e8f0'};
   border-radius: 0;
   background: ${props => props.filled ? '#fdf2f8' : '#ffffff'};
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 700;
   color: #1e293b;
   text-align: center;
@@ -141,13 +141,13 @@ const OtpInput = styled.input`
   }
 
   @media (max-width: 400px) {
-    width: 44px;
-    height: 52px;
-    font-size: 1.25rem;
+    width: 42px;
+    height: 50px;
+    font-size: 1.2rem;
   }
 
   @media (max-width: 480px) {
-    width: 46px;
+    width: 44px;
   }
 
   /* Hide spinner for number input */

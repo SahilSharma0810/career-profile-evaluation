@@ -32,27 +32,27 @@ const fadeIn = keyframes`
 
 const FormContainer = styled.div`
   width: 100%;
-  max-width: 480px;
+  max-width: 460px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-  padding: 40px;
+  padding: 28px;
   animation: ${fadeIn} 0.4s ease-out;
 
   @media (max-width: 540px) {
-    padding: 24px 20px;
+    padding: 20px 16px;
     max-width: 100%;
   }
 `;
 
 const FormHeader = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 20px;
   text-align: center;
 `;
 
 const FormTitle = styled.h2`
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 8px 0;
@@ -60,7 +60,7 @@ const FormTitle = styled.h2`
 `;
 
 const FormSubtitle = styled.p`
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #64748b;
   margin: 0;
   line-height: 1.5;
@@ -69,7 +69,7 @@ const FormSubtitle = styled.p`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 `;
 
 const FieldGroup = styled.div`
@@ -81,7 +81,7 @@ const FieldGroup = styled.div`
 const FieldRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px;
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
@@ -123,11 +123,11 @@ const InputIcon = styled.div`
 
 const Input = styled.input`
   width: 100%;
-  padding: 14px 16px 14px 46px;
+  padding: 12px 14px 12px 46px;
   border: 2px solid ${props => props.hasError ? '#dc2626' : '#e2e8f0'};
   border-radius: 0;
   background: #ffffff;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #1e293b;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -157,11 +157,11 @@ const SelectWrapper = styled.div`
 
 const Select = styled.select`
   width: 100%;
-  padding: 14px 44px 14px ${props => props.hasIcon ? '46px' : '16px'};
+  padding: 12px 40px 12px ${props => props.hasIcon ? '46px' : '16px'};
   border: 2px solid ${props => props.hasError ? '#dc2626' : '#e2e8f0'};
   border-radius: 0;
   background: #ffffff;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: ${props => props.value ? '#1e293b' : '#94a3b8'};
   font-family: inherit;
   transition: all 0.2s ease;
@@ -204,17 +204,17 @@ const SelectIcon = styled.div`
 
 const PhoneInputWrapper = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 10px;
 `;
 
 const CountryCode = styled.div`
   display: flex;
   align-items: center;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border: 2px solid #e2e8f0;
   border-radius: 0;
   background: #f8fafc;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #1e293b;
   font-weight: 500;
   white-space: nowrap;
@@ -242,11 +242,11 @@ const SuccessMessage = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' }
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: #dcfce7;
   border: 1px solid #86efac;
   border-radius: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #166534;
   font-weight: 500;
   margin-bottom: 16px;
@@ -256,12 +256,12 @@ const ErrorBanner = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: #fee2e2;
   border: 1px solid #fca5a5;
   border-left: 4px solid #dc2626;
   border-radius: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #991b1b;
   font-weight: 500;
   animation: ${shake} 0.4s ease-in-out;
@@ -271,8 +271,8 @@ const ErrorBanner = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
 const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 10px;
+  margin-top: 6px;
 `;
 
 const SecondaryLink = styled.button`
@@ -333,8 +333,7 @@ const SignUpForm = ({
   submitStatus = 'idle',
   errorMessage = '',
   successMessage = '',
-  initialValues = {},
-  showProfessionalFields = true
+  initialValues = {}
 }) => {
   const gradYearOptions = useMemo(() => generateGradYearOptions(), []);
 
@@ -387,7 +386,7 @@ const SignUpForm = ({
         else if (!validatePhone(value)) error = 'Please enter a valid 10-digit phone number';
         break;
       case 'grad_year':
-        if (showProfessionalFields && !value) error = 'Please select graduation year';
+        if (!value.trim()) error = 'Please select graduation year';
         break;
       default:
         break;
@@ -396,7 +395,7 @@ const SignUpForm = ({
     if (error) {
       setErrors(prev => ({ ...prev, [field]: error }));
     }
-  }, [formData, showProfessionalFields]);
+  }, [formData]);
 
   const handleFocus = useCallback((field) => {
     setFocusedField(field);
@@ -423,10 +422,8 @@ const SignUpForm = ({
       newErrors.phone_number = 'Please enter a valid 10-digit phone number';
     }
 
-    if (showProfessionalFields) {
-      if (!formData.grad_year) {
-        newErrors.grad_year = 'Please select graduation year';
-      }
+    if (!formData.grad_year) {
+      newErrors.grad_year = 'Please select graduation year';
     }
 
     setErrors(newErrors);
@@ -438,7 +435,7 @@ const SignUpForm = ({
     });
 
     return Object.keys(newErrors).length === 0;
-  }, [formData, showProfessionalFields]);
+  }, [formData]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
@@ -607,56 +604,44 @@ const SignUpForm = ({
           )}
         </FieldGroup>
                 
-        {showProfessionalFields && (
-          <>
-            <SectionDivider />
-            <SectionTitle>Professional Information</SectionTitle>
-
-            <FieldRow>
-              {/* Graduation Year */}
-              <FieldGroup>
-                <Label htmlFor="grad_year">
+        <FieldGroup>
+          <Label htmlFor="grad_year">
                   Graduation Year <span className="required">*</span>
-                </Label>
-                <SelectWrapper>
-                  <InputIcon 
-                    hasError={touched.grad_year && errors.grad_year}
-                    focused={focusedField === 'grad_year'}
-                  >
-                    <GraduationCap size={20} weight="regular" />
-                  </InputIcon>
-                  <Select
-                    id="grad_year"
-                    value={formData.grad_year}
-                    onChange={(e) => handleChange('grad_year', e.target.value)}
-                    onBlur={() => handleBlur('grad_year')}
-                    onFocus={() => handleFocus('grad_year')}
-                    hasError={touched.grad_year && errors.grad_year}
-                    hasIcon={true}
-                    disabled={isLoading || isSuccess}
-                  >
-                    {gradYearOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Select>
-                  <SelectIcon>
-                    <CaretDown size={20} weight="bold" />
-                  </SelectIcon>
-                </SelectWrapper>
-                {touched.grad_year && errors.grad_year && (
-                  <ErrorMessage>
-                    <WarningCircle size={14} weight="fill" />
-                    {errors.grad_year}
-                  </ErrorMessage>
-                )}
-              </FieldGroup>
-            </FieldRow>
-
-            
-          </>
-        )}
+          </Label>
+          <SelectWrapper>
+            <InputIcon 
+              hasError={touched.grad_year && errors.grad_year}
+              focused={focusedField === 'grad_year'}
+            >
+              <GraduationCap size={20} weight="regular" />
+            </InputIcon>
+            <Select
+              id="grad_year"
+              value={formData.grad_year}
+              onChange={(e) => handleChange('grad_year', e.target.value)}
+              onBlur={() => handleBlur('grad_year')}
+              onFocus={() => handleFocus('grad_year')}
+              hasError={touched.grad_year && errors.grad_year}
+              hasIcon={true}
+              disabled={isLoading || isSuccess}
+            >
+              {gradYearOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+            <SelectIcon>
+              <CaretDown size={20} weight="bold" />
+            </SelectIcon>
+          </SelectWrapper>
+          {touched.grad_year && errors.grad_year && (
+            <ErrorMessage>
+              <WarningCircle size={14} weight="fill" />
+              {errors.grad_year}
+            </ErrorMessage>
+          )}
+        </FieldGroup>
 
         <TurnstileWidget
           ref={turnstileRef}
