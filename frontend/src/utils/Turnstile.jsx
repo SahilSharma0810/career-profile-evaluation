@@ -8,7 +8,7 @@ const TurnstileWidget = React.forwardRef(({
 }, ref) => (
   <Turnstile
     ref={ref}
-    sitekey={'1x00000000000000000000AA'}
+    sitekey={process.env.REACT_APP_TURNSTILE_SITEKEY}
     onVerify={onTokenObtained}
     onLoad={onReset}
     appearance={appearance}
