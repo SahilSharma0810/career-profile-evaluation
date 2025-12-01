@@ -15,10 +15,7 @@ import tracker from '../../utils/tracker';
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: 24px;
   background: #f8fafc;
 
   @media (max-width: 540px) {

@@ -6,10 +6,8 @@ import {
   Phone, 
   CaretDown, 
   CheckCircle, 
-  WarningCircle,
-  GraduationCap,
-  Buildings,
-  Briefcase
+  WarningCircle, 
+  GraduationCap
 } from 'phosphor-react';
 import { PrimaryButton, LoadingSpinner } from './ui';
 import { validateEmail, validatePhone } from '../../utils/validation';
@@ -312,15 +310,6 @@ const SectionTitle = styled.div`
   margin-bottom: 4px;
 `;
 
-const programOptions = [
-  { value: '', label: 'Select a program' },
-  { value: 'academy', label: 'Software Development' },
-  { value: 'data_science', label: 'Data Science & ML' },
-  { value: 'devops', label: 'DevOps & Cloud' },
-  { value: 'ai_ml', label: 'AI/ML Engineering' },
-  { value: 'product', label: 'Product Management' }
-];
-
 const generateGradYearOptions = () => {
   const currentYear = new Date().getFullYear();
   const years = [];
@@ -337,30 +326,6 @@ const generateGradYearOptions = () => {
   return years;
 };
 
-const positionOptions = [
-  { value: '', label: 'Select job title' },
-  { value: 'Software Engineer', label: 'Software Engineer' },
-  { value: 'Senior Software Engineer', label: 'Senior Software Engineer' },
-  { value: 'Tech Lead', label: 'Tech Lead' },
-  { value: 'Engineering Manager', label: 'Engineering Manager' },
-  { value: 'Data Scientist', label: 'Data Scientist' },
-  { value: 'Data Analyst', label: 'Data Analyst' },
-  { value: 'Data Engineer', label: 'Data Engineer' },
-  { value: 'ML Engineer', label: 'ML Engineer' },
-  { value: 'DevOps Engineer', label: 'DevOps Engineer' },
-  { value: 'Product Manager', label: 'Product Manager' },
-  { value: 'QA Engineer', label: 'QA Engineer' },
-  { value: 'Full Stack Developer', label: 'Full Stack Developer' },
-  { value: 'Frontend Developer', label: 'Frontend Developer' },
-  { value: 'Backend Developer', label: 'Backend Developer' },
-  { value: 'Mobile Developer', label: 'Mobile Developer' },
-  { value: 'Cloud Engineer', label: 'Cloud Engineer' },
-  { value: 'Solutions Architect', label: 'Solutions Architect' },
-  { value: 'Business Analyst', label: 'Business Analyst' },
-  { value: 'Fresher', label: 'Fresher / Student' },
-  { value: 'Other', label: 'Other' }
-];
-
 const SignUpForm = ({
   onSubmit,
   onLoginClick,
@@ -373,13 +338,10 @@ const SignUpForm = ({
   const gradYearOptions = useMemo(() => generateGradYearOptions(), []);
 
   const [formData, setFormData] = useState({
-    program: initialValues.program || '',
     name: initialValues.name || '',
     email: initialValues.email || '',
     phone_number: initialValues.phone_number || '',
-    grad_year: initialValues.grad_year || '',
-    company: initialValues.company || '',
-    position: initialValues.position || ''
+    grad_year: initialValues.grad_year || ''
   });
 
   const [errors, setErrors] = useState({});
@@ -406,9 +368,6 @@ const SignUpForm = ({
     let error = '';
 
     switch (field) {
-      case 'program':
-        if (!value) error = 'Please select a program';
-        break;
       case 'name':
         if (!value.trim()) error = 'Name is required';
         else if (value.trim().length < 2) error = 'Name must be at least 2 characters';
@@ -423,9 +382,6 @@ const SignUpForm = ({
         break;
       case 'grad_year':
         if (showProfessionalFields && !value) error = 'Please select graduation year';
-        break;
-      case 'position':
-        if (showProfessionalFields && !value) error = 'Please select job title';
         break;
       default:
         break;
@@ -442,10 +398,6 @@ const SignUpForm = ({
 
   const validateForm = useCallback(() => {
     const newErrors = {};
-
-    if (!formData.program) {
-      newErrors.program = 'Please select a program';
-    }
 
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
@@ -469,20 +421,14 @@ const SignUpForm = ({
       if (!formData.grad_year) {
         newErrors.grad_year = 'Please select graduation year';
       }
-      if (!formData.position) {
-        newErrors.position = 'Please select job title';
-      }
     }
 
     setErrors(newErrors);
     setTouched({
-      program: true,
       name: true,
       email: true,
       phone_number: true,
-      grad_year: true,
-      company: true,
-      position: true
+      grad_year: true
     });
 
     return Object.keys(newErrors).length === 0;
@@ -532,37 +478,7 @@ const SignUpForm = ({
       )}
 
       <Form onSubmit={handleSubmit}>
-        <FieldGroup>
-          <Label htmlFor="program">
-            Program <span className="required">*</span>
-          </Label>
-          <SelectWrapper>
-            <Select
-              id="program"
-              value={formData.program}
-              onChange={(e) => handleChange('program', e.target.value)}
-              onBlur={() => handleBlur('program')}
-              onFocus={() => handleFocus('program')}
-              hasError={touched.program && errors.program}
-              disabled={isLoading || isSuccess}
-            >
-              {programOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-            <SelectIcon>
-              <CaretDown size={20} weight="bold" />
-            </SelectIcon>
-          </SelectWrapper>
-          {touched.program && errors.program && (
-            <ErrorMessage>
-              <WarningCircle size={14} weight="fill" />
-              {errors.program}
-            </ErrorMessage>
-          )}
-        </FieldGroup>
+        
 
         <FieldGroup>
           <Label htmlFor="name">
@@ -713,80 +629,9 @@ const SignUpForm = ({
                   </ErrorMessage>
                 )}
               </FieldGroup>
-
-              {/* Position / Job Title */}
-              <FieldGroup>
-                <Label htmlFor="position">
-                  Job Title <span className="required">*</span>
-                </Label>
-                <SelectWrapper>
-                  <InputIcon 
-                    hasError={touched.position && errors.position}
-                    focused={focusedField === 'position'}
-                  >
-                    <Briefcase size={20} weight="regular" />
-                  </InputIcon>
-                  <Select
-                    id="position"
-                    value={formData.position}
-                    onChange={(e) => handleChange('position', e.target.value)}
-                    onBlur={() => handleBlur('position')}
-                    onFocus={() => handleFocus('position')}
-                    hasError={touched.position && errors.position}
-                    hasIcon={true}
-                    disabled={isLoading || isSuccess}
-                  >
-                    {positionOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Select>
-                  <SelectIcon>
-                    <CaretDown size={20} weight="bold" />
-                  </SelectIcon>
-                </SelectWrapper>
-                {touched.position && errors.position && (
-                  <ErrorMessage>
-                    <WarningCircle size={14} weight="fill" />
-                    {errors.position}
-                  </ErrorMessage>
-                )}
-              </FieldGroup>
             </FieldRow>
 
-            {/* Company */}
-            <FieldGroup>
-              <Label htmlFor="company">
-                Company / Organization
-              </Label>
-              <InputWrapper>
-                <InputIcon 
-                  hasError={touched.company && errors.company}
-                  focused={focusedField === 'company'}
-                >
-                  <Buildings size={20} weight="regular" />
-                </InputIcon>
-                <Input
-                  id="company"
-                  type="text"
-                  placeholder="Enter company name (optional)"
-                  value={formData.company}
-                  onChange={(e) => handleChange('company', e.target.value)}
-                  onBlur={() => handleBlur('company')}
-                  onFocus={() => handleFocus('company')}
-                  hasError={touched.company && errors.company}
-                  disabled={isLoading || isSuccess}
-                  autoComplete="organization"
-                />
-              </InputWrapper>
-              {touched.company && errors.company && (
-                <ErrorMessage>
-                  <WarningCircle size={14} weight="fill" />
-                  {errors.company}
-                </ErrorMessage>
-              )}
-            </FieldGroup>
+            
           </>
         )}
 
