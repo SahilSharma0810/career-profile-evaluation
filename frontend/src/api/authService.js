@@ -25,7 +25,7 @@ function resolveApiError(error, fallbackMessage = 'Something went wrong. Please 
 }
 
 export async function signUp(userData) {
-  attribution.setAttribution('sign_up', {element: 'sign_up_form_cpe'});
+  attribution.setAttribution('career_profile_signup');
 
   const payload = {
     user: {
@@ -80,7 +80,7 @@ export async function verifySignUpOtp(phoneNumber, otp, email) {
 }
 
 export async function login(phoneNumber, turnstileToken) {
-  attribution.setAttribution('login', {element: 'login_form_cpe'});
+  attribution.setAttribution('career_profile_login');
 
   const formattedPhone = `+91-${phoneNumber}`;
   const payload = {
