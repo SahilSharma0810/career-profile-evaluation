@@ -37,6 +37,7 @@ export async function signUp(userData, intent = 'sign_up') {
       whatsapp_consent: 'whatsapp_consent_yes',
       skip_existing_user_check: true
     },
+    'cf-turnstile-response': userData.turnstile_token,
     type: 'marketing',
     attributions: attribution.getAttribution()
   };
@@ -81,13 +82,14 @@ export async function verifySignUpOtp(phoneNumber, otp, email) {
   }
 }
 
-export async function login(phoneNumber) {
+export async function login(phoneNumber, turnstileToken) {
   attribution.setAttribution('login', {element: 'login_form_cpe'});
 
   const formattedPhone = `+91-${phoneNumber}`;
   const payload = {
     user: { phone_number: formattedPhone },
-    attributions: attribution.getAttribution()
+    attributions: attribution.getAttribution(),
+    'cf-turnstile-response': turnstileToken
   };
 
   try {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { 
   User, 
@@ -11,6 +11,7 @@ import {
 } from 'phosphor-react';
 import { PrimaryButton, LoadingSpinner } from './ui';
 import { validateEmail, validatePhone } from '../../utils/validation';
+import TurnstileWidget from '../../utils/Turnstile';
 
 const shake = keyframes`
   0%, 100% { transform: translateX(0); }
@@ -347,6 +348,11 @@ const SignUpForm = ({
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [focusedField, setFocusedField] = useState(null);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [
+    turnstileAppearance, setTurnstileAppearance
+  ] = useState('interaction-only');
+  const turnstileRef = useRef(null);
 
   const isLoading = submitStatus === 'loading';
   const isSuccess = submitStatus === 'success';
@@ -445,7 +451,8 @@ const SignUpForm = ({
     
     onSubmit?.({
       ...formData,
-      phone_number: cleanedPhone
+      phone_number: cleanedPhone,
+      turnstile_token: turnstileToken
     });
   }, [formData, validateForm, onSubmit]);
 
@@ -634,6 +641,12 @@ const SignUpForm = ({
             
           </>
         )}
+
+        <TurnstileWidget
+          ref={turnstileRef}
+          onTokenObtained={setTurnstileToken}
+          appearance={turnstileAppearance}
+        />
 
         <ButtonGroup>
           <PrimaryButton 

@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Phone, SignIn, CheckCircle, WarningCircle } from 'phosphor-react';
 import { PrimaryButton, LoadingSpinner } from './ui';
 import { validatePhone } from '../../utils/validation';
+import TurnstileWidget from '../../utils/Turnstile';
 
 const shake = keyframes`
   0%, 100% { transform: translateX(0); }
@@ -290,6 +291,11 @@ const LoginForm = ({
   const [error, setError] = useState('');
   const [touched, setTouched] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [
+    turnstileAppearance, setTurnstileAppearance
+  ] = useState('interaction-only');
+  const turnstileRef = useRef(null);
 
   const isLoading = submitStatus === 'loading';
   const isSuccess = submitStatus === 'success';
@@ -333,7 +339,7 @@ const LoginForm = ({
       return;
     }
 
-    onSubmit?.(phoneNumber);
+    onSubmit?.(phoneNumber, turnstileToken);
   }, [phoneNumber, onSubmit]);
 
   const displayError = touched && (error || (isError && errorMessage));
@@ -410,6 +416,12 @@ const LoginForm = ({
             We'll send you a 6-digit verification code via SMS to confirm your identity.
           </span>
         </InfoBox>
+
+        <TurnstileWidget
+          ref={turnstileRef}
+          onTokenObtained={setTurnstileToken}
+          appearance={turnstileAppearance}
+        />
 
         <ButtonGroup>
           <PrimaryButton 

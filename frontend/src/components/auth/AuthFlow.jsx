@@ -85,7 +85,7 @@ const AuthFlow = ({
     return result;
   }, [signupIntent]);
 
-  const handleLogin = useCallback(async (phoneNumber) => {
+  const handleLogin = useCallback(async (phoneNumber, turnstileToken) => {
     setLoginStatus('loading');
     setLoginError('');
 
@@ -94,7 +94,7 @@ const AuthFlow = ({
       click_source: 'auth_flow'
     });
 
-    const result = await login(phoneNumber);
+    const result = await login(phoneNumber, turnstileToken);
 
     if (result.success) {
       setLoginStatus('success');
