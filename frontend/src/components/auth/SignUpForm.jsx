@@ -12,6 +12,7 @@ import {
 import { PrimaryButton, LoadingSpinner } from './ui';
 import { validateEmail, validatePhone } from '../../utils/validation';
 import TurnstileWidget from '../../utils/Turnstile';
+import tracker from '../../utils/tracker';
 
 const shake = keyframes`
   0%, 100% { transform: translateX(0); }
@@ -512,7 +513,15 @@ const SignUpForm = ({
               placeholder="Enter your full name"
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
-              onBlur={() => handleBlur('name')}
+              onBlur={(e) => {
+                handleBlur('name');
+                if (e.target.value) {
+                  tracker.click({
+                    click_type: 'signup_name_filled',
+                    click_text: e.target.value
+                  });
+                }
+              }}
               onFocus={() => handleFocus('name')}
               hasError={touched.name && errors.name}
               disabled={isLoading || isSuccess}
@@ -544,7 +553,15 @@ const SignUpForm = ({
               placeholder="you@example.com"
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
-              onBlur={() => handleBlur('email')}
+              onBlur={(e) => {
+                handleBlur('email');
+                if (e.target.value) {
+                  tracker.click({
+                    click_type: 'signup_email_filled',
+                    click_text: e.target.value
+                  });
+                }
+              }}
               onFocus={() => handleFocus('email')}
               hasError={touched.email && errors.email}
               disabled={isLoading || isSuccess}
@@ -581,7 +598,15 @@ const SignUpForm = ({
                 placeholder="10-digit mobile number"
                 value={formData.phone_number}
                 onChange={handlePhoneInput}
-                onBlur={() => handleBlur('phone_number')}
+                onBlur={(e) => {
+                  handleBlur('phone_number');
+                  if (e.target.value) {
+                    tracker.click({
+                      click_type: 'signup_phone_number_filled',
+                      click_text: e.target.value
+                    });
+                  }
+                }}
                 onFocus={() => {
                   handleFocus('phone_number');
                   if (!turnstileToken) {
@@ -619,7 +644,15 @@ const SignUpForm = ({
               id="grad_year"
               value={formData.grad_year}
               onChange={(e) => handleChange('grad_year', e.target.value)}
-              onBlur={() => handleBlur('grad_year')}
+              onBlur={(e) => {
+                handleBlur('grad_year');
+                if (e.target.value) {
+                  tracker.click({
+                    click_type: 'signup_grad_year_filled',
+                    click_text: e.target.value
+                  });
+                }
+              }}
               onFocus={() => handleFocus('grad_year')}
               hasError={touched.grad_year && errors.grad_year}
               hasIcon={true}

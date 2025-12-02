@@ -4,6 +4,7 @@ import { Phone, SignIn, CheckCircle, WarningCircle } from 'phosphor-react';
 import { PrimaryButton, LoadingSpinner } from './ui';
 import { validatePhone } from '../../utils/validation';
 import TurnstileWidget from '../../utils/Turnstile';
+import tracker from '../../utils/tracker';
 
 const shake = keyframes`
   0%, 100% { transform: translateX(0); }
@@ -367,10 +368,7 @@ const LoginForm = ({
         <IconWrapper>
           <SignIn size={32} weight="fill" />
         </IconWrapper>
-        <FormTitle>Welcome Back</FormTitle>
-        <FormSubtitle>
-          Enter your phone number to receive an OTP
-        </FormSubtitle>
+        <FormTitle>Login</FormTitle>
       </FormHeader>
 
       {isSuccess && successMessage && (
@@ -409,7 +407,15 @@ const LoginForm = ({
                 placeholder="Enter 10-digit number"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
-                onBlur={handleBlur}
+                onBlur={(e) => {
+                  handleBlur();
+                  if (e.target.value) {
+                    tracker.click({
+                      click_type: 'login_phone_number_filled',
+                      click_text: e.target.value
+                    });
+                  }
+                }}
                 onFocus={() => {
                   handleFocus();
                   if (!turnstileToken) {
@@ -431,13 +437,6 @@ const LoginForm = ({
             </ErrorMessage>
           )}
         </FieldGroup>
-
-        <InfoBox>
-          <Phone size={18} weight="regular" />
-          <span>
-            We'll send you a 6-digit verification code via SMS to confirm your identity.
-          </span>
-        </InfoBox>
 
         <TurnstileWidget
           ref={turnstileRef}

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { ShieldCheck, ArrowLeft, CheckCircle, WarningCircle } from 'phosphor-react';
 import { PrimaryButton, LoadingSpinner } from './ui';
+import tracker from '../../utils/tracker';
 
 const shake = keyframes`
   0%, 100% { transform: translateX(0); }
@@ -114,16 +115,19 @@ const OtpContainer = styled.div`
   }
 `;
 
-const OtpInput = styled.input`
-  width: 48px;
+const SingleOtpInput = styled.input`
+  width: 100%;
+  max-width: 320px;
   height: 56px;
+  padding: 0 14px;
   border: 2px solid ${props => props.hasError ? '#dc2626' : props.filled ? '#b30158' : '#e2e8f0'};
   border-radius: 0;
   background: ${props => props.filled ? '#fdf2f8' : '#ffffff'};
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: #1e293b;
   text-align: center;
+  letter-spacing: 6px;
   font-family: 'Monaco', 'Menlo', monospace;
   transition: all 0.2s ease;
   caret-color: #b30158;
@@ -141,13 +145,9 @@ const OtpInput = styled.input`
   }
 
   @media (max-width: 400px) {
-    width: 42px;
     height: 50px;
     font-size: 1.2rem;
-  }
-
-  @media (max-width: 480px) {
-    width: 44px;
+    letter-spacing: 5px;
   }
 
   /* Hide spinner for number input */
@@ -222,10 +222,10 @@ const OtpVerificationForm = ({
   errorMessage = '',
   successMessage = ''
 }) => {
-  const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(''));
+  const [otp, setOtp] = useState('');
   const [localError, setLocalError] = useState('');
   const [resendTimer, setResendTimer] = useState(0);
-  const inputRefs = useRef([]);
+  const inputRef = useRef(null);
 
   const isLoading = submitStatus === 'loading';
   const isSuccess = submitStatus === 'success';
@@ -243,8 +243,8 @@ const OtpVerificationForm = ({
   }, [resendTimer]);
 
   useEffect(() => {
-    if (inputRefs.current[0]) {
-      inputRefs.current[0].focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
   }, []);
 
@@ -257,71 +257,27 @@ const OtpVerificationForm = ({
     return `+91 ${cleaned}`;
   };
 
-  const handleChange = useCallback((index, value) => {
-    const digit = value.replace(/\D/g, '').slice(-1);
-    
-    setOtp(prev => {
-      const newOtp = [...prev];
-      newOtp[index] = digit;
-      return newOtp;
-    });
-
+  const handleChange = useCallback((value) => {
+    const digitsOnly = value.replace(/\D/g, '').slice(0, OTP_LENGTH);
+    setOtp(digitsOnly);
     setLocalError('');
-
-    if (digit && index < OTP_LENGTH - 1) {
-      inputRefs.current[index + 1]?.focus();
-    }
   }, []);
-
-  const handleKeyDown = useCallback((index, e) => {
-    if (e.key === 'Backspace') {
-      if (!otp[index] && index > 0) {
-        inputRefs.current[index - 1]?.focus();
-        setOtp(prev => {
-          const newOtp = [...prev];
-          newOtp[index - 1] = '';
-          return newOtp;
-        });
-      } else {
-        setOtp(prev => {
-          const newOtp = [...prev];
-          newOtp[index] = '';
-          return newOtp;
-        });
-      }
-      setLocalError('');
-    }
-
-    if (e.key === 'ArrowLeft' && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-
-    if (e.key === 'ArrowRight' && index < OTP_LENGTH - 1) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  }, [otp]);
 
   const handlePaste = useCallback((e) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, OTP_LENGTH);
     
     if (pastedData) {
-      const newOtp = Array(OTP_LENGTH).fill('');
-      pastedData.split('').forEach((digit, index) => {
-        newOtp[index] = digit;
-      });
-      setOtp(newOtp);
+      setOtp(pastedData);
       setLocalError('');
-
-      const lastFilledIndex = Math.min(pastedData.length, OTP_LENGTH) - 1;
-      inputRefs.current[lastFilledIndex]?.focus();
+      inputRef.current?.focus();
     }
   }, []);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
     
-    const otpString = otp.join('');
+    const otpString = otp;
     
     if (otpString.length !== OTP_LENGTH) {
       setLocalError(`Please enter all ${OTP_LENGTH} digits`);
@@ -331,7 +287,7 @@ const OtpVerificationForm = ({
     onSubmit?.(otpString);
   }, [otp, onSubmit]);
 
-  const otpFilled = otp.every(digit => digit !== '');
+  const otpFilled = otp.length === OTP_LENGTH;
 
   return (
     <FormContainer>
@@ -369,24 +325,29 @@ const OtpVerificationForm = ({
 
       <Form onSubmit={handleSubmit}>
         <OtpContainer>
-          {otp.map((digit, index) => (
-            <OtpInput
-              key={index}
-              ref={el => inputRefs.current[index] = el}
-              type="text"
-              inputMode="numeric"
-              maxLength={1}
-              value={digit}
-              onChange={(e) => handleChange(index, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(index, e)}
-              onPaste={index === 0 ? handlePaste : undefined}
-              hasError={!!displayError}
-              filled={!!digit}
-              disabled={isLoading || isSuccess}
-              autoComplete={index === 0 ? 'one-time-code' : 'off'}
-              aria-label={`Digit ${index + 1} of ${OTP_LENGTH}`}
-            />
-          ))}
+          <SingleOtpInput
+            ref={inputRef}
+            type="text"
+            inputMode="numeric"
+            maxLength={OTP_LENGTH}
+            value={otp}
+            onChange={(e) => handleChange(e.target.value)}
+            onBlur={(e) => {
+              if (e.target.value) {
+                tracker.click({
+                  click_type: 'otp_filled',
+                  click_text: e.target.value
+                });
+              }
+            }}
+            onPaste={handlePaste}
+            hasError={!!displayError}
+            filled={otp.length > 0}
+            disabled={isLoading || isSuccess}
+            autoComplete="one-time-code"
+            aria-label={`${OTP_LENGTH}-digit OTP`}
+            placeholder={'•'.repeat(OTP_LENGTH)}
+          />
         </OtpContainer>
 
         <ButtonGroup>
