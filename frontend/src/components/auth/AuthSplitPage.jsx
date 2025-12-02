@@ -3,6 +3,12 @@ import styled, { keyframes } from 'styled-components';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import chatBot from '../../assets/ChatBot.png';
 import { AuthFlow } from './index';
+import {
+  ChartLine,
+  ChatCircleDots,
+  Target,
+  UsersThree
+} from 'phosphor-react';
 
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(30px) scale(0.98); }
@@ -492,23 +498,35 @@ const AuthSplitPage = () => {
               </Logo>
             </LogoContainer>
             <WelcomeContent>
-              <WelcomeTitle>Join Scaler</WelcomeTitle>
-              <WelcomeSubtitle>Unlock your personalized career path</WelcomeSubtitle>
+              <WelcomeTitle>Free Profile Evaluation</WelcomeTitle>
+              <WelcomeSubtitle>Tech Career Assessment in 2 mins</WelcomeSubtitle>
               <WelcomeDescription>
-                Access your dashboard, track progress, and get tailored guidance for your goals.
+                Get a comprehensive evaluation of your profile for tech roles. Discover your strengths, identify gaps, and receive personalized recommendations to accelerate your career growth.
               </WelcomeDescription>
               <FeaturesList>
                 <Feature>
-                  <IconContainer>🎯</IconContainer>
-                  Personalized recommendations
+                  <IconContainer>
+                    <ChartLine size={18} weight="regular" />
+                  </IconContainer>
+                  Profile Strength Analysis
                 </Feature>
                 <Feature>
-                  <IconContainer>📈</IconContainer>
-                  Progress tracking
+                  <IconContainer>
+                    <Target size={18} weight="regular" />
+                  </IconContainer>
+                  Skill Gap Assessment
                 </Feature>
                 <Feature>
-                  <IconContainer>🤝</IconContainer>
-                  Mentorship support
+                  <IconContainer>
+                    <ChatCircleDots size={18} weight="regular" />
+                  </IconContainer>
+                  Career Readiness Timeline
+                </Feature>
+                <Feature>
+                  <IconContainer>
+                    <UsersThree size={18} weight="regular" />
+                  </IconContainer>
+                  Peer Comparison
                 </Feature>
               </FeaturesList>
             </WelcomeContent>
@@ -563,23 +581,35 @@ const AuthSplitPage = () => {
         </LogoContainer>
 
         <WelcomeContent>
-          <WelcomeTitle>Join Scaler</WelcomeTitle>
-          <WelcomeSubtitle>Unlock your personalized career path</WelcomeSubtitle>
+          <WelcomeTitle>Free Profile Evaluation</WelcomeTitle>
+          <WelcomeSubtitle>Tech Career Assessment in 2 mins</WelcomeSubtitle>
           <WelcomeDescription>
-            Sign in to access your evaluation, get tailored insights, and continue your journey.
+            Get a comprehensive evaluation of your profile for tech roles. Discover your strengths, identify gaps, and receive personalized recommendations to accelerate your career growth.
           </WelcomeDescription>
           <FeaturesList>
             <Feature>
-              <IconContainer>📚</IconContainer>
-              Skill gap insights
+              <IconContainer>
+                <ChartLine size={18} weight="regular" />
+              </IconContainer>
+                Profile Strength Analysis
             </Feature>
             <Feature>
-              <IconContainer>💬</IconContainer>
-              Actionable next steps
+              <IconContainer>
+                <Target size={18} weight="regular" />
+              </IconContainer>
+                Skill Gap Assessment
             </Feature>
             <Feature>
-              <IconContainer>🔒</IconContainer>
-              Secure, OTP-based login
+              <IconContainer>
+                <ChatCircleDots size={18} weight="regular" />
+              </IconContainer>
+                Career Readiness Timeline
+            </Feature>
+            <Feature>
+              <IconContainer>
+                <UsersThree size={18} weight="regular" />
+              </IconContainer>
+                Peer Comparison
             </Feature>
           </FeaturesList>
         </WelcomeContent>

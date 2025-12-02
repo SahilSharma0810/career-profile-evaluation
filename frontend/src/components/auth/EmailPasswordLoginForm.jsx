@@ -4,6 +4,7 @@ import { Envelope, Lock, Eye, EyeSlash, SignIn, CheckCircle, WarningCircle } fro
 import { PrimaryButton, LoadingSpinner } from './ui';
 import { validateEmail } from '../../utils/validation';
 import TurnstileWidget from '../../utils/Turnstile';
+import tracker from '../../utils/tracker';
 
 const shake = keyframes`
   0%, 100% { transform: translateX(0); }
@@ -308,7 +309,18 @@ const EmailPasswordLoginForm = ({
               placeholder="you@example.com"
               value={email}
               onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
-              onBlur={() => { if (!validateEmail(email)) setEmailError('Please enter a valid email'); setEmailFocused(false); }}
+              onBlur={(e) => {
+                if (!validateEmail(email)) {
+                  setEmailError('Please enter a valid email'); 
+                  setEmailFocused(false);
+                }
+                if (e.target.value) {
+                  tracker.click({
+                    click_type: 'email_login_email_filled',
+                    click_text: e.target.value
+                  });
+                }
+              }}
               onFocus={() => { setEmailFocused(true); if (!turnstileToken) setTurnstileAppearance('always'); }}
               hasError={displayEmailError}
               disabled={isLoading || isSuccess}
@@ -335,7 +347,18 @@ const EmailPasswordLoginForm = ({
               placeholder="Enter your password"
               value={password}
               onChange={(e) => { setPassword(e.target.value); if (passwordError) setPasswordError(''); }}
-              onBlur={() => { if (!password) setPasswordError('Password is required'); setPasswordFocused(false); }}
+              onBlur={(e) => {
+                if (!password) {
+                  setPasswordError('Password is required'); 
+                  setPasswordFocused(false); 
+                }
+                if (e.target.value) {
+                  tracker.click({
+                    click_type: 'email_login_password_filled',
+                    click_text: e.target.value
+                  });
+                }
+              }}
               onFocus={() => setPasswordFocused(true)}
               hasError={displayPasswordError}
               disabled={isLoading || isSuccess}
