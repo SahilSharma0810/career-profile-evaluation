@@ -8,9 +8,9 @@ import InitialDataBootstrapper from './app/bootstrap/InitialDataBootstrapper';
 import AppLayout from './app/layouts/AppLayout';
 import AppRoutes from './app/routing/AppRoutes';
 import LoadingScreen from './app/screens/LoadingScreen';
-import LoggedOutScreen from './app/screens/LoggedOutScreen';
 import { RequestCallbackProvider } from './app/context/RequestCallbackContext';
 import useGTMSectionTracking from './hooks/useGTMSectionTracking';
+import AuthSplitPage from './components/auth/AuthSplitPage';
 
 import '@vectord/ui/dist/style.css';
 import '@vectord/fp-styles';
@@ -18,7 +18,7 @@ import '@vectord/fp-styles';
 function AppContent() {
   const [quizProgress, setQuizProgress] = useState(0);
   const [quizMode, setQuizMode] = useState('final');
-  const { error, loading } = useStore($initialData);
+  const { data, loading } = useStore($initialData);
   const location = useLocation();
   useGTMSectionTracking();
   const shouldShowNav = !(
@@ -34,33 +34,8 @@ function AppContent() {
     [quizProgress, quizMode]
   );
 
-  useEffect(() => {
-    if (!error) {
-      return;
-    }
-
-    const timeoutId = setTimeout(() => {
-      window.location.replace(`${window.location.origin}/users/sign_in/mobile`);
-    }, 2500);
-
-    return () => clearTimeout(timeoutId);
-  }, [error]);
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
-
-  if (error) {
-    return (
-      <LoggedOutScreen
-        onRetry={() => {
-          window.location.replace(
-            `${window.location.origin}/users/sign_in/mobile`
-          );
-        }}
-      />
-    );
-  }
+  if (loading) return <LoadingScreen />;
+  if (!data?.isLoggedIn) return <AuthSplitPage />;
 
   return (
     <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
