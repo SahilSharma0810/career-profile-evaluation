@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
 import QuizPage from '../../components/QuizPage';
 import ResultsPage from '../../components/ResultsPage';
-import MasterclassNudge from '../../components/MasterclassNudge';
 import { getPathWithQueryParams, hasNudgeBeenShown } from '../../utils/url';
 
 import AdminViewPage from '../../components/admin/AdminViewPage';
 
-const RoutesComponent = ({ quizMode, onQuizProgressChange }) => {
+const AppRoutes = ({ quizMode, onQuizProgressChange }) => {
   return (
     <Routes>
       <Route
@@ -27,27 +26,6 @@ const RoutesComponent = ({ quizMode, onQuizProgressChange }) => {
       <Route path="/results" element={<ResultsPage />} />
       <Route path="/admin/view/response/:response_id" element={<AdminViewPage />} />
     </Routes>
-  );
-};
-
-const AppRoutes = ({ quizMode, onQuizProgressChange }) => {
-  const [searchParams] = useSearchParams();
-  const nudgeId =
-    searchParams.get('show_nudge') || searchParams.get('event_id');
-
-  const [shouldShowNudge, setShouldShowNudge] = useState(false);
-
-  useEffect(() => {
-    if (nudgeId && !hasNudgeBeenShown(nudgeId)) {
-      setShouldShowNudge(true);
-    }
-  }, [nudgeId]);
-
-  return (
-    <>
-      {shouldShowNudge && <MasterclassNudge eventId={nudgeId} />}
-      <RoutesComponent {...{ quizMode, onQuizProgressChange }} />;
-    </>
   );
 };
 
