@@ -112,6 +112,7 @@ export const RequestCallbackProvider = ({ children }) => {
             ...attribution.getAttribution(),
             product: 'scaler',
             sub_product: 'career_profile_tool',
+            element: 'cpe_requested_callback_btn'
           },
           owner: {
             id: 1,
