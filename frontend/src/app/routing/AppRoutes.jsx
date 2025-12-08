@@ -12,7 +12,7 @@ const AppRoutes = ({ quizMode, onQuizProgressChange }) => {
   const [searchParams] = useSearchParams();
   const sourcePage = searchParams.get('from_page') || '';
 
-  if (sourcePage) {
+  if ( sourcePage ) {
     tracker.click({
       click_type: 'redirection_to_cpe',
       click_text: sourcePage
