@@ -10,12 +10,12 @@ import AdminViewPage from '../../components/admin/AdminViewPage';
 
 const AppRoutes = ({ quizMode, onQuizProgressChange }) => {
   const [searchParams] = useSearchParams();
-  const sourceParam = searchParams.get('from_page') || '';
+  const sourcePage = searchParams.get('from_page') || '';
 
-  if (sourceParam) {
+  if (sourcePage) {
     tracker.click({
       click_type: 'redirection_to_cpe',
-      click_text: sourceParam
+      click_text: sourcePage
     });
   }
 
