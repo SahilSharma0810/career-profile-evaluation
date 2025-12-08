@@ -336,11 +336,6 @@ const LoginForm = ({
     e.preventDefault();
     setTouched(true);
 
-    if (!turnstileToken) {
-      setTurnstileAppearance('always');
-      return;
-    }
-
     if (!phoneNumber.trim()) {
       setError('Phone number is required');
       return;
@@ -351,6 +346,12 @@ const LoginForm = ({
       return;
     }
 
+    if (!turnstileToken) {
+      setTurnstileAppearance('always');
+      setError('Please complete the verification');
+      return;
+    }
+
     onSubmit?.(phoneNumber, turnstileToken);
     if (turnstileRef.current
       && typeof turnstileRef.current.reset === 'function'
@@ -358,7 +359,7 @@ const LoginForm = ({
       turnstileRef.current.reset();
     }
     setTurnstileToken('');
-  }, [phoneNumber, onSubmit]);
+  }, [phoneNumber, onSubmit, turnstileToken]);
 
   const displayError = touched && (error || (isError && errorMessage));
 

@@ -118,16 +118,17 @@ const AuthFlow = ({
         click_source: 'auth_flow'
       });
     } else {
-      setFormState(prev => ({ ...prev, login: { status: 'error', error: result.error || 'Login failed. Please try again.' } }));
-      
+      const errorMsg = result.notFound
+        ? 'Account not found. Please sign up first.'
+        : (result.error || 'Login failed. Please try again.');
+
+      setFormState(prev => ({ ...prev, login: { status: 'error', error: errorMsg } }));
+
       if (result.notFound) {
-        setFormState(prev => ({ ...prev, login: { error: 'Account not found. Please sign up first.' } }));
         tracker.click({
           click_type: 'login_user_not_found',
           click_source: 'auth_flow'
         });
-      } else {
-        setFormState(prev => ({ ...prev, login: { error: result.error || 'Login failed. Please try again.' } }));
       }
     }
 
