@@ -853,6 +853,12 @@ const FinalModeQuiz = ({ onProgressChange }) => {
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
+      tracker.formSubmitStatus({
+        click_type: 'quiz_submit_button_clicked',
+        custom: {
+          source: 'final_mode_quiz'
+        }
+      });
       navigate(getPathWithQueryParams('/results'));
     }
   }, [currentStep, totalSteps, navigate]);

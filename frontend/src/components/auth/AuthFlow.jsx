@@ -187,6 +187,12 @@ const AuthFlow = ({
       custom: { flow: formState.authFlow }
     });
 
+    tracker.formSubmitStatus({
+      click_type: 'otp_submitted',
+      click_source: 'auth_flow',
+      custom: { flow: formState.authFlow }
+    });
+
     let result;
 
     if (formState.authFlow === 'signup') {

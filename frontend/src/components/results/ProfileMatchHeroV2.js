@@ -1326,6 +1326,12 @@ const ProfileMatchHeroV2 = ({
         source: 'results_career_consultation_cta'
       }
     });
+    tracker.formSubmitStatus({
+      click_type: 'career_consultation_btn_clicked',
+      custom: {
+        source: 'results_career_consultation_cta'
+      }
+    });
     openCallbackModal?.({ source: 'results_career_consultation_cta' });
   }, [openCallbackModal]);
 
@@ -1549,6 +1555,12 @@ const ProfileMatchHeroV2 = ({
 
   const handleRCBClick = useCallback(() => {
     tracker.click({
+      click_type: 'rcb_btn_clicked',
+      custom: {
+        source: 'results_bottom_cta'
+      }
+    });
+    tracker.formSubmitStatus({
       click_type: 'rcb_btn_clicked',
       custom: {
         source: 'results_bottom_cta'
