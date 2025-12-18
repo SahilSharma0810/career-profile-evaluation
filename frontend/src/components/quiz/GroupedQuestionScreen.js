@@ -381,6 +381,17 @@ const GroupedQuestionScreen = ({
       }
     });
 
+    tracker.formInput({
+      click_type: 'question_clicked',
+      custom: {
+        question_number: questionStartIndex + questionIndex,
+        question_id: questionId,
+        question_text: question.question,
+        option_selected: option.value,
+        option_label: option.label ?? option.value
+      }
+    });
+
     onResponse(questionId, option, question);
 
     // Check if all questions on this screen will be answered after this selection

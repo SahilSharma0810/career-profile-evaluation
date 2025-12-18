@@ -359,6 +359,12 @@ const NavigationBar = ({
         source: 'navbar'
       }
     });
+    tracker.ctaClick({
+      click_type: 'rcb_btn_clicked',
+      custom: {
+        source: 'navbar'
+      }
+    });
     openCallbackModal?.({ source: 'navbar' });
   }, [openCallbackModal]);
 

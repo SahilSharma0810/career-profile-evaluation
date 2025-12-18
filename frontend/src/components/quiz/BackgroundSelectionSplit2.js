@@ -203,6 +203,15 @@ const BackgroundSelectionSplit2 = ({ onSelect, onAutoAdvance, hideChat = false, 
       }
     });
 
+    tracker.formInput({
+      click_type: 'question_clicked',
+      custom: {
+        question_number: 1,
+        question_text: "What's your current background?",
+        option_selected: background
+      }
+    });
+
     // Auto-advance after selection
     if (onAutoAdvance) {
       setTimeout(() => {
