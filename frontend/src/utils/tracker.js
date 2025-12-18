@@ -4,7 +4,7 @@ export const GTMEventType = {
   CLICK: 'gtm_custom_click',
   HOVER: 'hover',
   FORM_SUBMIT_STATUS: 'form_submit_status',
-  FORM_INPUT: 'career_profile_evaluation_form_input',
+  FORM_INPUT: 'career_profile_evaluation_form_input_click',
   CTA_CLICK: 'career_profile_evaluation_cta_click'
 };
 
