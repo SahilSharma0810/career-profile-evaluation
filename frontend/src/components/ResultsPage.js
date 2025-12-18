@@ -399,7 +399,7 @@ const ResultsPage = () => {
         source: 'results_page_floating_cta'
       }
     });
-    tracker.formSubmitStatus({
+    tracker.ctaClick({
       click_type: 'rcb_btn_clicked',
       custom: {
         source: 'results_page_floating_cta'

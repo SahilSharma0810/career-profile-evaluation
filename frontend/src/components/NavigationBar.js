@@ -359,7 +359,7 @@ const NavigationBar = ({
         source: 'navbar'
       }
     });
-    tracker.formSubmitStatus({
+    tracker.ctaClick({
       click_type: 'rcb_btn_clicked',
       custom: {
         source: 'navbar'

@@ -3,7 +3,9 @@ export const GTMEventType = {
   SECTION_VIEW: 'gtm_section_view',
   CLICK: 'gtm_custom_click',
   HOVER: 'hover',
-  FORM_SUBMIT_STATUS: 'form_submit_status'
+  FORM_SUBMIT_STATUS: 'form_submit_status',
+  FORM_INPUT: 'career_profile_evaluation_form_input',
+  CTA_CLICK: 'career_profile_evaluation_cta_click'
 };
 
 function isUndefined(v) {
@@ -191,6 +193,14 @@ class Tracker {
 
   formSubmitStatus(attributes) {
     this._trackEvent(GTMEventType.FORM_SUBMIT_STATUS, attributes);
+  }
+
+  formInput(attributes) {
+    this._trackEvent(GTMEventType.FORM_INPUT, attributes);
+  }
+
+  ctaClick(attributes) {
+    this._trackEvent(GTMEventType.CTA_CLICK, attributes);
   }
 }
 

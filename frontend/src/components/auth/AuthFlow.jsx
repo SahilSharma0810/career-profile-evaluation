@@ -187,7 +187,7 @@ const AuthFlow = ({
       custom: { flow: formState.authFlow }
     });
 
-    tracker.formSubmitStatus({
+    tracker.ctaClick({
       click_type: 'otp_submitted',
       click_source: 'auth_flow',
       custom: { flow: formState.authFlow }

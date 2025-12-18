@@ -853,7 +853,7 @@ const FinalModeQuiz = ({ onProgressChange }) => {
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      tracker.formSubmitStatus({
+      tracker.ctaClick({
         click_type: 'quiz_submit_button_clicked',
         custom: {
           source: 'final_mode_quiz'

@@ -381,7 +381,7 @@ const GroupedQuestionScreen = ({
       }
     });
 
-    tracker.formSubmitStatus({
+    tracker.formInput({
       click_type: 'question_clicked',
       custom: {
         question_number: questionStartIndex + questionIndex,

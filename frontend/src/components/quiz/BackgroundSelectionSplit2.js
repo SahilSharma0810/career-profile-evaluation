@@ -203,7 +203,7 @@ const BackgroundSelectionSplit2 = ({ onSelect, onAutoAdvance, hideChat = false, 
       }
     });
 
-    tracker.formSubmitStatus({
+    tracker.formInput({
       click_type: 'question_clicked',
       custom: {
         question_number: 1,

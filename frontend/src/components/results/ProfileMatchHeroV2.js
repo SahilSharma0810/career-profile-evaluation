@@ -1326,7 +1326,7 @@ const ProfileMatchHeroV2 = ({
         source: 'results_career_consultation_cta'
       }
     });
-    tracker.formSubmitStatus({
+    tracker.ctaClick({
       click_type: 'career_consultation_btn_clicked',
       custom: {
         source: 'results_career_consultation_cta'
@@ -1560,7 +1560,7 @@ const ProfileMatchHeroV2 = ({
         source: 'results_bottom_cta'
       }
     });
-    tracker.formSubmitStatus({
+    tracker.ctaClick({
       click_type: 'rcb_btn_clicked',
       custom: {
         source: 'results_bottom_cta'
