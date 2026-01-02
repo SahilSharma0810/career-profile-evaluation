@@ -2,6 +2,8 @@
 FastAPI application for Free Profile Evaluation.
 Handles HTTP endpoints for profile evaluation.
 """
+import hashlib
+import json
 import logging
 import os
 from typing import Dict, Optional, Any
@@ -57,6 +59,43 @@ class EvaluationRequest(BaseModel):
     questionsAndAnswers: Optional[list[Dict[str, Any]]] = None
 
     model_config = ConfigDict(extra="forbid")
+
+
+# =====================================================
+# Career Roadmap Tool (CRT) Models
+# =====================================================
+class CRTQuizResponses(BaseModel):
+    """
+    CRT Quiz responses - flexible schema to accept any quiz fields.
+    Fields based on career-roadmap-tool UnifiedContext.
+    """
+    background: Optional[str] = None
+    currentBackground: Optional[str] = None
+    stepsTaken: Optional[str] = None
+    targetRole: Optional[str] = None
+    targetRoleLabel: Optional[str] = None
+    yearsOfExperience: Optional[str] = None
+    codeComfort: Optional[str] = None
+    currentSkills: Optional[list[str]] = None
+    timeline: Optional[str] = None
+    currentRole: Optional[str] = None
+    currentRoleLabel: Optional[str] = None
+    targetCompany: Optional[str] = None
+    targetCompanyLabel: Optional[str] = None
+
+    model_config = ConfigDict(extra="allow")  # Allow additional fields
+
+
+class CRTStoreRequest(BaseModel):
+    """Request body for storing CRT quiz responses."""
+    quizResponses: Dict[str, Any]
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class CRTStoreResponse(BaseModel):
+    """Response containing the MD5 hash key."""
+    hash_key: str
 
 
 app = FastAPI(title="Full Profile Evaluation API")
@@ -235,6 +274,96 @@ async def get_response_by_cache_key(
         "response": cache_entry["response_json"],
     }
 
+
+crt_router = APIRouter(prefix="/crt", tags=["Career Roadmap Tool"])
+
+
+def _make_crt_hash(quiz_responses: Dict[str, Any]) -> str:
+    """Generate MD5 hash from quiz responses (deterministic)."""
+    serialized = json.dumps(quiz_responses, sort_keys=True, separators=(",", ":"))
+    return hashlib.md5(serialized.encode("utf-8")).hexdigest()
+
+
+@crt_router.post("/store", response_model=CRTStoreResponse)
+async def store_crt_quiz_responses(request: CRTStoreRequest) -> CRTStoreResponse:
+    from database import get_db_connection
+    
+    quiz_responses = request.quizResponses
+    hash_key = _make_crt_hash(quiz_responses)
+    
+    logger.info(f"Storing CRT quiz responses with hash: {hash_key}")
+    
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO crt_quiz_responses (hash_key, quiz_responses)
+                    VALUES (%s, %s)
+                    ON CONFLICT (hash_key) DO UPDATE SET
+                        quiz_responses = EXCLUDED.quiz_responses
+                    """,
+                    (hash_key, json.dumps(quiz_responses))
+                )
+        
+        logger.info(f"Successfully stored CRT quiz responses: {hash_key}")
+        return CRTStoreResponse(hash_key=hash_key)
+        
+    except Exception as exc:
+        logger.exception(f"Failed to store CRT quiz responses: {exc}")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to store quiz responses"
+        ) from exc
+
+
+@crt_router.get("/admin/view/{hash_key}")
+async def get_crt_quiz_responses(
+    hash_key: str,
+    username: str = Depends(verify_admin_credentials)
+) -> Dict[str, Any]:
+    from database import get_db_connection
+    from psycopg2.extras import RealDictCursor
+    
+    logger.info(f"Admin view request for CRT hash: {hash_key}")
+    
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(
+                    """
+                    SELECT quiz_responses, created_at
+                    FROM crt_quiz_responses
+                    WHERE hash_key = %s
+                    """,
+                    (hash_key,)
+                )
+                result = cur.fetchone()
+        
+        if not result:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Quiz responses not found for hash: {hash_key}"
+            )
+        
+        return {
+            "hash_key": hash_key,
+            "quiz_responses": result["quiz_responses"],
+            "created_at": result["created_at"].isoformat() if result["created_at"] else None
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception(f"Failed to retrieve CRT quiz responses: {exc}")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to retrieve quiz responses"
+        ) from exc
+
+
+# Include CRT router under the main API router
+api_router.include_router(crt_router)
 
 app.include_router(api_router, prefix="/career-profile-tool/api")
 

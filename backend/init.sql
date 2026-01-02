@@ -37,3 +37,17 @@ SELECT
     pg_size_pretty(pg_total_relation_size('response_cache')) as table_size
 FROM response_cache;
 COMMENT ON VIEW cache_statistics IS 'Provides overview statistics of the response cache';
+
+
+CREATE TABLE IF NOT EXISTS crt_quiz_responses (
+    id SERIAL PRIMARY KEY,
+    hash_key VARCHAR(32) NOT NULL UNIQUE,
+    quiz_responses JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_crt_hash_key ON crt_quiz_responses(hash_key);
+CREATE INDEX IF NOT EXISTS idx_crt_created_at ON crt_quiz_responses(created_at DESC);
+COMMENT ON TABLE crt_quiz_responses IS 'Stores Career Roadmap Tool quiz responses keyed by MD5 hash';
+COMMENT ON COLUMN crt_quiz_responses.hash_key IS 'MD5 hash of the normalized quiz responses payload';
+COMMENT ON COLUMN crt_quiz_responses.quiz_responses IS 'Full quiz responses JSON from the frontend';
+COMMENT ON COLUMN crt_quiz_responses.created_at IS 'Timestamp when entry was created';
