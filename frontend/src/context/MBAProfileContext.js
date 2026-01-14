@@ -1,0 +1,217 @@
+import React, { createContext, useContext, useReducer, useCallback, useMemo, useEffect, useRef } from 'react';
+
+const MBAProfileContext = createContext();
+
+// MBA-specific localStorage key to isolate from main app
+const MBA_STORAGE_KEY = 'scalerMBAProfileState';
+
+// Load state from localStorage
+const loadStateFromStorage = () => {
+  try {
+    const savedState = localStorage.getItem(MBA_STORAGE_KEY);
+    if (savedState) {
+      return JSON.parse(savedState);
+    }
+  } catch (error) {
+    console.error('Failed to load MBA state from localStorage:', error);
+  }
+  return null;
+};
+
+// Save state to localStorage
+const saveStateToStorage = (state) => {
+  try {
+    localStorage.setItem(MBA_STORAGE_KEY, JSON.stringify(state));
+  } catch (error) {
+    console.error('Failed to save MBA state to localStorage:', error);
+  }
+};
+
+const defaultState = {
+  // Quiz responses for MBA assessment
+  background: null,
+  quizResponses: {},
+  questionsAndAnswers: [],
+
+  // Goals and requirements
+  goals: {
+    requirementType: [],
+    targetCompany: '',
+    topicOfInterest: []
+  },
+
+  // Evaluation results
+  evaluationResults: null,
+
+  // Loading state for results page
+  isLoadingResults: false
+};
+
+const persistedState = loadStateFromStorage();
+const initialState = persistedState
+  ? {
+      ...defaultState,
+      ...persistedState,
+      goals: {
+        ...defaultState.goals,
+        ...(persistedState.goals || {})
+      },
+      quizResponses: {
+        ...defaultState.quizResponses,
+        ...(persistedState.quizResponses || {})
+      },
+      questionsAndAnswers: Array.isArray(persistedState.questionsAndAnswers)
+        ? persistedState.questionsAndAnswers
+        : defaultState.questionsAndAnswers
+    }
+  : defaultState;
+
+const profileReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_BACKGROUND':
+      return {
+        ...state,
+        background: action.payload
+      };
+
+    case 'SET_QUIZ_RESPONSE':
+      return {
+        ...state,
+        quizResponses: {
+          ...state.quizResponses,
+          [action.payload.question]: action.payload.answer
+        }
+      };
+
+    case 'ADD_QA_PAIR':
+      const existingIndex = state.questionsAndAnswers.findIndex(
+        qa => qa.field === action.payload.field
+      );
+      const updatedQA = existingIndex >= 0
+        ? [
+            ...state.questionsAndAnswers.slice(0, existingIndex),
+            action.payload,
+            ...state.questionsAndAnswers.slice(existingIndex + 1)
+          ]
+        : [...state.questionsAndAnswers, action.payload];
+      
+      return {
+        ...state,
+        questionsAndAnswers: updatedQA
+      };
+
+    case 'CLEAR_QUIZ_RESPONSES':
+      return {
+        ...state,
+        quizResponses: {},
+        questionsAndAnswers: []
+      };
+    
+    case 'SET_GOALS':
+      return {
+        ...state,
+        goals: {
+          ...state.goals,
+          ...action.payload
+        }
+      };
+    
+    case 'SET_EVALUATION_RESULTS':
+      return {
+        ...state,
+        evaluationResults: action.payload
+      };
+
+    case 'SET_LOADING_RESULTS':
+      return {
+        ...state,
+        isLoadingResults: action.payload
+      };
+
+    case 'RESET_PROFILE':
+      return defaultState;
+
+    default:
+      return state;
+  }
+};
+
+export const MBAProfileProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(profileReducer, initialState);
+  const isResetting = useRef(false);
+
+  // Save to localStorage whenever state changes (except during reset)
+  useEffect(() => {
+    if (!isResetting.current) {
+      saveStateToStorage(state);
+    }
+  }, [state]);
+
+  const setBackground = useCallback((background) => {
+    dispatch({ type: 'SET_BACKGROUND', payload: background });
+  }, [dispatch]);
+
+  const setQuizResponse = useCallback((question, answer) => {
+    dispatch({ type: 'SET_QUIZ_RESPONSE', payload: { question, answer } });
+  }, [dispatch]);
+
+  const addQAPair = useCallback((question, answer, field) => {
+    dispatch({ 
+      type: 'ADD_QA_PAIR', 
+      payload: { question, answer, field } 
+    });
+  }, [dispatch]);
+
+  const clearQuizResponses = useCallback(() => {
+    dispatch({ type: 'CLEAR_QUIZ_RESPONSES' });
+  }, [dispatch]);
+
+  const setGoals = useCallback((goals) => {
+    dispatch({ type: 'SET_GOALS', payload: goals });
+  }, [dispatch]);
+
+  const setEvaluationResults = useCallback((results) => {
+    dispatch({ type: 'SET_EVALUATION_RESULTS', payload: results });
+  }, [dispatch]);
+
+  const setLoadingResults = useCallback((isLoading) => {
+    dispatch({ type: 'SET_LOADING_RESULTS', payload: isLoading });
+  }, [dispatch]);
+
+  const resetProfile = useCallback(() => {
+    isResetting.current = true;
+    localStorage.removeItem(MBA_STORAGE_KEY);
+    dispatch({ type: 'RESET_PROFILE' });
+    // Reset flag after a brief delay
+    setTimeout(() => {
+      isResetting.current = false;
+    }, 100);
+  }, [dispatch]);
+
+  const value = useMemo(() => ({
+    ...state,
+    setBackground,
+    setQuizResponse,
+    addQAPair,
+    clearQuizResponses,
+    setGoals,
+    setEvaluationResults,
+    setLoadingResults,
+    resetProfile
+  }), [state, setBackground, setQuizResponse, addQAPair, clearQuizResponses, setGoals, setEvaluationResults, setLoadingResults, resetProfile]);
+
+  return (
+    <MBAProfileContext.Provider value={value}>
+      {children}
+    </MBAProfileContext.Provider>
+  );
+};
+
+export const useMBAProfile = () => {
+  const context = useContext(MBAProfileContext);
+  if (!context) {
+    throw new Error('useMBAProfile must be used within a MBAProfileProvider');
+  }
+  return context;
+};
+

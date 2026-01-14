@@ -365,6 +365,50 @@ async def get_crt_quiz_responses(
 # Include CRT router under the main API router
 api_router.include_router(crt_router)
 
+# =====================================================
+# MBA Readiness Evaluation (No OpenAI - Mapping Based)
+# =====================================================
+mba_router = APIRouter(prefix="/mba", tags=["MBA Readiness"])
+
+
+@mba_router.post("/evaluate")
+async def evaluate_mba_readiness(request: Dict[str, Any]):
+    """
+    Evaluate MBA readiness based on quiz responses.
+    Pure mapping-based evaluation - no OpenAI API calls.
+
+    Request body should contain:
+    - role: str (product-manager, finance, sales, marketing, operations, founder)
+    - experience: str (0-2, 2-5, 5-8, 8-12, 12+)
+    - career_goal: str
+    - Role-specific question responses
+
+    Returns:
+        Complete evaluation with scores, skills, quick wins, AI tools, etc.
+    """
+    from src.services.mba_evaluator import evaluate_mba_readiness
+
+    logger.info(f"Received MBA evaluation request for role: {request.get('role')}")
+
+    try:
+        # Pass request as-is to preserve dash-case quiz question keys
+        # (skill scoring maps expect keys like 'pm-retention-problem', not 'pm_retention_problem')
+        result = evaluate_mba_readiness(request)
+
+        logger.info("MBA evaluation completed successfully")
+        return result
+
+    except Exception as exc:
+        logger.exception(f"Failed to evaluate MBA readiness: {exc}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate MBA evaluation: {str(exc)}"
+        ) from exc
+
+
+# Include MBA router under the main API router
+api_router.include_router(mba_router)
+
 app.include_router(api_router, prefix="/career-profile-tool/api")
 
 def create_app() -> FastAPI:
