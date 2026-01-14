@@ -1542,34 +1542,6 @@ const MBAResultsPage = () => {
               fields: ['online_mba', adminPageLink]
             });
 
-            // Send attribution for evaluation
-            attribution.setAttribution('mba_cpe_evaluated', { program: 'online_mba' });
-            const jwt = await generateJWT();
-            const refererUrl = getURLWithUTMParams();
-          
-            await apiRequest(
-              'POST', 
-              '/api/v3/analytics/attributions/', 
-              {
-                attributions: {
-                  ...attribution.getAttribution(),
-                  program: 'online_mba',
-                  product: 'scaler',
-                  sub_product: 'career_profile_tool',
-                  element: 'mba_cpe_evaluate_btn'
-                },
-                owner: {
-                  id: 1,
-                  type: 'CareerProfileEvaluation',
-                },
-              },
-              {
-                headers: {
-                  'X-user-token': jwt,
-                  'X-REFERER': refererUrl.toString()
-                }
-              }
-            );
             tracker.click({
               click_type: "mba_profile_evaluation_detail_submitted",
             });
