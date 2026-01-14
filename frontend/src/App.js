@@ -14,6 +14,7 @@ import useGTMSectionTracking from './hooks/useGTMSectionTracking';
 import AuthSplitPage from './components/auth/AuthSplitPage';
 import MBAQuiz from './components/quiz/MBAQuiz';
 import MBAResultsPage from './components/MBAResultsPage';
+import MBAAdminViewPage from './components/admin/MBAAdminViewPage';
 import { getPathWithQueryParams } from './utils/url';
 
 import '@vectord/ui/dist/style.css';
@@ -55,6 +56,10 @@ function MBAAppContent() {
             element={<MBAQuiz onProgressChange={setQuizProgress} />}
           />
           <Route path="/online-mba-cpe/mba-results" element={<MBAResultsPage />} />
+          <Route 
+            path="/online-mba-cpe/admin/view/response/:response_id" 
+            element={<MBAAdminViewPage />} 
+          />
         </Routes>
       </AppLayout>
     </MBAProfileProvider>

@@ -28,10 +28,11 @@ import {
 } from 'phosphor-react';
 import { useNavigate } from 'react-router-dom';
 import { useMBAProfile } from '../context/MBAProfileContext';
-import { useRequestCallback } from '../app/context/RequestCallbackContext';
-import { apiRequest } from '../utils/api';
-import { getPathWithQueryParams } from '../utils/url';
+import { apiRequest, generateJWT } from '../utils/api';
+import { getPathWithQueryParams, getURLWithUTMParams } from '../utils/url';
 import tracker from '../utils/tracker';
+import attribution from '../utils/attribution';
+import { sendLSQActivity } from '../utils/leadSquared';
 import oliveBranchLeft from '../assets/Left-Olive-Branch.png';
 import oliveBranchRight from '../assets/Right-Olive-branch.png';
 import transformationCompaniesData from '../data/transformation_companies.json';
@@ -1149,7 +1150,7 @@ const FloatingCTA = styled.button`
   bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
-  background: #c71f69;
+  background: #D55D26;
   color: white;
   border: none;
   padding: 16px 32px;
@@ -1158,7 +1159,7 @@ const FloatingCTA = styled.button`
   letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(199, 31, 105, 0.35);
+  box-shadow: 0 8px 24px rgba(213, 93, 38, 0.35);
   z-index: 100;
   transition: all 0.3s ease;
   white-space: nowrap;
@@ -1168,14 +1169,19 @@ const FloatingCTA = styled.button`
   align-items: center;
   gap: 10px;
 
-  &:hover {
-    background: #a01855;
-    box-shadow: 0 12px 32px rgba(199, 31, 105, 0.45);
+  &:hover:not(:disabled) {
+    background: #b84d1f;
+    box-shadow: 0 12px 32px rgba(213, 93, 38, 0.45);
     transform: translateX(-50%) translateY(-2px);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: translateX(-50%) translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
   }
 
   @media (max-width: 768px) {
@@ -1186,6 +1192,56 @@ const FloatingCTA = styled.button`
 
   @media print {
     display: none;
+  }
+`;
+
+// Toast notification styles
+const slideIn = keyframes`
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+`;
+
+const Toast = styled.div`
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: ${props => props.variant === 'success' ? '#065f46' : '#dc2626'};
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: ${props => props.isExiting ? slideOut : slideIn} 0.3s ease forwards;
+
+  @media (max-width: 768px) {
+    bottom: 80px;
+    padding: 14px 20px;
+    font-size: 0.875rem;
+    max-width: 90%;
+    text-align: center;
   }
 `;
 
@@ -1309,14 +1365,34 @@ const getRoleDisplayLabel = (roleKey) => {
   return roleMapping[roleKey] || roleKey;
 };
 
+// Helper function to generate MBA admin page link
+const getMBAAdminPageLink = (responseId) => {
+  if (!responseId) {
+    return '';
+  }
+  
+  const origin = window.location.origin;
+  const basePath = '/career-profile-tool';
+  const adminPath = `/online-mba-cpe/admin/view/response/${responseId}`;
+  const path = `${basePath}${adminPath}`;
+  
+  const cleanOrigin = origin.replace(/\/$/, '');
+  return `${cleanOrigin}${path}`;
+};
+
 const MBAResultsPage = () => {
   const navigate = useNavigate();
   const { quizResponses, setLoadingResults } = useMBAProfile();
-  const { open: openCallbackModal } = useRequestCallback();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [results, setResults] = useState(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [responseId, setResponseId] = useState(null);
+  const [rcbSubmitting, setRcbSubmitting] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastVariant, setToastVariant] = useState('success');
+  const [isToastExiting, setIsToastExiting] = useState(false);
 
   const loadingSteps = [
     {
@@ -1343,6 +1419,23 @@ const MBAResultsPage = () => {
 
   const [loadingStep, setLoadingStep] = useState(0);
   const [transformationStories, setTransformationStories] = useState([]);
+
+  // Helper function to show toast notification
+  const showToastMessage = useCallback((message, variant = 'success') => {
+    setToastMessage(message);
+    setToastVariant(variant);
+    setIsToastExiting(false);
+    setShowToast(true);
+
+    // Auto-hide toast after 4 seconds
+    setTimeout(() => {
+      setIsToastExiting(true);
+      setTimeout(() => {
+        setShowToast(false);
+        setIsToastExiting(false);
+      }, 300);
+    }, 4000);
+  }, []);
 
   // Use OpenAI transformation stories directly (no fallback)
   useEffect(() => {
@@ -1437,6 +1530,54 @@ const MBAResultsPage = () => {
         clearInterval(stepInterval);
         setLoadingProgress(100);
 
+        // Store response_id for admin link generation
+        if (response?.response_id) {
+          setResponseId(response.response_id);
+          
+          // Send LSQ activity after successful evaluation (similar to normal CPE)
+          const adminPageLink = getMBAAdminPageLink(response.response_id);
+          try {
+            await sendLSQActivity({ 
+              activityName: 'mba_cpe_evaluated',
+              fields: ['online_mba', adminPageLink]
+            });
+
+            // Send attribution for evaluation
+            attribution.setAttribution('mba_cpe_evaluated', { program: 'online_mba' });
+            const jwt = await generateJWT();
+            const refererUrl = getURLWithUTMParams();
+          
+            await apiRequest(
+              'POST', 
+              '/api/v3/analytics/attributions/', 
+              {
+                attributions: {
+                  ...attribution.getAttribution(),
+                  program: 'online_mba',
+                  product: 'scaler',
+                  sub_product: 'career_profile_tool',
+                  element: 'mba_cpe_evaluate_btn'
+                },
+                owner: {
+                  id: 1,
+                  type: 'CareerProfileEvaluation',
+                },
+              },
+              {
+                headers: {
+                  'X-user-token': jwt,
+                  'X-REFERER': refererUrl.toString()
+                }
+              }
+            );
+            tracker.click({
+              click_type: "mba_profile_evaluation_detail_submitted",
+            });
+          } catch (e) {
+            console.error('Failed to send MBA evaluation activity:', e);
+          }
+        }
+
         // Show results after both API and timer complete
         setTimeout(() => {
           setResults(response);
@@ -1454,7 +1595,9 @@ const MBAResultsPage = () => {
     fetchEvaluation();
   }, [quizResponses, navigate, setLoadingResults]);
 
-  const handleRCBClick = useCallback(() => {
+  const handleRCBClick = useCallback(async () => {
+    if (rcbSubmitting) return;
+
     tracker.click({
       click_type: 'rcb_btn_clicked',
       custom: { source: 'mba_results_page_floating_cta' }
@@ -1463,8 +1606,67 @@ const MBAResultsPage = () => {
       click_type: 'rcb_btn_clicked',
       custom: { source: 'mba_results_page_floating_cta' }
     });
-    openCallbackModal?.({ source: 'mba_results_page_floating_cta' });
-  }, [openCallbackModal]);
+
+    setRcbSubmitting(true);
+
+    try {
+      // Set attribution with program: "online_mba"
+      attribution.setAttribution('mba_cpe_requested_callback', { program: 'online_mba' });
+
+      // Get admin page link for this evaluation
+      const adminPageLink = responseId ? getMBAAdminPageLink(responseId) : '';
+
+      // Send LSQ activity for RCB with admin link
+      await sendLSQActivity({ 
+        activityName: 'rcb_from_mba_cpe',
+        fields: ['Online MBA', adminPageLink]
+      });
+
+      // Send attribution API call
+      const jwt = await generateJWT();
+      const refererUrl = getURLWithUTMParams();
+    
+      await apiRequest(
+        'POST', 
+        '/api/v3/analytics/attributions/', 
+        {
+          attributions: {
+            ...attribution.getAttribution(),
+            program: 'online_mba',
+            product: 'scaler',
+            sub_product: 'career_profile_tool',
+            element: 'mba_cpe_requested_callback_btn'
+          },
+          owner: {
+            id: 1,
+            type: 'CareerProfileEvaluation',
+          },
+        },
+        {
+          headers: {
+            'X-user-token': jwt,
+            'X-REFERER': refererUrl.toString()
+          }
+        }
+      );
+
+      tracker.click({
+        click_type: 'mba_rcb_form_submitted',
+        custom: {
+          source: 'mba_results_page_floating_cta',
+          program: 'online_mba'
+        }
+      });
+
+      // Show success toast
+      showToastMessage('Request submitted! Our team will call you shortly.', 'success');
+    } catch (error) {
+      console.error('MBA Request callback submission failed:', error);
+      showToastMessage('Failed to submit request. Please try again.', 'error');
+    } finally {
+      setRcbSubmitting(false);
+    }
+  }, [responseId, rcbSubmitting, showToastMessage]);
 
   if (loading) {
     const currentStep = loadingSteps[loadingStep];
@@ -2177,10 +2379,20 @@ const MBAResultsPage = () => {
         </HeroContainer>
       </Container>
 
-      <FloatingCTA onClick={handleRCBClick}>
+      <FloatingCTA onClick={handleRCBClick} disabled={rcbSubmitting}>
         <Phone size={20} weight="bold" />
-        Book Free 1:1 Career Call
+        {rcbSubmitting ? 'Submitting...' : 'Book Free 1:1 Career Call'}
       </FloatingCTA>
+
+      {/* Toast notification */}
+      {showToast && (
+        <Toast variant={toastVariant} isExiting={isToastExiting}>
+          {toastVariant === 'success' ? (
+            <CheckCircle size={20} weight="bold" />
+          ) : null}
+          {toastMessage}
+        </Toast>
+      )}
     </ResultsContainer>
   );
 };

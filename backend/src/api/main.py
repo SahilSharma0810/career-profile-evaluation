@@ -371,6 +371,24 @@ api_router.include_router(crt_router)
 mba_router = APIRouter(prefix="/mba", tags=["MBA Readiness"])
 
 
+def _generate_mba_cache_key(payload: Dict[str, Any]) -> str:
+    """Generate a cache key for MBA evaluation responses."""
+    # Include only deterministic fields for cache key
+    cache_payload = {
+        'role': payload.get('role'),
+        'experience': payload.get('experience'),
+        'career_goal': payload.get('career_goal'),
+        'currentRole': payload.get('currentRole'),
+    }
+    # Add all quiz response keys (excluding timestamps or random fields)
+    for key, value in payload.items():
+        if key not in cache_payload and not key.startswith('_'):
+            cache_payload[key] = value
+    
+    serialized = json.dumps(cache_payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
 @mba_router.post("/evaluate")
 async def evaluate_mba_readiness(request: Dict[str, Any]):
     """
@@ -387,6 +405,7 @@ async def evaluate_mba_readiness(request: Dict[str, Any]):
         Complete evaluation with scores, skills, quick wins, AI tools, etc.
     """
     from src.services.mba_evaluator import evaluate_mba_readiness
+    from src.repositories.cache_repository import CacheRepository
 
     logger.info(f"Received MBA evaluation request for role: {request.get('role')}")
 
@@ -395,7 +414,27 @@ async def evaluate_mba_readiness(request: Dict[str, Any]):
         # (skill scoring maps expect keys like 'pm-retention-problem', not 'pm_retention_problem')
         result = evaluate_mba_readiness(request)
 
-        logger.info("MBA evaluation completed successfully")
+        # Generate cache key and store response for admin view
+        cache_key = _generate_mba_cache_key(request)
+        model_name = "mba-evaluation"  # Use distinct model name for MBA
+        
+        # Store in cache with user_input for admin view
+        cache_repo = CacheRepository()
+        user_input = {
+            "evaluation_type": "mba",  # Mark as MBA evaluation
+            "quizResponses": request,
+        }
+        cache_repo.set(
+            cache_key,
+            model_name,
+            json.dumps(result),
+            user_input=user_input
+        )
+        
+        # Add response_id to result
+        result["response_id"] = cache_key
+        
+        logger.info(f"MBA evaluation completed successfully, response_id: {cache_key[:16]}...")
         return result
 
     except Exception as exc:
@@ -404,6 +443,42 @@ async def evaluate_mba_readiness(request: Dict[str, Any]):
             status_code=500,
             detail=f"Failed to generate MBA evaluation: {str(exc)}"
         ) from exc
+
+
+@mba_router.get("/admin/view/{cache_key}")
+async def get_mba_response_by_cache_key(
+    cache_key: str,
+    username: str = Depends(verify_admin_credentials)
+) -> Dict[str, Any]:
+    """
+    Admin endpoint to view an MBA evaluation response by its cache key.
+    
+    Args:
+        cache_key: The SHA256 hash key (response_id) from response_cache table
+        
+    Returns:
+        Dictionary containing the cached MBA response and input payload
+    """
+    from src.repositories.cache_repository import CacheRepository
+    
+    logger.info(f"Admin view request for MBA cache_key: {cache_key[:16]}...")
+    
+    cache_repo = CacheRepository()
+    model_name = "mba-evaluation"
+    
+    cache_entry = cache_repo.get_by_key(cache_key, model_name)
+    
+    if not cache_entry:
+        raise HTTPException(
+            status_code=404,
+            detail=f"MBA response not found for cache_key: {cache_key}"
+        )
+    
+    return {
+        "evaluation_type": "mba",
+        "user_input": cache_entry["user_input"],
+        "response": cache_entry["response_json"],
+    }
 
 
 # Include MBA router under the main API router
