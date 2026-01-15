@@ -24,6 +24,61 @@ import {
 } from 'recharts';
 import BasicAuthModal from '../auth/BasicAuthModal';
 import { apiRequest } from '../../utils/api';
+import {
+  MBA_INTAKE_SCREEN_1,
+  MBA_INTAKE_SCREEN_2,
+  MBA_ROLE_SPECIFIC_SCREENS
+} from '../quiz/MBAQuizScreens';
+
+// Build a mapping of question IDs to their full question text and metadata
+const buildQuestionMap = () => {
+  const questionMap = {};
+  
+  // Add intake screen 1 questions
+  MBA_INTAKE_SCREEN_1.questions.forEach(q => {
+    questionMap[q.id] = {
+      question: q.question,
+      helperText: q.helperText,
+      options: q.options?.reduce((acc, opt) => {
+        acc[opt.value] = opt.label;
+        return acc;
+      }, {})
+    };
+  });
+  
+  // Add intake screen 2 questions
+  MBA_INTAKE_SCREEN_2.questions.forEach(q => {
+    questionMap[q.id] = {
+      question: q.question,
+      helperText: q.helperText,
+      options: q.options?.reduce((acc, opt) => {
+        acc[opt.value] = opt.label;
+        return acc;
+      }, {})
+    };
+  });
+  
+  // Add role-specific questions
+  Object.values(MBA_ROLE_SPECIFIC_SCREENS).forEach(screens => {
+    screens.forEach(screen => {
+      screen.questions.forEach(q => {
+        questionMap[q.id] = {
+          question: q.question,
+          helperText: q.helperText,
+          isScenario: q.isScenario,
+          options: q.options?.reduce((acc, opt) => {
+            acc[opt.value] = opt.label;
+            return acc;
+          }, {})
+        };
+      });
+    });
+  });
+  
+  return questionMap;
+};
+
+const MBA_QUESTION_MAP = buildQuestionMap();
 
 const PrintStyles = createGlobalStyle`
   @media print {
@@ -276,18 +331,48 @@ const QAItem = styled.div`
 `;
 
 const QuestionText = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  color: #475569;
+  color: #1e293b;
   margin-bottom: 8px;
+  line-height: 1.5;
+`;
+
+const QuestionMeta = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+`;
+
+const QuestionBadge = styled.span`
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  background: ${props => props.variant === 'scenario' ? '#fef3c7' : '#e0f2fe'};
+  color: ${props => props.variant === 'scenario' ? '#92400e' : '#0369a1'};
+`;
+
+const QuestionHelperText = styled.div`
+  font-size: 0.75rem;
+  color: #64748b;
+  font-style: italic;
+  margin-top: 4px;
 `;
 
 const AnswerText = styled.div`
   font-size: 0.9375rem;
   font-weight: 500;
   color: #1e293b;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  margin-top: 8px;
 `;
 
 // Score Section
@@ -709,13 +794,28 @@ const MBAAdminViewPage = () => {
   const userInput = data.user_input || {};
   const quizResponses = userInput.quizResponses || {};
 
-  // Extract quiz Q&A pairs for display
+  // Extract quiz Q&A pairs for display with full question text
   const qaPairs = Object.entries(quizResponses)
-    .filter(([key]) => !['currentRole', 'experience', 'careerGoal', 'role', 'career_goal'].includes(key))
-    .map(([key, value]) => ({
-      question: key.replace(/-/g, ' ').replace(/_/g, ' '),
-      answer: value
-    }));
+    .filter(([key]) => !['currentRole', 'experience', 'careerGoal', 'role', 'career_goal', 'primaryGoal'].includes(key))
+    .map(([key, value]) => {
+      const questionData = MBA_QUESTION_MAP[key];
+      const displayAnswer = questionData?.options?.[value] || value;
+      
+      return {
+        questionId: key,
+        question: questionData?.question || key.replace(/-/g, ' ').replace(/_/g, ' '),
+        helperText: questionData?.helperText,
+        isScenario: questionData?.isScenario,
+        answer: displayAnswer,
+        rawValue: value
+      };
+    });
+
+  // Helper to get readable answer for core fields
+  const getReadableAnswer = (questionId, value) => {
+    const questionData = MBA_QUESTION_MAP[questionId];
+    return questionData?.options?.[value] || value || 'Not specified';
+  };
 
   const getSkillLevelLabel = (level) => {
     if (level === 1) return 'Needs Improvement';
@@ -762,26 +862,45 @@ const MBAAdminViewPage = () => {
             Quiz Questions & Answers
           </QATitle>
           <QAList>
-            {/* Role and Experience */}
+            {/* Role and Experience - Core Profile Questions */}
             <QAItem>
-              <QuestionText>Current Role</QuestionText>
-              <AnswerText>{quizResponses.currentRole || quizResponses.role || 'Not specified'}</AnswerText>
+              <QuestionMeta>
+                <QuestionBadge>Profile</QuestionBadge>
+              </QuestionMeta>
+              <QuestionText>What's your current role or background?</QuestionText>
+              <AnswerText>{getReadableAnswer('currentRole', quizResponses.currentRole || quizResponses.role)}</AnswerText>
             </QAItem>
             <QAItem>
-              <QuestionText>Experience</QuestionText>
-              <AnswerText>{quizResponses.experience || 'Not specified'}</AnswerText>
+              <QuestionMeta>
+                <QuestionBadge>Profile</QuestionBadge>
+              </QuestionMeta>
+              <QuestionText>How many years of total work experience do you have?</QuestionText>
+              <AnswerText>{getReadableAnswer('experience', quizResponses.experience)}</AnswerText>
             </QAItem>
             <QAItem>
-              <QuestionText>Career Goal</QuestionText>
-              <AnswerText>{quizResponses.careerGoal || quizResponses.career_goal || 'Not specified'}</AnswerText>
+              <QuestionMeta>
+                <QuestionBadge>Profile</QuestionBadge>
+              </QuestionMeta>
+              <QuestionText>What's your primary career goal?</QuestionText>
+              <AnswerText>{getReadableAnswer('primaryGoal', quizResponses.primaryGoal || quizResponses.careerGoal || quizResponses.career_goal)}</AnswerText>
             </QAItem>
-            {/* Other Q&A pairs */}
-            {qaPairs.slice(0, 10).map((qa, index) => (
-              <QAItem key={index}>
-                <QuestionText>{qa.question}</QuestionText>
-                <AnswerText>{qa.answer}</AnswerText>
-              </QAItem>
-            ))}
+            
+            {/* Role-specific deep-dive questions */}
+            {qaPairs.length > 0 && (
+              <>
+                {qaPairs.map((qa, index) => (
+                  <QAItem key={index}>
+                    <QuestionMeta>
+                      {qa.isScenario && <QuestionBadge variant="scenario">Scenario</QuestionBadge>}
+                      <QuestionBadge>Q{index + 4}</QuestionBadge>
+                    </QuestionMeta>
+                    <QuestionText>{qa.question}</QuestionText>
+                    {qa.helperText && <QuestionHelperText>{qa.helperText}</QuestionHelperText>}
+                    <AnswerText>{qa.answer}</AnswerText>
+                  </QAItem>
+                ))}
+              </>
+            )}
           </QAList>
         </QASection>
 
