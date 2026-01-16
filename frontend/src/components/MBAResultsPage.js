@@ -1413,12 +1413,12 @@ const MBAResultsPage = () => {
           const adminPageLink = getMBAAdminPageLink(response.response_id);
           try {
             await sendLSQActivity({ 
-              activityName: 'mba_cpe_evaluated',
-              fields: ['online_mba', adminPageLink]
+              activityName: 'user_completed_online_mba_course',
+              fields: [adminPageLink]
             });
 
             tracker.click({
-              click_type: "mba_profile_evaluation_detail_submitted",
+              click_type: 'mba_profile_evaluation_detail_submitted'
             });
           } catch (e) {
             console.error('Failed to send MBA evaluation activity:', e);
@@ -1582,7 +1582,7 @@ const MBAResultsPage = () => {
                       data={radarData}
                       cx="50%"
                       cy="45%"
-                      outerRadius={typeof window !== 'undefined' && window.innerWidth <= 768 ? "65%" : "80%"}
+                      outerRadius={typeof window !== 'undefined' && window.innerWidth <= 768 ? '65%' : '80%'}
                       margin={typeof window !== 'undefined' && window.innerWidth <= 768
                         ? { top: 20, right: 30, bottom: 20, left: 30 }
                         : { top: 40, right: 80, bottom: 40, left: 80 }}
@@ -1990,42 +1990,42 @@ const MBAResultsPage = () => {
 
                 <TransformationGrid>
                   {transformationStories.map((story, index) => (
-                  <TransformationCard key={index}>
-                    <TransformationHeader brandColor={story.brandColor || '#F8F8F8'}>
-                      <CompanyLogo src={story.logo} alt={story.company} />
-                    </TransformationHeader>
+                    <TransformationCard key={index}>
+                      <TransformationHeader brandColor={story.brandColor || '#F8F8F8'}>
+                        <CompanyLogo src={story.logo} alt={story.company} />
+                      </TransformationHeader>
 
-                    <TransformationBody>
-                      <div>
-                        <TransformationLabel>Before AI</TransformationLabel>
-                        <TransformationList>
-                          {story.preAI.split(' | ').filter(s => s.trim()).map((point, i) => (
-                            <TransformationListItem key={i}>{point.trim()}</TransformationListItem>
-                          ))}
-                        </TransformationList>
-                      </div>
+                      <TransformationBody>
+                        <div>
+                          <TransformationLabel>Before AI</TransformationLabel>
+                          <TransformationList>
+                            {story.preAI.split(' | ').filter(s => s.trim()).map((point, i) => (
+                              <TransformationListItem key={i}>{point.trim()}</TransformationListItem>
+                            ))}
+                          </TransformationList>
+                        </div>
 
-                      <div>
-                        <TransformationLabel>After AI</TransformationLabel>
-                        <TransformationList>
-                          {story.postAI.split(' | ').filter(s => s.trim()).map((point, i) => (
-                            <TransformationListItem key={i}>{point.trim()}</TransformationListItem>
-                          ))}
-                        </TransformationList>
-                      </div>
+                        <div>
+                          <TransformationLabel>After AI</TransformationLabel>
+                          <TransformationList>
+                            {story.postAI.split(' | ').filter(s => s.trim()).map((point, i) => (
+                              <TransformationListItem key={i}>{point.trim()}</TransformationListItem>
+                            ))}
+                          </TransformationList>
+                        </div>
 
-                      <RelevanceBox>
-                        <RelevanceTitle>Why this is relevant to you</RelevanceTitle>
-                        <RelevanceList>
-                          {story.lookingFor.split(' | ').filter(s => s.trim()).map((point, i) => (
-                            <RelevanceItem key={i}>{point.trim()}</RelevanceItem>
-                          ))}
-                        </RelevanceList>
-                      </RelevanceBox>
-                    </TransformationBody>
-                  </TransformationCard>
-                ))}
-              </TransformationGrid>
+                        <RelevanceBox>
+                          <RelevanceTitle>Why this is relevant to you</RelevanceTitle>
+                          <RelevanceList>
+                            {story.lookingFor.split(' | ').filter(s => s.trim()).map((point, i) => (
+                              <RelevanceItem key={i}>{point.trim()}</RelevanceItem>
+                            ))}
+                          </RelevanceList>
+                        </RelevanceBox>
+                      </TransformationBody>
+                    </TransformationCard>
+                  ))}
+                </TransformationGrid>
               </SectionBlock>
             )}
 
@@ -2055,11 +2055,11 @@ const MBAResultsPage = () => {
                     // Get user role for personalization
                     const userRole = results.meta?.role || 'pm';
                     const roleLabel = results.meta?.role === 'pm' ? 'product management' :
-                                     results.meta?.role === 'finance' ? 'finance' :
-                                     results.meta?.role === 'sales' ? 'sales' :
-                                     results.meta?.role === 'marketing' ? 'marketing' :
-                                     results.meta?.role === 'operations' ? 'operations' :
-                                     'your role';
+                      results.meta?.role === 'finance' ? 'finance' :
+                        results.meta?.role === 'sales' ? 'sales' :
+                          results.meta?.role === 'marketing' ? 'marketing' :
+                            results.meta?.role === 'operations' ? 'operations' :
+                              'your role';
 
                     // Use OpenAI personalized description or create role-specific fallback
                     let description = openAITool?.personalized_use_case || tool.use_case;
