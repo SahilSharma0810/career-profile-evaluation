@@ -28,7 +28,7 @@ function MBAAppContent() {
   useGTMSectionTracking();
   
   // Hide nav for MBA quiz page
-  const shouldShowNav = !location.pathname.includes('/online-mba-cpe/quiz') && 
+  const shouldShowNav = !location.pathname.includes('/business-and-ai-readiness/quiz') && 
                         !location.pathname.startsWith('/admin');
 
   const navigationProps = useMemo(
@@ -48,16 +48,16 @@ function MBAAppContent() {
       <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
         <Routes>
           <Route
-            path="/online-mba-cpe"
-            element={<Navigate to={getPathWithQueryParams('/online-mba-cpe/quiz')} replace />}
+            path="/business-and-ai-readiness"
+            element={<Navigate to={getPathWithQueryParams('/business-and-ai-readiness/quiz')} replace />}
           />
           <Route
-            path="/online-mba-cpe/quiz"
+            path="/business-and-ai-readiness/quiz"
             element={<MBAQuiz onProgressChange={setQuizProgress} />}
           />
-          <Route path="/online-mba-cpe/mba-results" element={<MBAResultsPage />} />
+          <Route path="/business-and-ai-readiness/mba-results" element={<MBAResultsPage />} />
           <Route 
-            path="/online-mba-cpe/admin/view/response/:response_id" 
+            path="/business-and-ai-readiness/admin/view/response/:response_id" 
             element={<MBAAdminViewPage />} 
           />
         </Routes>
@@ -74,7 +74,7 @@ function AppContent() {
   useGTMSectionTracking();
   
   // Check if we're on an MBA route
-  const isMBARoute = location.pathname.startsWith('/online-mba-cpe');
+  const isMBARoute = location.pathname.startsWith('/business-and-ai-readiness');
   
   const shouldShowNav = !(
     quizMode === 'final' && location.pathname === '/quiz'
@@ -92,7 +92,7 @@ function AppContent() {
   if (loading) return <LoadingScreen />;
   if (!data?.isLoggedIn) return <AuthSplitPage />;
   
-  // Route to MBA app for /online-mba-cpe/* paths
+  // Route to MBA app for /business-and-ai-readiness/* paths
   if (isMBARoute) {
     return <MBAAppContent />;
   }

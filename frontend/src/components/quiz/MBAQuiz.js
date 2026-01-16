@@ -637,7 +637,7 @@ const MBAQuiz = ({ onProgressChange }) => {
 
   useEffect(() => {
     if (evaluationResults) {
-      navigate(getPathWithQueryParams('/online-mba-cpe/mba-results'), { replace: true });
+      navigate(getPathWithQueryParams('/business-and-ai-readiness/mba-results'), { replace: true });
     }
   }, [evaluationResults, navigate]);
 
@@ -704,7 +704,7 @@ const MBAQuiz = ({ onProgressChange }) => {
         click_type: 'mba_quiz_submit_button_clicked',
         custom: { source: 'mba_quiz' }
       });
-      navigate(getPathWithQueryParams('/online-mba-cpe/mba-results'));
+      navigate(getPathWithQueryParams('/business-and-ai-readiness/mba-results'));
     }
   }, [currentStep, totalSteps, navigate]);
 
@@ -715,7 +715,7 @@ const MBAQuiz = ({ onProgressChange }) => {
     });
 
     if (currentStep === 0) {
-      navigate(getPathWithQueryParams('/online-mba-cpe'));
+      navigate(getPathWithQueryParams('/business-and-ai-readiness'));
       return;
     }
 
