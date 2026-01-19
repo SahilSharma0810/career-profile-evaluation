@@ -1538,8 +1538,8 @@ const MBAResultsPage = () => {
           const adminPageLink = getMBAAdminPageLink(response.response_id);
           try {
             await sendLSQActivity({ 
-              activityName: 'mba_cpe_evaluated',
-              fields: ['online_mba', adminPageLink]
+              activityName: 'user_completed_online_mba_course',
+              fields: [adminPageLink]
             });
 
             tracker.click({
