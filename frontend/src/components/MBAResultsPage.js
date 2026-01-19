@@ -20,6 +20,7 @@ import {
   Books,
   ChartLine,
   Sparkle,
+  Phone,
   Clock,
   CalendarBlank,
   MapPin,
@@ -27,9 +28,10 @@ import {
 } from 'phosphor-react';
 import { useNavigate } from 'react-router-dom';
 import { useMBAProfile } from '../context/MBAProfileContext';
-import { apiRequest } from '../utils/api';
-import { getPathWithQueryParams } from '../utils/url';
+import { apiRequest, generateJWT } from '../utils/api';
+import { getPathWithQueryParams, getURLWithUTMParams } from '../utils/url';
 import tracker from '../utils/tracker';
+import attribution from '../utils/attribution';
 import { sendLSQActivity } from '../utils/leadSquared';
 import oliveBranchLeft from '../assets/Left-Olive-Branch.png';
 import oliveBranchRight from '../assets/Right-Olive-branch.png';
@@ -1142,6 +1144,107 @@ const StatSourceText = styled.div`
   flex: 1;
 `;
 
+// FLOATING CTA - Exact copy from ProfileMatchHeroV2
+const FloatingCTA = styled.button`
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #D55D26;
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(213, 93, 38, 0.35);
+  z-index: 100;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  width: auto;
+  max-width: 90%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &:hover:not(:disabled) {
+    background: #b84d1f;
+    box-shadow: 0 12px 32px rgba(213, 93, 38, 0.45);
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    bottom: 20px;
+    padding: 14px 24px;
+    font-size: 0.875rem;
+  }
+
+  @media print {
+    display: none;
+  }
+`;
+
+// Toast notification styles
+const slideIn = keyframes`
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+`;
+
+const Toast = styled.div`
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: ${props => props.variant === 'success' ? '#065f46' : '#dc2626'};
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: ${props => props.isExiting ? slideOut : slideIn} 0.3s ease forwards;
+
+  @media (max-width: 768px) {
+    bottom: 80px;
+    padding: 14px 20px;
+    font-size: 0.875rem;
+    max-width: 90%;
+    text-align: center;
+  }
+`;
+
 // TOOLTIP STYLING - Exact copy from SkillMapNew.jsx (monochromatic grey)
 const TooltipBox = styled.div`
   background: #2d2d2d;
@@ -1270,7 +1373,7 @@ const getMBAAdminPageLink = (responseId) => {
   
   const origin = window.location.origin;
   const basePath = '/career-profile-tool';
-  const adminPath = `/business-and-ai-readiness/admin/view/response/${responseId}`;
+  const adminPath = `/online-mba-cpe/admin/view/response/${responseId}`;
   const path = `${basePath}${adminPath}`;
   
   const cleanOrigin = origin.replace(/\/$/, '');
@@ -1285,6 +1388,11 @@ const MBAResultsPage = () => {
   const [results, setResults] = useState(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [responseId, setResponseId] = useState(null);
+  const [rcbSubmitting, setRcbSubmitting] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastVariant, setToastVariant] = useState('success');
+  const [isToastExiting, setIsToastExiting] = useState(false);
 
   const loadingSteps = [
     {
@@ -1311,6 +1419,23 @@ const MBAResultsPage = () => {
 
   const [loadingStep, setLoadingStep] = useState(0);
   const [transformationStories, setTransformationStories] = useState([]);
+
+  // Helper function to show toast notification
+  const showToastMessage = useCallback((message, variant = 'success') => {
+    setToastMessage(message);
+    setToastVariant(variant);
+    setIsToastExiting(false);
+    setShowToast(true);
+
+    // Auto-hide toast after 4 seconds
+    setTimeout(() => {
+      setIsToastExiting(true);
+      setTimeout(() => {
+        setShowToast(false);
+        setIsToastExiting(false);
+      }, 300);
+    }, 4000);
+  }, []);
 
   // Use OpenAI transformation stories directly (no fallback)
   useEffect(() => {
@@ -1356,7 +1481,7 @@ const MBAResultsPage = () => {
         setError(null);
 
         if (!quizResponses || !quizResponses.currentRole) {
-          navigate(getPathWithQueryParams('/business-and-ai-readiness/quiz'));
+          navigate(getPathWithQueryParams('/online-mba-cpe/quiz'));
           return;
         }
 
@@ -1413,8 +1538,8 @@ const MBAResultsPage = () => {
           const adminPageLink = getMBAAdminPageLink(response.response_id);
           try {
             await sendLSQActivity({ 
-              activityName: 'user_completed_online_mba_course',
-              fields: [adminPageLink]
+              activityName: 'mba_cpe_evaluated',
+              fields: ['online_mba', adminPageLink]
             });
 
             tracker.click({
@@ -1441,6 +1566,66 @@ const MBAResultsPage = () => {
 
     fetchEvaluation();
   }, [quizResponses, navigate, setLoadingResults]);
+
+  const handleRCBClick = useCallback(async () => {
+    if (rcbSubmitting) return;
+
+    tracker.click({
+      click_type: 'rcb_btn_clicked',
+      custom: { source: 'mba_results_page_floating_cta' }
+    });
+    tracker.ctaClick({
+      click_type: 'rcb_btn_clicked',
+      custom: { source: 'mba_results_page_floating_cta' }
+    });
+
+    setRcbSubmitting(true);
+
+    try {
+      // Set attribution with program: "online_mba"
+      attribution.setAttribution('online_mba_rcb', { program: 'online_mba' });
+
+      const jwt = await generateJWT();
+      const refererUrl = getURLWithUTMParams();
+    
+      await apiRequest(
+        'POST', 
+        '/request-callback', 
+        {
+          attributions: {
+            ...attribution.getAttribution(),
+            program: 'online_mba',
+            product: 'online_mba_cpe'
+          },
+          user: {
+            program: 'Online MBA'
+          }
+        },
+        {
+          headers: {
+            'X-user-token': jwt,
+            'X-REFERER': refererUrl.toString()
+          }
+        }
+      );
+
+      tracker.click({
+        click_type: 'mba_rcb_form_submitted',
+        custom: {
+          source: 'mba_results_page_floating_cta',
+          program: 'online_mba'
+        }
+      });
+
+      // Show success toast
+      showToastMessage('Request submitted! Our team will call you shortly.', 'success');
+    } catch (error) {
+      console.error('MBA Request callback submission failed:', error);
+      showToastMessage('Failed to submit request. Please try again.', 'error');
+    } finally {
+      setRcbSubmitting(false);
+    }
+  }, [responseId, rcbSubmitting, showToastMessage]);
 
   if (loading) {
     const currentStep = loadingSteps[loadingStep];
@@ -2152,6 +2337,21 @@ const MBAResultsPage = () => {
           </RightPanel>
         </HeroContainer>
       </Container>
+
+      <FloatingCTA onClick={handleRCBClick} disabled={rcbSubmitting}>
+        <Phone size={20} weight="bold" />
+        {rcbSubmitting ? 'Submitting...' : 'Book Free 1:1 Career Call'}
+      </FloatingCTA>
+
+      {/* Toast notification */}
+      {showToast && (
+        <Toast variant={toastVariant} isExiting={isToastExiting}>
+          {toastVariant === 'success' ? (
+            <CheckCircle size={20} weight="bold" />
+          ) : null}
+          {toastMessage}
+        </Toast>
+      )}
     </ResultsContainer>
   );
 };
