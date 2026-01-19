@@ -1595,7 +1595,7 @@ const MBAResultsPage = () => {
           attributions: {
             ...attribution.getAttribution(),
             program: 'online_mba',
-            product: 'online_mba_cpe'
+            product: 'career_profile_tool'
           },
           user: {
             program: 'Online MBA'
