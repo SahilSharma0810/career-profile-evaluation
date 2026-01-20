@@ -15,6 +15,7 @@ import AuthSplitPage from './components/auth/AuthSplitPage';
 import MBAQuiz from './components/quiz/MBAQuiz';
 import MBAResultsPage from './components/MBAResultsPage';
 import MBAAdminViewPage from './components/admin/MBAAdminViewPage';
+import MicrosoftClarity from './components/analytics/MicrosoftClarity';
 import { getPathWithQueryParams } from './utils/url';
 
 import '@vectord/ui/dist/style.css';
@@ -80,6 +81,8 @@ function AppContent() {
     quizMode === 'final' && location.pathname === '/quiz'
   ) && !location.pathname.startsWith('/admin') && !isMBARoute;
 
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   const navigationProps = useMemo(
     () => ({
       progress: quizProgress,
@@ -88,6 +91,16 @@ function AppContent() {
     }),
     [quizProgress, quizMode]
   );
+
+  useEffect(() => {
+    if (window.clarity) {
+      if (isMBARoute) {
+        window.clarity('set', 'experiment', 'online_mba_cpe');
+      } else if (!isAdminRoute) {
+        window.clarity('set', 'experiment', 'career_profile_tool');
+      }
+    }
+  }, []);
 
   if (loading) return <LoadingScreen />;
   if (!data?.isLoggedIn) return <AuthSplitPage />;
@@ -106,17 +119,20 @@ function AppContent() {
 
 function App() {
   return (
-    <ProfileProvider>
-      <Router basename="/career-profile-tool">
-        <RequestCallbackProvider>
-          <InitialDataBootstrapper
-            product="career_profile_tool"
-            subProduct="free_evaluation"
-          />
-          <AppContent />
-        </RequestCallbackProvider>
-      </Router>
-    </ProfileProvider>
+    <>
+      <MicrosoftClarity />
+      <ProfileProvider>
+        <Router basename="/career-profile-tool">
+          <RequestCallbackProvider>
+            <InitialDataBootstrapper
+              product="career_profile_tool"
+              subProduct="free_evaluation"
+            />
+            <AppContent />
+          </RequestCallbackProvider>
+        </Router>
+      </ProfileProvider>
+    </>
   );
 }
 
