@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BrowserRouter as Router, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 import { useStore } from '@nanostores/react';
 
 import { ProfileProvider } from './context/ProfileContext';
+import { MBAProfileProvider } from './context/MBAProfileContext';
 import { $initialData } from './store/initial-data';
 import InitialDataBootstrapper from './app/bootstrap/InitialDataBootstrapper';
 import AppLayout from './app/layouts/AppLayout';
@@ -11,9 +12,60 @@ import LoadingScreen from './app/screens/LoadingScreen';
 import { RequestCallbackProvider } from './app/context/RequestCallbackContext';
 import useGTMSectionTracking from './hooks/useGTMSectionTracking';
 import AuthSplitPage from './components/auth/AuthSplitPage';
+import MBAQuiz from './components/quiz/MBAQuiz';
+import MBAResultsPage from './components/MBAResultsPage';
+import MBAAdminViewPage from './components/admin/MBAAdminViewPage';
+import MicrosoftClarity from './components/analytics/MicrosoftClarity';
+import { getPathWithQueryParams } from './utils/url';
 
 import '@vectord/ui/dist/style.css';
 import '@vectord/fp-styles';
+
+// MBA App Content - separate from main app with isolated context
+function MBAAppContent() {
+  const [quizProgress, setQuizProgress] = useState(0);
+  const { data, loading } = useStore($initialData);
+  const location = useLocation();
+  useGTMSectionTracking();
+  
+  // Hide nav for MBA quiz page
+  const shouldShowNav = !location.pathname.includes('/business-and-ai-readiness/quiz') && 
+                        !location.pathname.startsWith('/admin');
+
+  const navigationProps = useMemo(
+    () => ({
+      progress: quizProgress,
+      quizMode: 'mba',
+      onQuizModeChange: () => {}
+    }),
+    [quizProgress]
+  );
+
+  if (loading) return <LoadingScreen />;
+  if (!data?.isLoggedIn) return <AuthSplitPage />;
+
+  return (
+    <MBAProfileProvider>
+      <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
+        <Routes>
+          <Route
+            path="/business-and-ai-readiness"
+            element={<Navigate to={getPathWithQueryParams('/business-and-ai-readiness/quiz')} replace />}
+          />
+          <Route
+            path="/business-and-ai-readiness/quiz"
+            element={<MBAQuiz onProgressChange={setQuizProgress} />}
+          />
+          <Route path="/business-and-ai-readiness/mba-results" element={<MBAResultsPage />} />
+          <Route 
+            path="/business-and-ai-readiness/admin/view/response/:response_id" 
+            element={<MBAAdminViewPage />} 
+          />
+        </Routes>
+      </AppLayout>
+    </MBAProfileProvider>
+  );
+}
 
 function AppContent() {
   const [quizProgress, setQuizProgress] = useState(0);
@@ -21,9 +73,15 @@ function AppContent() {
   const { data, loading } = useStore($initialData);
   const location = useLocation();
   useGTMSectionTracking();
+  
+  // Check if we're on an MBA route
+  const isMBARoute = location.pathname.startsWith('/business-and-ai-readiness');
+  
   const shouldShowNav = !(
     quizMode === 'final' && location.pathname === '/quiz'
-  ) && !location.pathname.startsWith('/admin');
+  ) && !location.pathname.startsWith('/admin') && !isMBARoute;
+
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   const navigationProps = useMemo(
     () => ({
@@ -34,8 +92,23 @@ function AppContent() {
     [quizProgress, quizMode]
   );
 
+  useEffect(() => {
+    if (window.clarity) {
+      if (isMBARoute) {
+        window.clarity('set', 'experiment', 'online_mba_cpe');
+      } else if (!isAdminRoute) {
+        window.clarity('set', 'experiment', 'career_profile_tool');
+      }
+    }
+  }, []);
+
   if (loading) return <LoadingScreen />;
   if (!data?.isLoggedIn) return <AuthSplitPage />;
+  
+  // Route to MBA app for /business-and-ai-readiness/* paths
+  if (isMBARoute) {
+    return <MBAAppContent />;
+  }
 
   return (
     <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
@@ -46,17 +119,20 @@ function AppContent() {
 
 function App() {
   return (
-    <ProfileProvider>
-      <Router basename="/career-profile-tool">
-        <RequestCallbackProvider>
-          <InitialDataBootstrapper
-            product="career_profile_tool"
-            subProduct="free_evaluation"
-          />
-          <AppContent />
-        </RequestCallbackProvider>
-      </Router>
-    </ProfileProvider>
+    <>
+      <MicrosoftClarity />
+      <ProfileProvider>
+        <Router basename="/career-profile-tool">
+          <RequestCallbackProvider>
+            <InitialDataBootstrapper
+              product="career_profile_tool"
+              subProduct="free_evaluation"
+            />
+            <AppContent />
+          </RequestCallbackProvider>
+        </Router>
+      </ProfileProvider>
+    </>
   );
 }
 
