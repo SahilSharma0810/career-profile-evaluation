@@ -637,6 +637,10 @@ const MBAQuiz = ({ onProgressChange }) => {
 
   useEffect(() => {
     if (evaluationResults) {
+      tracker.click({
+        click_type: 'mba_cpe_submitted',
+        custom: { source: 'mba_quiz' }
+      });
       navigate(getPathWithQueryParams('/business-and-ai-readiness/mba-results'), { replace: true });
     }
   }, [evaluationResults, navigate]);
