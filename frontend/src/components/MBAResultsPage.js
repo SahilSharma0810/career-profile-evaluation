@@ -1373,7 +1373,7 @@ const getMBAAdminPageLink = (responseId) => {
   
   const origin = window.location.origin;
   const basePath = '/career-profile-tool';
-  const adminPath = `/online-mba-cpe/admin/view/response/${responseId}`;
+  const adminPath = `/business-and-ai-readiness/admin/view/response/${responseId}`;
   const path = `${basePath}${adminPath}`;
   
   const cleanOrigin = origin.replace(/\/$/, '');
@@ -1481,7 +1481,7 @@ const MBAResultsPage = () => {
         setError(null);
 
         if (!quizResponses || !quizResponses.currentRole) {
-          navigate(getPathWithQueryParams('/online-mba-cpe/quiz'));
+          navigate(getPathWithQueryParams('/business-and-ai-readiness/quiz'));
           return;
         }
 
