@@ -1583,7 +1583,7 @@ const MBAResultsPage = () => {
 
     try {
       // Set attribution with program: "online_mba"
-      attribution.setAttribution('online_mba_rcb', { program: 'online_mba' });
+      attribution.setAttribution('online_mba_cpe_rcb', { program: 'online_mba' });
 
       const jwt = await generateJWT();
       const refererUrl = getURLWithUTMParams();
