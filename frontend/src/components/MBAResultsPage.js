@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import Xarrow from 'react-xarrows';
 import {
@@ -33,6 +33,7 @@ import { getPathWithQueryParams, getURLWithUTMParams } from '../utils/url';
 import tracker from '../utils/tracker';
 import attribution from '../utils/attribution';
 import { sendLSQActivity } from '../utils/leadSquared';
+import useSectionViewTracking from '../hooks/useSectionViewTracking';
 import oliveBranchLeft from '../assets/Left-Olive-Branch.png';
 import oliveBranchRight from '../assets/Right-Olive-branch.png';
 import transformationCompaniesData from '../data/transformation_companies.json';
@@ -1394,6 +1395,23 @@ const MBAResultsPage = () => {
   const [toastVariant, setToastVariant] = useState('success');
   const [isToastExiting, setIsToastExiting] = useState(false);
 
+  // Section tracking configuration
+  const sectionTrackingConfig = useMemo(() => [
+    { id: 'mba-hero-section', name: 'MBA Hero Section' },
+    { id: 'mba-skills-analysis', name: 'MBA Skills Analysis' },
+    { id: 'mba-career-journey', name: 'MBA Career Journey' },
+    { id: 'mba-quick-wins', name: 'MBA Quick Wins' },
+    { id: 'mba-transformation-stories', name: 'MBA Transformation Stories' },
+    { id: 'mba-ai-tools', name: 'MBA AI Tools' },
+    { id: 'mba-industry-stats', name: 'MBA Industry Stats' }
+  ], []);
+
+  // Track section views
+  useSectionViewTracking(sectionTrackingConfig, {
+    enabled: !loading && !!results,
+    customAttributes: { page: 'mba_results' }
+  });
+
   const loadingSteps = [
     {
       icon: <MagnifyingGlass size={28} weight="bold" />,
@@ -1583,7 +1601,7 @@ const MBAResultsPage = () => {
 
     try {
       // Set attribution with program: "online_mba"
-      attribution.setAttribution('online_mba_rcb', { program: 'online_mba' });
+      attribution.setAttribution('online_mba_cpe_rcb', { program: 'online_mba' });
 
       const jwt = await generateJWT();
       const refererUrl = getURLWithUTMParams();
@@ -1716,7 +1734,7 @@ const MBAResultsPage = () => {
     <ResultsContainer>
       <PrintStyles />
       <Container>
-        <HeroContainer>
+        <HeroContainer id="mba-hero-section">
           <LeftPanel score={readiness.overall_score}>
             <GreetingSection>
               <HeroGreeting>
@@ -1751,7 +1769,7 @@ const MBAResultsPage = () => {
 
           <RightPanel>
             {/* Skills Analysis with Recharts Radar */}
-            <SectionBlock>
+            <SectionBlock id="mba-skills-analysis">
               <SectionHeading>
                 See Where You Stand Today
               </SectionHeading>
@@ -1912,7 +1930,7 @@ const MBAResultsPage = () => {
 
             {/* Career Journey Section */}
             {results.career_transitions && results.career_transitions.length > 0 && (
-              <CareerTransitionContainer>
+              <CareerTransitionContainer id="mba-career-journey">
                 <CareerTransitionTitle>Career Journey</CareerTransitionTitle>
                 <CareerTransitionSubtitle>
                   Personalized role recommendations based on your career goals and Business {'<>'} AI aspirations
@@ -2131,7 +2149,7 @@ const MBAResultsPage = () => {
 
             {/* Quick Wins */}
             {quick_wins && quick_wins.length > 0 && (
-              <SectionBlock>
+              <SectionBlock id="mba-quick-wins">
                 <SectionHeading>Quick Wins for You</SectionHeading>
                 <SectionSubtitle>
                   Take these actionable steps to improve your profile
@@ -2164,7 +2182,7 @@ const MBAResultsPage = () => {
 
             {/* Industry Transformation Stories */}
             {transformationStories.length > 0 && (
-              <SectionBlock>
+              <SectionBlock id="mba-transformation-stories">
                 <SectionHeading>
                   How Companies Are Transforming with AI
                 </SectionHeading>
@@ -2216,7 +2234,7 @@ const MBAResultsPage = () => {
 
             {/* AI Tools */}
             {ai_tools && ai_tools.length > 0 && (
-              <SectionBlock>
+              <SectionBlock id="mba-ai-tools">
                 <SectionHeading>
                   AI Tools & Technologies to Learn
                 </SectionHeading>
@@ -2276,7 +2294,7 @@ const MBAResultsPage = () => {
 
             {/* Industry Stats */}
             {industry_stats && industry_stats.length > 0 && (
-              <SectionBlock>
+              <SectionBlock id="mba-industry-stats">
                 <SectionHeading smaller>
                   Why Business {'<>'} AI Matters Now
                 </SectionHeading>

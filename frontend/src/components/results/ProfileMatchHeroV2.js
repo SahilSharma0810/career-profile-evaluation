@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import Xarrow from 'react-xarrows';
 import {
@@ -26,6 +26,7 @@ import oliveBranchRight from '../../assets/Right-Olive-branch.png';
 import PeerComparisonCard from './PeerComparisonCard';
 import { useRequestCallback } from '../../app/context/RequestCallbackContext';
 import tracker from '../../utils/tracker';
+import useSectionViewTracking from '../../hooks/useSectionViewTracking';
 
 const HeroContainer = styled.div`
   background: white;
@@ -1289,14 +1290,31 @@ const ProfileMatchHeroV2 = ({
   background: backgroundProp,
   quizResponses,
   goals,
-  userName = "There",
-  hideCTAs = false,
+  userName = 'There',
+  hideCTAs = false
 }) => {
   const { open: openCallbackModal } = useRequestCallback();
   const [displayScore, setDisplayScore] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [showArrows, setShowArrows] = useState(false);
   const heroRef = useRef(null);
+
+  // Section tracking configuration
+  const sectionTrackingConfig = useMemo(() => [
+    { id: 'cpe-hero-section', name: 'CPE Hero Section' },
+    { id: 'cpe-skills-section', name: 'CPE Skills Analysis' },
+    { id: 'cpe-career-timeline', name: 'CPE Career Timeline' },
+    { id: 'cpe-quick-wins', name: 'CPE Quick Wins' },
+    { id: 'cpe-tools-section', name: 'CPE Tools Section' },
+    { id: 'cpe-experience-benchmark', name: 'CPE Experience Benchmark' },
+    { id: 'cpe-peer-comparison', name: 'CPE Peer Comparison' }
+  ], []);
+
+  // Track section views
+  useSectionViewTracking(sectionTrackingConfig, {
+    enabled: !!evaluationResults,
+    customAttributes: { page: 'cpe_results' }
+  });
 
   const animateScore = useCallback(() => {
     if (!score || score === 0) {
@@ -1570,7 +1588,7 @@ const ProfileMatchHeroV2 = ({
   }, [openCallbackModal]);
 
   return (
-    <HeroContainer ref={heroRef}>
+    <HeroContainer ref={heroRef} id="cpe-hero-section">
       <LeftPanel score={score}>
         <GreetingSection>
           <HeroGreeting>
@@ -1619,10 +1637,7 @@ const ProfileMatchHeroV2 = ({
 
         {/* Skills Section - Moved to top for both modes */}
         {(strengths.length > 0 || areasToImprove.length > 0) && (
-          <SectionBlock
-            className="gtm-section-view"
-            data-gtm-section-name="See Where You Stand Today"
-          >
+          <SectionBlock id="cpe-skills-section">
             <SectionHeading>See Where You Stand Today</SectionHeading>
             <SectionSubtitle>
               Compare your strengths and areas for improvement
@@ -1668,10 +1683,7 @@ const ProfileMatchHeroV2 = ({
         <>
           {/* Career Transition Section - Shows realistic timelines to achieve target role */}
           {recommendedRoles.length > 0 && (
-            <CareerTransitionContainer
-              className="gtm-section-view"
-              data-gtm-section-name="Career Timeline"
-            >
+            <CareerTransitionContainer id="cpe-career-timeline">
               <CareerTransitionTitle>Career Timeline</CareerTransitionTitle>
               <CareerTransitionSubtitle>
                 Realistic timelines to achieve your target roles based on
@@ -2055,10 +2067,7 @@ const ProfileMatchHeroV2 = ({
           )}
 
           {quickWins.length > 0 && (
-            <SectionBlock
-              className="gtm-section-view"
-              data-gtm-section-name="Quick Wins for You"
-            >
+            <SectionBlock id="cpe-quick-wins">
               <SectionHeading>Quick Wins for You</SectionHeading>
               <SectionSubtitle>
                 Take these actionable steps to improve your profile
@@ -2130,10 +2139,7 @@ const ProfileMatchHeroV2 = ({
           )}
 
           {tools.length > 0 && (
-            <SectionBlock
-              className="gtm-section-view"
-              data-gtm-section-name="Tools & Technologies to Learn"
-            >
+            <SectionBlock id="cpe-tools-section">
               <SectionHeading>Tools & Technologies to Learn</SectionHeading>
               <SectionSubtitle>
                 Master these tools to enhance your skillset
@@ -2149,10 +2155,7 @@ const ProfileMatchHeroV2 = ({
           )}
 
           {experienceBenchmark && (
-            <SectionBlock
-              className="gtm-section-view"
-              data-gtm-section-name="Experience Benchmark"
-            >
+            <SectionBlock id="cpe-experience-benchmark">
               <SectionHeading>Experience Benchmark</SectionHeading>
               <SectionSubtitle>
                 Compare your experience with typical requirements for your
@@ -2191,7 +2194,9 @@ const ProfileMatchHeroV2 = ({
           )}
 
           {peerComparison && (
-            <PeerComparisonCard peerComparison={peerComparison} />
+            <div id="cpe-peer-comparison">
+              <PeerComparisonCard peerComparison={peerComparison} />
+            </div>
           )}
 
           {!hideCTAs && (
