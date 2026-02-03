@@ -1555,10 +1555,15 @@ const MBAResultsPage = () => {
           // Send LSQ activity after successful evaluation (similar to normal CPE)
           const adminPageLink = getMBAAdminPageLink(response.response_id);
           try {
+
+            //We want to send role to the activity
             await sendLSQActivity({ 
               activityName: 'user_completed_online_mba_course',
-              fields: [adminPageLink]
+              fields: [adminPageLink, quizResponses?.currentRole]
             });
+
+
+            console.log('quizResponses.currentRole', quizResponses?.currentRole);
 
             tracker.click({
               click_type: 'mba_profile_evaluation_detail_submitted'
