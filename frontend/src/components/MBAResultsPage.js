@@ -1562,9 +1562,6 @@ const MBAResultsPage = () => {
               fields: [adminPageLink, quizResponses?.currentRole]
             });
 
-
-            console.log('quizResponses.currentRole', quizResponses?.currentRole);
-
             tracker.click({
               click_type: 'mba_profile_evaluation_detail_submitted'
             });
