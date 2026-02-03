@@ -37,6 +37,7 @@ import useSectionViewTracking from '../hooks/useSectionViewTracking';
 import oliveBranchLeft from '../assets/Left-Olive-Branch.png';
 import oliveBranchRight from '../assets/Right-Olive-branch.png';
 import transformationCompaniesData from '../data/transformation_companies.json';
+import { ONLINE_PGP_ROLES } from '../data/online_pgp';
 
 const PrintStyles = createGlobalStyle`
   @media print {
@@ -1556,10 +1557,11 @@ const MBAResultsPage = () => {
           const adminPageLink = getMBAAdminPageLink(response.response_id);
           try {
 
+            const roleLabel = ONLINE_PGP_ROLES[quizResponses?.currentRole] || '';
             //We want to send role to the activity
             await sendLSQActivity({ 
               activityName: 'user_completed_online_mba_course',
-              fields: [adminPageLink, quizResponses?.currentRole]
+              fields: [adminPageLink, roleLabel]
             });
 
             tracker.click({
