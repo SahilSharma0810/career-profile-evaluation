@@ -34,7 +34,8 @@ import {
   ThumbsUp,
   HandHeart,
   Target,
-  ChartBar
+  ChartBar,
+  CaretRight
 } from 'phosphor-react';
 import scalerBot from '../../assets/Agent.png';
 import tracker from '../../utils/tracker';
@@ -203,29 +204,30 @@ const OptionsRow = styled.div`
 
 const OptionPill = styled.button`
   background: ${props => props.selected ? '#fff4ed' : '#FFFFFF'};
-  color: ${props => props.selected ? '#D55D26' : '#1e293b'};
-  border: 2px solid ${props => props.selected ? '#D55D26' : '#e7e5e4'};
+  color: ${props => props.selected ? '#D55D26' : props.disabled ? '#94a3b8' : '#1e293b'};
+  border: 2px solid ${props => props.selected ? '#D55D26' : props.disabled ? '#e2e8f0' : '#e7e5e4'};
   border-radius: 0;
   padding: 12px 16px;
   font-size: 0.875rem;
   font-weight: 500;
-  cursor: pointer;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
   transition: all 0.2s ease;
   text-align: left;
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
+  opacity: ${props => props.disabled ? 0.6 : 1};
 
   &:hover {
-    border-color: #D55D26;
-    background: ${props => props.selected ? '#fff4ed' : '#FFFFFF'};
+    border-color: ${props => props.disabled ? '#e2e8f0' : '#D55D26'};
+    background: ${props => props.selected ? '#fff4ed' : props.disabled ? '#FFFFFF' : '#FFFFFF'};
   }
 
   &:focus {
     outline: none;
-    border-color: #D55D26;
-    box-shadow: 0 0 0 3px rgba(213, 93, 38, 0.1);
+    border-color: ${props => props.disabled ? '#e2e8f0' : '#D55D26'};
+    box-shadow: ${props => props.disabled ? 'none' : '0 0 0 3px rgba(213, 93, 38, 0.1)'};
   }
 
   &:active {
@@ -268,6 +270,54 @@ const CheckIcon = styled.div`
   opacity: ${props => props.selected ? 1 : 0};
   transition: opacity 0.2s ease;
   flex-shrink: 0;
+`;
+
+const ContinueButtonContainer = styled.div`
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 200;
+  animation: ${fadeIn} 0.3s ease-out;
+
+  @media (max-width: 768px) {
+    bottom: 110px;
+    right: 16px;
+    left: auto;
+  }
+`;
+
+const ContinueButton = styled.button`
+  background: #D70666;
+  color: white;
+  border: none;
+  border-radius: 0;
+  padding: 14px 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(215, 6, 102, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: #b8044d;
+    box-shadow: 0 6px 16px rgba(215, 6, 102, 0.4);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
 `;
 
 // Icon mapping for options (moved outside component for consistency)
@@ -379,6 +429,20 @@ const MBAGroupedQuestionScreen = ({
       // Handle multiselect: toggle option in array
       const currentValue = Array.isArray(responses[questionId]) ? responses[questionId] : [];
       const isSelected = currentValue.includes(option.value);
+      const maxSelections = question.maxSelections || 3;
+      const minSelections = question.minSelections || 1;
+      
+      // Prevent selecting more than max
+      if (!isSelected && currentValue.length >= maxSelections) {
+        // User tried to select more than max - show feedback or prevent
+        return;
+      }
+      
+      // Prevent deselecting if we're at minimum
+      if (isSelected && currentValue.length <= minSelections) {
+        // User tried to deselect when at minimum - prevent
+        return;
+      }
       
       const newValue = isSelected
         ? currentValue.filter(v => v !== option.value)
@@ -414,21 +478,8 @@ const MBAGroupedQuestionScreen = ({
       const syntheticOption = { value: newValue, label: option.label };
       onResponse(questionId, syntheticOption, question);
 
-      // Check if all questions on this screen will be answered after this selection
-      const updatedResponses = { ...responses, [questionId]: newValue };
-      const allAnswered = questions.every((q) => {
-        if (q.optional) {
-          return true;
-        }
-        const response = updatedResponses[q.id];
-        if (q.isMultiselect) {
-          return Array.isArray(response) && response.length > 0;
-        }
-        return response !== undefined && response !== null;
-      });
-
-      // For multiselect, don't auto-advance or show chat responses
-      // User needs to explicitly click next after selecting their goals
+      // For multiselect, don't auto-advance - user will click Continue button
+      // But still check validation for button state
       return;
     } else {
       // Handle single select: replace value
@@ -504,6 +555,27 @@ const MBAGroupedQuestionScreen = ({
     }
   };
 
+  // Check if there's a multiselect question and if it's valid
+  const hasMultiselectQuestion = questions.some(q => q.isMultiselect);
+  const multiselectQuestion = questions.find(q => q.isMultiselect);
+  
+  let showContinueButton = false;
+  if (hasMultiselectQuestion && multiselectQuestion) {
+    const response = responses[multiselectQuestion.id];
+    if (Array.isArray(response)) {
+      const minSelections = multiselectQuestion.minSelections || 1;
+      const maxSelections = multiselectQuestion.maxSelections || 3;
+      showContinueButton = response.length >= minSelections && response.length <= maxSelections;
+    }
+  }
+
+  const handleContinue = () => {
+    if (onAutoAdvance && showContinueButton) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      onAutoAdvance();
+    }
+  };
+
   return (
     <Container>
       {!hideChat && (
@@ -522,17 +594,39 @@ const MBAGroupedQuestionScreen = ({
           <QuestionGroup key={question.id} data-question-index={questionIndex}>
             {question.isScenario && <ScenarioLabel>Scenario-Based Question</ScenarioLabel>}
             <QuestionLabel>{question.question}</QuestionLabel>
+            {question.isMultiselect && (
+              <div style={{ 
+                fontSize: '0.875rem', 
+                color: '#64748b', 
+                marginBottom: '8px',
+                fontWeight: 400
+              }}>
+                {Array.isArray(responses[question.id]) && responses[question.id].length > 0
+                  ? `${responses[question.id].length} of ${question.maxSelections || 3} selected`
+                  : `Select up to ${question.maxSelections || 3} goals`}
+              </div>
+            )}
             <OptionsRow>
               {question.options.map((option) => {
                 const isMultiselect = question.isMultiselect || false;
                 const isSelected = isMultiselect
                   ? Array.isArray(responses[question.id]) && responses[question.id].includes(option.value)
                   : responses[question.id] === option.value;
+                
+                // For multiselect, check if option should be disabled
+                const currentSelections = isMultiselect 
+                  ? (Array.isArray(responses[question.id]) ? responses[question.id].length : 0)
+                  : 0;
+                const maxSelections = question.maxSelections || 3;
+                const minSelections = question.minSelections || 1;
+                const isDisabled = isMultiselect && !isSelected && currentSelections >= maxSelections;
+                
                 return (
                   <OptionPill
                     key={option.value}
                     selected={isSelected}
-                    onClick={() => handleOptionSelect(question, option, questionIndex)}
+                    disabled={isDisabled}
+                    onClick={() => !isDisabled && handleOptionSelect(question, option, questionIndex)}
                   >
                     <OptionIconWrapper selected={isSelected}>
                       {option.icon || getOptionIcon(option.value)}
@@ -550,6 +644,15 @@ const MBAGroupedQuestionScreen = ({
           </QuestionGroup>
         ))}
       </QuestionsContainer>
+
+      {showContinueButton && (
+        <ContinueButtonContainer>
+          <ContinueButton onClick={handleContinue}>
+            Continue
+            <CaretRight size={20} weight="bold" />
+          </ContinueButton>
+        </ContinueButtonContainer>
+      )}
     </Container>
   );
 };

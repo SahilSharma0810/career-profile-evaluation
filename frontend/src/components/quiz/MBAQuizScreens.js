@@ -84,8 +84,10 @@ export const MBA_INTAKE_SCREEN_2 = {
   questions: [
     {
       id: 'primaryGoal',
-      question: 'What are your career goals? (Select all that apply)',
+      question: 'What are your career goals? (Select up to 3)',
       isMultiselect: true,
+      maxSelections: 3,
+      minSelections: 1,
       options: [
         { value: 'ai-leadership', label: 'Move into a Business + AI leadership role', icon: <ChartLineUp size={24} weight="duotone" /> },
         { value: 'ai-pm', label: 'Become a Product Manager with strong AI/data skills', icon: <Target size={24} weight="duotone" /> },

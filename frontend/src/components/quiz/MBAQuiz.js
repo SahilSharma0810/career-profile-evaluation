@@ -751,9 +751,12 @@ const MBAQuiz = ({ onProgressChange }) => {
         if (!q.showIf(quizResponses)) return true;
       }
       const response = quizResponses[q.id];
-      // For multiselect questions, check if array exists and has at least one item
+      // For multiselect questions, check min/max constraints
       if (q.isMultiselect) {
-        return Array.isArray(response) && response.length > 0;
+        if (!Array.isArray(response)) return false;
+        const minSelections = q.minSelections || 1;
+        const maxSelections = q.maxSelections || 3;
+        return response.length >= minSelections && response.length <= maxSelections;
       }
       return response !== undefined && response !== null;
     });
