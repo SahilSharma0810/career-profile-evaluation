@@ -1561,20 +1561,54 @@ const MBAResultsPage = () => {
           
           // Send LSQ activity after successful evaluation (similar to normal CPE)
           const adminPageLink = getMBAAdminPageLink(response.response_id);
+          
+          // Send LSQ activity
           try {
-
             const roleLabel = ONLINE_PGP_ROLES[quizResponses?.currentRole] || '';
             //We want to send role to the activity
             await sendLSQActivity({ 
               activityName: 'user_completed_online_mba_course',
               fields: [adminPageLink, roleLabel]
             });
-
-            tracker.click({
-              click_type: 'mba_profile_evaluation_detail_submitted'
-            });
           } catch (e) {
             console.error('Failed to send MBA evaluation activity:', e);
+          }
+
+          // Track click event
+          tracker.click({
+            click_type: 'mba_profile_evaluation_detail_submitted'
+          });
+
+          // Send attribution data after evaluation
+          try {
+            attribution.setAttribution('cpe_evaluated');
+            const jwt = await generateJWT();
+            const refererUrl = getURLWithUTMParams();
+          
+            await apiRequest(
+              'POST', 
+              '/api/v3/analytics/attributions/', 
+              {
+                attributions: {
+                  ...attribution.getAttribution(),
+                  product: 'scaler',
+                  sub_product: 'online_mba_page',
+                  element: 'cpe_evaluate_btn'
+                },
+                owner: {
+                  id: 1,
+                  type: 'CareerProfileEvaluation'
+                }
+              },
+              {
+                headers: {
+                  'X-user-token': jwt,
+                  'X-REFERER': refererUrl.toString()
+                }
+              }
+            );
+          } catch (e) {
+            console.error('Failed to send MBA evaluation attribution:', e);
           }
         }
 
