@@ -59,7 +59,8 @@ def generate_mba_openai_content(
     readiness_score: int,
     companies: List[Dict[str, str]],
     tools: List[Dict[str, str]],
-    current_role: str = None
+    current_role: str = None,
+    career_goals: List[str] = None
 ) -> Dict[str, Any]:
     """
     Generate all personalized OpenAI content in one call
@@ -67,7 +68,8 @@ def generate_mba_openai_content(
     Args:
         role: User's role (pm, finance, sales, marketing, operations, founder)
         experience: Years of experience
-        career_goal: Career goal from Q2
+        career_goal: Primary career goal (for backward compatibility)
+        career_goals: List of all selected career goals (multiselect)
         skill_gaps: List of skill gap keys
         skills: Full skills analysis with levels
         readiness_score: Overall readiness score
@@ -78,13 +80,30 @@ def generate_mba_openai_content(
     Returns:
         Dictionary with transformation_stories, tool_descriptions, quick_wins, career_paths
     """
+    # Use career_goals if provided, otherwise fallback to single career_goal
+    if career_goals is None:
+        career_goals = [career_goal] if career_goal else ['improve-current']
+    
+    # Map goal values to readable labels
+    goal_labels = {
+        'ai-leadership': 'Move into a Business + AI leadership role',
+        'ai-pm': 'Become a Product Manager with strong AI/data skills',
+        'analytics-strategy': 'Transition into Business Analytics / Strategy',
+        'improve-current': 'Improve performance & growth in current role',
+        'build-startup': 'Build / scale my own startup using AI',
+        'salary-growth': 'Higher salary & faster career growth'
+    }
+    
+    goals_display = [goal_labels.get(g, g) for g in career_goals]
 
     # Build tight user context JSON
     user_context = {
         "role": role,
         "current_role_name": current_role or role,
         "experience": experience,
-        "career_goal": career_goal,
+        "career_goal": career_goal,  # Primary goal for backward compatibility
+        "career_goals": career_goals,  # All selected goals
+        "career_goals_display": goals_display,  # Human-readable labels
         "readiness_score": readiness_score,
         "skills": {
             "strengths": skills.get("strengths", []),
@@ -119,23 +138,24 @@ For each tool in tools_to_personalize:
 - why_it_helps: 1 sentence ONLY (max 15 words). Concrete career impact.
 
 3. QUICK WINS (5 items):
-Actionable steps based on skill gaps and career goal:
+Actionable steps based on skill gaps and ALL career goals (career_goals):
 - title: 3-5 words ONLY (punchy, action-oriented)
-- description: 3-5 sentences (100-150 words). Be verbose and highly personalized. Explain WHY this specific win is recommended for THIS user based on their role, experience, career goal, and skill gaps. Reference their specific context (e.g., "Since you're a founder looking to scale...", "As a PM transitioning to AI leadership..."). Provide step-by-step guidance on exactly what to do and how it addresses their needs.
+- description: 3-5 sentences (100-150 words). Be verbose and highly personalized. Explain WHY this specific win is recommended for THIS user based on their role, experience, ALL their career goals (consider all goals in career_goals array), and skill gaps. Reference their specific context (e.g., "Since you're a founder looking to scale...", "As a PM transitioning to AI leadership...", "Given your goals of both salary growth and moving into leadership..."). Provide step-by-step guidance on exactly what to do and how it addresses their needs. If multiple goals are selected, show how this win addresses multiple goals simultaneously.
 - timeline: Realistic estimate (e.g., "2-3 weeks", "1 month")
-- impact: 2-3 sentences (40-50 words). Specific, measurable outcomes that connect directly to their career goal. Explain how this quick win will help them progress toward their target role or address their identified skill gaps. Be concrete about the career benefits.
+- impact: 2-3 sentences (40-50 words). Specific, measurable outcomes that connect directly to their career goals. Explain how this quick win will help them progress toward their target roles or address their identified skill gaps. If multiple goals are selected, show how it supports multiple objectives. Be concrete about the career benefits.
 - priority: "must-have", "recommended", or "nice-to-have"
 
 4. CAREER PATHS (3 roles):
-Based on career_goal, suggest:
-- 1 recommended path (target role)
-- 2 alternate paths (adjacent opportunities)
+Based on ALL career goals in career_goals array, suggest:
+- 1 recommended path (primary target role based on first goal or most ambitious goal)
+- 2 alternate paths (adjacent opportunities that align with other selected goals)
 For each:
 - title: Job title with goal context
-  * If career_goal is "ai-leadership", "ai-pm", "analytics-strategy", or "build-startup" (transition goals), add "(Transition Goal)" to the recommended path title
-  * If career_goal is "improve-current" or "salary-growth" (upskilling goals), show it as an upgraded version of their current role with "(Upskill Path)" label
-  * For alternate paths, just use the job title without labels
-- description: 1-2 sentences ONLY (max 25 words). Focus on core responsibilities.
+  * If primary career_goal is "ai-leadership", "ai-pm", "analytics-strategy", or "build-startup" (transition goals), add "(Transition Goal)" to the recommended path title
+  * If primary career_goal is "improve-current" or "salary-growth" (upskilling goals), show it as an upgraded version of their current role with "(Upskill Path)" label
+  * For alternate paths, align with other goals in the career_goals array if applicable
+  * If multiple goals are selected, ensure paths address different aspects of their goals
+- description: 1-2 sentences ONLY (max 25 words). Focus on core responsibilities and how it aligns with their goals.
 - action_items: 3-4 milestones. Each milestone MUST be 6-10 words ONLY. Concrete and actionable.
 
 TONE: Professional, motivational, actionable. Focus on concrete steps and realistic outcomes.
@@ -152,7 +172,7 @@ CRITICAL WORD LIMITS (DO NOT EXCEED):
 OUTPUT: Return JSON matching the structure exactly."""
 
     try:
-        logger.info(f"Calling OpenAI for MBA content generation (role={role}, goal={career_goal})")
+        logger.info(f"Calling OpenAI for MBA content generation (role={role}, goals={career_goals})")
 
         response = client.chat.completions.create(
             model="gpt-4o",  # Using GPT-4 for quality

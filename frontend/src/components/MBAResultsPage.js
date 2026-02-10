@@ -1528,10 +1528,19 @@ const MBAResultsPage = () => {
         }, 1500);
 
         // Send API request immediately (don't wait for timer)
+        // Handle primaryGoal as array (multiselect) or fallback to single value
+        const primaryGoal = Array.isArray(quizResponses.primaryGoal) 
+          ? quizResponses.primaryGoal 
+          : (quizResponses.primaryGoal ? [quizResponses.primaryGoal] : []);
+        
+        // For backward compatibility, also set career_goal as first selected goal or default
+        const career_goal = primaryGoal.length > 0 ? primaryGoal[0] : (quizResponses.careerGoal || 'improve-current');
+        
         const payload = {
           role: quizResponses.currentRole,
           experience: quizResponses.experience,
-          career_goal: quizResponses.careerGoal || 'career-growth',
+          primaryGoal: primaryGoal,
+          career_goal: career_goal, // Keep for backward compatibility
           ...quizResponses
         };
 

@@ -373,75 +373,134 @@ const MBAGroupedQuestionScreen = ({
 
   const handleOptionSelect = (question, option, questionIndex) => {
     const questionId = question.id;
+    const isMultiselect = question.isMultiselect || false;
 
-    // Don't do anything if this option is already selected
-    if (responses[questionId] === option.value) {
+    if (isMultiselect) {
+      // Handle multiselect: toggle option in array
+      const currentValue = Array.isArray(responses[questionId]) ? responses[questionId] : [];
+      const isSelected = currentValue.includes(option.value);
+      
+      const newValue = isSelected
+        ? currentValue.filter(v => v !== option.value)
+        : [...currentValue, option.value];
+
+      tracker.click({
+        click_type: 'question_clicked',
+        custom: {
+          question_number: questionStartIndex + questionIndex,
+          question_id: questionId,
+          question_text: question.question,
+          option_selected: option.value,
+          option_label: option.label ?? option.value,
+          is_multiselect: true,
+          action: isSelected ? 'deselected' : 'selected'
+        }
+      });
+
+      tracker.formInput({
+        click_type: 'question_clicked',
+        custom: {
+          question_number: questionStartIndex + questionIndex,
+          question_id: questionId,
+          question_text: question.question,
+          option_selected: option.value,
+          option_label: option.label ?? option.value,
+          is_multiselect: true,
+          action: isSelected ? 'deselected' : 'selected'
+        }
+      });
+
+      // Create a synthetic option object for multiselect
+      const syntheticOption = { value: newValue, label: option.label };
+      onResponse(questionId, syntheticOption, question);
+
+      // Check if all questions on this screen will be answered after this selection
+      const updatedResponses = { ...responses, [questionId]: newValue };
+      const allAnswered = questions.every((q) => {
+        if (q.optional) {
+          return true;
+        }
+        const response = updatedResponses[q.id];
+        if (q.isMultiselect) {
+          return Array.isArray(response) && response.length > 0;
+        }
+        return response !== undefined && response !== null;
+      });
+
+      // For multiselect, don't auto-advance or show chat responses
+      // User needs to explicitly click next after selecting their goals
       return;
-    }
-
-    tracker.click({
-      click_type: 'question_clicked',
-      custom: {
-        question_number: questionStartIndex + questionIndex,
-        question_id: questionId,
-        question_text: question.question,
-        option_selected: option.value,
-        option_label: option.label ?? option.value
+    } else {
+      // Handle single select: replace value
+      // Don't do anything if this option is already selected
+      if (responses[questionId] === option.value) {
+        return;
       }
-    });
 
-    tracker.formInput({
-      click_type: 'question_clicked',
-      custom: {
-        question_number: questionStartIndex + questionIndex,
-        question_id: questionId,
-        question_text: question.question,
-        option_selected: option.value,
-        option_label: option.label ?? option.value
-      }
-    });
+      tracker.click({
+        click_type: 'question_clicked',
+        custom: {
+          question_number: questionStartIndex + questionIndex,
+          question_id: questionId,
+          question_text: question.question,
+          option_selected: option.value,
+          option_label: option.label ?? option.value
+        }
+      });
 
-    onResponse(questionId, option, question);
+      tracker.formInput({
+        click_type: 'question_clicked',
+        custom: {
+          question_number: questionStartIndex + questionIndex,
+          question_id: questionId,
+          question_text: question.question,
+          option_selected: option.value,
+          option_label: option.label ?? option.value
+        }
+      });
 
-    // Check if all questions on this screen will be answered after this selection
-    const updatedResponses = { ...responses, [questionId]: option.value };
-    const allAnswered = questions.every((q) => {
-      if (q.optional) {
-        return true;
-      }
-      return updatedResponses[q.id] !== undefined && updatedResponses[q.id] !== null;
-    });
-    const isLastQuestion = questionIndex === questions.length - 1;
-    const isSingleQuestion = questions.length === 1;
+      onResponse(questionId, option, question);
 
-    if (!isSingleQuestion && !isLastQuestion) {
-      if (chatResponseMap && chatResponseMap[questionId] && chatResponseMap[questionId][option.value]) {
-        const newChatText = chatResponseMap[questionId][option.value];
-        setChatText(newChatText);
+      // Check if all questions on this screen will be answered after this selection
+      const updatedResponses = { ...responses, [questionId]: option.value };
+      const allAnswered = questions.every((q) => {
+        if (q.optional) {
+          return true;
+        }
+        return updatedResponses[q.id] !== undefined && updatedResponses[q.id] !== null;
+      });
+      const isLastQuestion = questionIndex === questions.length - 1;
+      const isSingleQuestion = questions.length === 1;
 
-        if (onChatTextChange) {
-          onChatTextChange(newChatText);
+      if (!isSingleQuestion && !isLastQuestion) {
+        if (chatResponseMap && chatResponseMap[questionId] && chatResponseMap[questionId][option.value]) {
+          const newChatText = chatResponseMap[questionId][option.value];
+          setChatText(newChatText);
+
+          if (onChatTextChange) {
+            onChatTextChange(newChatText);
+          }
         }
       }
-    }
 
-    // Auto-scroll to next question (if not last question on this screen)
-    if (!isLastQuestion) {
-      // Scroll to next question after a brief delay
-      setTimeout(() => {
-        const nextQuestionElement = document.querySelector(`[data-question-index="${questionIndex + 1}"]`);
-        if (nextQuestionElement) {
-          nextQuestionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 200);
-    }
+      // Auto-scroll to next question (if not last question on this screen)
+      if (!isLastQuestion) {
+        // Scroll to next question after a brief delay
+        setTimeout(() => {
+          const nextQuestionElement = document.querySelector(`[data-question-index="${questionIndex + 1}"]`);
+          if (nextQuestionElement) {
+            nextQuestionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 200);
+      }
 
-    // Auto-advance to next page if all questions are answered
-    if (allAnswered && onAutoAdvance) {
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        onAutoAdvance();
-      }, 1000);
+      // Auto-advance to next page if all questions are answered
+      if (allAnswered && onAutoAdvance) {
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          onAutoAdvance();
+        }, 1000);
+      }
     }
   };
 
@@ -465,7 +524,10 @@ const MBAGroupedQuestionScreen = ({
             <QuestionLabel>{question.question}</QuestionLabel>
             <OptionsRow>
               {question.options.map((option) => {
-                const isSelected = responses[question.id] === option.value;
+                const isMultiselect = question.isMultiselect || false;
+                const isSelected = isMultiselect
+                  ? Array.isArray(responses[question.id]) && responses[question.id].includes(option.value)
+                  : responses[question.id] === option.value;
                 return (
                   <OptionPill
                     key={option.value}

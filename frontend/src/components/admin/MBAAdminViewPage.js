@@ -814,6 +814,13 @@ const MBAAdminViewPage = () => {
   // Helper to get readable answer for core fields
   const getReadableAnswer = (questionId, value) => {
     const questionData = MBA_QUESTION_MAP[questionId];
+    
+    // Handle arrays (for multiselect questions like primaryGoal)
+    if (Array.isArray(value)) {
+      if (value.length === 0) return 'Not specified';
+      return value.map(v => questionData?.options?.[v] || v).join(', ');
+    }
+    
     return questionData?.options?.[value] || value || 'Not specified';
   };
 

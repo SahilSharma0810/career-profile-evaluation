@@ -677,6 +677,8 @@ const MBAQuiz = ({ onProgressChange }) => {
   }, [currentStep, totalSteps, onProgressChange]);
 
   const handleQuizResponse = (questionId, option, question) => {
+    // Handle multiselect: option.value is already an array
+    // Handle single select: option.value is a string
     setQuizResponse(questionId, option.value);
 
     const labelFields = ['currentRole'];
@@ -686,9 +688,21 @@ const MBAQuiz = ({ onProgressChange }) => {
 
     // Add Q&A pair
     if (question && question.question) {
+      // For multiselect, format the answer as comma-separated labels
+      let answerText;
+      if (Array.isArray(option.value)) {
+        // Find labels for selected values
+        const selectedLabels = option.value.map(val => {
+          const opt = question.options?.find(o => o.value === val);
+          return opt?.label || val;
+        });
+        answerText = selectedLabels.join(', ');
+      } else {
+        answerText = option.label || option.value;
+      }
       addQAPair(
         question.question,
-        option.label || option.value,
+        answerText,
         questionId
       );
     }
@@ -736,7 +750,12 @@ const MBAQuiz = ({ onProgressChange }) => {
       if (q.conditional && q.showIf) {
         if (!q.showIf(quizResponses)) return true;
       }
-      return quizResponses[q.id] !== undefined && quizResponses[q.id] !== null;
+      const response = quizResponses[q.id];
+      // For multiselect questions, check if array exists and has at least one item
+      if (q.isMultiselect) {
+        return Array.isArray(response) && response.length > 0;
+      }
+      return response !== undefined && response !== null;
     });
 
     return allQuestionsAnswered;

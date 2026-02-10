@@ -29,7 +29,7 @@ import {
   Gear
 } from 'phosphor-react';
 
-// Screen 1: Current Role/Background
+// Screen 1: Current Role/Background + Experience
 export const MBA_INTAKE_SCREEN_1 = {
   id: 'current-role',
   initialChatText: "Welcome! Let's understand your professional background to personalize your Business <> AI assessment.",
@@ -45,25 +45,7 @@ export const MBA_INTAKE_SCREEN_1 = {
         { value: 'operations', label: 'Operations / Supply Chain / Strategy', icon: <Package size={24} weight="duotone" /> },
         { value: 'founder', label: 'Startup Founder / Entrepreneur', icon: <Lightbulb size={24} weight="duotone" /> }
       ]
-    }
-  ],
-  chatResponseMap: {
-    currentRole: {
-      'pm': 'Excellent! Product managers with AI/data skills are transforming how companies build and scale products.',
-      'finance': 'Great choice! Finance and analytics professionals are at the forefront of AI-driven decision making.',
-      'sales': 'Perfect! Sales and growth leaders who understand AI are revolutionizing revenue operations.',
-      'marketing': 'Awesome! Marketing professionals leveraging AI are seeing unprecedented ROI and scale.',
-      'operations': 'Fantastic! Operations and strategy roles are being redefined by AI and automation.',
-      'founder': 'Impressive! Founders who master AI have a massive competitive advantage in building and scaling.'
-    }
-  }
-};
-
-// Screen 2: Experience + Career Goal
-export const MBA_INTAKE_SCREEN_2 = {
-  id: 'experience-and-goals',
-  initialChatText: "Now let's understand your experience level and what you're aiming to achieve.",
-  questions: [
+    },
     {
       id: 'experience',
       question: 'How many years of total work experience do you have?',
@@ -74,10 +56,36 @@ export const MBA_INTAKE_SCREEN_2 = {
         { value: '6-10', label: '6–10 years', icon: <TrendUp size={24} weight="duotone" /> },
         { value: '10+', label: '10+ years', icon: <Trophy size={24} weight="duotone" /> }
       ]
+    }
+  ],
+  chatResponseMap: {
+    currentRole: {
+      'pm': 'Excellent! Product managers with AI/data skills are transforming how companies build and scale products.',
+      'finance': 'Great choice! Finance and analytics professionals are at the forefront of AI-driven decision making.',
+      'sales': 'Perfect! Sales and growth leaders who understand AI are revolutionizing revenue operations.',
+      'marketing': 'Awesome! Marketing professionals leveraging AI are seeing unprecedented ROI and scale.',
+      'operations': 'Fantastic! Operations and strategy roles are being redefined by AI and automation.',
+      'founder': 'Impressive! Founders who master AI have a massive competitive advantage in building and scaling.'
     },
+    experience: {
+      '0-1': 'Early in your career - perfect time to build strong business + AI foundations!',
+      '1-3': 'Great timing! You have enough context to leverage AI strategically in your role.',
+      '3-6': "You're at an inflection point. AI skills can accelerate your path to senior/leadership roles.",
+      '6-10': 'Solid experience! AI + business acumen will position you for executive opportunities.',
+      '10+': 'Seasoned professional! AI mastery will multiply your decades of business insight.'
+    }
+  }
+};
+
+// Screen 2: Career Goals (Multiselect)
+export const MBA_INTAKE_SCREEN_2 = {
+  id: 'career-goals',
+  initialChatText: "Now let's understand what you're aiming to achieve. You can select multiple goals that matter to you.",
+  questions: [
     {
       id: 'primaryGoal',
-      question: "What's your primary career goal?",
+      question: 'What are your career goals? (Select all that apply)',
+      isMultiselect: true,
       options: [
         { value: 'ai-leadership', label: 'Move into a Business + AI leadership role', icon: <ChartLineUp size={24} weight="duotone" /> },
         { value: 'ai-pm', label: 'Become a Product Manager with strong AI/data skills', icon: <Target size={24} weight="duotone" /> },
@@ -89,13 +97,6 @@ export const MBA_INTAKE_SCREEN_2 = {
     }
   ],
   chatResponseMap: {
-    experience: {
-      '0-1': 'Early in your career - perfect time to build strong business + AI foundations!',
-      '1-3': 'Great timing! You have enough context to leverage AI strategically in your role.',
-      '3-6': "You're at an inflection point. AI skills can accelerate your path to senior/leadership roles.",
-      '6-10': 'Solid experience! AI + business acumen will position you for executive opportunities.',
-      '10+': 'Seasoned professional! AI mastery will multiply your decades of business insight.'
-    },
     primaryGoal: {
       'ai-leadership': 'Ambitious! AI-fluent business leaders are the most sought-after talent right now.',
       'ai-pm': 'Smart choice! AI-native PMs command premium salaries and drive critical decisions.',
