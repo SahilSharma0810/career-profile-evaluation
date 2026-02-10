@@ -1591,7 +1591,7 @@ const MBAResultsPage = () => {
               {
                 attributions: {
                   ...attribution.getAttribution(),
-                  program: 'software_development',
+                  program: 'online_mba',
                   product: 'scaler',
                   sub_product: 'online_mba_page',
                   element: 'cpe_evaluate_btn'
