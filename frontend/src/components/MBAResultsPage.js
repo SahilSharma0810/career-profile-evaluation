@@ -1499,10 +1499,15 @@ const MBAResultsPage = () => {
         setLoadingResults(true); // Set global loading state
         setError(null);
 
+        // Check if quiz responses exist (loaded from localStorage via context)
+        // If not, redirect to quiz screen
         if (!quizResponses || !quizResponses.currentRole) {
           navigate(getPathWithQueryParams('/business-and-ai-readiness/quiz'));
           return;
         }
+
+        // Use quizResponses from context (which is loaded from localStorage)
+        // This ensures that on page reload, we can still generate results
 
         setLoadingProgress(0);
         setLoadingStep(0);
@@ -1528,10 +1533,11 @@ const MBAResultsPage = () => {
         }, 1500);
 
         // Send API request immediately (don't wait for timer)
+        // Build payload from quizResponses (loaded from localStorage if page was reloaded)
         const payload = {
           role: quizResponses.currentRole,
           experience: quizResponses.experience,
-          career_goal: quizResponses.careerGoal || 'career-growth',
+          career_goal: quizResponses.careerGoal || quizResponses.primaryGoal || 'career-growth',
           ...quizResponses
         };
 
@@ -1555,20 +1561,55 @@ const MBAResultsPage = () => {
           
           // Send LSQ activity after successful evaluation (similar to normal CPE)
           const adminPageLink = getMBAAdminPageLink(response.response_id);
+          
+          // Send LSQ activity
           try {
-
             const roleLabel = ONLINE_PGP_ROLES[quizResponses?.currentRole] || '';
             //We want to send role to the activity
             await sendLSQActivity({ 
               activityName: 'user_completed_online_mba_course',
               fields: [adminPageLink, roleLabel]
             });
-
-            tracker.click({
-              click_type: 'mba_profile_evaluation_detail_submitted'
-            });
           } catch (e) {
             console.error('Failed to send MBA evaluation activity:', e);
+          }
+
+          // Track click event
+          tracker.click({
+            click_type: 'mba_profile_evaluation_detail_submitted'
+          });
+
+          // Send attribution data after evaluation
+          try {
+            attribution.setAttribution('cpe_evaluated');
+            const jwt = await generateJWT();
+            const refererUrl = getURLWithUTMParams();
+          
+            await apiRequest(
+              'POST', 
+              '/api/v3/analytics/attributions/', 
+              {
+                attributions: {
+                  ...attribution.getAttribution(),
+                  program: 'online_mba',
+                  product: 'scaler',
+                  sub_product: 'online_mba_page',
+                  element: 'cpe_evaluate_btn'
+                },
+                owner: {
+                  id: 1,
+                  type: 'CareerProfileEvaluation'
+                }
+              },
+              {
+                headers: {
+                  'X-user-token': jwt,
+                  'X-REFERER': refererUrl.toString()
+                }
+              }
+            );
+          } catch (e) {
+            console.error('Failed to send MBA evaluation attribution:', e);
           }
         }
 
