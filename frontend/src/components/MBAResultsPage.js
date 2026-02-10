@@ -1499,10 +1499,15 @@ const MBAResultsPage = () => {
         setLoadingResults(true); // Set global loading state
         setError(null);
 
+        // Check if quiz responses exist (loaded from localStorage via context)
+        // If not, redirect to quiz screen
         if (!quizResponses || !quizResponses.currentRole) {
           navigate(getPathWithQueryParams('/business-and-ai-readiness/quiz'));
           return;
         }
+
+        // Use quizResponses from context (which is loaded from localStorage)
+        // This ensures that on page reload, we can still generate results
 
         setLoadingProgress(0);
         setLoadingStep(0);
@@ -1528,10 +1533,11 @@ const MBAResultsPage = () => {
         }, 1500);
 
         // Send API request immediately (don't wait for timer)
+        // Build payload from quizResponses (loaded from localStorage if page was reloaded)
         const payload = {
           role: quizResponses.currentRole,
           experience: quizResponses.experience,
-          career_goal: quizResponses.careerGoal || 'career-growth',
+          career_goal: quizResponses.careerGoal || quizResponses.primaryGoal || 'career-growth',
           ...quizResponses
         };
 
