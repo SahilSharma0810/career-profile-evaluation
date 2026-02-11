@@ -645,6 +645,43 @@ const MBAQuiz = ({ onProgressChange }) => {
     }
   }, [evaluationResults, navigate]);
 
+  // Check if quiz is complete and redirect to results if so
+  useEffect(() => {
+    // Wait a bit for context to load from localStorage
+    const checkQuizCompletion = () => {
+      if (!quizResponses || !quizResponses.currentRole) {
+        return;
+      }
+
+      // Build quiz screens to check completion
+      const screens = [MBA_INTAKE_SCREEN_1, MBA_INTAKE_SCREEN_2];
+      const selectedRole = quizResponses.currentRole;
+      if (selectedRole && MBA_ROLE_SPECIFIC_SCREENS[selectedRole]) {
+        screens.push(...MBA_ROLE_SPECIFIC_SCREENS[selectedRole]);
+      }
+
+      // Check if all required questions are answered
+      const allQuestionsAnswered = screens.every((screen) => {
+        return screen.questions.every((q) => {
+          if (q.optional) return true;
+          if (q.conditional && q.showIf) {
+            if (!q.showIf(quizResponses)) return true;
+          }
+          return quizResponses[q.id] !== undefined && quizResponses[q.id] !== null;
+        });
+      });
+
+      // If quiz is complete, redirect to results
+      if (allQuestionsAnswered) {
+        navigate(getPathWithQueryParams('/business-and-ai-readiness/mba-results'), { replace: true });
+      }
+    };
+
+    // Small delay to ensure context has loaded from localStorage
+    const timeoutId = setTimeout(checkQuizCompletion, 100);
+    return () => clearTimeout(timeoutId);
+  }, [quizResponses, navigate]);
+
   const [currentStep, setCurrentStep] = useState(0);
   const [chatText, setChatText] = useState(MBA_INTAKE_SCREEN_1.initialChatText);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
