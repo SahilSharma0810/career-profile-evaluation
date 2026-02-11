@@ -526,6 +526,33 @@ const QuickWinDescription = styled.div`
   line-height: 1.5;
 `;
 
+const QuickWinDescriptionList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const QuickWinDescriptionItem = styled.li`
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.5;
+  padding-left: 20px;
+  position: relative;
+
+  &::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #64748b;
+    font-size: 1.1rem;
+    font-weight: bold;
+    top: -1px;
+  }
+`;
+
 // TOOLS GRID
 const ToolsGrid = styled.div`
   display: grid;
@@ -1354,6 +1381,43 @@ const getSkillLevelTag = (level) => {
   }
 };
 
+// Helper function to split description by periods into bullet points
+const splitDescriptionIntoBullets = (description) => {
+  // Handle edge cases: empty, null, or undefined
+  if (!description || typeof description !== 'string') {
+    return [];
+  }
+
+  // Trim the description
+  const trimmed = description.trim();
+  
+  // If empty after trimming, return empty array
+  if (trimmed.length === 0) {
+    return [];
+  }
+
+  // Split by period followed by space or end of string
+  // This handles cases like "Sentence 1. Sentence 2." or "Sentence 1.Sentence 2"
+  const sentences = trimmed
+    .split(/\.(?:\s+|$)/)
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+
+  // If only one sentence (or no periods found), return as single item
+  if (sentences.length <= 1) {
+    return [trimmed];
+  }
+
+  // Add period back to each sentence except the last one (if it doesn't already have one)
+  return sentences.map((sentence, index) => {
+    // If it's not the last sentence and doesn't end with a period, add one
+    if (index < sentences.length - 1 && !sentence.endsWith('.')) {
+      return sentence + '.';
+    }
+    return sentence;
+  });
+};
+
 // Helper function to map role keys to display labels
 const getRoleDisplayLabel = (roleKey) => {
   const roleMapping = {
@@ -1781,7 +1845,7 @@ const MBAResultsPage = () => {
           </LeftPanel>
 
           <RightPanel>
-            {/* Skills Analysis with Recharts Radar */}
+            {/* Skills Analysis */}
             <SectionBlock id="mba-skills-analysis">
               <SectionHeading>
                 See Where You Stand Today
@@ -1791,154 +1855,70 @@ const MBAResultsPage = () => {
               </SectionSubtitle>
               <SectionDivider />
 
-              <RadialChartWrapper>
-                <ChartContainer>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart
-                      data={radarData}
-                      cx="50%"
-                      cy="45%"
-                      outerRadius={typeof window !== 'undefined' && window.innerWidth <= 768 ? '65%' : '80%'}
-                      margin={typeof window !== 'undefined' && window.innerWidth <= 768
-                        ? { top: 20, right: 30, bottom: 20, left: 30 }
-                        : { top: 40, right: 80, bottom: 40, left: 80 }}
-                    >
-                      <PolarGrid stroke="#e7e5e4" />
-                      <PolarAngleAxis
-                        dataKey="categoryDisplay"
-                        tick={{
-                          fill: '#475569',
-                          fontSize: typeof window !== 'undefined' && window.innerWidth <= 768 ? 10 : 14,
-                          fontWeight: 600
-                        }}
-                        tickFormatter={(value) => {
-                          if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-                            return value.length > 12 ? value.substring(0, 10) + '...' : value;
-                          }
-                          return value;
-                        }}
-                      />
-                      <PolarRadiusAxis
-                        angle={90}
-                        domain={[0, 100]}
-                        tick={{ fill: '#94a3b8', fontSize: 10 }}
-                      />
-                      <Tooltip content={<CustomTooltip />} />
+              <ChartDescription>
+                <DescriptionText>
+                  {(() => {
+                    const strongCount = Object.values(skills.skills).filter((s) => s.level >= 3).length;
+                    const needsImprovementCount = Object.values(skills.skills).filter((s) => s.level === 1).length;
 
-                      {/* Average learner (dotted outline) */}
-                      <Radar
-                        name="Avg. Candidate"
-                        dataKey="average"
-                        stroke="#a8a29e"
-                        fill="#a8a29e"
-                        fillOpacity={0.1}
-                        strokeWidth={2}
-                        strokeDasharray="5 5"
-                        dot={{ fill: '#a8a29e', r: 4 }}
-                        activeDot={{ fill: '#D55D26', r: 7 }}
-                      />
+                    if (strongCount > 0 && needsImprovementCount > 0) {
+                      // Show both
+                      return (
+                        <>
+                          Your skills profile shows{' '}
+                          <strong>
+                            {strongCount} {strongCount === 1 ? 'strong skill' : 'strong skills'}
+                          </strong>{' '}
+                          and{' '}
+                          <strong>
+                            {needsImprovementCount} {needsImprovementCount === 1 ? 'area' : 'areas'} needing improvement
+                          </strong>.
+                        </>
+                      );
+                    } else if (strongCount > 0) {
+                      // Only strong skills
+                      return (
+                        <>
+                          Your skills profile shows{' '}
+                          <strong>
+                            {strongCount} {strongCount === 1 ? 'strong skill' : 'strong skills'}
+                          </strong>.
+                        </>
+                      );
+                    } else if (needsImprovementCount > 0) {
+                      // Only areas needing improvement
+                      return (
+                        <>
+                          Your skills profile shows{' '}
+                          <strong>
+                            {needsImprovementCount} {needsImprovementCount === 1 ? 'area' : 'areas'} needing improvement
+                          </strong>.
+                        </>
+                      );
+                    } else {
+                      // All proficient (no strong, no gaps)
+                      return <>Your skills are at a proficient level.</>;
+                    }
+                  })()}
+                </DescriptionText>
 
-                      {/* User's skills (filled area) */}
-                      <Radar
-                        name="My Skills"
-                        dataKey="user"
-                        stroke="#D55D26"
-                        fill="#D55D26"
-                        fillOpacity={0.5}
-                        strokeWidth={2}
-                        dot={{ fill: '#D55D26', r: 5 }}
-                        activeDot={{
-                          fill: '#D55D26',
-                          r: 8,
-                          strokeWidth: 2,
-                          stroke: '#fff'
-                        }}
-                      />
-
-                      <Legend
-                        wrapperStyle={{
-                          paddingTop: '10px',
-                          fontFamily: "'Plus Jakarta Sans', sans-serif",
-                          fontSize: '0.875rem'
-                        }}
-                        iconType="rect"
-                        formatter={(value) => (
-                          <span style={{ marginLeft: '8px', marginRight: '24px' }}>
-                            {value}
-                          </span>
-                        )}
-                      />
-                    </RadarChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-
-                <ChartDescription>
-                  <DescriptionText>
-                    {(() => {
-                      const strongCount = Object.values(skills.skills).filter((s) => s.level >= 3).length;
-                      const needsImprovementCount = Object.values(skills.skills).filter((s) => s.level === 1).length;
-
-                      if (strongCount > 0 && needsImprovementCount > 0) {
-                        // Show both
-                        return (
-                          <>
-                            Your skills profile shows{' '}
-                            <strong>
-                              {strongCount} {strongCount === 1 ? 'strong skill' : 'strong skills'}
-                            </strong>{' '}
-                            and{' '}
-                            <strong>
-                              {needsImprovementCount} {needsImprovementCount === 1 ? 'area' : 'areas'} needing improvement
-                            </strong>.
-                          </>
-                        );
-                      } else if (strongCount > 0) {
-                        // Only strong skills
-                        return (
-                          <>
-                            Your skills profile shows{' '}
-                            <strong>
-                              {strongCount} {strongCount === 1 ? 'strong skill' : 'strong skills'}
-                            </strong>.
-                          </>
-                        );
-                      } else if (needsImprovementCount > 0) {
-                        // Only areas needing improvement
-                        return (
-                          <>
-                            Your skills profile shows{' '}
-                            <strong>
-                              {needsImprovementCount} {needsImprovementCount === 1 ? 'area' : 'areas'} needing improvement
-                            </strong>.
-                          </>
-                        );
-                      } else {
-                        // All proficient (no strong, no gaps)
-                        return <>Your skills are at a proficient level.</>;
-                      }
-                    })()}{' '}
-                    The chart above compares your current skills against the average
-                    candidate profile.
-                  </DescriptionText>
-
-                  <SkillsSummaryList>
-                    {Object.entries(skills.skills)
-                      .map(([skillName, skillData]) => {
-                        const tagInfo = getSkillLevelTag(skillData.level);
-                        return (
-                          <SkillSummaryItem key={skillName}>
-                            <SkillSummaryName>
-                              {skillData.title || skillName.replace(/_/g, ' ')}
-                            </SkillSummaryName>
-                            <SkillLevelTag level={tagInfo.type}>
-                              {tagInfo.label}
-                            </SkillLevelTag>
-                          </SkillSummaryItem>
-                        );
-                      })}
-                  </SkillsSummaryList>
-                </ChartDescription>
-              </RadialChartWrapper>
+                <SkillsSummaryList>
+                  {Object.entries(skills.skills)
+                    .map(([skillName, skillData]) => {
+                      const tagInfo = getSkillLevelTag(skillData.level);
+                      return (
+                        <SkillSummaryItem key={skillName}>
+                          <SkillSummaryName>
+                            {skillData.title || skillName.replace(/_/g, ' ')}
+                          </SkillSummaryName>
+                          <SkillLevelTag level={tagInfo.type}>
+                            {tagInfo.label}
+                          </SkillLevelTag>
+                        </SkillSummaryItem>
+                      );
+                    })}
+                </SkillsSummaryList>
+              </ChartDescription>
             </SectionBlock>
 
             {/* Career Journey Section */}
@@ -2183,7 +2163,27 @@ const MBAResultsPage = () => {
                           </QuickWinIconContainer>
                           <QuickWinContent>
                             <QuickWinTitle>{win.title}</QuickWinTitle>
-                            <QuickWinDescription>{win.description}</QuickWinDescription>
+                            <QuickWinDescription>
+                              {(() => {
+                                const bullets = splitDescriptionIntoBullets(win.description);
+                                
+                                // If no bullets or single bullet, render as plain text
+                                if (bullets.length <= 1) {
+                                  return bullets[0] || win.description || '';
+                                }
+                                
+                                // Render as bullet list
+                                return (
+                                  <QuickWinDescriptionList>
+                                    {bullets.map((bullet, bulletIndex) => (
+                                      <QuickWinDescriptionItem key={bulletIndex}>
+                                        {bullet}
+                                      </QuickWinDescriptionItem>
+                                    ))}
+                                  </QuickWinDescriptionList>
+                                );
+                              })()}
+                            </QuickWinDescription>
                           </QuickWinContent>
                         </QuickWinCard>
                       </QuickWinItem>
