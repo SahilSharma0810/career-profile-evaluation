@@ -1491,6 +1491,13 @@ const MBAResultsPage = () => {
   }, [results]);
 
   useEffect(() => {
+    const url = new URL(window.location.href);
+    tracker.superAttributes = {
+      attributes: {
+        page_path: url.pathname,
+        page_url: url.href
+      }
+    };
     tracker.pageview({ page_name: 'mba_results_page' });
 
     const fetchEvaluation = async () => {
