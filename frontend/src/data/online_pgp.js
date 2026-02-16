@@ -4,5 +4,6 @@ export const ONLINE_PGP_ROLES = {
   sales: 'Sales / Growth / Revenue roles',
   marketing: 'Marketing / Brand / Performance Marketing',
   operations: 'Operations / Supply Chain / Strategy',
-  founder: 'Startup Founder / Entrepreneur'
+  founder: 'Startup Founder / Entrepreneur',
+  tech: 'Engineering / DevOps / Tech Roles'
 };
