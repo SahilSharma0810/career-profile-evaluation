@@ -512,9 +512,9 @@ const SkillLevel = styled.div`
   text-transform: uppercase;
   
   ${props => {
-    if (props.level === 1) return `background: #fee2e2; color: #991b1b;`;
-    if (props.level === 2) return `background: #fff4ed; color: #D55D26;`;
-    return `background: #d1fae5; color: #065f46;`;
+    if (props.level === 1) return 'background: #fee2e2; color: #991b1b;';
+    if (props.level === 2) return 'background: #fff4ed; color: #D55D26;';
+    return 'background: #d1fae5; color: #065f46;';
   }}
 `;
 
