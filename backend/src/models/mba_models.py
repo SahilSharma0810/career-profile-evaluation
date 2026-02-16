@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 class MBAQuizRequest(BaseModel):
     """Request model for MBA evaluation"""
     # Required fields
-    role: str = Field(..., description="User's selected role (product-manager, finance, sales, marketing, operations, founder)")
+    role: str = Field(..., description="User's selected role (pm, finance, sales, marketing, operations, founder, tech)")
     experience: str = Field(..., description="Years of experience (0-2, 2-5, 5-8, 8-12, 12+)")
     career_goal: str = Field(..., description="Career goal (career-growth, skill-development, role-transition, entrepreneurship)")
 
@@ -60,6 +60,30 @@ class MBAQuizRequest(BaseModel):
     founder_resource_constraint: Optional[str] = Field(None, alias="founder-resource-constraint")
     founder_ai_advantage: Optional[str] = Field(None, alias="founder-ai-advantage")
     founder_failure_pattern: Optional[str] = Field(None, alias="founder-failure-pattern")
+
+    # Tech/Engineering (0-3 years)
+    tech_product_thinking: Optional[str] = Field(None, alias="tech-product-thinking")
+    tech_business_impact: Optional[str] = Field(None, alias="tech-business-impact")
+    tech_execution_accountability: Optional[str] = Field(None, alias="tech-execution-accountability")
+    tech_prioritization: Optional[str] = Field(None, alias="tech-prioritization")
+    tech_ai_literacy: Optional[str] = Field(None, alias="tech-ai-literacy")
+    tech_ownership: Optional[str] = Field(None, alias="tech-ownership")
+
+    # Tech/Engineering (3-8 years)
+    tech_feature_roi: Optional[str] = Field(None, alias="tech-feature-roi")
+    tech_cost_escalation: Optional[str] = Field(None, alias="tech-cost-escalation")
+    tech_sales_product_conflict: Optional[str] = Field(None, alias="tech-sales-product-conflict")
+    tech_debt_speed: Optional[str] = Field(None, alias="tech-debt-speed")
+    tech_ai_investment: Optional[str] = Field(None, alias="tech-ai-investment")
+    tech_resource_allocation: Optional[str] = Field(None, alias="tech-resource-allocation")
+
+    # Tech/Engineering (8+ years)
+    tech_strategic_tradeoff: Optional[str] = Field(None, alias="tech-strategic-tradeoff")
+    tech_capital_allocation: Optional[str] = Field(None, alias="tech-capital-allocation")
+    tech_competitive_advantage: Optional[str] = Field(None, alias="tech-competitive-advantage")
+    tech_scalability: Optional[str] = Field(None, alias="tech-scalability")
+    tech_ai_strategy: Optional[str] = Field(None, alias="tech-ai-strategy")
+    tech_portfolio_balancing: Optional[str] = Field(None, alias="tech-portfolio-balancing")
 
     class Config:
         populate_by_name = True  # Allow both alias and field name

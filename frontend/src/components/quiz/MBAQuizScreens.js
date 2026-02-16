@@ -43,7 +43,8 @@ export const MBA_INTAKE_SCREEN_1 = {
         { value: 'sales', label: 'Sales / Growth / Revenue roles', icon: <TrendUp size={24} weight="duotone" /> },
         { value: 'marketing', label: 'Marketing / Brand / Performance Marketing', icon: <MegaphoneSimple size={24} weight="duotone" /> },
         { value: 'operations', label: 'Operations / Supply Chain / Strategy', icon: <Package size={24} weight="duotone" /> },
-        { value: 'founder', label: 'Startup Founder / Entrepreneur', icon: <Lightbulb size={24} weight="duotone" /> }
+        { value: 'founder', label: 'Startup Founder / Entrepreneur', icon: <Lightbulb size={24} weight="duotone" /> },
+        { value: 'tech', label: 'Engineering / DevOps / Tech Roles', icon: <Code size={24} weight="duotone" /> }
       ]
     },
     {
@@ -65,7 +66,8 @@ export const MBA_INTAKE_SCREEN_1 = {
       'sales': 'Perfect! Sales and growth leaders who understand AI are revolutionizing revenue operations.',
       'marketing': 'Awesome! Marketing professionals leveraging AI are seeing unprecedented ROI and scale.',
       'operations': 'Fantastic! Operations and strategy roles are being redefined by AI and automation.',
-      'founder': 'Impressive! Founders who master AI have a massive competitive advantage in building and scaling.'
+      'founder': 'Impressive! Founders who master AI have a massive competitive advantage in building and scaling.',
+      'tech': 'Excellent! Engineers with business acumen and AI skills are becoming strategic leaders in tech companies.'
     },
     experience: {
       '0-1': 'Early in your career - perfect time to build strong business + AI foundations!',
@@ -111,563 +113,2004 @@ export const MBA_INTAKE_SCREEN_2 = {
 };
 
 // Role-specific deep-dive questions
+// NEW STRUCTURE: Questions are now organized by role AND experience level
+// Structure: { 'role': { '0-3': [screens...], '3-8': [screens...], '8+': [screens...] } }
+// Experience mapping: '0-1'/'1-3' -> '0-3', '3-6'/'6-10' -> '3-8', '10+' -> '8+'
 export const MBA_ROLE_SPECIFIC_SCREENS = {
-  'pm': [
+  'pm': {
+    // 0-3 years experience (Entry level)
+    '0-3': [
     // Screen 3: PM Questions 1-2
-    {
-      id: 'pm-screen-1',
-      initialChatText: "Let's dive into your product thinking and decision-making approach.",
-      questions: [
-        {
-          id: 'pm-retention-problem',
-          question: 'You launched a new product/feature. Adoption is high, but 30-day retention is below 15%. Engineering says "feature parity gap," sales says "wrong ICP (Ideal Customer Profile)." What do you do first?',
-          helperText: 'This tests problem framing and sequencing',
-          isScenario: true,
-          options: [
-            { value: 'resegment-cohorts', label: 'Re-segment cohorts by acquisition source + JTBD (Jobs To Be Done)', icon: <ChartBar size={24} weight="duotone" /> },
-            { value: 'qualitative-interviews', label: 'Run qualitative interviews with churned users', icon: <Users size={24} weight="duotone" /> },
-            { value: 'add-parity', label: 'Add parity features requested by sales team', icon: <Code size={24} weight="duotone" /> },
-            { value: 'pause-for-data', label: 'Pause roadmap changes and wait for more data', icon: <Clock size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'pm-roadmap-tradeoff',
-          question: 'Leadership wants a big-bang AI feature for market positioning. However, your data shows incremental improvements give better ROI (Return on Investment). What do you ship?',
-          helperText: 'Tests strategic courage and stakeholder management',
-          isScenario: true,
-          options: [
-            { value: 'ai-feature', label: 'Ship AI feature to align with leadership vision', icon: <Brain size={24} weight="duotone" /> },
-            { value: 'incremental', label: 'Ship incremental improvements backed by metrics', icon: <TrendUp size={24} weight="duotone" /> },
-            { value: 'ai-wrapper', label: 'Build a thin AI layer on existing flows (compromise)', icon: <Lightning size={24} weight="duotone" /> },
-            { value: 'parallel-discovery', label: 'Run parallel discovery to validate both approaches', icon: <Path size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 4: PM Questions 3-4
-    {
-      id: 'pm-screen-2',
-      initialChatText: "Now let's explore your execution approach and metrics thinking.",
-      questions: [
-        {
-          id: 'pm-mvp-validation',
-          question: 'You must validate a new workflow in 2 weeks with no engineers assigned to you. What do you actually build?',
-          helperText: 'Tests execution bias and AI leverage',
-          isScenario: true,
-          options: [
-            { value: 'prd-mockups', label: 'PRD (Product Requirements Document) + mockups only', icon: <PresentationChart size={24} weight="duotone" /> },
-            { value: 'nocode-prototype', label: 'No-code prototype with realistic data flows', icon: <Code size={24} weight="duotone" /> },
-            { value: 'ai-simulated', label: 'AI-simulated workflow using prompts & automation', icon: <Brain size={24} weight="duotone" /> },
-            { value: 'interviews-only', label: 'Customer interviews only (no prototype)', icon: <Users size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'pm-metrics-conflict',
-          question: 'Your north-star metric (primary success metric) improves significantly, but downstream revenue remains stagnant. What do you trust more?',
-          helperText: 'Tests senior metric thinking',
-          isScenario: true,
-          options: [
-            { value: 'north-star', label: 'Trust the north-star metric', icon: <Target size={24} weight="duotone" /> },
-            { value: 'revenue', label: 'Trust the revenue metrics', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'leading-indicators', label: 'Look at leading indicators between both', icon: <TrendUp size={24} weight="duotone" /> },
-            { value: 'unit-economics', label: 'Analyze segment-specific unit economics', icon: <ChartBar size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 5: PM Questions 5-6
-    {
-      id: 'pm-screen-3',
-      initialChatText: "Finally, let's assess your AI leverage and self-awareness as a PM.",
-      questions: [
-        {
-          id: 'pm-ai-leverage',
-          question: 'Where do you think AI would add the highest leverage and value in your current PM (Product Manager) role?',
-          options: [
-            { value: 'writing-prds', label: 'Writing PRDs (Product Requirements Documents) faster', icon: <PresentationChart size={24} weight="duotone" /> },
-            { value: 'research-synthesis', label: 'Synthesizing qualitative user research insights', icon: <Users size={24} weight="duotone" /> },
-            { value: 'prioritization', label: 'Prioritization frameworks and trade-off modeling', icon: <Target size={24} weight="duotone" /> },
-            { value: 'impact-prediction', label: 'Predicting feature and roadmap business impact', icon: <ChartLineUp size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'pm-failure-reflection',
-          question: 'When you look back at your career, what do you think caused your most expensive product mistake or failure?',
-          helperText: 'Tests self-awareness and seniority',
-          options: [
-            { value: 'poor-data', label: 'Poor data quality or insufficient metrics', icon: <XCircle size={24} weight="duotone" /> },
-            { value: 'wrong-assumptions', label: 'Incorrect assumptions about user needs', icon: <Brain size={24} weight="duotone" /> },
-            { value: 'stakeholder-pressure', label: 'Stakeholder pressure overriding product judgment', icon: <Users size={24} weight="duotone" /> },
-            { value: 'execution-constraints', label: 'Execution constraints (time, resources, dependencies)', icon: <Gear size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    }
-  ],
+      {
+        id: 'pm-screen-1',
+        initialChatText: "Let's dive into your product thinking and decision-making approach.",
+        questions: [
+          {
+            id: 'pm-retention-problem',
+            question: 'You launched a new product/feature. Adoption is high, but 30-day retention is below 15%. Engineering says "feature parity gap," sales says "wrong ICP (Ideal Customer Profile)." What do you do first?',
+            helperText: 'This tests problem framing and sequencing',
+            isScenario: true,
+            options: [
+              { value: 'resegment-cohorts', label: 'Re-segment cohorts by acquisition source + JTBD (Jobs To Be Done)', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'qualitative-interviews', label: 'Run qualitative interviews with churned users', icon: <Users size={24} weight="duotone" /> },
+              { value: 'add-parity', label: 'Add parity features requested by sales team', icon: <Code size={24} weight="duotone" /> },
+              { value: 'pause-for-data', label: 'Pause roadmap changes and wait for more data', icon: <Clock size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'pm-roadmap-tradeoff',
+            question: 'Leadership wants a big-bang AI feature for market positioning. However, your data shows incremental improvements give better ROI (Return on Investment). What do you ship?',
+            helperText: 'Tests strategic courage and stakeholder management',
+            isScenario: true,
+            options: [
+              { value: 'ai-feature', label: 'Ship AI feature to align with leadership vision', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'incremental', label: 'Ship incremental improvements backed by metrics', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'ai-wrapper', label: 'Build a thin AI layer on existing flows (compromise)', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'parallel-discovery', label: 'Run parallel discovery to validate both approaches', icon: <Path size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: PM Questions 3-4
+      {
+        id: 'pm-screen-2',
+        initialChatText: "Now let's explore your execution approach and metrics thinking.",
+        questions: [
+          {
+            id: 'pm-mvp-validation',
+            question: 'You must validate a new workflow in 2 weeks with no engineers assigned to you. What do you actually build?',
+            helperText: 'Tests execution bias and AI leverage',
+            isScenario: true,
+            options: [
+              { value: 'prd-mockups', label: 'PRD (Product Requirements Document) + mockups only', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'nocode-prototype', label: 'No-code prototype with realistic data flows', icon: <Code size={24} weight="duotone" /> },
+              { value: 'ai-simulated', label: 'AI-simulated workflow using prompts & automation', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'interviews-only', label: 'Customer interviews only (no prototype)', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'pm-metrics-conflict',
+            question: 'Your north-star metric (primary success metric) improves significantly, but downstream revenue remains stagnant. What do you trust more?',
+            helperText: 'Tests senior metric thinking',
+            isScenario: true,
+            options: [
+              { value: 'north-star', label: 'Trust the north-star metric', icon: <Target size={24} weight="duotone" /> },
+              { value: 'revenue', label: 'Trust the revenue metrics', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'leading-indicators', label: 'Look at leading indicators between both', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'unit-economics', label: 'Analyze segment-specific unit economics', icon: <ChartBar size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: PM Questions 5-6
+      {
+        id: 'pm-screen-3',
+        initialChatText: "Finally, let's assess your AI leverage and self-awareness as a PM.",
+        questions: [
+          {
+            id: 'pm-ai-leverage',
+            question: 'Where do you think AI would add the highest leverage and value in your current PM (Product Manager) role?',
+            options: [
+              { value: 'writing-prds', label: 'Writing PRDs (Product Requirements Documents) faster', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'research-synthesis', label: 'Synthesizing qualitative user research insights', icon: <Users size={24} weight="duotone" /> },
+              { value: 'prioritization', label: 'Prioritization frameworks and trade-off modeling', icon: <Target size={24} weight="duotone" /> },
+              { value: 'impact-prediction', label: 'Predicting feature and roadmap business impact', icon: <ChartLineUp size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'pm-failure-reflection',
+            question: 'When you look back at your career, what do you think caused your most expensive product mistake or failure?',
+            helperText: 'Tests self-awareness and seniority',
+            options: [
+              { value: 'poor-data', label: 'Poor data quality or insufficient metrics', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'wrong-assumptions', label: 'Incorrect assumptions about user needs', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'stakeholder-pressure', label: 'Stakeholder pressure overriding product judgment', icon: <Users size={24} weight="duotone" /> },
+              { value: 'execution-constraints', label: 'Execution constraints (time, resources, dependencies)', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 3-8 years experience (Mid level) - using same questions for now
+    '3-8': [
+      // Screen 3: PM Questions 1-2
+      {
+        id: 'pm-screen-1',
+        initialChatText: "Let's dive into your product thinking and decision-making approach.",
+        questions: [
+          {
+            id: 'pm-retention-problem',
+            question: 'You launched a new product/feature. Adoption is high, but 30-day retention is below 15%. Engineering says "feature parity gap," sales says "wrong ICP (Ideal Customer Profile)." What do you do first?',
+            helperText: 'This tests problem framing and sequencing',
+            isScenario: true,
+            options: [
+              { value: 'resegment-cohorts', label: 'Re-segment cohorts by acquisition source + JTBD (Jobs To Be Done)', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'qualitative-interviews', label: 'Run qualitative interviews with churned users', icon: <Users size={24} weight="duotone" /> },
+              { value: 'add-parity', label: 'Add parity features requested by sales team', icon: <Code size={24} weight="duotone" /> },
+              { value: 'pause-for-data', label: 'Pause roadmap changes and wait for more data', icon: <Clock size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'pm-roadmap-tradeoff',
+            question: 'Leadership wants a big-bang AI feature for market positioning. However, your data shows incremental improvements give better ROI (Return on Investment). What do you ship?',
+            helperText: 'Tests strategic courage and stakeholder management',
+            isScenario: true,
+            options: [
+              { value: 'ai-feature', label: 'Ship AI feature to align with leadership vision', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'incremental', label: 'Ship incremental improvements backed by metrics', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'ai-wrapper', label: 'Build a thin AI layer on existing flows (compromise)', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'parallel-discovery', label: 'Run parallel discovery to validate both approaches', icon: <Path size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: PM Questions 3-4
+      {
+        id: 'pm-screen-2',
+        initialChatText: "Now let's explore your execution approach and metrics thinking.",
+        questions: [
+          {
+            id: 'pm-mvp-validation',
+            question: 'You must validate a new workflow in 2 weeks with no engineers assigned to you. What do you actually build?',
+            helperText: 'Tests execution bias and AI leverage',
+            isScenario: true,
+            options: [
+              { value: 'prd-mockups', label: 'PRD (Product Requirements Document) + mockups only', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'nocode-prototype', label: 'No-code prototype with realistic data flows', icon: <Code size={24} weight="duotone" /> },
+              { value: 'ai-simulated', label: 'AI-simulated workflow using prompts & automation', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'interviews-only', label: 'Customer interviews only (no prototype)', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'pm-metrics-conflict',
+            question: 'Your north-star metric (primary success metric) improves significantly, but downstream revenue remains stagnant. What do you trust more?',
+            helperText: 'Tests senior metric thinking',
+            isScenario: true,
+            options: [
+              { value: 'north-star', label: 'Trust the north-star metric', icon: <Target size={24} weight="duotone" /> },
+              { value: 'revenue', label: 'Trust the revenue metrics', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'leading-indicators', label: 'Look at leading indicators between both', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'unit-economics', label: 'Analyze segment-specific unit economics', icon: <ChartBar size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: PM Questions 5-6
+      {
+        id: 'pm-screen-3',
+        initialChatText: "Finally, let's assess your AI leverage and self-awareness as a PM.",
+        questions: [
+          {
+            id: 'pm-ai-leverage',
+            question: 'Where do you think AI would add the highest leverage and value in your current PM (Product Manager) role?',
+            options: [
+              { value: 'writing-prds', label: 'Writing PRDs (Product Requirements Documents) faster', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'research-synthesis', label: 'Synthesizing qualitative user research insights', icon: <Users size={24} weight="duotone" /> },
+              { value: 'prioritization', label: 'Prioritization frameworks and trade-off modeling', icon: <Target size={24} weight="duotone" /> },
+              { value: 'impact-prediction', label: 'Predicting feature and roadmap business impact', icon: <ChartLineUp size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'pm-failure-reflection',
+            question: 'When you look back at your career, what do you think caused your most expensive product mistake or failure?',
+            helperText: 'Tests self-awareness and seniority',
+            options: [
+              { value: 'poor-data', label: 'Poor data quality or insufficient metrics', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'wrong-assumptions', label: 'Incorrect assumptions about user needs', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'stakeholder-pressure', label: 'Stakeholder pressure overriding product judgment', icon: <Users size={24} weight="duotone" /> },
+              { value: 'execution-constraints', label: 'Execution constraints (time, resources, dependencies)', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 8+ years experience (Senior level) - using same questions for now
+    '8+': [
+      // Screen 3: PM Questions 1-2
+      {
+        id: 'pm-screen-1',
+        initialChatText: "Let's dive into your product thinking and decision-making approach.",
+        questions: [
+          {
+            id: 'pm-retention-problem',
+            question: 'You launched a new product/feature. Adoption is high, but 30-day retention is below 15%. Engineering says "feature parity gap," sales says "wrong ICP (Ideal Customer Profile)." What do you do first?',
+            helperText: 'This tests problem framing and sequencing',
+            isScenario: true,
+            options: [
+              { value: 'resegment-cohorts', label: 'Re-segment cohorts by acquisition source + JTBD (Jobs To Be Done)', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'qualitative-interviews', label: 'Run qualitative interviews with churned users', icon: <Users size={24} weight="duotone" /> },
+              { value: 'add-parity', label: 'Add parity features requested by sales team', icon: <Code size={24} weight="duotone" /> },
+              { value: 'pause-for-data', label: 'Pause roadmap changes and wait for more data', icon: <Clock size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'pm-roadmap-tradeoff',
+            question: 'Leadership wants a big-bang AI feature for market positioning. However, your data shows incremental improvements give better ROI (Return on Investment). What do you ship?',
+            helperText: 'Tests strategic courage and stakeholder management',
+            isScenario: true,
+            options: [
+              { value: 'ai-feature', label: 'Ship AI feature to align with leadership vision', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'incremental', label: 'Ship incremental improvements backed by metrics', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'ai-wrapper', label: 'Build a thin AI layer on existing flows (compromise)', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'parallel-discovery', label: 'Run parallel discovery to validate both approaches', icon: <Path size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: PM Questions 3-4
+      {
+        id: 'pm-screen-2',
+        initialChatText: "Now let's explore your execution approach and metrics thinking.",
+        questions: [
+          {
+            id: 'pm-mvp-validation',
+            question: 'You must validate a new workflow in 2 weeks with no engineers assigned to you. What do you actually build?',
+            helperText: 'Tests execution bias and AI leverage',
+            isScenario: true,
+            options: [
+              { value: 'prd-mockups', label: 'PRD (Product Requirements Document) + mockups only', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'nocode-prototype', label: 'No-code prototype with realistic data flows', icon: <Code size={24} weight="duotone" /> },
+              { value: 'ai-simulated', label: 'AI-simulated workflow using prompts & automation', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'interviews-only', label: 'Customer interviews only (no prototype)', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'pm-metrics-conflict',
+            question: 'Your north-star metric (primary success metric) improves significantly, but downstream revenue remains stagnant. What do you trust more?',
+            helperText: 'Tests senior metric thinking',
+            isScenario: true,
+            options: [
+              { value: 'north-star', label: 'Trust the north-star metric', icon: <Target size={24} weight="duotone" /> },
+              { value: 'revenue', label: 'Trust the revenue metrics', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'leading-indicators', label: 'Look at leading indicators between both', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'unit-economics', label: 'Analyze segment-specific unit economics', icon: <ChartBar size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: PM Questions 5-6
+      {
+        id: 'pm-screen-3',
+        initialChatText: "Finally, let's assess your AI leverage and self-awareness as a PM.",
+        questions: [
+          {
+            id: 'pm-ai-leverage',
+            question: 'Where do you think AI would add the highest leverage and value in your current PM (Product Manager) role?',
+            options: [
+              { value: 'writing-prds', label: 'Writing PRDs (Product Requirements Documents) faster', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'research-synthesis', label: 'Synthesizing qualitative user research insights', icon: <Users size={24} weight="duotone" /> },
+              { value: 'prioritization', label: 'Prioritization frameworks and trade-off modeling', icon: <Target size={24} weight="duotone" /> },
+              { value: 'impact-prediction', label: 'Predicting feature and roadmap business impact', icon: <ChartLineUp size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'pm-failure-reflection',
+            question: 'When you look back at your career, what do you think caused your most expensive product mistake or failure?',
+            helperText: 'Tests self-awareness and seniority',
+            options: [
+              { value: 'poor-data', label: 'Poor data quality or insufficient metrics', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'wrong-assumptions', label: 'Incorrect assumptions about user needs', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'stakeholder-pressure', label: 'Stakeholder pressure overriding product judgment', icon: <Users size={24} weight="duotone" /> },
+              { value: 'execution-constraints', label: 'Execution constraints (time, resources, dependencies)', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ]
+  },
 
-  'finance': [
+  'finance': {
+    // 0-3 years experience (Entry level)
+    '0-3': [
     // Screen 3: Finance Questions 1-2
-    {
-      id: 'finance-screen-1',
-      initialChatText: "Let's assess your analytical depth and stakeholder management.",
-      questions: [
-        {
-          id: 'finance-model-contradiction',
-          question: 'Your financial model shows approximately 20% downside risk, contradicting leadership\'s intuition. What do you do?',
-          helperText: 'Tests executive communication maturity',
-          isScenario: true,
-          options: [
-            { value: 'recheck-quietly', label: 'Re-check all assumptions quietly before presenting', icon: <CheckCircle size={24} weight="duotone" /> },
-            { value: 'present-as-is', label: 'Present model as-is with full transparency', icon: <PresentationChart size={24} weight="duotone" /> },
-            { value: 'scenarios', label: 'Build multiple upside/downside scenario models', icon: <Path size={24} weight="duotone" /> },
-            { value: 'align-narrative', label: 'Align narrative with leadership before presenting', icon: <Users size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'finance-forecast-miss',
-          question: 'Your quarterly forecast missed by 18% QoQ (Quarter over Quarter). Root cause is unclear. What changes do you make for next quarter?',
-          helperText: 'Tests analytical depth',
-          isScenario: true,
-          options: [
-            { value: 'conservative-buffers', label: 'Add conservative buffers to all projections', icon: <Target size={24} weight="duotone" /> },
-            { value: 'granular-drivers', label: 'Break down into more granular business drivers', icon: <ChartBar size={24} weight="duotone" /> },
-            { value: 'scenario-modeling', label: 'Build scenario + sensitivity modeling framework', icon: <Path size={24} weight="duotone" /> },
-            { value: 'predictive-models', label: 'Use predictive models with leading indicators', icon: <Brain size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 4: Finance Questions 3-4
-    {
-      id: 'finance-screen-2',
-      initialChatText: "Let's explore your approach to data quality and AI application.",
-      questions: [
-        {
-          id: 'finance-data-quality',
-          question: 'Key datasets are noisy and incomplete, but urgent business decisions cannot wait. What do you do?',
-          helperText: 'Tests real-world analytics maturity',
-          isScenario: true,
-          options: [
-            { value: 'delay-decision', label: 'Delay decision until data quality improves', icon: <Clock size={24} weight="duotone" /> },
-            { value: 'historical-averages', label: 'Use historical averages as proxy', icon: <ChartBar size={24} weight="duotone" /> },
-            { value: 'confidence-intervals', label: 'Build confidence intervals to show uncertainty', icon: <Target size={24} weight="duotone" /> },
-            { value: 'ai-anomalies', label: 'Use AI to flag anomalies & reduce bias', icon: <Brain size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'finance-ai-value',
-          question: 'Where do you think AI would deliver actual business value today in your finance and analytics work?',
-          options: [
-            { value: 'faster-reporting', label: 'Faster reporting - automating report generation', icon: <Lightning size={24} weight="duotone" /> },
-            { value: 'anomaly-detection', label: 'Anomaly detection - flagging unusual patterns', icon: <Target size={24} weight="duotone" /> },
-            { value: 'forecasting', label: 'Forecasting and scenario simulations', icon: <ChartLineUp size={24} weight="duotone" /> },
-            { value: 'prescriptive', label: 'Prescriptive recommendations - actionable insights', icon: <Brain size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 5: Finance Questions 5-6
-    {
-      id: 'finance-screen-3',
-      initialChatText: "Finally, let's understand your accountability and business impact.",
-      questions: [
-        {
-          id: 'finance-ownership',
-          question: 'In your current role, who do you think ultimately owns the outcome and business impact of your financial analysis?',
-          helperText: 'Tests trust and seniority',
-          options: [
-            { value: 'leadership', label: 'Leadership team makes the final decisions', icon: <Users size={24} weight="duotone" /> },
-            { value: 'cross-functional', label: 'Cross-functional team owns it collectively', icon: <Buildings size={24} weight="duotone" /> },
-            { value: 'shared', label: 'Me and leadership share ownership jointly', icon: <Target size={24} weight="duotone" /> },
-            { value: 'me', label: 'I own the outcome and accountability', icon: <Trophy size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'finance-impact',
-          question: 'Looking back at your career, which type of financial analysis do you think created the most business impact?',
-          helperText: 'Tests business orientation',
-          options: [
-            { value: 'cost-reduction', label: 'Cost reduction - identifying savings opportunities', icon: <TrendUp size={24} weight="duotone" /> },
-            { value: 'revenue-optimization', label: 'Revenue optimization - pricing or growth strategies', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'risk-mitigation', label: 'Risk mitigation - preventing financial losses', icon: <CheckCircle size={24} weight="duotone" /> },
-            { value: 'strategic-pivot', label: 'Strategic pivot - changing business direction', icon: <Path size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    }
-  ],
+      {
+        id: 'finance-screen-1',
+        initialChatText: "Let's assess your analytical depth and stakeholder management.",
+        questions: [
+          {
+            id: 'finance-model-contradiction',
+            question: 'Your financial model shows approximately 20% downside risk, contradicting leadership\'s intuition. What do you do?',
+            helperText: 'Tests executive communication maturity',
+            isScenario: true,
+            options: [
+              { value: 'recheck-quietly', label: 'Re-check all assumptions quietly before presenting', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'present-as-is', label: 'Present model as-is with full transparency', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'scenarios', label: 'Build multiple upside/downside scenario models', icon: <Path size={24} weight="duotone" /> },
+              { value: 'align-narrative', label: 'Align narrative with leadership before presenting', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'finance-forecast-miss',
+            question: 'Your quarterly forecast missed by 18% QoQ (Quarter over Quarter). Root cause is unclear. What changes do you make for next quarter?',
+            helperText: 'Tests analytical depth',
+            isScenario: true,
+            options: [
+              { value: 'conservative-buffers', label: 'Add conservative buffers to all projections', icon: <Target size={24} weight="duotone" /> },
+              { value: 'granular-drivers', label: 'Break down into more granular business drivers', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'scenario-modeling', label: 'Build scenario + sensitivity modeling framework', icon: <Path size={24} weight="duotone" /> },
+              { value: 'predictive-models', label: 'Use predictive models with leading indicators', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Finance Questions 3-4
+      {
+        id: 'finance-screen-2',
+        initialChatText: "Let's explore your approach to data quality and AI application.",
+        questions: [
+          {
+            id: 'finance-data-quality',
+            question: 'Key datasets are noisy and incomplete, but urgent business decisions cannot wait. What do you do?',
+            helperText: 'Tests real-world analytics maturity',
+            isScenario: true,
+            options: [
+              { value: 'delay-decision', label: 'Delay decision until data quality improves', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'historical-averages', label: 'Use historical averages as proxy', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'confidence-intervals', label: 'Build confidence intervals to show uncertainty', icon: <Target size={24} weight="duotone" /> },
+              { value: 'ai-anomalies', label: 'Use AI to flag anomalies & reduce bias', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'finance-ai-value',
+            question: 'Where do you think AI would deliver actual business value today in your finance and analytics work?',
+            options: [
+              { value: 'faster-reporting', label: 'Faster reporting - automating report generation', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'anomaly-detection', label: 'Anomaly detection - flagging unusual patterns', icon: <Target size={24} weight="duotone" /> },
+              { value: 'forecasting', label: 'Forecasting and scenario simulations', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'prescriptive', label: 'Prescriptive recommendations - actionable insights', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Finance Questions 5-6
+      {
+        id: 'finance-screen-3',
+        initialChatText: "Finally, let's understand your accountability and business impact.",
+        questions: [
+          {
+            id: 'finance-ownership',
+            question: 'In your current role, who do you think ultimately owns the outcome and business impact of your financial analysis?',
+            helperText: 'Tests trust and seniority',
+            options: [
+              { value: 'leadership', label: 'Leadership team makes the final decisions', icon: <Users size={24} weight="duotone" /> },
+              { value: 'cross-functional', label: 'Cross-functional team owns it collectively', icon: <Buildings size={24} weight="duotone" /> },
+              { value: 'shared', label: 'Me and leadership share ownership jointly', icon: <Target size={24} weight="duotone" /> },
+              { value: 'me', label: 'I own the outcome and accountability', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'finance-impact',
+            question: 'Looking back at your career, which type of financial analysis do you think created the most business impact?',
+            helperText: 'Tests business orientation',
+            options: [
+              { value: 'cost-reduction', label: 'Cost reduction - identifying savings opportunities', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'revenue-optimization', label: 'Revenue optimization - pricing or growth strategies', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'risk-mitigation', label: 'Risk mitigation - preventing financial losses', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'strategic-pivot', label: 'Strategic pivot - changing business direction', icon: <Path size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 3-8 years experience (Mid level) - using same questions for now
+    '3-8': [
+      // Screen 3: Finance Questions 1-2
+      {
+        id: 'finance-screen-1',
+        initialChatText: "Let's assess your analytical depth and stakeholder management.",
+        questions: [
+          {
+            id: 'finance-model-contradiction',
+            question: 'Your financial model shows approximately 20% downside risk, contradicting leadership\'s intuition. What do you do?',
+            helperText: 'Tests executive communication maturity',
+            isScenario: true,
+            options: [
+              { value: 'recheck-quietly', label: 'Re-check all assumptions quietly before presenting', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'present-as-is', label: 'Present model as-is with full transparency', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'scenarios', label: 'Build multiple upside/downside scenario models', icon: <Path size={24} weight="duotone" /> },
+              { value: 'align-narrative', label: 'Align narrative with leadership before presenting', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'finance-forecast-miss',
+            question: 'Your quarterly forecast missed by 18% QoQ (Quarter over Quarter). Root cause is unclear. What changes do you make for next quarter?',
+            helperText: 'Tests analytical depth',
+            isScenario: true,
+            options: [
+              { value: 'conservative-buffers', label: 'Add conservative buffers to all projections', icon: <Target size={24} weight="duotone" /> },
+              { value: 'granular-drivers', label: 'Break down into more granular business drivers', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'scenario-modeling', label: 'Build scenario + sensitivity modeling framework', icon: <Path size={24} weight="duotone" /> },
+              { value: 'predictive-models', label: 'Use predictive models with leading indicators', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Finance Questions 3-4
+      {
+        id: 'finance-screen-2',
+        initialChatText: "Let's explore your approach to data quality and AI application.",
+        questions: [
+          {
+            id: 'finance-data-quality',
+            question: 'Key datasets are noisy and incomplete, but urgent business decisions cannot wait. What do you do?',
+            helperText: 'Tests real-world analytics maturity',
+            isScenario: true,
+            options: [
+              { value: 'delay-decision', label: 'Delay decision until data quality improves', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'historical-averages', label: 'Use historical averages as proxy', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'confidence-intervals', label: 'Build confidence intervals to show uncertainty', icon: <Target size={24} weight="duotone" /> },
+              { value: 'ai-anomalies', label: 'Use AI to flag anomalies & reduce bias', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'finance-ai-value',
+            question: 'Where do you think AI would deliver actual business value today in your finance and analytics work?',
+            options: [
+              { value: 'faster-reporting', label: 'Faster reporting - automating report generation', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'anomaly-detection', label: 'Anomaly detection - flagging unusual patterns', icon: <Target size={24} weight="duotone" /> },
+              { value: 'forecasting', label: 'Forecasting and scenario simulations', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'prescriptive', label: 'Prescriptive recommendations - actionable insights', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Finance Questions 5-6
+      {
+        id: 'finance-screen-3',
+        initialChatText: "Finally, let's understand your accountability and business impact.",
+        questions: [
+          {
+            id: 'finance-ownership',
+            question: 'In your current role, who do you think ultimately owns the outcome and business impact of your financial analysis?',
+            helperText: 'Tests trust and seniority',
+            options: [
+              { value: 'leadership', label: 'Leadership team makes the final decisions', icon: <Users size={24} weight="duotone" /> },
+              { value: 'cross-functional', label: 'Cross-functional team owns it collectively', icon: <Buildings size={24} weight="duotone" /> },
+              { value: 'shared', label: 'Me and leadership share ownership jointly', icon: <Target size={24} weight="duotone" /> },
+              { value: 'me', label: 'I own the outcome and accountability', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'finance-impact',
+            question: 'Looking back at your career, which type of financial analysis do you think created the most business impact?',
+            helperText: 'Tests business orientation',
+            options: [
+              { value: 'cost-reduction', label: 'Cost reduction - identifying savings opportunities', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'revenue-optimization', label: 'Revenue optimization - pricing or growth strategies', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'risk-mitigation', label: 'Risk mitigation - preventing financial losses', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'strategic-pivot', label: 'Strategic pivot - changing business direction', icon: <Path size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 8+ years experience (Senior level) - using same questions for now
+    '8+': [
+      // Screen 3: Finance Questions 1-2
+      {
+        id: 'finance-screen-1',
+        initialChatText: "Let's assess your analytical depth and stakeholder management.",
+        questions: [
+          {
+            id: 'finance-model-contradiction',
+            question: 'Your financial model shows approximately 20% downside risk, contradicting leadership\'s intuition. What do you do?',
+            helperText: 'Tests executive communication maturity',
+            isScenario: true,
+            options: [
+              { value: 'recheck-quietly', label: 'Re-check all assumptions quietly before presenting', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'present-as-is', label: 'Present model as-is with full transparency', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'scenarios', label: 'Build multiple upside/downside scenario models', icon: <Path size={24} weight="duotone" /> },
+              { value: 'align-narrative', label: 'Align narrative with leadership before presenting', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'finance-forecast-miss',
+            question: 'Your quarterly forecast missed by 18% QoQ (Quarter over Quarter). Root cause is unclear. What changes do you make for next quarter?',
+            helperText: 'Tests analytical depth',
+            isScenario: true,
+            options: [
+              { value: 'conservative-buffers', label: 'Add conservative buffers to all projections', icon: <Target size={24} weight="duotone" /> },
+              { value: 'granular-drivers', label: 'Break down into more granular business drivers', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'scenario-modeling', label: 'Build scenario + sensitivity modeling framework', icon: <Path size={24} weight="duotone" /> },
+              { value: 'predictive-models', label: 'Use predictive models with leading indicators', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Finance Questions 3-4
+      {
+        id: 'finance-screen-2',
+        initialChatText: "Let's explore your approach to data quality and AI application.",
+        questions: [
+          {
+            id: 'finance-data-quality',
+            question: 'Key datasets are noisy and incomplete, but urgent business decisions cannot wait. What do you do?',
+            helperText: 'Tests real-world analytics maturity',
+            isScenario: true,
+            options: [
+              { value: 'delay-decision', label: 'Delay decision until data quality improves', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'historical-averages', label: 'Use historical averages as proxy', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'confidence-intervals', label: 'Build confidence intervals to show uncertainty', icon: <Target size={24} weight="duotone" /> },
+              { value: 'ai-anomalies', label: 'Use AI to flag anomalies & reduce bias', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'finance-ai-value',
+            question: 'Where do you think AI would deliver actual business value today in your finance and analytics work?',
+            options: [
+              { value: 'faster-reporting', label: 'Faster reporting - automating report generation', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'anomaly-detection', label: 'Anomaly detection - flagging unusual patterns', icon: <Target size={24} weight="duotone" /> },
+              { value: 'forecasting', label: 'Forecasting and scenario simulations', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'prescriptive', label: 'Prescriptive recommendations - actionable insights', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Finance Questions 5-6
+      {
+        id: 'finance-screen-3',
+        initialChatText: "Finally, let's understand your accountability and business impact.",
+        questions: [
+          {
+            id: 'finance-ownership',
+            question: 'In your current role, who do you think ultimately owns the outcome and business impact of your financial analysis?',
+            helperText: 'Tests trust and seniority',
+            options: [
+              { value: 'leadership', label: 'Leadership team makes the final decisions', icon: <Users size={24} weight="duotone" /> },
+              { value: 'cross-functional', label: 'Cross-functional team owns it collectively', icon: <Buildings size={24} weight="duotone" /> },
+              { value: 'shared', label: 'Me and leadership share ownership jointly', icon: <Target size={24} weight="duotone" /> },
+              { value: 'me', label: 'I own the outcome and accountability', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'finance-impact',
+            question: 'Looking back at your career, which type of financial analysis do you think created the most business impact?',
+            helperText: 'Tests business orientation',
+            options: [
+              { value: 'cost-reduction', label: 'Cost reduction - identifying savings opportunities', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'revenue-optimization', label: 'Revenue optimization - pricing or growth strategies', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'risk-mitigation', label: 'Risk mitigation - preventing financial losses', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'strategic-pivot', label: 'Strategic pivot - changing business direction', icon: <Path size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ]
+  },
 
   // Sales, Marketing, Operations, and Founder roles fully implemented
   // Student and Other roles remain as placeholders (decision needed on approach)
-  'sales': [
+  'sales': {
+    // 0-3 years experience (Entry level)
+    '0-3': [
     // Screen 3: Sales Questions 1-2
-    {
-      id: 'sales-screen-1',
-      initialChatText: "Let's dive into your sales approach and revenue thinking.",
-      questions: [
-        {
-          id: 'sales-pipeline-reality',
-          question: 'Your sales pipeline coverage is 3× the target, but your close rate is dropping. What would be your first move?',
-          helperText: 'Tests revenue maturity',
-          isScenario: true,
-          options: [
-            { value: 'push-volume', label: 'Push more volume into the pipeline', icon: <TrendUp size={24} weight="duotone" /> },
-            { value: 'tighten-qualification', label: 'Tighten lead qualification criteria', icon: <Target size={24} weight="duotone" /> },
-            { value: 'analyze-winloss', label: 'Analyze win/loss patterns deeply', icon: <ChartBar size={24} weight="duotone" /> },
-            { value: 'change-pricing', label: 'Change pricing or packaging structure', icon: <CurrencyInr size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'sales-deal-stuck',
-          question: 'A large deal is stuck at final approval stage for weeks. What do you do?',
-          helperText: 'Tests pattern recognition',
-          isScenario: true,
-          options: [
-            { value: 'increase-followups', label: 'Increase follow-up frequency with the prospect', icon: <Clock size={24} weight="duotone" /> },
-            { value: 'escalate-internally', label: 'Escalate to senior leadership internally', icon: <Users size={24} weight="duotone" /> },
-            { value: 'analyze-blockers', label: 'Analyze historical blockers from similar deals', icon: <ChartBar size={24} weight="duotone" /> },
-            { value: 'change-structure', label: 'Restructure the deal terms', icon: <Path size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 4: Sales Questions 3-4
-    {
-      id: 'sales-screen-2',
-      initialChatText: "Now let's explore your AI application and systems thinking.",
-      questions: [
-        {
-          id: 'sales-ai-usage',
-          question: 'Where do you think AI actually helps and adds value in your sales work today?',
-          helperText: 'Tests senior AI usage',
-          options: [
-            { value: 'email-drafts', label: 'Email drafts - writing prospect communications', icon: <Lightning size={24} weight="duotone" /> },
-            { value: 'call-summaries', label: 'Call summaries - documenting conversations', icon: <PresentationChart size={24} weight="duotone" /> },
-            { value: 'deal-risk', label: 'Deal risk prediction - forecasting win probability', icon: <Target size={24} weight="duotone" /> },
-            { value: 'pricing-optimization', label: 'Pricing and discount optimization strategies', icon: <CurrencyInr size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'sales-target-miss',
-          question: 'You missed your sales quota despite strong activity metrics (calls, meetings, demos). What do you think is the root cause?',
-          helperText: 'Tests systems thinking',
-          isScenario: true,
-          options: [
-            { value: 'lead-quality', label: 'Poor lead quality from marketing', icon: <Target size={24} weight="duotone" /> },
-            { value: 'icp-mismatch', label: 'ICP (Ideal Customer Profile) mismatch', icon: <Users size={24} weight="duotone" /> },
-            { value: 'sales-motion', label: 'Flawed sales motion or process design', icon: <Path size={24} weight="duotone" /> },
-            { value: 'market-conditions', label: 'External market conditions', icon: <ChartLineUp size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 5: Sales Questions 5-6
-    {
-      id: 'sales-screen-3',
-      initialChatText: "Finally, let's assess your data maturity and ownership level.",
-      questions: [
-        {
-          id: 'sales-forecasting',
-          question: 'What do you think your sales forecast is primarily based on today?',
-          helperText: 'Tests data maturity',
-          options: [
-            { value: 'rep-judgment', label: 'Rep judgment - sales team intuition and estimates', icon: <Users size={24} weight="duotone" /> },
-            { value: 'weighted-pipeline', label: 'Weighted pipeline - stage-based probability scoring', icon: <Target size={24} weight="duotone" /> },
-            { value: 'historical-patterns', label: 'Historical patterns - past performance trends', icon: <ChartBar size={24} weight="duotone" /> },
-            { value: 'predictive-models', label: 'Predictive models - AI-driven forecasting', icon: <Brain size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'sales-ownership',
-          question: 'In your current sales role, what do you think you own and are accountable for?',
-          helperText: 'Tests seniority',
-          options: [
-            { value: 'activities', label: 'Activities - calls, meetings, and demos', icon: <Clock size={24} weight="duotone" /> },
-            { value: 'revenue-number', label: 'Revenue number - personal quota achievement', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'team-number', label: 'Team number - managing team quota', icon: <Users size={24} weight="duotone" /> },
-            { value: 'region-business', label: 'Region or business unit performance', icon: <Buildings size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    }
-  ],
-  'marketing': [
+      {
+        id: 'sales-screen-1',
+        initialChatText: "Let's dive into your sales approach and revenue thinking.",
+        questions: [
+          {
+            id: 'sales-pipeline-reality',
+            question: 'Your sales pipeline coverage is 3× the target, but your close rate is dropping. What would be your first move?',
+            helperText: 'Tests revenue maturity',
+            isScenario: true,
+            options: [
+              { value: 'push-volume', label: 'Push more volume into the pipeline', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'tighten-qualification', label: 'Tighten lead qualification criteria', icon: <Target size={24} weight="duotone" /> },
+              { value: 'analyze-winloss', label: 'Analyze win/loss patterns deeply', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'change-pricing', label: 'Change pricing or packaging structure', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'sales-deal-stuck',
+            question: 'A large deal is stuck at final approval stage for weeks. What do you do?',
+            helperText: 'Tests pattern recognition',
+            isScenario: true,
+            options: [
+              { value: 'increase-followups', label: 'Increase follow-up frequency with the prospect', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'escalate-internally', label: 'Escalate to senior leadership internally', icon: <Users size={24} weight="duotone" /> },
+              { value: 'analyze-blockers', label: 'Analyze historical blockers from similar deals', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'change-structure', label: 'Restructure the deal terms', icon: <Path size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Sales Questions 3-4
+      {
+        id: 'sales-screen-2',
+        initialChatText: "Now let's explore your AI application and systems thinking.",
+        questions: [
+          {
+            id: 'sales-ai-usage',
+            question: 'Where do you think AI actually helps and adds value in your sales work today?',
+            helperText: 'Tests senior AI usage',
+            options: [
+              { value: 'email-drafts', label: 'Email drafts - writing prospect communications', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'call-summaries', label: 'Call summaries - documenting conversations', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'deal-risk', label: 'Deal risk prediction - forecasting win probability', icon: <Target size={24} weight="duotone" /> },
+              { value: 'pricing-optimization', label: 'Pricing and discount optimization strategies', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'sales-target-miss',
+            question: 'You missed your sales quota despite strong activity metrics (calls, meetings, demos). What do you think is the root cause?',
+            helperText: 'Tests systems thinking',
+            isScenario: true,
+            options: [
+              { value: 'lead-quality', label: 'Poor lead quality from marketing', icon: <Target size={24} weight="duotone" /> },
+              { value: 'icp-mismatch', label: 'ICP (Ideal Customer Profile) mismatch', icon: <Users size={24} weight="duotone" /> },
+              { value: 'sales-motion', label: 'Flawed sales motion or process design', icon: <Path size={24} weight="duotone" /> },
+              { value: 'market-conditions', label: 'External market conditions', icon: <ChartLineUp size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Sales Questions 5-6
+      {
+        id: 'sales-screen-3',
+        initialChatText: "Finally, let's assess your data maturity and ownership level.",
+        questions: [
+          {
+            id: 'sales-forecasting',
+            question: 'What do you think your sales forecast is primarily based on today?',
+            helperText: 'Tests data maturity',
+            options: [
+              { value: 'rep-judgment', label: 'Rep judgment - sales team intuition and estimates', icon: <Users size={24} weight="duotone" /> },
+              { value: 'weighted-pipeline', label: 'Weighted pipeline - stage-based probability scoring', icon: <Target size={24} weight="duotone" /> },
+              { value: 'historical-patterns', label: 'Historical patterns - past performance trends', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'predictive-models', label: 'Predictive models - AI-driven forecasting', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'sales-ownership',
+            question: 'In your current sales role, what do you think you own and are accountable for?',
+            helperText: 'Tests seniority',
+            options: [
+              { value: 'activities', label: 'Activities - calls, meetings, and demos', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'revenue-number', label: 'Revenue number - personal quota achievement', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'team-number', label: 'Team number - managing team quota', icon: <Users size={24} weight="duotone" /> },
+              { value: 'region-business', label: 'Region or business unit performance', icon: <Buildings size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 3-8 years experience (Mid level) - using same questions for now
+    '3-8': [
+      // Screen 3: Sales Questions 1-2
+      {
+        id: 'sales-screen-1',
+        initialChatText: "Let's dive into your sales approach and revenue thinking.",
+        questions: [
+          {
+            id: 'sales-pipeline-reality',
+            question: 'Your sales pipeline coverage is 3× the target, but your close rate is dropping. What would be your first move?',
+            helperText: 'Tests revenue maturity',
+            isScenario: true,
+            options: [
+              { value: 'push-volume', label: 'Push more volume into the pipeline', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'tighten-qualification', label: 'Tighten lead qualification criteria', icon: <Target size={24} weight="duotone" /> },
+              { value: 'analyze-winloss', label: 'Analyze win/loss patterns deeply', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'change-pricing', label: 'Change pricing or packaging structure', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'sales-deal-stuck',
+            question: 'A large deal is stuck at final approval stage for weeks. What do you do?',
+            helperText: 'Tests pattern recognition',
+            isScenario: true,
+            options: [
+              { value: 'increase-followups', label: 'Increase follow-up frequency with the prospect', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'escalate-internally', label: 'Escalate to senior leadership internally', icon: <Users size={24} weight="duotone" /> },
+              { value: 'analyze-blockers', label: 'Analyze historical blockers from similar deals', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'change-structure', label: 'Restructure the deal terms', icon: <Path size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Sales Questions 3-4
+      {
+        id: 'sales-screen-2',
+        initialChatText: "Now let's explore your AI application and systems thinking.",
+        questions: [
+          {
+            id: 'sales-ai-usage',
+            question: 'Where do you think AI actually helps and adds value in your sales work today?',
+            helperText: 'Tests senior AI usage',
+            options: [
+              { value: 'email-drafts', label: 'Email drafts - writing prospect communications', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'call-summaries', label: 'Call summaries - documenting conversations', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'deal-risk', label: 'Deal risk prediction - forecasting win probability', icon: <Target size={24} weight="duotone" /> },
+              { value: 'pricing-optimization', label: 'Pricing and discount optimization strategies', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'sales-target-miss',
+            question: 'You missed your sales quota despite strong activity metrics (calls, meetings, demos). What do you think is the root cause?',
+            helperText: 'Tests systems thinking',
+            isScenario: true,
+            options: [
+              { value: 'lead-quality', label: 'Poor lead quality from marketing', icon: <Target size={24} weight="duotone" /> },
+              { value: 'icp-mismatch', label: 'ICP (Ideal Customer Profile) mismatch', icon: <Users size={24} weight="duotone" /> },
+              { value: 'sales-motion', label: 'Flawed sales motion or process design', icon: <Path size={24} weight="duotone" /> },
+              { value: 'market-conditions', label: 'External market conditions', icon: <ChartLineUp size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Sales Questions 5-6
+      {
+        id: 'sales-screen-3',
+        initialChatText: "Finally, let's assess your data maturity and ownership level.",
+        questions: [
+          {
+            id: 'sales-forecasting',
+            question: 'What do you think your sales forecast is primarily based on today?',
+            helperText: 'Tests data maturity',
+            options: [
+              { value: 'rep-judgment', label: 'Rep judgment - sales team intuition and estimates', icon: <Users size={24} weight="duotone" /> },
+              { value: 'weighted-pipeline', label: 'Weighted pipeline - stage-based probability scoring', icon: <Target size={24} weight="duotone" /> },
+              { value: 'historical-patterns', label: 'Historical patterns - past performance trends', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'predictive-models', label: 'Predictive models - AI-driven forecasting', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'sales-ownership',
+            question: 'In your current sales role, what do you think you own and are accountable for?',
+            helperText: 'Tests seniority',
+            options: [
+              { value: 'activities', label: 'Activities - calls, meetings, and demos', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'revenue-number', label: 'Revenue number - personal quota achievement', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'team-number', label: 'Team number - managing team quota', icon: <Users size={24} weight="duotone" /> },
+              { value: 'region-business', label: 'Region or business unit performance', icon: <Buildings size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 8+ years experience (Senior level) - using same questions for now
+    '8+': [
+      // Screen 3: Sales Questions 1-2
+      {
+        id: 'sales-screen-1',
+        initialChatText: "Let's dive into your sales approach and revenue thinking.",
+        questions: [
+          {
+            id: 'sales-pipeline-reality',
+            question: 'Your sales pipeline coverage is 3× the target, but your close rate is dropping. What would be your first move?',
+            helperText: 'Tests revenue maturity',
+            isScenario: true,
+            options: [
+              { value: 'push-volume', label: 'Push more volume into the pipeline', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'tighten-qualification', label: 'Tighten lead qualification criteria', icon: <Target size={24} weight="duotone" /> },
+              { value: 'analyze-winloss', label: 'Analyze win/loss patterns deeply', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'change-pricing', label: 'Change pricing or packaging structure', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'sales-deal-stuck',
+            question: 'A large deal is stuck at final approval stage for weeks. What do you do?',
+            helperText: 'Tests pattern recognition',
+            isScenario: true,
+            options: [
+              { value: 'increase-followups', label: 'Increase follow-up frequency with the prospect', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'escalate-internally', label: 'Escalate to senior leadership internally', icon: <Users size={24} weight="duotone" /> },
+              { value: 'analyze-blockers', label: 'Analyze historical blockers from similar deals', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'change-structure', label: 'Restructure the deal terms', icon: <Path size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Sales Questions 3-4
+      {
+        id: 'sales-screen-2',
+        initialChatText: "Now let's explore your AI application and systems thinking.",
+        questions: [
+          {
+            id: 'sales-ai-usage',
+            question: 'Where do you think AI actually helps and adds value in your sales work today?',
+            helperText: 'Tests senior AI usage',
+            options: [
+              { value: 'email-drafts', label: 'Email drafts - writing prospect communications', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'call-summaries', label: 'Call summaries - documenting conversations', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'deal-risk', label: 'Deal risk prediction - forecasting win probability', icon: <Target size={24} weight="duotone" /> },
+              { value: 'pricing-optimization', label: 'Pricing and discount optimization strategies', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'sales-target-miss',
+            question: 'You missed your sales quota despite strong activity metrics (calls, meetings, demos). What do you think is the root cause?',
+            helperText: 'Tests systems thinking',
+            isScenario: true,
+            options: [
+              { value: 'lead-quality', label: 'Poor lead quality from marketing', icon: <Target size={24} weight="duotone" /> },
+              { value: 'icp-mismatch', label: 'ICP (Ideal Customer Profile) mismatch', icon: <Users size={24} weight="duotone" /> },
+              { value: 'sales-motion', label: 'Flawed sales motion or process design', icon: <Path size={24} weight="duotone" /> },
+              { value: 'market-conditions', label: 'External market conditions', icon: <ChartLineUp size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Sales Questions 5-6
+      {
+        id: 'sales-screen-3',
+        initialChatText: "Finally, let's assess your data maturity and ownership level.",
+        questions: [
+          {
+            id: 'sales-forecasting',
+            question: 'What do you think your sales forecast is primarily based on today?',
+            helperText: 'Tests data maturity',
+            options: [
+              { value: 'rep-judgment', label: 'Rep judgment - sales team intuition and estimates', icon: <Users size={24} weight="duotone" /> },
+              { value: 'weighted-pipeline', label: 'Weighted pipeline - stage-based probability scoring', icon: <Target size={24} weight="duotone" /> },
+              { value: 'historical-patterns', label: 'Historical patterns - past performance trends', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'predictive-models', label: 'Predictive models - AI-driven forecasting', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'sales-ownership',
+            question: 'In your current sales role, what do you think you own and are accountable for?',
+            helperText: 'Tests seniority',
+            options: [
+              { value: 'activities', label: 'Activities - calls, meetings, and demos', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'revenue-number', label: 'Revenue number - personal quota achievement', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'team-number', label: 'Team number - managing team quota', icon: <Users size={24} weight="duotone" /> },
+              { value: 'region-business', label: 'Region or business unit performance', icon: <Buildings size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  'marketing': {
+    // 0-3 years experience (Entry level)
+    '0-3': [
     // Screen 3: Marketing Questions 1-2
-    {
-      id: 'marketing-screen-1',
-      initialChatText: "Let's explore your marketing analytics and strategic thinking.",
-      questions: [
-        {
-          id: 'marketing-conflicting-signals',
-          question: 'Your CTR (Click-Through Rate) is up, CAC (Customer Acquisition Cost) is up, but Revenue is down. What metric do you trust most to make decisions?',
-          helperText: 'Tests metric hierarchy understanding',
-          isScenario: true,
-          options: [
-            { value: 'ctr', label: 'Trust CTR (Click-Through Rate)', icon: <ChartLineUp size={24} weight="duotone" /> },
-            { value: 'cac', label: 'Trust CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'ltv-cac-cohort', label: 'Analyze LTV/CAC (Lifetime Value to CAC ratio) by cohort', icon: <ChartBar size={24} weight="duotone" /> },
-            { value: 'revenue-attribution', label: 'Build a comprehensive revenue attribution model', icon: <Target size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'marketing-budget-shock',
-          question: 'Your marketing budget is cut by 30%, but growth targets remain unchanged. What would you cut first?',
-          helperText: 'Tests ROI thinking',
-          isScenario: true,
-          options: [
-            { value: 'experiments', label: 'New experiments and testing', icon: <Lightning size={24} weight="duotone" /> },
-            { value: 'branding', label: 'Brand awareness campaigns', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-            { value: 'low-ltv-segments', label: 'Low LTV (Lifetime Value) customer segments', icon: <Target size={24} weight="duotone" /> },
-            { value: 'agency-spend', label: 'External agency spend', icon: <CurrencyInr size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 4: Marketing Questions 3-4
-    {
-      id: 'marketing-screen-2',
-      initialChatText: "Now let's assess your AI maturity and pragmatic decision-making.",
-      questions: [
-        {
-          id: 'marketing-ai-application',
-          question: 'Where do you think AI creates a defensible competitive advantage in marketing?',
-          helperText: 'Tests AI maturity',
-          options: [
-            { value: 'content-generation', label: 'Content generation - creating marketing copy at scale', icon: <Lightning size={24} weight="duotone" /> },
-            { value: 'creative-testing', label: 'Creative testing - rapid A/B experimentation', icon: <Target size={24} weight="duotone" /> },
-            { value: 'audience-prediction', label: 'Audience prediction - identifying high-intent segments', icon: <Users size={24} weight="duotone" /> },
-            { value: 'automated-optimization', label: 'Automated optimization loops - self-improving campaigns', icon: <Gear size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'marketing-attribution-reality',
-          question: 'Your attribution data is unreliable and inconsistent. What do you do?',
-          helperText: 'Tests senior pragmatism',
-          isScenario: true,
-          options: [
-            { value: 'accept-imperfect', label: 'Accept imperfect data and move forward', icon: <CheckCircle size={24} weight="duotone" /> },
-            { value: 'switch-model', label: 'Switch to a different attribution model', icon: <Path size={24} weight="duotone" /> },
-            { value: 'directional-insights', label: 'Build directional insights with caveats', icon: <ChartBar size={24} weight="duotone" /> },
-            { value: 'ai-infer-patterns', label: 'Use AI to infer hidden patterns', icon: <Brain size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 5: Marketing Questions 5-6
-    {
-      id: 'marketing-screen-3',
-      initialChatText: "Finally, let's understand your systems thinking and accountability.",
-      questions: [
-        {
-          id: 'marketing-scale-failure',
-          question: 'Your growth campaign scaled initially but now has completely stalled. What do you think is the most likely reason?',
-          helperText: 'Tests systems thinking',
-          isScenario: true,
-          options: [
-            { value: 'saturation', label: 'Market saturation - ran out of addressable audience', icon: <ChartLineUp size={24} weight="duotone" /> },
-            { value: 'messaging-mismatch', label: 'Messaging mismatch with new audience segments', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-            { value: 'funnel-leakage', label: 'Conversion funnel leakage at scale', icon: <Path size={24} weight="duotone" /> },
-            { value: 'ops-constraints', label: 'Operations constraints (fulfillment, support)', icon: <Gear size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'marketing-leadership-metric',
-          question: 'Which metric do you defend and own in leadership reviews and stakeholder meetings?',
-          helperText: 'Tests senior accountability',
-          options: [
-            { value: 'leads', label: 'Leads - total lead volume generated', icon: <Users size={24} weight="duotone" /> },
-            { value: 'cac', label: 'CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'revenue-contribution', label: 'Revenue contribution - marketing-attributed revenue', icon: <ChartLineUp size={24} weight="duotone" /> },
-            { value: 'ltv', label: 'LTV (Lifetime Value) of acquired customers', icon: <Trophy size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    }
-  ],
-  'operations': [
+      {
+        id: 'marketing-screen-1',
+        initialChatText: "Let's explore your marketing analytics and strategic thinking.",
+        questions: [
+          {
+            id: 'marketing-conflicting-signals',
+            question: 'Your CTR (Click-Through Rate) is up, CAC (Customer Acquisition Cost) is up, but Revenue is down. What metric do you trust most to make decisions?',
+            helperText: 'Tests metric hierarchy understanding',
+            isScenario: true,
+            options: [
+              { value: 'ctr', label: 'Trust CTR (Click-Through Rate)', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'cac', label: 'Trust CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'ltv-cac-cohort', label: 'Analyze LTV/CAC (Lifetime Value to CAC ratio) by cohort', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'revenue-attribution', label: 'Build a comprehensive revenue attribution model', icon: <Target size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'marketing-budget-shock',
+            question: 'Your marketing budget is cut by 30%, but growth targets remain unchanged. What would you cut first?',
+            helperText: 'Tests ROI thinking',
+            isScenario: true,
+            options: [
+              { value: 'experiments', label: 'New experiments and testing', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'branding', label: 'Brand awareness campaigns', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'low-ltv-segments', label: 'Low LTV (Lifetime Value) customer segments', icon: <Target size={24} weight="duotone" /> },
+              { value: 'agency-spend', label: 'External agency spend', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Marketing Questions 3-4
+      {
+        id: 'marketing-screen-2',
+        initialChatText: "Now let's assess your AI maturity and pragmatic decision-making.",
+        questions: [
+          {
+            id: 'marketing-ai-application',
+            question: 'Where do you think AI creates a defensible competitive advantage in marketing?',
+            helperText: 'Tests AI maturity',
+            options: [
+              { value: 'content-generation', label: 'Content generation - creating marketing copy at scale', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'creative-testing', label: 'Creative testing - rapid A/B experimentation', icon: <Target size={24} weight="duotone" /> },
+              { value: 'audience-prediction', label: 'Audience prediction - identifying high-intent segments', icon: <Users size={24} weight="duotone" /> },
+              { value: 'automated-optimization', label: 'Automated optimization loops - self-improving campaigns', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'marketing-attribution-reality',
+            question: 'Your attribution data is unreliable and inconsistent. What do you do?',
+            helperText: 'Tests senior pragmatism',
+            isScenario: true,
+            options: [
+              { value: 'accept-imperfect', label: 'Accept imperfect data and move forward', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'switch-model', label: 'Switch to a different attribution model', icon: <Path size={24} weight="duotone" /> },
+              { value: 'directional-insights', label: 'Build directional insights with caveats', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'ai-infer-patterns', label: 'Use AI to infer hidden patterns', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Marketing Questions 5-6
+      {
+        id: 'marketing-screen-3',
+        initialChatText: "Finally, let's understand your systems thinking and accountability.",
+        questions: [
+          {
+            id: 'marketing-scale-failure',
+            question: 'Your growth campaign scaled initially but now has completely stalled. What do you think is the most likely reason?',
+            helperText: 'Tests systems thinking',
+            isScenario: true,
+            options: [
+              { value: 'saturation', label: 'Market saturation - ran out of addressable audience', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'messaging-mismatch', label: 'Messaging mismatch with new audience segments', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'funnel-leakage', label: 'Conversion funnel leakage at scale', icon: <Path size={24} weight="duotone" /> },
+              { value: 'ops-constraints', label: 'Operations constraints (fulfillment, support)', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'marketing-leadership-metric',
+            question: 'Which metric do you defend and own in leadership reviews and stakeholder meetings?',
+            helperText: 'Tests senior accountability',
+            options: [
+              { value: 'leads', label: 'Leads - total lead volume generated', icon: <Users size={24} weight="duotone" /> },
+              { value: 'cac', label: 'CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'revenue-contribution', label: 'Revenue contribution - marketing-attributed revenue', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'ltv', label: 'LTV (Lifetime Value) of acquired customers', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 3-8 years experience (Mid level) - using same questions for now
+    '3-8': [
+      // Screen 3: Marketing Questions 1-2
+      {
+        id: 'marketing-screen-1',
+        initialChatText: "Let's explore your marketing analytics and strategic thinking.",
+        questions: [
+          {
+            id: 'marketing-conflicting-signals',
+            question: 'Your CTR (Click-Through Rate) is up, CAC (Customer Acquisition Cost) is up, but Revenue is down. What metric do you trust most to make decisions?',
+            helperText: 'Tests metric hierarchy understanding',
+            isScenario: true,
+            options: [
+              { value: 'ctr', label: 'Trust CTR (Click-Through Rate)', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'cac', label: 'Trust CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'ltv-cac-cohort', label: 'Analyze LTV/CAC (Lifetime Value to CAC ratio) by cohort', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'revenue-attribution', label: 'Build a comprehensive revenue attribution model', icon: <Target size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'marketing-budget-shock',
+            question: 'Your marketing budget is cut by 30%, but growth targets remain unchanged. What would you cut first?',
+            helperText: 'Tests ROI thinking',
+            isScenario: true,
+            options: [
+              { value: 'experiments', label: 'New experiments and testing', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'branding', label: 'Brand awareness campaigns', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'low-ltv-segments', label: 'Low LTV (Lifetime Value) customer segments', icon: <Target size={24} weight="duotone" /> },
+              { value: 'agency-spend', label: 'External agency spend', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Marketing Questions 3-4
+      {
+        id: 'marketing-screen-2',
+        initialChatText: "Now let's assess your AI maturity and pragmatic decision-making.",
+        questions: [
+          {
+            id: 'marketing-ai-application',
+            question: 'Where do you think AI creates a defensible competitive advantage in marketing?',
+            helperText: 'Tests AI maturity',
+            options: [
+              { value: 'content-generation', label: 'Content generation - creating marketing copy at scale', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'creative-testing', label: 'Creative testing - rapid A/B experimentation', icon: <Target size={24} weight="duotone" /> },
+              { value: 'audience-prediction', label: 'Audience prediction - identifying high-intent segments', icon: <Users size={24} weight="duotone" /> },
+              { value: 'automated-optimization', label: 'Automated optimization loops - self-improving campaigns', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'marketing-attribution-reality',
+            question: 'Your attribution data is unreliable and inconsistent. What do you do?',
+            helperText: 'Tests senior pragmatism',
+            isScenario: true,
+            options: [
+              { value: 'accept-imperfect', label: 'Accept imperfect data and move forward', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'switch-model', label: 'Switch to a different attribution model', icon: <Path size={24} weight="duotone" /> },
+              { value: 'directional-insights', label: 'Build directional insights with caveats', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'ai-infer-patterns', label: 'Use AI to infer hidden patterns', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Marketing Questions 5-6
+      {
+        id: 'marketing-screen-3',
+        initialChatText: "Finally, let's understand your systems thinking and accountability.",
+        questions: [
+          {
+            id: 'marketing-scale-failure',
+            question: 'Your growth campaign scaled initially but now has completely stalled. What do you think is the most likely reason?',
+            helperText: 'Tests systems thinking',
+            isScenario: true,
+            options: [
+              { value: 'saturation', label: 'Market saturation - ran out of addressable audience', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'messaging-mismatch', label: 'Messaging mismatch with new audience segments', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'funnel-leakage', label: 'Conversion funnel leakage at scale', icon: <Path size={24} weight="duotone" /> },
+              { value: 'ops-constraints', label: 'Operations constraints (fulfillment, support)', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'marketing-leadership-metric',
+            question: 'Which metric do you defend and own in leadership reviews and stakeholder meetings?',
+            helperText: 'Tests senior accountability',
+            options: [
+              { value: 'leads', label: 'Leads - total lead volume generated', icon: <Users size={24} weight="duotone" /> },
+              { value: 'cac', label: 'CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'revenue-contribution', label: 'Revenue contribution - marketing-attributed revenue', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'ltv', label: 'LTV (Lifetime Value) of acquired customers', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 8+ years experience (Senior level) - using same questions for now
+    '8+': [
+      // Screen 3: Marketing Questions 1-2
+      {
+        id: 'marketing-screen-1',
+        initialChatText: "Let's explore your marketing analytics and strategic thinking.",
+        questions: [
+          {
+            id: 'marketing-conflicting-signals',
+            question: 'Your CTR (Click-Through Rate) is up, CAC (Customer Acquisition Cost) is up, but Revenue is down. What metric do you trust most to make decisions?',
+            helperText: 'Tests metric hierarchy understanding',
+            isScenario: true,
+            options: [
+              { value: 'ctr', label: 'Trust CTR (Click-Through Rate)', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'cac', label: 'Trust CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'ltv-cac-cohort', label: 'Analyze LTV/CAC (Lifetime Value to CAC ratio) by cohort', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'revenue-attribution', label: 'Build a comprehensive revenue attribution model', icon: <Target size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'marketing-budget-shock',
+            question: 'Your marketing budget is cut by 30%, but growth targets remain unchanged. What would you cut first?',
+            helperText: 'Tests ROI thinking',
+            isScenario: true,
+            options: [
+              { value: 'experiments', label: 'New experiments and testing', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'branding', label: 'Brand awareness campaigns', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'low-ltv-segments', label: 'Low LTV (Lifetime Value) customer segments', icon: <Target size={24} weight="duotone" /> },
+              { value: 'agency-spend', label: 'External agency spend', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Marketing Questions 3-4
+      {
+        id: 'marketing-screen-2',
+        initialChatText: "Now let's assess your AI maturity and pragmatic decision-making.",
+        questions: [
+          {
+            id: 'marketing-ai-application',
+            question: 'Where do you think AI creates a defensible competitive advantage in marketing?',
+            helperText: 'Tests AI maturity',
+            options: [
+              { value: 'content-generation', label: 'Content generation - creating marketing copy at scale', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'creative-testing', label: 'Creative testing - rapid A/B experimentation', icon: <Target size={24} weight="duotone" /> },
+              { value: 'audience-prediction', label: 'Audience prediction - identifying high-intent segments', icon: <Users size={24} weight="duotone" /> },
+              { value: 'automated-optimization', label: 'Automated optimization loops - self-improving campaigns', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'marketing-attribution-reality',
+            question: 'Your attribution data is unreliable and inconsistent. What do you do?',
+            helperText: 'Tests senior pragmatism',
+            isScenario: true,
+            options: [
+              { value: 'accept-imperfect', label: 'Accept imperfect data and move forward', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'switch-model', label: 'Switch to a different attribution model', icon: <Path size={24} weight="duotone" /> },
+              { value: 'directional-insights', label: 'Build directional insights with caveats', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'ai-infer-patterns', label: 'Use AI to infer hidden patterns', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Marketing Questions 5-6
+      {
+        id: 'marketing-screen-3',
+        initialChatText: "Finally, let's understand your systems thinking and accountability.",
+        questions: [
+          {
+            id: 'marketing-scale-failure',
+            question: 'Your growth campaign scaled initially but now has completely stalled. What do you think is the most likely reason?',
+            helperText: 'Tests systems thinking',
+            isScenario: true,
+            options: [
+              { value: 'saturation', label: 'Market saturation - ran out of addressable audience', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'messaging-mismatch', label: 'Messaging mismatch with new audience segments', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'funnel-leakage', label: 'Conversion funnel leakage at scale', icon: <Path size={24} weight="duotone" /> },
+              { value: 'ops-constraints', label: 'Operations constraints (fulfillment, support)', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'marketing-leadership-metric',
+            question: 'Which metric do you defend and own in leadership reviews and stakeholder meetings?',
+            helperText: 'Tests senior accountability',
+            options: [
+              { value: 'leads', label: 'Leads - total lead volume generated', icon: <Users size={24} weight="duotone" /> },
+              { value: 'cac', label: 'CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'revenue-contribution', label: 'Revenue contribution - marketing-attributed revenue', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'ltv', label: 'LTV (Lifetime Value) of acquired customers', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  'operations': {
+    // 0-3 years experience (Entry level)
+    '0-3': [
     // Screen 3: Operations Questions 1-2
-    {
-      id: 'operations-screen-1',
-      initialChatText: "Let's explore your operations thinking and problem-solving approach.",
-      questions: [
-        {
-          id: 'operations-scale-stress',
-          question: 'Your product demand doubles in just 90 days. What do you think will break first in your operations?',
-          helperText: 'Tests system-level thinking',
-          isScenario: true,
-          options: [
-            { value: 'hiring-capacity', label: 'Hiring capacity - unable to scale team fast enough', icon: <Users size={24} weight="duotone" /> },
-            { value: 'process-design', label: 'Process design - workflows not built for scale', icon: <Gear size={24} weight="duotone" /> },
-            { value: 'data-visibility', label: 'Data visibility - losing insights at scale', icon: <Database size={24} weight="duotone" /> },
-            { value: 'vendor-reliability', label: 'Vendor reliability - third-party dependencies', icon: <Buildings size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'operations-cost-sla',
-          question: 'Your operational costs are rising while SLA (Service Level Agreement) performance is dropping. What would you fix first?',
-          helperText: 'Tests ops maturity',
-          isScenario: true,
-          options: [
-            { value: 'headcount', label: 'Headcount - hire more people', icon: <Users size={24} weight="duotone" /> },
-            { value: 'process-bottlenecks', label: 'Process bottlenecks - fix inefficient workflows', icon: <Path size={24} weight="duotone" /> },
-            { value: 'demand-variability', label: 'Demand variability - better forecasting', icon: <ChartLineUp size={24} weight="duotone" /> },
-            { value: 'automation-gaps', label: 'Automation gaps - identify manual work to automate', icon: <Gear size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 4: Operations Questions 3-4
-    {
-      id: 'operations-screen-2',
-      initialChatText: "Now let's assess your AI application and accountability.",
-      questions: [
-        {
-          id: 'operations-ai-leverage',
-          question: 'Where do you think AI delivers the highest ROI (Return on Investment) in your operations work?',
-          helperText: 'Tests AI application depth',
-          options: [
-            { value: 'reporting', label: 'Reporting - automated dashboards and insights', icon: <PresentationChart size={24} weight="duotone" /> },
-            { value: 'forecasting', label: 'Forecasting - demand and capacity prediction', icon: <ChartLineUp size={24} weight="duotone" /> },
-            { value: 'automation', label: 'Automation - eliminating manual workflows', icon: <Gear size={24} weight="duotone" /> },
-            { value: 'decision-optimization', label: 'Decision optimization - smarter resource allocation', icon: <Brain size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'operations-ownership',
-          question: 'Which metric do you think keeps you up at night and worries you the most?',
-          helperText: 'Tests accountability',
-          options: [
-            { value: 'task-completion', label: 'Task completion - getting things done on time', icon: <CheckCircle size={24} weight="duotone" /> },
-            { value: 'cost-per-unit', label: 'Cost per unit - operational efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'sla-adherence', label: 'SLA (Service Level Agreement) adherence - meeting commitments', icon: <Target size={24} weight="duotone" /> },
-            { value: 'margin', label: 'Margin - profitability of operations', icon: <ChartBar size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 5: Operations Questions 5-6
-    {
-      id: 'operations-screen-3',
-      initialChatText: "Finally, let's understand your pragmatism and strategic framing.",
-      questions: [
-        {
-          id: 'operations-data-constraint',
-          question: 'Your operations data is delayed by 2 weeks, but decisions need to be made now. What do you do?',
-          helperText: 'Tests senior pragmatism',
-          isScenario: true,
-          options: [
-            { value: 'wait', label: 'Wait for accurate data before making decisions', icon: <Clock size={24} weight="duotone" /> },
-            { value: 'use-proxies', label: 'Use proxy metrics as temporary alternatives', icon: <Target size={24} weight="duotone" /> },
-            { value: 'early-warning', label: 'Build real-time early-warning indicator system', icon: <Lightning size={24} weight="duotone" /> },
-            { value: 'ai-prediction', label: 'Use AI models to predict missing data', icon: <Brain size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'operations-strategic-role',
-          question: 'In your view, what do you think operations exists primarily to accomplish?',
-          helperText: 'Tests senior framing',
-          options: [
-            { value: 'execute-plans', label: 'Execute plans - deliver on commitments', icon: <CheckCircle size={24} weight="duotone" /> },
-            { value: 'reduce-cost', label: 'Reduce cost - maximize efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'enable-scale', label: 'Enable scale - support rapid growth', icon: <TrendUp size={24} weight="duotone" /> },
-            { value: 'competitive-advantage', label: 'Drive competitive advantage - ops as strategy', icon: <Trophy size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    }
-  ],
-  'founder': [
+      {
+        id: 'operations-screen-1',
+        initialChatText: "Let's explore your operations thinking and problem-solving approach.",
+        questions: [
+          {
+            id: 'operations-scale-stress',
+            question: 'Your product demand doubles in just 90 days. What do you think will break first in your operations?',
+            helperText: 'Tests system-level thinking',
+            isScenario: true,
+            options: [
+              { value: 'hiring-capacity', label: 'Hiring capacity - unable to scale team fast enough', icon: <Users size={24} weight="duotone" /> },
+              { value: 'process-design', label: 'Process design - workflows not built for scale', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'data-visibility', label: 'Data visibility - losing insights at scale', icon: <Database size={24} weight="duotone" /> },
+              { value: 'vendor-reliability', label: 'Vendor reliability - third-party dependencies', icon: <Buildings size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'operations-cost-sla',
+            question: 'Your operational costs are rising while SLA (Service Level Agreement) performance is dropping. What would you fix first?',
+            helperText: 'Tests ops maturity',
+            isScenario: true,
+            options: [
+              { value: 'headcount', label: 'Headcount - hire more people', icon: <Users size={24} weight="duotone" /> },
+              { value: 'process-bottlenecks', label: 'Process bottlenecks - fix inefficient workflows', icon: <Path size={24} weight="duotone" /> },
+              { value: 'demand-variability', label: 'Demand variability - better forecasting', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'automation-gaps', label: 'Automation gaps - identify manual work to automate', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Operations Questions 3-4
+      {
+        id: 'operations-screen-2',
+        initialChatText: "Now let's assess your AI application and accountability.",
+        questions: [
+          {
+            id: 'operations-ai-leverage',
+            question: 'Where do you think AI delivers the highest ROI (Return on Investment) in your operations work?',
+            helperText: 'Tests AI application depth',
+            options: [
+              { value: 'reporting', label: 'Reporting - automated dashboards and insights', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'forecasting', label: 'Forecasting - demand and capacity prediction', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'automation', label: 'Automation - eliminating manual workflows', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'decision-optimization', label: 'Decision optimization - smarter resource allocation', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'operations-ownership',
+            question: 'Which metric do you think keeps you up at night and worries you the most?',
+            helperText: 'Tests accountability',
+            options: [
+              { value: 'task-completion', label: 'Task completion - getting things done on time', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'cost-per-unit', label: 'Cost per unit - operational efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'sla-adherence', label: 'SLA (Service Level Agreement) adherence - meeting commitments', icon: <Target size={24} weight="duotone" /> },
+              { value: 'margin', label: 'Margin - profitability of operations', icon: <ChartBar size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Operations Questions 5-6
+      {
+        id: 'operations-screen-3',
+        initialChatText: "Finally, let's understand your pragmatism and strategic framing.",
+        questions: [
+          {
+            id: 'operations-data-constraint',
+            question: 'Your operations data is delayed by 2 weeks, but decisions need to be made now. What do you do?',
+            helperText: 'Tests senior pragmatism',
+            isScenario: true,
+            options: [
+              { value: 'wait', label: 'Wait for accurate data before making decisions', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'use-proxies', label: 'Use proxy metrics as temporary alternatives', icon: <Target size={24} weight="duotone" /> },
+              { value: 'early-warning', label: 'Build real-time early-warning indicator system', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'ai-prediction', label: 'Use AI models to predict missing data', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'operations-strategic-role',
+            question: 'In your view, what do you think operations exists primarily to accomplish?',
+            helperText: 'Tests senior framing',
+            options: [
+              { value: 'execute-plans', label: 'Execute plans - deliver on commitments', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'reduce-cost', label: 'Reduce cost - maximize efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'enable-scale', label: 'Enable scale - support rapid growth', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'competitive-advantage', label: 'Drive competitive advantage - ops as strategy', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 3-8 years experience (Mid level) - using same questions for now
+    '3-8': [
+      // Screen 3: Operations Questions 1-2
+      {
+        id: 'operations-screen-1',
+        initialChatText: "Let's explore your operations thinking and problem-solving approach.",
+        questions: [
+          {
+            id: 'operations-scale-stress',
+            question: 'Your product demand doubles in just 90 days. What do you think will break first in your operations?',
+            helperText: 'Tests system-level thinking',
+            isScenario: true,
+            options: [
+              { value: 'hiring-capacity', label: 'Hiring capacity - unable to scale team fast enough', icon: <Users size={24} weight="duotone" /> },
+              { value: 'process-design', label: 'Process design - workflows not built for scale', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'data-visibility', label: 'Data visibility - losing insights at scale', icon: <Database size={24} weight="duotone" /> },
+              { value: 'vendor-reliability', label: 'Vendor reliability - third-party dependencies', icon: <Buildings size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'operations-cost-sla',
+            question: 'Your operational costs are rising while SLA (Service Level Agreement) performance is dropping. What would you fix first?',
+            helperText: 'Tests ops maturity',
+            isScenario: true,
+            options: [
+              { value: 'headcount', label: 'Headcount - hire more people', icon: <Users size={24} weight="duotone" /> },
+              { value: 'process-bottlenecks', label: 'Process bottlenecks - fix inefficient workflows', icon: <Path size={24} weight="duotone" /> },
+              { value: 'demand-variability', label: 'Demand variability - better forecasting', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'automation-gaps', label: 'Automation gaps - identify manual work to automate', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Operations Questions 3-4
+      {
+        id: 'operations-screen-2',
+        initialChatText: "Now let's assess your AI application and accountability.",
+        questions: [
+          {
+            id: 'operations-ai-leverage',
+            question: 'Where do you think AI delivers the highest ROI (Return on Investment) in your operations work?',
+            helperText: 'Tests AI application depth',
+            options: [
+              { value: 'reporting', label: 'Reporting - automated dashboards and insights', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'forecasting', label: 'Forecasting - demand and capacity prediction', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'automation', label: 'Automation - eliminating manual workflows', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'decision-optimization', label: 'Decision optimization - smarter resource allocation', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'operations-ownership',
+            question: 'Which metric do you think keeps you up at night and worries you the most?',
+            helperText: 'Tests accountability',
+            options: [
+              { value: 'task-completion', label: 'Task completion - getting things done on time', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'cost-per-unit', label: 'Cost per unit - operational efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'sla-adherence', label: 'SLA (Service Level Agreement) adherence - meeting commitments', icon: <Target size={24} weight="duotone" /> },
+              { value: 'margin', label: 'Margin - profitability of operations', icon: <ChartBar size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Operations Questions 5-6
+      {
+        id: 'operations-screen-3',
+        initialChatText: "Finally, let's understand your pragmatism and strategic framing.",
+        questions: [
+          {
+            id: 'operations-data-constraint',
+            question: 'Your operations data is delayed by 2 weeks, but decisions need to be made now. What do you do?',
+            helperText: 'Tests senior pragmatism',
+            isScenario: true,
+            options: [
+              { value: 'wait', label: 'Wait for accurate data before making decisions', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'use-proxies', label: 'Use proxy metrics as temporary alternatives', icon: <Target size={24} weight="duotone" /> },
+              { value: 'early-warning', label: 'Build real-time early-warning indicator system', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'ai-prediction', label: 'Use AI models to predict missing data', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'operations-strategic-role',
+            question: 'In your view, what do you think operations exists primarily to accomplish?',
+            helperText: 'Tests senior framing',
+            options: [
+              { value: 'execute-plans', label: 'Execute plans - deliver on commitments', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'reduce-cost', label: 'Reduce cost - maximize efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'enable-scale', label: 'Enable scale - support rapid growth', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'competitive-advantage', label: 'Drive competitive advantage - ops as strategy', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 8+ years experience (Senior level) - using same questions for now
+    '8+': [
+      // Screen 3: Operations Questions 1-2
+      {
+        id: 'operations-screen-1',
+        initialChatText: "Let's explore your operations thinking and problem-solving approach.",
+        questions: [
+          {
+            id: 'operations-scale-stress',
+            question: 'Your product demand doubles in just 90 days. What do you think will break first in your operations?',
+            helperText: 'Tests system-level thinking',
+            isScenario: true,
+            options: [
+              { value: 'hiring-capacity', label: 'Hiring capacity - unable to scale team fast enough', icon: <Users size={24} weight="duotone" /> },
+              { value: 'process-design', label: 'Process design - workflows not built for scale', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'data-visibility', label: 'Data visibility - losing insights at scale', icon: <Database size={24} weight="duotone" /> },
+              { value: 'vendor-reliability', label: 'Vendor reliability - third-party dependencies', icon: <Buildings size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'operations-cost-sla',
+            question: 'Your operational costs are rising while SLA (Service Level Agreement) performance is dropping. What would you fix first?',
+            helperText: 'Tests ops maturity',
+            isScenario: true,
+            options: [
+              { value: 'headcount', label: 'Headcount - hire more people', icon: <Users size={24} weight="duotone" /> },
+              { value: 'process-bottlenecks', label: 'Process bottlenecks - fix inefficient workflows', icon: <Path size={24} weight="duotone" /> },
+              { value: 'demand-variability', label: 'Demand variability - better forecasting', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'automation-gaps', label: 'Automation gaps - identify manual work to automate', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Operations Questions 3-4
+      {
+        id: 'operations-screen-2',
+        initialChatText: "Now let's assess your AI application and accountability.",
+        questions: [
+          {
+            id: 'operations-ai-leverage',
+            question: 'Where do you think AI delivers the highest ROI (Return on Investment) in your operations work?',
+            helperText: 'Tests AI application depth',
+            options: [
+              { value: 'reporting', label: 'Reporting - automated dashboards and insights', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'forecasting', label: 'Forecasting - demand and capacity prediction', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'automation', label: 'Automation - eliminating manual workflows', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'decision-optimization', label: 'Decision optimization - smarter resource allocation', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'operations-ownership',
+            question: 'Which metric do you think keeps you up at night and worries you the most?',
+            helperText: 'Tests accountability',
+            options: [
+              { value: 'task-completion', label: 'Task completion - getting things done on time', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'cost-per-unit', label: 'Cost per unit - operational efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'sla-adherence', label: 'SLA (Service Level Agreement) adherence - meeting commitments', icon: <Target size={24} weight="duotone" /> },
+              { value: 'margin', label: 'Margin - profitability of operations', icon: <ChartBar size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Operations Questions 5-6
+      {
+        id: 'operations-screen-3',
+        initialChatText: "Finally, let's understand your pragmatism and strategic framing.",
+        questions: [
+          {
+            id: 'operations-data-constraint',
+            question: 'Your operations data is delayed by 2 weeks, but decisions need to be made now. What do you do?',
+            helperText: 'Tests senior pragmatism',
+            isScenario: true,
+            options: [
+              { value: 'wait', label: 'Wait for accurate data before making decisions', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'use-proxies', label: 'Use proxy metrics as temporary alternatives', icon: <Target size={24} weight="duotone" /> },
+              { value: 'early-warning', label: 'Build real-time early-warning indicator system', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'ai-prediction', label: 'Use AI models to predict missing data', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'operations-strategic-role',
+            question: 'In your view, what do you think operations exists primarily to accomplish?',
+            helperText: 'Tests senior framing',
+            options: [
+              { value: 'execute-plans', label: 'Execute plans - deliver on commitments', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'reduce-cost', label: 'Reduce cost - maximize efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'enable-scale', label: 'Enable scale - support rapid growth', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'competitive-advantage', label: 'Drive competitive advantage - ops as strategy', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  'founder': {
+    // 0-3 years experience (Entry level)
+    '0-3': [
     // Screen 3: Founder Questions 1-2
-    {
-      id: 'founder-screen-1',
-      initialChatText: "Let's explore your founder mindset and strategic approach.",
-      questions: [
-        {
-          id: 'founder-mvp-failure',
-          question: 'Users are signing up for your product but not returning. What do you do?',
-          helperText: 'Tests founder maturity',
-          isScenario: true,
-          options: [
-            { value: 'add-features', label: 'Add more features to increase value', icon: <Code size={24} weight="duotone" /> },
-            { value: 'increase-marketing', label: 'Increase marketing to get more users', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-            { value: 'reframe-problem', label: 'Reframe the problem you\'re solving', icon: <Brain size={24} weight="duotone" /> },
-            { value: 'pivot-icp', label: 'Pivot to a different ICP (Ideal Customer Profile)', icon: <Users size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'founder-ai-dependency',
-          question: 'Which team dependency do you think AI would help you remove or reduce first in your startup?',
-          helperText: 'Tests AI strategy',
-          options: [
-            { value: 'engineering', label: 'Engineering - building and shipping product', icon: <Code size={24} weight="duotone" /> },
-            { value: 'marketing', label: 'Marketing - customer acquisition and content', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-            { value: 'ops', label: 'Operations - workflows and processes', icon: <Gear size={24} weight="duotone" /> },
-            { value: 'decision-making', label: 'Decision-making - strategic choices and insights', icon: <Brain size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 4: Founder Questions 3-4
-    {
-      id: 'founder-screen-2',
-      initialChatText: "Now let's assess your business maturity and resource prioritization.",
-      questions: [
-        {
-          id: 'founder-scale-pain',
-          question: 'Your revenue is growing but profit margins are falling. What do you think is the root cause?',
-          helperText: 'Tests business maturity',
-          isScenario: true,
-          options: [
-            { value: 'pricing', label: 'Pricing strategy is too aggressive', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'ops-inefficiency', label: 'Operations inefficiency at scale', icon: <Gear size={24} weight="duotone" /> },
-            { value: 'customer-mix', label: 'Customer mix - acquiring wrong segment', icon: <Users size={24} weight="duotone" /> },
-            { value: 'data-blindness', label: 'Data blindness - not tracking unit economics', icon: <Database size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'founder-resource-constraint',
-          question: 'You have only 3 people and 6 months of runway. What would you optimize for?',
-          helperText: 'Tests founder intent',
-          isScenario: true,
-          options: [
-            { value: 'growth', label: 'Growth - maximize user acquisition', icon: <TrendUp size={24} weight="duotone" /> },
-            { value: 'profitability', label: 'Profitability - reach break-even', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'learning', label: 'Learning - validate key assumptions', icon: <Lightbulb size={24} weight="duotone" /> },
-            { value: 'fundraising', label: 'Fundraising - build deck and meet investors', icon: <Rocket size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    },
-    // Screen 5: Founder Questions 5-6
-    {
-      id: 'founder-screen-3',
-      initialChatText: "Finally, let's understand your AI strategy and self-awareness.",
-      questions: [
-        {
-          id: 'founder-ai-advantage',
-          question: 'How do you think AI helps your startup the most right now?',
-          helperText: 'Tests strategic thinking',
-          options: [
-            { value: 'speed', label: 'Speed - shipping faster and iterating quickly', icon: <Lightning size={24} weight="duotone" /> },
-            { value: 'cost', label: 'Cost - reducing burn rate and expenses', icon: <CurrencyInr size={24} weight="duotone" /> },
-            { value: 'insight', label: 'Insight - better data-driven decisions', icon: <Brain size={24} weight="duotone" /> },
-            { value: 'differentiation', label: 'Differentiation - unique competitive advantage', icon: <Trophy size={24} weight="duotone" /> }
-          ]
-        },
-        {
-          id: 'founder-failure-pattern',
-          question: 'When you reflect on your journey, what do you think was your biggest mistake so far?',
-          helperText: 'Tests reflection depth',
-          options: [
-            { value: 'hiring-early', label: 'Hiring too early - scaling team prematurely', icon: <Users size={24} weight="duotone" /> },
-            { value: 'scaling-fast', label: 'Scaling too fast - overextending operations', icon: <Rocket size={24} weight="duotone" /> },
-            { value: 'weak-data', label: 'Weak data - not tracking metrics early enough', icon: <Database size={24} weight="duotone" /> },
-            { value: 'poor-problem', label: 'Poor problem selection - solving wrong problem', icon: <Target size={24} weight="duotone" /> }
-          ]
-        }
-      ]
-    }
-  ]
+      {
+        id: 'founder-screen-1',
+        initialChatText: "Let's explore your founder mindset and strategic approach.",
+        questions: [
+          {
+            id: 'founder-mvp-failure',
+            question: 'Users are signing up for your product but not returning. What do you do?',
+            helperText: 'Tests founder maturity',
+            isScenario: true,
+            options: [
+              { value: 'add-features', label: 'Add more features to increase value', icon: <Code size={24} weight="duotone" /> },
+              { value: 'increase-marketing', label: 'Increase marketing to get more users', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'reframe-problem', label: 'Reframe the problem you\'re solving', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'pivot-icp', label: 'Pivot to a different ICP (Ideal Customer Profile)', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'founder-ai-dependency',
+            question: 'Which team dependency do you think AI would help you remove or reduce first in your startup?',
+            helperText: 'Tests AI strategy',
+            options: [
+              { value: 'engineering', label: 'Engineering - building and shipping product', icon: <Code size={24} weight="duotone" /> },
+              { value: 'marketing', label: 'Marketing - customer acquisition and content', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'ops', label: 'Operations - workflows and processes', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'decision-making', label: 'Decision-making - strategic choices and insights', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Founder Questions 3-4
+      {
+        id: 'founder-screen-2',
+        initialChatText: "Now let's assess your business maturity and resource prioritization.",
+        questions: [
+          {
+            id: 'founder-scale-pain',
+            question: 'Your revenue is growing but profit margins are falling. What do you think is the root cause?',
+            helperText: 'Tests business maturity',
+            isScenario: true,
+            options: [
+              { value: 'pricing', label: 'Pricing strategy is too aggressive', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'ops-inefficiency', label: 'Operations inefficiency at scale', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'customer-mix', label: 'Customer mix - acquiring wrong segment', icon: <Users size={24} weight="duotone" /> },
+              { value: 'data-blindness', label: 'Data blindness - not tracking unit economics', icon: <Database size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'founder-resource-constraint',
+            question: 'You have only 3 people and 6 months of runway. What would you optimize for?',
+            helperText: 'Tests founder intent',
+            isScenario: true,
+            options: [
+              { value: 'growth', label: 'Growth - maximize user acquisition', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'profitability', label: 'Profitability - reach break-even', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'learning', label: 'Learning - validate key assumptions', icon: <Lightbulb size={24} weight="duotone" /> },
+              { value: 'fundraising', label: 'Fundraising - build deck and meet investors', icon: <Rocket size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Founder Questions 5-6
+      {
+        id: 'founder-screen-3',
+        initialChatText: "Finally, let's understand your AI strategy and self-awareness.",
+        questions: [
+          {
+            id: 'founder-ai-advantage',
+            question: 'How do you think AI helps your startup the most right now?',
+            helperText: 'Tests strategic thinking',
+            options: [
+              { value: 'speed', label: 'Speed - shipping faster and iterating quickly', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'cost', label: 'Cost - reducing burn rate and expenses', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'insight', label: 'Insight - better data-driven decisions', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'differentiation', label: 'Differentiation - unique competitive advantage', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'founder-failure-pattern',
+            question: 'When you reflect on your journey, what do you think was your biggest mistake so far?',
+            helperText: 'Tests reflection depth',
+            options: [
+              { value: 'hiring-early', label: 'Hiring too early - scaling team prematurely', icon: <Users size={24} weight="duotone" /> },
+              { value: 'scaling-fast', label: 'Scaling too fast - overextending operations', icon: <Rocket size={24} weight="duotone" /> },
+              { value: 'weak-data', label: 'Weak data - not tracking metrics early enough', icon: <Database size={24} weight="duotone" /> },
+              { value: 'poor-problem', label: 'Poor problem selection - solving wrong problem', icon: <Target size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 3-8 years experience (Mid level) - using same questions for now
+    '3-8': [
+      // Screen 3: Founder Questions 1-2
+      {
+        id: 'founder-screen-1',
+        initialChatText: "Let's explore your founder mindset and strategic approach.",
+        questions: [
+          {
+            id: 'founder-mvp-failure',
+            question: 'Users are signing up for your product but not returning. What do you do?',
+            helperText: 'Tests founder maturity',
+            isScenario: true,
+            options: [
+              { value: 'add-features', label: 'Add more features to increase value', icon: <Code size={24} weight="duotone" /> },
+              { value: 'increase-marketing', label: 'Increase marketing to get more users', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'reframe-problem', label: 'Reframe the problem you\'re solving', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'pivot-icp', label: 'Pivot to a different ICP (Ideal Customer Profile)', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'founder-ai-dependency',
+            question: 'Which team dependency do you think AI would help you remove or reduce first in your startup?',
+            helperText: 'Tests AI strategy',
+            options: [
+              { value: 'engineering', label: 'Engineering - building and shipping product', icon: <Code size={24} weight="duotone" /> },
+              { value: 'marketing', label: 'Marketing - customer acquisition and content', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'ops', label: 'Operations - workflows and processes', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'decision-making', label: 'Decision-making - strategic choices and insights', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Founder Questions 3-4
+      {
+        id: 'founder-screen-2',
+        initialChatText: "Now let's assess your business maturity and resource prioritization.",
+        questions: [
+          {
+            id: 'founder-scale-pain',
+            question: 'Your revenue is growing but profit margins are falling. What do you think is the root cause?',
+            helperText: 'Tests business maturity',
+            isScenario: true,
+            options: [
+              { value: 'pricing', label: 'Pricing strategy is too aggressive', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'ops-inefficiency', label: 'Operations inefficiency at scale', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'customer-mix', label: 'Customer mix - acquiring wrong segment', icon: <Users size={24} weight="duotone" /> },
+              { value: 'data-blindness', label: 'Data blindness - not tracking unit economics', icon: <Database size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'founder-resource-constraint',
+            question: 'You have only 3 people and 6 months of runway. What would you optimize for?',
+            helperText: 'Tests founder intent',
+            isScenario: true,
+            options: [
+              { value: 'growth', label: 'Growth - maximize user acquisition', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'profitability', label: 'Profitability - reach break-even', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'learning', label: 'Learning - validate key assumptions', icon: <Lightbulb size={24} weight="duotone" /> },
+              { value: 'fundraising', label: 'Fundraising - build deck and meet investors', icon: <Rocket size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Founder Questions 5-6
+      {
+        id: 'founder-screen-3',
+        initialChatText: "Finally, let's understand your AI strategy and self-awareness.",
+        questions: [
+          {
+            id: 'founder-ai-advantage',
+            question: 'How do you think AI helps your startup the most right now?',
+            helperText: 'Tests strategic thinking',
+            options: [
+              { value: 'speed', label: 'Speed - shipping faster and iterating quickly', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'cost', label: 'Cost - reducing burn rate and expenses', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'insight', label: 'Insight - better data-driven decisions', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'differentiation', label: 'Differentiation - unique competitive advantage', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'founder-failure-pattern',
+            question: 'When you reflect on your journey, what do you think was your biggest mistake so far?',
+            helperText: 'Tests reflection depth',
+            options: [
+              { value: 'hiring-early', label: 'Hiring too early - scaling team prematurely', icon: <Users size={24} weight="duotone" /> },
+              { value: 'scaling-fast', label: 'Scaling too fast - overextending operations', icon: <Rocket size={24} weight="duotone" /> },
+              { value: 'weak-data', label: 'Weak data - not tracking metrics early enough', icon: <Database size={24} weight="duotone" /> },
+              { value: 'poor-problem', label: 'Poor problem selection - solving wrong problem', icon: <Target size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 8+ years experience (Senior level) - using same questions for now
+    '8+': [
+      // Screen 3: Founder Questions 1-2
+      {
+        id: 'founder-screen-1',
+        initialChatText: "Let's explore your founder mindset and strategic approach.",
+        questions: [
+          {
+            id: 'founder-mvp-failure',
+            question: 'Users are signing up for your product but not returning. What do you do?',
+            helperText: 'Tests founder maturity',
+            isScenario: true,
+            options: [
+              { value: 'add-features', label: 'Add more features to increase value', icon: <Code size={24} weight="duotone" /> },
+              { value: 'increase-marketing', label: 'Increase marketing to get more users', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'reframe-problem', label: 'Reframe the problem you\'re solving', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'pivot-icp', label: 'Pivot to a different ICP (Ideal Customer Profile)', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'founder-ai-dependency',
+            question: 'Which team dependency do you think AI would help you remove or reduce first in your startup?',
+            helperText: 'Tests AI strategy',
+            options: [
+              { value: 'engineering', label: 'Engineering - building and shipping product', icon: <Code size={24} weight="duotone" /> },
+              { value: 'marketing', label: 'Marketing - customer acquisition and content', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'ops', label: 'Operations - workflows and processes', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'decision-making', label: 'Decision-making - strategic choices and insights', icon: <Brain size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Founder Questions 3-4
+      {
+        id: 'founder-screen-2',
+        initialChatText: "Now let's assess your business maturity and resource prioritization.",
+        questions: [
+          {
+            id: 'founder-scale-pain',
+            question: 'Your revenue is growing but profit margins are falling. What do you think is the root cause?',
+            helperText: 'Tests business maturity',
+            isScenario: true,
+            options: [
+              { value: 'pricing', label: 'Pricing strategy is too aggressive', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'ops-inefficiency', label: 'Operations inefficiency at scale', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'customer-mix', label: 'Customer mix - acquiring wrong segment', icon: <Users size={24} weight="duotone" /> },
+              { value: 'data-blindness', label: 'Data blindness - not tracking unit economics', icon: <Database size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'founder-resource-constraint',
+            question: 'You have only 3 people and 6 months of runway. What would you optimize for?',
+            helperText: 'Tests founder intent',
+            isScenario: true,
+            options: [
+              { value: 'growth', label: 'Growth - maximize user acquisition', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'profitability', label: 'Profitability - reach break-even', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'learning', label: 'Learning - validate key assumptions', icon: <Lightbulb size={24} weight="duotone" /> },
+              { value: 'fundraising', label: 'Fundraising - build deck and meet investors', icon: <Rocket size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Founder Questions 5-6
+      {
+        id: 'founder-screen-3',
+        initialChatText: "Finally, let's understand your AI strategy and self-awareness.",
+        questions: [
+          {
+            id: 'founder-ai-advantage',
+            question: 'How do you think AI helps your startup the most right now?',
+            helperText: 'Tests strategic thinking',
+            options: [
+              { value: 'speed', label: 'Speed - shipping faster and iterating quickly', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'cost', label: 'Cost - reducing burn rate and expenses', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'insight', label: 'Insight - better data-driven decisions', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'differentiation', label: 'Differentiation - unique competitive advantage', icon: <Trophy size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'founder-failure-pattern',
+            question: 'When you reflect on your journey, what do you think was your biggest mistake so far?',
+            helperText: 'Tests reflection depth',
+            options: [
+              { value: 'hiring-early', label: 'Hiring too early - scaling team prematurely', icon: <Users size={24} weight="duotone" /> },
+              { value: 'scaling-fast', label: 'Scaling too fast - overextending operations', icon: <Rocket size={24} weight="duotone" /> },
+              { value: 'weak-data', label: 'Weak data - not tracking metrics early enough', icon: <Database size={24} weight="duotone" /> },
+              { value: 'poor-problem', label: 'Poor problem selection - solving wrong problem', icon: <Target size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  'tech': {
+    // 0-3 years experience (Entry level) - Questions from document
+    '0-3': [
+      // Screen 3: Tech Questions 1-2
+      {
+        id: 'tech-screen-1',
+        initialChatText: "Let's explore your product thinking and business impact awareness.",
+        questions: [
+          {
+            id: 'tech-product-thinking',
+            question: 'You built a feature that took significant effort. After launch, usage is very low. The Product Manager hasn\'t raised concerns yet. What do you do?',
+            helperText: 'Tests product thinking and ownership',
+            isScenario: true,
+            options: [
+              { value: 'move-next-task', label: 'Move to the next task since launch is complete', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'suggest-features', label: 'Suggest adding more features to improve engagement', icon: <Code size={24} weight="duotone" /> },
+              { value: 'review-data', label: 'Review usage data and speak to Product about potential issues', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'blame-marketing', label: 'Assume marketing didn\'t promote it well', icon: <MegaphoneSimple size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'tech-business-impact',
+            question: 'You reduced server response time by 25%, but users haven\'t directly complained about speed before. How do you evaluate the value of your work?',
+            helperText: 'Tests business impact awareness',
+            isScenario: true,
+            options: [
+              { value: 'code-quality', label: 'It improves code quality only', icon: <Code size={24} weight="duotone" /> },
+              { value: 'ux-cost', label: 'It may improve user experience and reduce infra costs', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'deployment', label: 'It makes deployment easier', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'doesnt-matter', label: 'It doesn\'t matter if users didn\'t complain', icon: <XCircle size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Tech Questions 3-4
+      {
+        id: 'tech-screen-2',
+        initialChatText: "Now let's assess your execution approach and prioritization thinking.",
+        questions: [
+          {
+            id: 'tech-execution-accountability',
+            question: 'Two days before release, you discover a bug that may impact 5% of users. What is the best action?',
+            helperText: 'Tests execution and accountability',
+            isScenario: true,
+            options: [
+              { value: 'ignore-small', label: 'Ignore since impact is small', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'inform-stakeholders', label: 'Inform stakeholders and suggest fix vs delay trade-off', icon: <Users size={24} weight="duotone" /> },
+              { value: 'fix-quietly', label: 'Fix quietly without informing anyone', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'delay-release', label: 'Delay release without explanation', icon: <Clock size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'tech-prioritization',
+            question: 'You have: Task A: Refactor messy code (no immediate visible impact). Task B: Add minor UI feature requested by Sales. Both take equal time. How do you decide?',
+            helperText: 'Tests prioritization thinking',
+            isScenario: true,
+            options: [
+              { value: 'technically-interesting', label: 'Choose what is technically interesting', icon: <Code size={24} weight="duotone" /> },
+              { value: 'business-impact', label: 'Evaluate business impact and urgency', icon: <Target size={24} weight="duotone" /> },
+              { value: 'always-sales', label: 'Always prioritize Sales', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'always-refactor', label: 'Always prioritize refactoring', icon: <Gear size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Tech Questions 5-6
+      {
+        id: 'tech-screen-3',
+        initialChatText: "Finally, let's understand your AI literacy and ownership mindset.",
+        questions: [
+          {
+            id: 'tech-ai-literacy',
+            question: 'Your manager suggests adopting an AI coding assistant for the team. What should you evaluate?',
+            helperText: 'Tests AI literacy in business context',
+            options: [
+              { value: 'competitor-usage', label: 'Whether competitors use it', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'productivity-cost', label: 'Whether it improves productivity enough to justify cost', icon: <Target size={24} weight="duotone" /> },
+              { value: 'trending', label: 'Whether it\'s trending', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'junior-likes', label: 'Whether junior engineers like it', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'tech-ownership',
+            question: 'A production issue occurred due to a decision you made, though it wasn\'t fully your fault. What do you do?',
+            helperText: 'Tests ownership mindset',
+            isScenario: true,
+            options: [
+              { value: 'highlight-others', label: 'Highlight that others were involved', icon: <Users size={24} weight="duotone" /> },
+              { value: 'take-ownership', label: 'Take ownership and help resolve it', icon: <Trophy size={24} weight="duotone" /> },
+              { value: 'stay-silent', label: 'Stay silent unless asked', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'escalate-blame', label: 'Escalate blame', icon: <XCircle size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 3-8 years experience (Mid level) - Questions from document
+    '3-8': [
+      // Screen 3: Tech Questions 1-2
+      {
+        id: 'tech-screen-1',
+        initialChatText: "Let's explore your feature ROI evaluation and cost management thinking.",
+        questions: [
+          {
+            id: 'tech-feature-roi',
+            question: 'A new feature requires 6 weeks of engineering effort and may increase retention by 3%. What matters most before committing?',
+            helperText: 'Tests feature ROI evaluation',
+            isScenario: true,
+            options: [
+              { value: 'technical-feasibility', label: 'Technical feasibility', icon: <Code size={24} weight="duotone" /> },
+              { value: 'revenue-opportunity', label: 'Revenue impact vs opportunity cost', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'team-excitement', label: 'Team excitement', icon: <Users size={24} weight="duotone" /> },
+              { value: 'competitor-parity', label: 'Competitor parity', icon: <Target size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'tech-cost-escalation',
+            question: 'Cloud costs increased 50% year-over-year. Growth is only 15%. What\'s your first strategic step?',
+            helperText: 'Tests cost escalation management',
+            isScenario: true,
+            options: [
+              { value: 'immediate-overhaul', label: 'Immediate infra overhaul', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'analyze-drivers', label: 'Analyze cost drivers and inefficiencies', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'reduce-features', label: 'Reduce product features', icon: <Code size={24} weight="duotone" /> },
+              { value: 'wait-cfo', label: 'Wait for CFO direction', icon: <Clock size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Tech Questions 3-4
+      {
+        id: 'tech-screen-2',
+        initialChatText: "Now let's assess your cross-functional collaboration and tech debt management.",
+        questions: [
+          {
+            id: 'tech-sales-product-conflict',
+            question: 'Sales closed a major deal promising a custom feature not on roadmap. What do you do?',
+            helperText: 'Tests sales vs product conflict resolution',
+            isScenario: true,
+            options: [
+              { value: 'build-immediately', label: 'Build immediately', icon: <Code size={24} weight="duotone" /> },
+              { value: 'reject-firmly', label: 'Reject firmly', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'evaluate-align', label: 'Evaluate revenue impact and align with Product roadmap', icon: <Target size={24} weight="duotone" /> },
+              { value: 'escalate-conflict', label: 'Escalate conflict', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'tech-debt-speed',
+            question: 'Engineering wants refactoring. Leadership wants faster feature releases. How do you respond?',
+            helperText: 'Tests tech debt vs speed balance',
+            isScenario: true,
+            options: [
+              { value: 'prioritize-features', label: 'Prioritize features always', icon: <Code size={24} weight="duotone" /> },
+              { value: 'balance-debt', label: 'Balance short-term delivery with planned debt reduction', icon: <Target size={24} weight="duotone" /> },
+              { value: 'focus-health', label: 'Focus only on engineering health', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'ignore-pressure', label: 'Ignore leadership pressure', icon: <XCircle size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Tech Questions 5-6
+      {
+        id: 'tech-screen-3',
+        initialChatText: "Finally, let's understand your AI investment decisions and resource allocation.",
+        questions: [
+          {
+            id: 'tech-ai-investment',
+            question: 'Leadership wants to add AI chatbot to product. Your evaluation criteria?',
+            helperText: 'Tests AI investment decision making',
+            options: [
+              { value: 'trend-value', label: 'Trend value', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'pain-point-roi', label: 'Clear user pain point + ROI projection', icon: <Target size={24} weight="duotone" /> },
+              { value: 'competitive-pressure', label: 'Competitive pressure', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'ease-implementation', label: 'Ease of implementation', icon: <Code size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'tech-resource-allocation',
+            question: 'You have limited engineering bandwidth. Options: Infra optimization, New revenue feature, Internal tooling. How do you decide?',
+            helperText: 'Tests resource allocation thinking',
+            isScenario: true,
+            options: [
+              { value: 'highest-impact', label: 'Choose highest visible impact', icon: <Target size={24} weight="duotone" /> },
+              { value: 'growth-priorities', label: 'Align with company growth priorities', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'technically-complex', label: 'Choose technically complex work', icon: <Code size={24} weight="duotone" /> },
+              { value: 'team-vote', label: 'Let team vote', icon: <Users size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ],
+    // 8+ years experience (Senior level) - Questions from document
+    '8+': [
+      // Screen 3: Tech Questions 1-2
+      {
+        id: 'tech-screen-1',
+        initialChatText: "Let's explore your strategic trade-offs and capital allocation thinking.",
+        questions: [
+          {
+            id: 'tech-strategic-tradeoff',
+            question: 'You must choose between: Improving reliability (reduces churn risk) OR Launching a revenue-driving feature. Decision should be based on?',
+            helperText: 'Tests strategic trade-off thinking',
+            isScenario: true,
+            options: [
+              { value: 'immediate-revenue', label: 'Immediate revenue only', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'long-term-strategy', label: 'Long-term company strategy + risk analysis', icon: <Target size={24} weight="duotone" /> },
+              { value: 'engineering-preference', label: 'Engineering preference', icon: <Code size={24} weight="duotone" /> },
+              { value: 'ceo-urgency', label: 'CEO urgency', icon: <Clock size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'tech-capital-allocation',
+            question: 'You receive ₹3 Cr for engineering improvement. Best approach?',
+            helperText: 'Tests capital allocation thinking',
+            isScenario: true,
+            options: [
+              { value: 'hire-aggressively', label: 'Hire aggressively', icon: <Users size={24} weight="duotone" /> },
+              { value: 'invest-ai', label: 'Invest entirely in AI', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'allocate-roi', label: 'Allocate across people, infra, and automation based on ROI', icon: <Target size={24} weight="duotone" /> },
+              { value: 'preserve-capital', label: 'Preserve capital', icon: <CurrencyInr size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 4: Tech Questions 3-4
+      {
+        id: 'tech-screen-2',
+        initialChatText: "Now let's assess your understanding of engineering as competitive advantage and scalability.",
+        questions: [
+          {
+            id: 'tech-competitive-advantage',
+            question: 'When does tech become a moat?',
+            helperText: 'Tests understanding of engineering as competitive advantage',
+            options: [
+              { value: 'complex-architecture', label: 'When architecture is complex', icon: <Code size={24} weight="duotone" /> },
+              { value: 'switching-cost-value', label: 'When it increases switching cost and user value', icon: <Target size={24} weight="duotone" /> },
+              { value: 'high-infra-cost', label: 'When infra cost is high', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'large-team', label: 'When team size grows', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'tech-scalability',
+            question: 'You expect 5x user growth in 2 years but revenue is tight today. What\'s the best strategy?',
+            helperText: 'Tests long-term scalability thinking',
+            isScenario: true,
+            options: [
+              { value: 'overbuild-now', label: 'Overbuild now', icon: <Code size={24} weight="duotone" /> },
+              { value: 'modular-incremental', label: 'Build modular systems that scale incrementally', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'ignore-projections', label: 'Ignore future projections', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'freeze-innovation', label: 'Freeze innovation', icon: <Clock size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      },
+      // Screen 5: Tech Questions 5-6
+      {
+        id: 'tech-screen-3',
+        initialChatText: "Finally, let's understand your AI strategy and portfolio balancing.",
+        questions: [
+          {
+            id: 'tech-ai-strategy',
+            question: 'How do you decide if AI should be core product vs supporting feature?',
+            helperText: 'Tests AI as strategy thinking',
+            options: [
+              { value: 'industry-trend', label: 'Industry trend', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'strategic-differentiation', label: 'Strategic differentiation potential', icon: <Target size={24} weight="duotone" /> },
+              { value: 'investor-excitement', label: 'Investor excitement', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'team-expertise', label: 'Team expertise', icon: <Users size={24} weight="duotone" /> }
+            ]
+          },
+          {
+            id: 'tech-portfolio-balancing',
+            question: 'How should engineering capacity typically be allocated?',
+            helperText: 'Tests portfolio balancing thinking',
+            options: [
+              { value: 'all-features', label: '100% new features', icon: <Code size={24} weight="duotone" /> },
+              { value: 'balanced-allocation', label: 'Balanced between growth, stability, and innovation', icon: <Target size={24} weight="duotone" /> },
+              { value: 'mostly-refactoring', label: 'Mostly refactoring', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'engineering-interest', label: 'Based on engineering interest', icon: <Users size={24} weight="duotone" /> }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+};
+
+// Helper function to map frontend experience values to document experience levels
+export const mapExperienceToLevel = (experience) => {
+  // Frontend: '0-1', '1-3', '3-6', '6-10', '10+'
+  // Document: '0-3', '3-8', '8+'
+  if (experience === '0-1' || experience === '1-3') {
+    return '0-3';
+  } else if (experience === '3-6' || experience === '6-10') {
+    return '3-8';
+  } else if (experience === '10+') {
+    return '8+';
+  }
+  // Default to mid-level if unknown
+  return '3-8';
 };
 
 // Helper to check if all questions in a screen are answered

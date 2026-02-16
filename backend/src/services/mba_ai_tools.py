@@ -63,7 +63,8 @@ def get_ai_tools_for_role(role: str, skill_gaps: List[str]) -> List[Dict[str, An
         'sales': _sales_ai_tools,
         'marketing': _marketing_ai_tools,
         'operations': _operations_ai_tools,
-        'founder': _founder_ai_tools
+        'founder': _founder_ai_tools,
+        'tech': _tech_ai_tools
     }
 
     role_tools = role_tools_map.get(role, lambda: [])()
@@ -357,6 +358,52 @@ def _founder_ai_tools() -> List[Dict[str, Any]]:
             'impact': 'Validate ideas in hours with working prototypes.',
             'priority': 'recommended',
             'url': 'https://bolt.new'
+        }
+    ]
+
+
+def _tech_ai_tools() -> List[Dict[str, Any]]:
+    """AI tools for Tech/Engineering roles"""
+    return [
+        {
+            'name': 'Cursor',
+            'category': 'AI Code Editor',
+            'use_case': 'AI pair programming - write code 10x faster with context-aware suggestions',
+            'impact': 'Focus on architecture and business logic, not boilerplate.',
+            'priority': 'must-have',
+            'url': 'https://cursor.sh'
+        },
+        {
+            'name': 'GitHub Copilot',
+            'category': 'AI Code Assistant',
+            'use_case': 'Autocomplete code, generate tests, and explain complex codebases',
+            'impact': 'Reduce coding time by 50% while maintaining quality.',
+            'priority': 'must-have',
+            'url': 'https://github.com/features/copilot'
+        },
+        {
+            'name': 'v0.dev',
+            'category': 'UI Generation',
+            'use_case': 'Generate React components from text descriptions',
+            'impact': 'Build UIs faster and focus on business logic.',
+            'priority': 'recommended',
+            'url': 'https://v0.dev'
+        },
+        {
+            'name': 'Replit',
+            'category': 'AI Development Environment',
+            'use_case': 'Build, test, and deploy apps with AI assistance in browser',
+            'impact': 'Code from anywhere without local setup.',
+            'priority': 'recommended',
+            'url': 'https://replit.com'
+        },
+        {
+            'name': 'Codeium',
+            'category': 'AI Code Search',
+            'use_case': 'Search codebase semantically, understand legacy code faster',
+            'impact': 'Navigate large codebases and understand architecture quickly.',
+            'priority': 'recommended',
+            'url': 'https://codeium.com'
         }
     ]
 

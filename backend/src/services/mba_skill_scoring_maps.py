@@ -65,7 +65,31 @@ QUESTION_SKILL_MAP = {
     'founder-scale-pain': ['business_fundamentals', 'strategic_thinking'],
     'founder-resource-constraint': ['founder_resourcefulness', 'business_fundamentals'],
     'founder-ai-advantage': ['ai_literacy', 'strategic_thinking'],
-    'founder-failure-pattern': ['leadership', 'venture_building']
+    'founder-failure-pattern': ['leadership', 'venture_building'],
+
+    # Tech/Engineering Questions (0-3 years)
+    'tech-product-thinking': ['product_thinking', 'ownership'],
+    'tech-business-impact': ['business_impact_awareness', 'strategic_thinking'],
+    'tech-execution-accountability': ['execution', 'accountability'],
+    'tech-prioritization': ['prioritization', 'business_impact_awareness'],
+    'tech-ai-literacy': ['ai_literacy'],
+    'tech-ownership': ['ownership', 'leadership'],
+
+    # Tech/Engineering Questions (3-8 years)
+    'tech-feature-roi': ['product_thinking', 'strategic_thinking'],
+    'tech-cost-escalation': ['business_impact_awareness', 'strategic_thinking'],
+    'tech-sales-product-conflict': ['leadership', 'business_partnering'],
+    'tech-debt-speed': ['strategic_thinking', 'prioritization'],
+    'tech-ai-investment': ['ai_literacy', 'strategic_thinking'],
+    'tech-resource-allocation': ['strategic_thinking', 'capital_allocation'],
+
+    # Tech/Engineering Questions (8+ years)
+    'tech-strategic-tradeoff': ['strategic_thinking', 'capital_allocation'],
+    'tech-capital-allocation': ['capital_allocation', 'strategic_thinking'],
+    'tech-competitive-advantage': ['strategic_thinking', 'product_thinking'],
+    'tech-scalability': ['strategic_thinking', 'product_thinking'],
+    'tech-ai-strategy': ['ai_literacy', 'strategic_thinking'],
+    'tech-portfolio-balancing': ['strategic_thinking', 'capital_allocation']
 }
 
 
@@ -337,6 +361,138 @@ ANSWER_SCORES = {
         'scaling-fast': 3,  # Proficient: Timing mistake
         'weak-data': 5,  # Expert: Instrumentation gap
         'poor-problem': 5   # Expert: Market understanding
+    },
+
+    # -------------------- TECH/ENGINEERING (0-3 years) --------------------
+
+    'tech-product-thinking': {
+        'move-next-task': 0,  # Very Weak: No ownership
+        'suggest-features': 2,  # Weak: Solution before diagnosis
+        'review-data': 4,  # Strong: Data-first thinking
+        'blame-marketing': 1   # Very Weak: Blame shifting
+    },
+
+    'tech-business-impact': {
+        'code-quality': 2,  # Weak: Technical focus only
+        'ux-cost': 4,  # Strong: Business impact awareness
+        'deployment': 1,  # Very Weak: Narrow focus
+        'doesnt-matter': 0   # Very Weak: No business sense
+    },
+
+    'tech-execution-accountability': {
+        'ignore-small': 0,  # Very Weak: No accountability
+        'inform-stakeholders': 4,  # Strong: Transparent and responsible
+        'fix-quietly': 2,  # Weak: Good intent but poor communication
+        'delay-release': 1   # Very Weak: Reactive
+    },
+
+    'tech-prioritization': {
+        'technically-interesting': 1,  # Very Weak: Self-interest
+        'business-impact': 4,  # Strong: Business-oriented
+        'always-sales': 2,  # Weak: No balance
+        'always-refactor': 2   # Weak: No balance
+    },
+
+    'tech-ai-literacy': {
+        'competitor-usage': 2,  # Weak: Follower mindset
+        'productivity-cost': 4,  # Strong: ROI thinking
+        'trending': 0,  # Very Weak: Trend-chasing
+        'junior-likes': 1   # Very Weak: Wrong criteria
+    },
+
+    'tech-ownership': {
+        'highlight-others': 2,  # Weak: Defensive
+        'take-ownership': 4,  # Strong: Ownership mindset
+        'stay-silent': 1,  # Very Weak: Passive
+        'escalate-blame': 0   # Very Weak: Blame-shifting
+    },
+
+    # -------------------- TECH/ENGINEERING (3-8 years) --------------------
+
+    'tech-feature-roi': {
+        'technical-feasibility': 2,  # Weak: Technical focus
+        'revenue-opportunity': 4,  # Strong: Business ROI thinking
+        'team-excitement': 0,  # Very Weak: Wrong criteria
+        'competitor-parity': 1   # Very Weak: Follower mindset
+    },
+
+    'tech-cost-escalation': {
+        'immediate-overhaul': 2,  # Weak: Reactive
+        'analyze-drivers': 4,  # Strong: Analytical approach
+        'reduce-features': 1,  # Very Weak: Wrong solution
+        'wait-cfo': 1   # Very Weak: No ownership
+    },
+
+    'tech-sales-product-conflict': {
+        'build-immediately': 2,  # Weak: Reactive
+        'reject-firmly': 0,  # Very Weak: Inflexible
+        'evaluate-align': 4,  # Strong: Balanced decision-making
+        'escalate-conflict': 1   # Very Weak: Avoidance
+    },
+
+    'tech-debt-speed': {
+        'prioritize-features': 2,  # Weak: Short-term focus
+        'balance-debt': 4,  # Strong: Strategic balance
+        'focus-health': 1,  # Very Weak: Ignoring business
+        'ignore-pressure': 1   # Very Weak: Poor stakeholder management
+    },
+
+    'tech-ai-investment': {
+        'trend-value': 0,  # Very Weak: Trend-chasing
+        'pain-point-roi': 4,  # Strong: Outcome-driven
+        'competitive-pressure': 2,  # Weak: Follower mindset
+        'ease-implementation': 1   # Very Weak: Wrong criteria
+    },
+
+    'tech-resource-allocation': {
+        'highest-impact': 2,  # Weak: Tactical
+        'growth-priorities': 4,  # Strong: Strategic alignment
+        'technically-complex': 1,  # Very Weak: Self-interest
+        'team-vote': 1   # Very Weak: No leadership
+    },
+
+    # -------------------- TECH/ENGINEERING (8+ years) --------------------
+
+    'tech-strategic-tradeoff': {
+        'immediate-revenue': 2,  # Weak: Short-term focus
+        'long-term-strategy': 4,  # Strong: Strategic thinking
+        'engineering-preference': 1,  # Very Weak: Biased
+        'ceo-urgency': 1   # Very Weak: Reactive
+    },
+
+    'tech-capital-allocation': {
+        'hire-aggressively': 2,  # Weak: Single lever
+        'invest-ai': 1,  # Very Weak: Over-concentration
+        'allocate-roi': 4,  # Strong: ROI-based allocation
+        'preserve-capital': 1   # Very Weak: Risk-averse
+    },
+
+    'tech-competitive-advantage': {
+        'complex-architecture': 2,  # Weak: Technical focus
+        'switching-cost-value': 4,  # Strong: Business moat thinking
+        'high-infra-cost': 1,  # Very Weak: Wrong understanding
+        'large-team': 0   # Very Weak: Wrong understanding
+    },
+
+    'tech-scalability': {
+        'overbuild-now': 2,  # Weak: Premature optimization
+        'modular-incremental': 4,  # Strong: Pragmatic scaling
+        'ignore-projections': 1,  # Very Weak: Short-sighted
+        'freeze-innovation': 0   # Very Weak: Stagnation
+    },
+
+    'tech-ai-strategy': {
+        'industry-trend': 1,  # Very Weak: Follower
+        'strategic-differentiation': 4,  # Strong: Strategic thinking
+        'investor-excitement': 0,  # Very Weak: Wrong driver
+        'team-expertise': 2   # Weak: Capability focus only
+    },
+
+    'tech-portfolio-balancing': {
+        'all-features': 1,  # Very Weak: Growth bias
+        'balanced-allocation': 4,  # Strong: Strategic balance
+        'mostly-refactoring': 1,  # Very Weak: Over-optimization
+        'engineering-interest': 0   # Very Weak: Wrong driver
     }
 }
 

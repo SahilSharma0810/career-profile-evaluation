@@ -99,7 +99,8 @@ def evaluate_mba_readiness(quiz_responses: Dict[str, Any]) -> Dict[str, Any]:
         'sales': 'sales-growth',
         'marketing': 'marketing',
         'operations': 'operations',
-        'founder': 'founder'
+        'founder': 'founder',
+        'tech': 'tech'
     }
     companies_key = role_mapping.get(role, 'product-manager')
     role_companies = transformation_companies_data.get(companies_key, [])

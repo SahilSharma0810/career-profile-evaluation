@@ -70,6 +70,10 @@ ROLE_SKILL_MAPS = {
     'founder': [
         'venture_building', 'business_fundamentals', 'founder_resourcefulness',
         'ai_literacy', 'leadership', 'strategic_thinking'
+    ],
+    'tech': [
+        'product_thinking', 'business_impact_awareness', 'execution',
+        'ai_literacy', 'leadership', 'strategic_thinking'
     ]
 }
 
@@ -172,6 +176,28 @@ SKILL_METADATA = {
     'founder_resourcefulness': {
         'title': 'Founder Resourcefulness',
         'description': 'Your ability to move fast with limited resources, prioritize ruthlessly, and find creative solutions to constraints.'
+    },
+
+    # Tech/Engineering Skills (3)
+    'product_thinking': {
+        'title': 'Product Thinking',
+        'description': 'Your ability to connect engineering work to user value, understand product impact, and think beyond code.'
+    },
+    'business_impact_awareness': {
+        'title': 'Business Impact Awareness',
+        'description': 'Your understanding of how technical decisions affect business outcomes, costs, and user experience.'
+    },
+    'execution': {
+        'title': 'Execution & Accountability',
+        'description': 'Your ability to deliver reliably, communicate trade-offs transparently, and take ownership of outcomes.'
+    },
+    'prioritization': {
+        'title': 'Prioritization Thinking',
+        'description': 'Your skill in balancing technical quality, business needs, and technical debt to maximize impact.'
+    },
+    'capital_allocation': {
+        'title': 'Capital Allocation Thinking',
+        'description': 'Your ability to allocate engineering resources, budget, and time based on ROI and strategic priorities.'
     }
 }
 
