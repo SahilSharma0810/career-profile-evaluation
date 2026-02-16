@@ -59,18 +59,23 @@ const buildQuestionMap = () => {
   });
   
   // Add role-specific questions
-  Object.values(MBA_ROLE_SPECIFIC_SCREENS).forEach(screens => {
-    screens.forEach(screen => {
-      screen.questions.forEach(q => {
-        questionMap[q.id] = {
-          question: q.question,
-          helperText: q.helperText,
-          isScenario: q.isScenario,
-          options: q.options?.reduce((acc, opt) => {
-            acc[opt.value] = opt.label;
-            return acc;
-          }, {})
-        };
+  // MBA_ROLE_SPECIFIC_SCREENS is now nested: { role: { '0-3': [...], '3-8': [...], '8+': [...] } }
+  Object.values(MBA_ROLE_SPECIFIC_SCREENS).forEach(experienceLevels => {
+    // experienceLevels is an object like { '0-3': [...], '3-8': [...], '8+': [...] }
+    Object.values(experienceLevels).forEach(screens => {
+      // screens is an array of screen objects
+      screens.forEach(screen => {
+        screen.questions.forEach(q => {
+          questionMap[q.id] = {
+            question: q.question,
+            helperText: q.helperText,
+            isScenario: q.isScenario,
+            options: q.options?.reduce((acc, opt) => {
+              acc[opt.value] = opt.label;
+              return acc;
+            }, {})
+          };
+        });
       });
     });
   });

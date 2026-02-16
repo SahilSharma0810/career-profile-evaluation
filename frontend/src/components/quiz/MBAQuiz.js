@@ -657,8 +657,24 @@ const MBAQuiz = ({ onProgressChange }) => {
       // Build quiz screens to check completion
       const screens = [MBA_INTAKE_SCREEN_1, MBA_INTAKE_SCREEN_2];
       const selectedRole = quizResponses.currentRole;
-      if (selectedRole && MBA_ROLE_SPECIFIC_SCREENS[selectedRole]) {
-        screens.push(...MBA_ROLE_SPECIFIC_SCREENS[selectedRole]);
+      const selectedExperience = quizResponses.experience;
+      
+      if (selectedRole && selectedExperience && MBA_ROLE_SPECIFIC_SCREENS[selectedRole]) {
+        // Map frontend experience to document experience level
+        const experienceLevel = mapExperienceToLevel(selectedExperience);
+        const roleScreens = MBA_ROLE_SPECIFIC_SCREENS[selectedRole];
+        
+        // Check if it's the new nested structure (object with experience levels)
+        if (typeof roleScreens === 'object' && !Array.isArray(roleScreens)) {
+          // New nested structure: role -> experience -> screens
+          const experienceScreens = roleScreens[experienceLevel];
+          if (experienceScreens && Array.isArray(experienceScreens)) {
+            screens.push(...experienceScreens);
+          }
+        } else if (Array.isArray(roleScreens)) {
+          // Old flat structure (backward compatibility)
+          screens.push(...roleScreens);
+        }
       }
 
       // Check if all required questions are answered
