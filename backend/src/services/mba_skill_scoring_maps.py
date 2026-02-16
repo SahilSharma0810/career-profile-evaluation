@@ -19,13 +19,29 @@ from typing import Dict, List
 # ============================================================================
 
 QUESTION_SKILL_MAP = {
-    # Product Manager Questions
-    'pm-retention-problem': ['product_strategy', 'data_driven_pm', 'user_centricity'],
-    'pm-roadmap-tradeoff': ['product_strategy', 'strategic_thinking', 'leadership'],
-    'pm-mvp-validation': ['user_centricity', 'ai_literacy'],
-    'pm-metrics-conflict': ['data_driven_pm', 'strategic_thinking'],
-    'pm-ai-leverage': ['ai_literacy'],
-    'pm-failure-reflection': ['leadership', 'strategic_thinking'],
+    # Product Manager Questions - 0-3 years (Entry level)
+    'pm-e1': ['data_driven_pm'],  # Feature Adoption Drop
+    'pm-e2': ['user_centricity'],  # Problem Discovery
+    'pm-e3': ['data_driven_pm'],  # Prioritization Conflict
+    'pm-e4': ['strategic_thinking'],  # Success Measurement (Ownership)
+    'pm-e5': ['ai_literacy'],  # AI in Workflow (AI Fluency)
+    'pm-e6': ['strategic_thinking'],  # Data vs User Emotion
+    
+    # Product Manager Questions - 3-8 years (Mid level)
+    'pm-m1': ['product_strategy'],  # Growth vs Monetization Tradeoff
+    'pm-m2': ['leadership'],  # Cross-Functional Conflict
+    'pm-m3': ['strategic_thinking'],  # North Star Alignment (AI Fluency)
+    'pm-m4': ['ai_literacy'],  # AI Feature Pressure (Ownership)
+    'pm-m5': ['data_driven_pm'],  # Retention Plateau
+    'pm-m6': ['product_strategy'],  # Failed Launch Reflection
+    
+    # Product Manager Questions - 8+ years (Senior level)
+    'pm-s1': ['product_strategy'],  # Revenue Doubling Mandate (AI Fluency)
+    'pm-s2': ['capital_allocation'],  # Portfolio Kill Decision
+    'pm-s3': ['ai_literacy'],  # AI as Moat (Ownership)
+    'pm-s4': ['leadership'],  # Organizational Scale
+    'pm-s5': ['strategic_thinking'],  # Expansion vs Focus
+    'pm-s6': ['strategic_thinking'],  # Biggest Strategic Failure
 
     # Finance Questions
     'finance-metrics-conflict': ['business_partnering', 'data_integrity', 'leadership'],
@@ -99,48 +115,136 @@ QUESTION_SKILL_MAP = {
 # ============================================================================
 
 ANSWER_SCORES = {
-    # -------------------- PRODUCT MANAGER --------------------
-
-    'pm-retention-problem': {
-        'resegment-cohorts': 5,  # Expert: Data-driven cohort analysis
-        'qualitative-interviews': 4,  # Advanced: Good but less analytical
-        'add-parity': 2,  # Developing: Reactive, not analytical
-        'pause-for-data': 3   # Proficient: Cautious, neutral
+    # -------------------- PRODUCT MANAGER - 0-3 YEARS (ENTRY) --------------------
+    
+    'pm-e1': {  # Feature Adoption Drop - Data Driven PM
+        'add-nudges': 2,  # B → 5, C → 3, A → 2, D → 1
+        'break-down-funnel': 5,  # Best: Data-driven analysis
+        'ask-support': 3,  # Good: Qualitative input
+        'roll-back': 1  # Worst: Reactive without analysis
     },
-
-    'pm-roadmap-tradeoff': {
-        'ai-feature': 2,  # Developing: Caving to pressure
-        'incremental': 5,  # Expert: Data-driven, courageous
-        'ai-wrapper': 1,  # Beginner: Worst of both worlds
-        'parallel-discovery': 4   # Advanced: Diplomatic but spreads focus
+    
+    'pm-e2': {  # Problem Discovery - User Centricity
+        'add-to-sprint': 1,  # B → 5, C → 3, D → 2, A → 1
+        'interview-churned': 5,  # Best: User-centric validation
+        'ship-lightweight': 3,  # Good: Test-driven approach
+        'benchmark-competitors': 2  # Okay: External validation
     },
-
-    'pm-mvp-validation': {
-        'prd-mockups': 2,  # Developing: Static, no validation
-        'nocode-prototype': 5,  # Expert: Interactive, realistic
-        'ai-simulated': 4,  # Advanced: Creative AI leverage
-        'interviews-only': 3   # Proficient: Qualitative only
+    
+    'pm-e3': {  # Prioritization Conflict - Data Driven PM
+        'choose-enterprise': 2,  # B → 4, D → 3, A → 2, C → 1
+        'scoring-framework': 4,  # Best: Structured approach
+        'ask-leadership': 1,  # Worst: No ownership
+        'pick-retention': 3  # Good: Growth-focused
     },
-
-    'pm-metrics-conflict': {
-        'north-star': 2,  # Developing: Ignoring revenue reality
-        'revenue': 3,  # Proficient: Reactive but practical
-        'leading-indicators': 4,  # Advanced: Analytical, forward-looking
-        'unit-economics': 5   # Expert: Deepest understanding
+    
+    'pm-e4': {  # Success Measurement - Strategic Thinking (Ownership)
+        'feature-successful': 2,  # B → 3, A → 2, C → 2, D → 1
+        'cohort-analysis': 3,  # Best: Deeper analysis
+        'increase-marketing': 2,  # Same as A
+        'add-more-features': 1  # Worst: Feature factory
     },
-
-    'pm-ai-leverage': {
-        'writing-prds': 2,  # Developing: Tactical speed gain
-        'research-synthesis': 4,  # Advanced: Good insight generation
-        'prioritization': 5,  # Expert: Strategic decision-making
-        'impact-prediction': 5   # Expert: Strategic forecasting
+    
+    'pm-e5': {  # AI in Workflow - AI Literacy (AI Fluency)
+        'auto-summarize': 3,  # A → 3, B → 3, C → 2, D → 1
+        'generate-prd': 3,  # Same as A
+        'respond-stakeholders': 2,  # Good: Practical use
+        'not-use-ai': 1  # Worst: No AI adoption
     },
-
-    'pm-failure-reflection': {
-        'poor-data': 3,  # Proficient: External blame
-        'wrong-assumptions': 5,  # Expert: Owns mental models
-        'stakeholder-pressure': 2,  # Developing: Blaming others
-        'execution-constraints': 3   # Proficient: External factors
+    
+    'pm-e6': {  # Data vs User Emotion - Strategic Thinking
+        'ignore-interviews': 1,  # B → 4, C → 3, D → 2, A → 1
+        'segment-analyze': 4,  # Best: Synthesize both
+        'redesign-immediately': 3,  # Good: Action-oriented
+        'wait-month': 2  # Okay: Cautious
+    },
+    
+    # -------------------- PRODUCT MANAGER - 3-8 YEARS (MID) --------------------
+    
+    'pm-m1': {  # Growth vs Monetization Tradeoff - Product Strategy
+        'implement-monetization': 1,  # B → 4, C → 3, D → 2, A → 1
+        'ltv-analysis': 4,  # Best: Data-driven decision
+        'upsell-power-users': 3,  # Good: Targeted approach
+        'delay-monetization': 2  # Okay: Growth-focused
+    },
+    
+    'pm-m2': {  # Cross-Functional Conflict - Leadership
+        'prioritize-enterprise': 2,  # C → 2, A → 2, B → 1, D → 1
+        'prioritize-refactor': 1,  # Single-sided
+        'quantify-phased': 2,  # Best: Balanced approach
+        'escalate-leadership': 1  # Worst: No ownership
+    },
+    
+    'pm-m3': {  # North Star Alignment - Strategic Thinking (AI Fluency)
+        'standardize-reporting': 3,  # B → 3, A → 3, D → 2, C → 1
+        'north-star-metric': 3,  # Best: Strategic alignment
+        'teams-optimize': 1,  # Worst: Fragmented
+        'add-dashboards': 2  # Okay: More visibility
+    },
+    
+    'pm-m4': {  # AI Feature Pressure - AI Literacy (Ownership)
+        'build-wrapper': 2,  # B → 3, D → 3, A → 2, C → 1
+        'test-workflow': 3,  # Best: Validate value
+        'announce-roadmap': 1,  # Worst: No delivery
+        'push-back': 3  # Good: Strategic pushback
+    },
+    
+    'pm-m5': {  # Retention Plateau - Data Driven PM
+        'add-engagement': 3,  # B → 5, A → 3, C → 2, D → 1
+        'churned-analysis': 5,  # Best: Data-driven root cause
+        'increase-push': 2,  # Okay: Tactical
+        'offer-discounts': 1  # Worst: Short-term fix
+    },
+    
+    'pm-m6': {  # Failed Launch Reflection - Product Strategy
+        'weak-discovery': 4,  # A → 4, D → 2, B → 1, C → 1
+        'poor-marketing': 1,  # Execution issue
+        'engineering-delays': 1,  # Execution issue
+        'competitive-timing': 2  # External factor
+    },
+    
+    # -------------------- PRODUCT MANAGER - 8+ YEARS (SENIOR) --------------------
+    
+    'pm-s1': {  # Revenue Doubling Mandate - Product Strategy (AI Fluency)
+        'increase-pricing': 3,  # B → 4, A → 3, D → 2, C → 1
+        'identify-ltv-icp': 4,  # Best: Strategic focus
+        'launch-features': 1,  # Worst: Feature factory
+        'expand-marketing': 2  # Okay: Growth lever
+    },
+    
+    'pm-s2': {  # Portfolio Kill Decision - Capital Allocation Thinking
+        'continue-engagement': 1,  # C → 2, B → 2, A → 1, D → 1
+        'improve-monetization': 2,  # Good: Fix margin
+        'reevaluate-fit': 2,  # Best: Strategic thinking
+        'shut-down': 1  # Reactive
+    },
+    
+    'pm-s3': {  # AI as Moat - AI Literacy (Ownership)
+        'better-ux': 3,  # C → 4, A → 3, B → 2, D → 1
+        'faster-releases': 2,  # Tactical advantage
+        'proprietary-data': 4,  # Best: Strategic moat
+        'larger-model': 1  # Worst: Wrong understanding
+    },
+    
+    'pm-s4': {  # Organizational Scale - Leadership
+        'more-meetings': 3,  # B → 3, A → 3, D → 2, C → 1
+        'lack-ownership': 3,  # Best: Root cause
+        'slower-engineers': 1,  # Wrong diagnosis
+        'poor-tooling': 2  # Contributing factor
+    },
+    
+    'pm-s5': {  # Expansion vs Focus - Strategic Thinking
+        'tam-size': 3,  # B → 4, A → 3, D → 2, C → 1
+        'core-competency': 4,  # Best: Strategic advantage
+        'investor-pressure': 1,  # Worst: External driver
+        'trend-momentum': 2  # Okay: Market-driven
+    },
+    
+    'pm-s6': {  # Biggest Strategic Failure - Strategic Thinking
+        'wrong-leadership': 2,  # B → 3, A → 2, C → 2, D → 1
+        'market-timing': 3,  # Best: Strategic mistake
+        'underinvest-data': 2,  # Important but less strategic
+        'feature-overbuilding': 1  # Tactical mistake
     },
 
     # -------------------- FINANCE --------------------

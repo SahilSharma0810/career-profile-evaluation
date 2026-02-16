@@ -49,7 +49,7 @@ def _map_score_to_level(score: int) -> int:
 ROLE_SKILL_MAPS = {
     'pm': [
         'product_strategy', 'data_driven_pm', 'user_centricity',
-        'ai_literacy', 'leadership', 'strategic_thinking'
+        'ai_literacy', 'leadership', 'strategic_thinking', 'capital_allocation'
     ],
     'finance': [
         'financial_modeling', 'business_partnering', 'data_integrity',
@@ -197,7 +197,7 @@ SKILL_METADATA = {
     },
     'capital_allocation': {
         'title': 'Capital Allocation Thinking',
-        'description': 'Your ability to allocate engineering resources, budget, and time based on ROI and strategic priorities.'
+        'description': 'Your ability to allocate resources, budget, and time across products/initiatives based on ROI, strategic fit, and opportunity cost.'
     }
 }
 

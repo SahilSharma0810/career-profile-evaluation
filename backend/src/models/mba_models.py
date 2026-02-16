@@ -13,13 +13,30 @@ class MBAQuizRequest(BaseModel):
     career_goal: str = Field(..., description="Career goal (career-growth, skill-development, role-transition, entrepreneurship)")
 
     # Role-specific responses (all optional since different roles have different questions)
-    # Product Manager
-    pm_retention_problem: Optional[str] = Field(None, alias="pm-retention-problem")
-    pm_roadmap_tradeoff: Optional[str] = Field(None, alias="pm-roadmap-tradeoff")
-    pm_mvp_validation: Optional[str] = Field(None, alias="pm-mvp-validation")
-    pm_metrics_conflict: Optional[str] = Field(None, alias="pm-metrics-conflict")
-    pm_ai_leverage: Optional[str] = Field(None, alias="pm-ai-leverage")
-    pm_failure_reflection: Optional[str] = Field(None, alias="pm-failure-reflection")
+    # Product Manager - Experience-based questions
+    # 0-3 years (Entry level)
+    pm_e1: Optional[str] = Field(None, alias="pm-e1")  # Feature Adoption Drop
+    pm_e2: Optional[str] = Field(None, alias="pm-e2")  # Problem Discovery
+    pm_e3: Optional[str] = Field(None, alias="pm-e3")  # Prioritization Conflict
+    pm_e4: Optional[str] = Field(None, alias="pm-e4")  # Success Measurement (Ownership)
+    pm_e5: Optional[str] = Field(None, alias="pm-e5")  # AI in Workflow (AI Fluency)
+    pm_e6: Optional[str] = Field(None, alias="pm-e6")  # Data vs User Emotion
+    
+    # 3-8 years (Mid level)
+    pm_m1: Optional[str] = Field(None, alias="pm-m1")  # Growth vs Monetization Tradeoff
+    pm_m2: Optional[str] = Field(None, alias="pm-m2")  # Cross-Functional Conflict
+    pm_m3: Optional[str] = Field(None, alias="pm-m3")  # North Star Alignment (AI Fluency)
+    pm_m4: Optional[str] = Field(None, alias="pm-m4")  # AI Feature Pressure (Ownership)
+    pm_m5: Optional[str] = Field(None, alias="pm-m5")  # Retention Plateau
+    pm_m6: Optional[str] = Field(None, alias="pm-m6")  # Failed Launch Reflection
+    
+    # 8+ years (Senior level)
+    pm_s1: Optional[str] = Field(None, alias="pm-s1")  # Revenue Doubling Mandate (AI Fluency)
+    pm_s2: Optional[str] = Field(None, alias="pm-s2")  # Portfolio Kill Decision
+    pm_s3: Optional[str] = Field(None, alias="pm-s3")  # AI as Moat (Ownership)
+    pm_s4: Optional[str] = Field(None, alias="pm-s4")  # Organizational Scale
+    pm_s5: Optional[str] = Field(None, alias="pm-s5")  # Expansion vs Focus
+    pm_s6: Optional[str] = Field(None, alias="pm-s6")  # Biggest Strategic Failure
 
     # Finance
     finance_metrics_conflict: Optional[str] = Field(None, alias="finance-metrics-conflict")

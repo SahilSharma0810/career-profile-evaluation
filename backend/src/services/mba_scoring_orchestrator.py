@@ -121,30 +121,61 @@ def _calculate_role_maturity(role: str, responses: Dict[str, Any]) -> int:
 
 
 def _score_pm_maturity(responses: Dict[str, Any]) -> int:
-    """Score PM based on strategic depth"""
+    """Score PM based on strategic depth - experience-based questions"""
+    from .mba_skill_scoring_maps import ANSWER_SCORES
+    
     score = 50  # Base score
-
-    # Question: Data conflict priority
-    if responses.get('pm-data-conflict') == 'revalidate-hypothesis':
-        score += 15  # Strategic thinking
-    elif responses.get('pm-data-conflict') == 'customer-research':
-        score += 10
-
-    # Question: Roadmap bloat
-    if responses.get('pm-roadmap-bloat') == 'ruthless-prioritization':
-        score += 15
-    elif responses.get('pm-roadmap-bloat') == 'communicate-tradeoffs':
-        score += 10
-
-    # Question: AI usage
-    if responses.get('pm-ai-usage') in ['predictive-insights', 'automated-decisions']:
-        score += 10
-
-    # Question: Feature failure
-    if responses.get('pm-feature-failure') in ['systemic-failure', 'misaligned-incentives']:
-        score += 10  # Systems thinking
-
+    experience = responses.get('experience', '')
+    
+    # Map experience to level
+    experience_level = _map_experience_to_level(experience)
+    
+    # Score based on experience level
+    if experience_level == '0-3':
+        # Entry level questions (PM-E1 to PM-E6)
+        # Exclude E4 (ownership) and E5 (AI) as they're used in separate calculations
+        questions = ['pm-e1', 'pm-e2', 'pm-e3', 'pm-e6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                # Convert 1-5 score to maturity points (max 10 points per question)
+                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
+    
+    elif experience_level == '3-8':
+        # Mid level questions (PM-M1 to PM-M6)
+        # Exclude M3 (AI) and M4 (ownership) as they're used in separate calculations
+        questions = ['pm-m1', 'pm-m2', 'pm-m5', 'pm-m6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
+    elif experience_level == '8+':
+        # Senior level questions (PM-S1 to PM-S6)
+        # Exclude S1 (AI) and S3 (ownership) as they're used in separate calculations
+        questions = ['pm-s2', 'pm-s4', 'pm-s5', 'pm-s6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
     return min(score, 100)
+
+
+def _map_experience_to_level(experience: str) -> str:
+    """Map experience string to level (0-3, 3-8, 8+)"""
+    if experience in ['0-1', '1-3', '0-2', '2-5']:
+        return '0-3'
+    elif experience in ['3-6', '6-10', '5-8', '8-12']:
+        return '3-8'
+    elif experience in ['10+', '12+']:
+        return '8+'
+    else:
+        # Default to mid-level if unknown
+        return '3-8'
 
 
 def _score_finance_maturity(responses: Dict[str, Any]) -> int:
@@ -235,88 +266,125 @@ def _score_founder_maturity(responses: Dict[str, Any]) -> int:
 
 def _calculate_ai_fluency(role: str, responses: Dict[str, Any]) -> int:
     """Calculate AI fluency score based on AI-related answers"""
+    from .mba_skill_scoring_maps import ANSWER_SCORES
+    
     score = 30  # Base score (everyone has some AI exposure)
 
-    # Map AI usage patterns to scores
-    ai_question_keys = {
-        'product-manager': 'pm-ai-usage',
-        'finance': 'finance-ai-usage',
-        'sales': 'sales-ai-usage',
-        'marketing': 'marketing-ai-application',
-        'operations': 'operations-ai-leverage',
-        'founder': 'founder-ai-advantage'
-    }
-
-    ai_key = ai_question_keys.get(role)
-    if not ai_key:
-        return score
-
-    ai_answer = responses.get(ai_key)
-
-    # Strategic/Advanced AI usage
-    advanced_answers = [
-        'predictive-insights', 'automated-decisions',  # PM
-        'scenario-modeling', 'anomaly-detection',  # Finance
-        'deal-risk', 'pricing-optimization',  # Sales
-        'automated-optimization', 'audience-prediction',  # Marketing
-        'decision-optimization', 'automation',  # Operations
-        'insight', 'differentiation'  # Founder
-    ]
-
-    # Tactical AI usage
-    tactical_answers = [
-        'user-research', 'ab-testing',  # PM
-        'forecasting', 'reporting',  # Finance
-        'call-summaries', 'email-drafts',  # Sales
-        'creative-testing', 'content-generation',  # Marketing
-        'forecasting', 'reporting',  # Operations
-        'speed', 'cost'  # Founder
-    ]
-
-    if ai_answer in advanced_answers:
-        score += 50  # AI-Strategic or AI-Native
-    elif ai_answer in tactical_answers:
-        score += 30  # AI-Capable
+    if role == 'product-manager':
+        # PM uses experience-based AI questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct AI question based on experience
+        ai_question_map = {
+            '0-3': 'pm-e5',  # AI in Workflow
+            '3-8': 'pm-m3',  # North Star Alignment (used for AI fluency per markdown)
+            '8+': 'pm-s1'    # Revenue Doubling Mandate (used for AI fluency per markdown)
+        }
+        
+        ai_key = ai_question_map.get(experience_level)
+        if ai_key:
+            ai_answer = responses.get(ai_key)
+            if ai_answer and ai_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ai_key].get(ai_answer, 0)
+                # Convert 1-5 score to AI fluency points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
+                score += (answer_score - 1) * 10 + 10
     else:
-        score += 10  # AI-Curious
+        # Other roles use existing logic
+        ai_question_keys = {
+            'finance': 'finance-ai-usage',
+            'sales': 'sales-ai-usage',
+            'marketing': 'marketing-ai-application',
+            'operations': 'operations-ai-leverage',
+            'founder': 'founder-ai-advantage'
+        }
+
+        ai_key = ai_question_keys.get(role)
+        if ai_key:
+            ai_answer = responses.get(ai_key)
+
+            # Strategic/Advanced AI usage
+            advanced_answers = [
+                'scenario-modeling', 'anomaly-detection',  # Finance
+                'deal-risk', 'pricing-optimization',  # Sales
+                'automated-optimization', 'audience-prediction',  # Marketing
+                'decision-optimization', 'automation',  # Operations
+                'insight', 'differentiation'  # Founder
+            ]
+
+            # Tactical AI usage
+            tactical_answers = [
+                'forecasting', 'reporting',  # Finance
+                'call-summaries', 'email-drafts',  # Sales
+                'creative-testing', 'content-generation',  # Marketing
+                'forecasting', 'reporting',  # Operations
+                'speed', 'cost'  # Founder
+            ]
+
+            if ai_answer in advanced_answers:
+                score += 50  # AI-Strategic or AI-Native
+            elif ai_answer in tactical_answers:
+                score += 30  # AI-Capable
+            else:
+                score += 10  # AI-Curious
 
     return min(score, 100)
 
 
 def _calculate_ownership(role: str, responses: Dict[str, Any]) -> int:
     """Calculate ownership/leadership score"""
+    from .mba_skill_scoring_maps import ANSWER_SCORES
+    
     score = 50  # Base score
 
-    # Role-specific ownership indicators
-    ownership_keys = {
-        'product-manager': 'pm-ownership',
-        'finance': 'finance-leadership-weight',
-        'sales': 'sales-ownership',
-        'marketing': 'marketing-leadership-metric',
-        'operations': 'operations-ownership',
-        'founder': 'founder-resource-constraint'
-    }
-
-    ownership_key = ownership_keys.get(role)
-    if not ownership_key:
-        return score
-
-    ownership_answer = responses.get(ownership_key)
-
-    # High ownership answers
-    high_ownership = [
-        'product-line', 'business-unit',  # PM
-        'strategic-allocation', 'board-reporting',  # Finance
-        'region-business', 'team-number',  # Sales
-        'revenue-contribution', 'ltv',  # Marketing
-        'margin', 'sla-adherence',  # Operations
-        'learning', 'profitability'  # Founder
-    ]
-
-    if ownership_answer in high_ownership:
-        score += 40
+    if role == 'product-manager':
+        # PM uses experience-based ownership questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct ownership question based on experience
+        ownership_question_map = {
+            '0-3': 'pm-e4',  # Success Measurement (used for ownership per markdown)
+            '3-8': 'pm-m4',  # AI Feature Pressure (used for ownership per markdown)
+            '8+': 'pm-s3'    # AI as Moat (used for ownership per markdown)
+        }
+        
+        ownership_key = ownership_question_map.get(experience_level)
+        if ownership_key:
+            ownership_answer = responses.get(ownership_key)
+            if ownership_answer and ownership_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ownership_key].get(ownership_answer, 0)
+                # Convert 1-5 score to ownership points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
+                score += (answer_score - 1) * 10 + 10
     else:
-        score += 20
+        # Other roles use existing logic
+        ownership_keys = {
+            'finance': 'finance-leadership-weight',
+            'sales': 'sales-ownership',
+            'marketing': 'marketing-leadership-metric',
+            'operations': 'operations-ownership',
+            'founder': 'founder-resource-constraint'
+        }
+
+        ownership_key = ownership_keys.get(role)
+        if ownership_key:
+            ownership_answer = responses.get(ownership_key)
+
+            # High ownership answers
+            high_ownership = [
+                'strategic-allocation', 'board-reporting',  # Finance
+                'region-business', 'team-number',  # Sales
+                'revenue-contribution', 'ltv',  # Marketing
+                'margin', 'sla-adherence',  # Operations
+                'learning', 'profitability'  # Founder
+            ]
+
+            if ownership_answer in high_ownership:
+                score += 40
+            else:
+                score += 20
 
     return min(score, 100)
 
@@ -368,16 +436,49 @@ def _generate_readiness_tags(score: int, maturity: str, role: str, responses: Di
 
     # Response-specific tags (max 2-3 based on answer patterns)
     if role == 'product-manager':
-        if responses.get('pm-retention-problem') == 'resegment-cohorts':
-            tags.append("Data-Driven")
-        if responses.get('pm-roadmap-tradeoff') == 'incremental':
-            tags.append("Metrics-Focused")
-        if responses.get('pm-ai-leverage') in ['prioritization', 'impact-prediction']:
-            tags.append("AI-Powered PM")
-        if responses.get('pm-failure-reflection') == 'wrong-assumptions':
-            tags.append("Self-Aware")
-        if responses.get('pm-metrics-conflict') == 'unit-economics':
-            tags.append("Business-Minded")
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        if experience_level == '0-3':
+            # Entry level tags
+            if responses.get('pm-e1') == 'break-down-funnel':
+                tags.append("Data-Driven")
+            if responses.get('pm-e2') == 'interview-churned':
+                tags.append("User-Centric")
+            if responses.get('pm-e3') == 'scoring-framework':
+                tags.append("Structured Thinker")
+            if responses.get('pm-e5') in ['auto-summarize', 'generate-prd']:
+                tags.append("AI-Powered PM")
+            if responses.get('pm-e6') == 'segment-analyze':
+                tags.append("Strategic Analyst")
+        
+        elif experience_level == '3-8':
+            # Mid level tags
+            if responses.get('pm-m1') == 'ltv-analysis':
+                tags.append("Strategic PM")
+            if responses.get('pm-m2') == 'quantify-phased':
+                tags.append("Leadership")
+            if responses.get('pm-m5') == 'churned-analysis':
+                tags.append("Data-Driven")
+            if responses.get('pm-m6') == 'weak-discovery':
+                tags.append("Self-Aware")
+            if responses.get('pm-m3') == 'north-star-metric':
+                tags.append("Strategic Thinker")
+        
+        elif experience_level == '8+':
+            # Senior level tags
+            if responses.get('pm-s1') == 'identify-ltv-icp':
+                tags.append("Portfolio Strategist")
+            if responses.get('pm-s2') == 'reevaluate-fit':
+                tags.append("Capital Allocator")
+            if responses.get('pm-s3') == 'proprietary-data':
+                tags.append("AI Strategist")
+            if responses.get('pm-s4') == 'lack-ownership':
+                tags.append("Organizational Leader")
+            if responses.get('pm-s5') == 'core-competency':
+                tags.append("Strategic Thinker")
+            if responses.get('pm-s6') == 'market-timing':
+                tags.append("Strategic Visionary")
 
     elif role == 'finance':
         if responses.get('finance-metrics-conflict') == 'scenarios':

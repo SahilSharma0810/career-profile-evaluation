@@ -120,278 +120,285 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
   'pm': {
     // 0-3 years experience (Entry level)
     '0-3': [
-    // Screen 3: PM Questions 1-2
+      // Screen 1: PM-E1, PM-E2
       {
         id: 'pm-screen-1',
         initialChatText: "Let's dive into your product thinking and decision-making approach.",
         questions: [
           {
-            id: 'pm-retention-problem',
-            question: 'You launched a new product/feature. Adoption is high, but 30-day retention is below 15%. Engineering says "feature parity gap," sales says "wrong ICP (Ideal Customer Profile)." What do you do first?',
-            helperText: 'This tests problem framing and sequencing',
+            id: 'pm-e1',
+            question: 'Two weeks after launching a new onboarding feature, you notice that overall sign-ups are stable, but activation rate has dropped from 62% to 47%. Leadership is asking for quick fixes. What do you do first?',
+            helperText: 'Tests data-driven problem-solving',
             isScenario: true,
             options: [
-              { value: 'resegment-cohorts', label: 'Re-segment cohorts by acquisition source + JTBD (Jobs To Be Done)', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'qualitative-interviews', label: 'Run qualitative interviews with churned users', icon: <Users size={24} weight="duotone" /> },
-              { value: 'add-parity', label: 'Add parity features requested by sales team', icon: <Code size={24} weight="duotone" /> },
-              { value: 'pause-for-data', label: 'Pause roadmap changes and wait for more data', icon: <Clock size={24} weight="duotone" /> }
+              { value: 'add-nudges', label: 'Add nudges and tooltips to push users forward', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'break-down-funnel', label: 'Break down the funnel step-by-step and identify exact drop-off points', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'ask-support', label: 'Ask support if they\'ve received complaints', icon: <Users size={24} weight="duotone" /> },
+              { value: 'roll-back', label: 'Roll back the feature to restore previous flow', icon: <XCircle size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'pm-roadmap-tradeoff',
-            question: 'Leadership wants a big-bang AI feature for market positioning. However, your data shows incremental improvements give better ROI (Return on Investment). What do you ship?',
-            helperText: 'Tests strategic courage and stakeholder management',
+            id: 'pm-e2',
+            question: 'Your sales team insists that customers need a dashboard export feature urgently. No data currently tracks how many users are requesting this. What would you do?',
+            helperText: 'Tests user-centric discovery',
             isScenario: true,
             options: [
-              { value: 'ai-feature', label: 'Ship AI feature to align with leadership vision', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'incremental', label: 'Ship incremental improvements backed by metrics', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'ai-wrapper', label: 'Build a thin AI layer on existing flows (compromise)', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'parallel-discovery', label: 'Run parallel discovery to validate both approaches', icon: <Path size={24} weight="duotone" /> }
+              { value: 'add-to-sprint', label: 'Immediately add it to next sprint to support sales', icon: <Rocket size={24} weight="duotone" /> },
+              { value: 'interview-churned', label: 'Interview recent churned customers to validate pain', icon: <Users size={24} weight="duotone" /> },
+              { value: 'ship-lightweight', label: 'Ship a lightweight version quickly to test usage', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'benchmark-competitors', label: 'Benchmark competitors and replicate best practice', icon: <ChartBar size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: PM Questions 3-4
+      // Screen 2: PM-E3, PM-E4
       {
         id: 'pm-screen-2',
-        initialChatText: "Now let's explore your execution approach and metrics thinking.",
+        initialChatText: "Now let's explore your prioritization and measurement thinking.",
         questions: [
           {
-            id: 'pm-mvp-validation',
-            question: 'You must validate a new workflow in 2 weeks with no engineers assigned to you. What do you actually build?',
-            helperText: 'Tests execution bias and AI leverage',
+            id: 'pm-e3',
+            question: 'You have 3 competing features: One improves user retention, one requested by enterprise client, one improves internal efficiency. Resources allow only one this sprint. How do you decide?',
+            helperText: 'Tests data-driven prioritization',
             isScenario: true,
             options: [
-              { value: 'prd-mockups', label: 'PRD (Product Requirements Document) + mockups only', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'nocode-prototype', label: 'No-code prototype with realistic data flows', icon: <Code size={24} weight="duotone" /> },
-              { value: 'ai-simulated', label: 'AI-simulated workflow using prompts & automation', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'interviews-only', label: 'Customer interviews only (no prototype)', icon: <Users size={24} weight="duotone" /> }
+              { value: 'choose-enterprise', label: 'Choose enterprise client request', icon: <Buildings size={24} weight="duotone" /> },
+              { value: 'scoring-framework', label: 'Use a structured scoring framework (impact, effort, risk)', icon: <Target size={24} weight="duotone" /> },
+              { value: 'ask-leadership', label: 'Ask leadership to decide', icon: <Users size={24} weight="duotone" /> },
+              { value: 'pick-retention', label: 'Pick retention because growth is important', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'pm-metrics-conflict',
-            question: 'Your north-star metric (primary success metric) improves significantly, but downstream revenue remains stagnant. What do you trust more?',
-            helperText: 'Tests senior metric thinking',
+            id: 'pm-e4',
+            question: 'You launched a feature meant to improve engagement. After 30 days, overall usage increased but retention stayed flat. What does this signal?',
+            helperText: 'Tests strategic measurement thinking',
             isScenario: true,
             options: [
-              { value: 'north-star', label: 'Trust the north-star metric', icon: <Target size={24} weight="duotone" /> },
-              { value: 'revenue', label: 'Trust the revenue metrics', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'leading-indicators', label: 'Look at leading indicators between both', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'unit-economics', label: 'Analyze segment-specific unit economics', icon: <ChartBar size={24} weight="duotone" /> }
+              { value: 'feature-successful', label: 'Feature is successful', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'cohort-analysis', label: 'Need deeper cohort analysis', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'increase-marketing', label: 'Increase marketing push', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'add-more-features', label: 'Add more features around it', icon: <Code size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: PM Questions 5-6
+      // Screen 3: PM-E5, PM-E6
       {
         id: 'pm-screen-3',
-        initialChatText: "Finally, let's assess your AI leverage and self-awareness as a PM.",
+        initialChatText: "Finally, let's assess your AI leverage and strategic thinking.",
         questions: [
           {
-            id: 'pm-ai-leverage',
-            question: 'Where do you think AI would add the highest leverage and value in your current PM (Product Manager) role?',
+            id: 'pm-e5',
+            question: 'You spend 6 hours weekly synthesizing user feedback and converting it into insights. How would you use AI here?',
+            helperText: 'Tests AI literacy and workflow optimization',
             options: [
-              { value: 'writing-prds', label: 'Writing PRDs (Product Requirements Documents) faster', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'research-synthesis', label: 'Synthesizing qualitative user research insights', icon: <Users size={24} weight="duotone" /> },
-              { value: 'prioritization', label: 'Prioritization frameworks and trade-off modeling', icon: <Target size={24} weight="duotone" /> },
-              { value: 'impact-prediction', label: 'Predicting feature and roadmap business impact', icon: <ChartLineUp size={24} weight="duotone" /> }
+              { value: 'auto-summarize', label: 'Auto-summarize feedback themes and cluster patterns', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'generate-prd', label: 'Generate PRD drafts from raw notes', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'respond-stakeholders', label: 'Use AI to respond to stakeholders', icon: <Users size={24} weight="duotone" /> },
+              { value: 'not-use-ai', label: 'Not use AI; prefer manual review', icon: <Gear size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'pm-failure-reflection',
-            question: 'When you look back at your career, what do you think caused your most expensive product mistake or failure?',
-            helperText: 'Tests self-awareness and seniority',
+            id: 'pm-e6',
+            question: 'Quantitative data shows high feature engagement, but user interviews reveal frustration and confusion. What\'s your next step?',
+            helperText: 'Tests strategic thinking and data synthesis',
+            isScenario: true,
             options: [
-              { value: 'poor-data', label: 'Poor data quality or insufficient metrics', icon: <XCircle size={24} weight="duotone" /> },
-              { value: 'wrong-assumptions', label: 'Incorrect assumptions about user needs', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'stakeholder-pressure', label: 'Stakeholder pressure overriding product judgment', icon: <Users size={24} weight="duotone" /> },
-              { value: 'execution-constraints', label: 'Execution constraints (time, resources, dependencies)', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'ignore-interviews', label: 'Ignore interviews since data is strong', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'segment-analyze', label: 'Segment users and analyze qualitative patterns deeper', icon: <Users size={24} weight="duotone" /> },
+              { value: 'redesign-immediately', label: 'Redesign immediately', icon: <Code size={24} weight="duotone" /> },
+              { value: 'wait-month', label: 'Wait another month', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 3-8 years experience (Mid level) - using same questions for now
+    // 3-8 years experience (Mid level)
     '3-8': [
-      // Screen 3: PM Questions 1-2
+      // Screen 1: PM-M1, PM-M2
       {
         id: 'pm-screen-1',
-        initialChatText: "Let's dive into your product thinking and decision-making approach.",
+        initialChatText: "Let's dive into your product strategy and leadership approach.",
         questions: [
           {
-            id: 'pm-retention-problem',
-            question: 'You launched a new product/feature. Adoption is high, but 30-day retention is below 15%. Engineering says "feature parity gap," sales says "wrong ICP (Ideal Customer Profile)." What do you do first?',
-            helperText: 'This tests problem framing and sequencing',
+            id: 'pm-m1',
+            question: 'Your product\'s monthly active users have grown 35% YoY, but revenue growth is flat. Leadership wants to introduce aggressive monetization (paywalls + upsells). What do you do first?',
+            helperText: 'Tests product strategy and monetization thinking',
             isScenario: true,
             options: [
-              { value: 'resegment-cohorts', label: 'Re-segment cohorts by acquisition source + JTBD (Jobs To Be Done)', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'qualitative-interviews', label: 'Run qualitative interviews with churned users', icon: <Users size={24} weight="duotone" /> },
-              { value: 'add-parity', label: 'Add parity features requested by sales team', icon: <Code size={24} weight="duotone" /> },
-              { value: 'pause-for-data', label: 'Pause roadmap changes and wait for more data', icon: <Clock size={24} weight="duotone" /> }
+              { value: 'implement-monetization', label: 'Implement monetization quickly to capture value', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'ltv-analysis', label: 'Run cohort-level LTV analysis before changing pricing', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'upsell-power-users', label: 'Add upsell prompts to power users only', icon: <Target size={24} weight="duotone" /> },
+              { value: 'delay-monetization', label: 'Delay monetization to protect growth', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'pm-roadmap-tradeoff',
-            question: 'Leadership wants a big-bang AI feature for market positioning. However, your data shows incremental improvements give better ROI (Return on Investment). What do you ship?',
-            helperText: 'Tests strategic courage and stakeholder management',
+            id: 'pm-m2',
+            question: 'Engineering says technical debt is slowing delivery by 40%. Sales says missing features are hurting enterprise deals. Resources are limited. What do you do?',
+            helperText: 'Tests leadership and conflict resolution',
             isScenario: true,
             options: [
-              { value: 'ai-feature', label: 'Ship AI feature to align with leadership vision', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'incremental', label: 'Ship incremental improvements backed by metrics', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'ai-wrapper', label: 'Build a thin AI layer on existing flows (compromise)', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'parallel-discovery', label: 'Run parallel discovery to validate both approaches', icon: <Path size={24} weight="duotone" /> }
+              { value: 'prioritize-enterprise', label: 'Prioritize enterprise features', icon: <Buildings size={24} weight="duotone" /> },
+              { value: 'prioritize-refactor', label: 'Prioritize refactor', icon: <Code size={24} weight="duotone" /> },
+              { value: 'quantify-phased', label: 'Quantify impact of both and create phased roadmap', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'escalate-leadership', label: 'Escalate to leadership', icon: <Users size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: PM Questions 3-4
+      // Screen 2: PM-M3, PM-M4
       {
         id: 'pm-screen-2',
-        initialChatText: "Now let's explore your execution approach and metrics thinking.",
+        initialChatText: "Now let's explore your strategic alignment and AI approach.",
         questions: [
           {
-            id: 'pm-mvp-validation',
-            question: 'You must validate a new workflow in 2 weeks with no engineers assigned to you. What do you actually build?',
-            helperText: 'Tests execution bias and AI leverage',
+            id: 'pm-m3',
+            question: 'Different teams track different KPIs (engagement, revenue, feature adoption). Growth discussions feel fragmented. What do you do?',
+            helperText: 'Tests strategic thinking and alignment',
             isScenario: true,
             options: [
-              { value: 'prd-mockups', label: 'PRD (Product Requirements Document) + mockups only', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'nocode-prototype', label: 'No-code prototype with realistic data flows', icon: <Code size={24} weight="duotone" /> },
-              { value: 'ai-simulated', label: 'AI-simulated workflow using prompts & automation', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'interviews-only', label: 'Customer interviews only (no prototype)', icon: <Users size={24} weight="duotone" /> }
+              { value: 'standardize-reporting', label: 'Standardize reporting format', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'north-star-metric', label: 'Define a single north-star metric tied to long-term value', icon: <Target size={24} weight="duotone" /> },
+              { value: 'teams-optimize', label: 'Let teams optimize independently', icon: <Users size={24} weight="duotone" /> },
+              { value: 'add-dashboards', label: 'Add more dashboards', icon: <PresentationChart size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'pm-metrics-conflict',
-            question: 'Your north-star metric (primary success metric) improves significantly, but downstream revenue remains stagnant. What do you trust more?',
-            helperText: 'Tests senior metric thinking',
+            id: 'pm-m4',
+            question: 'CEO wants to announce an AI feature at upcoming event. No validated use-case yet. You:',
+            helperText: 'Tests AI literacy and strategic pushback',
             isScenario: true,
             options: [
-              { value: 'north-star', label: 'Trust the north-star metric', icon: <Target size={24} weight="duotone" /> },
-              { value: 'revenue', label: 'Trust the revenue metrics', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'leading-indicators', label: 'Look at leading indicators between both', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'unit-economics', label: 'Analyze segment-specific unit economics', icon: <ChartBar size={24} weight="duotone" /> }
+              { value: 'build-wrapper', label: 'Build a lightweight AI wrapper for optics', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'test-workflow', label: 'Identify 1 high-friction workflow and test AI value', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'announce-roadmap', label: 'Announce roadmap without building', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'push-back', label: 'Push back entirely', icon: <XCircle size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: PM Questions 5-6
+      // Screen 3: PM-M5, PM-M6
       {
         id: 'pm-screen-3',
-        initialChatText: "Finally, let's assess your AI leverage and self-awareness as a PM.",
+        initialChatText: "Finally, let's assess your data-driven approach and strategic reflection.",
         questions: [
           {
-            id: 'pm-ai-leverage',
-            question: 'Where do you think AI would add the highest leverage and value in your current PM (Product Manager) role?',
+            id: 'pm-m5',
+            question: 'Your activation is strong, but 90-day retention is declining gradually. What is your first structured move?',
+            helperText: 'Tests data-driven problem-solving',
+            isScenario: true,
             options: [
-              { value: 'writing-prds', label: 'Writing PRDs (Product Requirements Documents) faster', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'research-synthesis', label: 'Synthesizing qualitative user research insights', icon: <Users size={24} weight="duotone" /> },
-              { value: 'prioritization', label: 'Prioritization frameworks and trade-off modeling', icon: <Target size={24} weight="duotone" /> },
-              { value: 'impact-prediction', label: 'Predicting feature and roadmap business impact', icon: <ChartLineUp size={24} weight="duotone" /> }
+              { value: 'add-engagement', label: 'Add new engagement features', icon: <Code size={24} weight="duotone" /> },
+              { value: 'churned-analysis', label: 'Run churned-user interviews + behavioral cohort analysis', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'increase-push', label: 'Increase push notifications', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'offer-discounts', label: 'Offer discounts', icon: <CurrencyInr size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'pm-failure-reflection',
-            question: 'When you look back at your career, what do you think caused your most expensive product mistake or failure?',
-            helperText: 'Tests self-awareness and seniority',
+            id: 'pm-m6',
+            question: 'A major feature failed to move the primary metric despite positive internal reviews. Root cause most likely?',
+            helperText: 'Tests product strategy and problem discovery',
+            isScenario: true,
             options: [
-              { value: 'poor-data', label: 'Poor data quality or insufficient metrics', icon: <XCircle size={24} weight="duotone" /> },
-              { value: 'wrong-assumptions', label: 'Incorrect assumptions about user needs', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'stakeholder-pressure', label: 'Stakeholder pressure overriding product judgment', icon: <Users size={24} weight="duotone" /> },
-              { value: 'execution-constraints', label: 'Execution constraints (time, resources, dependencies)', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'weak-discovery', label: 'Weak problem discovery', icon: <Users size={24} weight="duotone" /> },
+              { value: 'poor-marketing', label: 'Poor marketing push', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'engineering-delays', label: 'Engineering delays', icon: <Code size={24} weight="duotone" /> },
+              { value: 'competitive-timing', label: 'Competitive timing', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 8+ years experience (Senior level) - using same questions for now
+    // 8+ years experience (Senior level)
     '8+': [
-      // Screen 3: PM Questions 1-2
+      // Screen 1: PM-S1, PM-S2
       {
         id: 'pm-screen-1',
-        initialChatText: "Let's dive into your product thinking and decision-making approach.",
+        initialChatText: "Let's dive into your portfolio strategy and capital allocation thinking.",
         questions: [
           {
-            id: 'pm-retention-problem',
-            question: 'You launched a new product/feature. Adoption is high, but 30-day retention is below 15%. Engineering says "feature parity gap," sales says "wrong ICP (Ideal Customer Profile)." What do you do first?',
-            helperText: 'This tests problem framing and sequencing',
+            id: 'pm-s1',
+            question: 'Board mandates 2x revenue in 12 months. You lead a multi-product portfolio. Your first action:',
+            helperText: 'Tests product strategy and portfolio thinking',
             isScenario: true,
             options: [
-              { value: 'resegment-cohorts', label: 'Re-segment cohorts by acquisition source + JTBD (Jobs To Be Done)', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'qualitative-interviews', label: 'Run qualitative interviews with churned users', icon: <Users size={24} weight="duotone" /> },
-              { value: 'add-parity', label: 'Add parity features requested by sales team', icon: <Code size={24} weight="duotone" /> },
-              { value: 'pause-for-data', label: 'Pause roadmap changes and wait for more data', icon: <Clock size={24} weight="duotone" /> }
+              { value: 'increase-pricing', label: 'Increase pricing across products', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'identify-ltv-icp', label: 'Identify highest LTV ICP and re-focus portfolio', icon: <Target size={24} weight="duotone" /> },
+              { value: 'launch-features', label: 'Launch 3 new features', icon: <Code size={24} weight="duotone" /> },
+              { value: 'expand-marketing', label: 'Expand marketing budget', icon: <MegaphoneSimple size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'pm-roadmap-tradeoff',
-            question: 'Leadership wants a big-bang AI feature for market positioning. However, your data shows incremental improvements give better ROI (Return on Investment). What do you ship?',
-            helperText: 'Tests strategic courage and stakeholder management',
+            id: 'pm-s2',
+            question: 'One product has strong engagement but low margin and weak strategic alignment. You:',
+            helperText: 'Tests capital allocation thinking',
             isScenario: true,
             options: [
-              { value: 'ai-feature', label: 'Ship AI feature to align with leadership vision', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'incremental', label: 'Ship incremental improvements backed by metrics', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'ai-wrapper', label: 'Build a thin AI layer on existing flows (compromise)', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'parallel-discovery', label: 'Run parallel discovery to validate both approaches', icon: <Path size={24} weight="duotone" /> }
+              { value: 'continue-engagement', label: 'Continue due to engagement', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'improve-monetization', label: 'Improve monetization', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'reevaluate-fit', label: 'Re-evaluate strategic fit + opportunity cost', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'shut-down', label: 'Shut it down immediately', icon: <XCircle size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: PM Questions 3-4
+      // Screen 2: PM-S3, PM-S4
       {
         id: 'pm-screen-2',
-        initialChatText: "Now let's explore your execution approach and metrics thinking.",
+        initialChatText: "Now let's explore your AI strategy and organizational leadership.",
         questions: [
           {
-            id: 'pm-mvp-validation',
-            question: 'You must validate a new workflow in 2 weeks with no engineers assigned to you. What do you actually build?',
-            helperText: 'Tests execution bias and AI leverage',
-            isScenario: true,
+            id: 'pm-s3',
+            question: 'Competitors are adding similar AI features rapidly. True defensibility comes from:',
+            helperText: 'Tests AI literacy and strategic moat thinking',
             options: [
-              { value: 'prd-mockups', label: 'PRD (Product Requirements Document) + mockups only', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'nocode-prototype', label: 'No-code prototype with realistic data flows', icon: <Code size={24} weight="duotone" /> },
-              { value: 'ai-simulated', label: 'AI-simulated workflow using prompts & automation', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'interviews-only', label: 'Customer interviews only (no prototype)', icon: <Users size={24} weight="duotone" /> }
+              { value: 'better-ux', label: 'Better UX', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'faster-releases', label: 'Faster releases', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'proprietary-data', label: 'Proprietary data feedback loops', icon: <Database size={24} weight="duotone" /> },
+              { value: 'larger-model', label: 'Larger model size', icon: <Brain size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'pm-metrics-conflict',
-            question: 'Your north-star metric (primary success metric) improves significantly, but downstream revenue remains stagnant. What do you trust more?',
-            helperText: 'Tests senior metric thinking',
+            id: 'pm-s4',
+            question: 'Product velocity slows as org grows from 20 to 120 people. Root strategic issue likely:',
+            helperText: 'Tests leadership and organizational design',
             isScenario: true,
             options: [
-              { value: 'north-star', label: 'Trust the north-star metric', icon: <Target size={24} weight="duotone" /> },
-              { value: 'revenue', label: 'Trust the revenue metrics', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'leading-indicators', label: 'Look at leading indicators between both', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'unit-economics', label: 'Analyze segment-specific unit economics', icon: <ChartBar size={24} weight="duotone" /> }
+              { value: 'more-meetings', label: 'More meetings', icon: <Users size={24} weight="duotone" /> },
+              { value: 'lack-ownership', label: 'Lack of clear ownership structure', icon: <Target size={24} weight="duotone" /> },
+              { value: 'slower-engineers', label: 'Slower engineers', icon: <Code size={24} weight="duotone" /> },
+              { value: 'poor-tooling', label: 'Poor tooling', icon: <Gear size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: PM Questions 5-6
+      // Screen 3: PM-S5, PM-S6
       {
         id: 'pm-screen-3',
-        initialChatText: "Finally, let's assess your AI leverage and self-awareness as a PM.",
+        initialChatText: "Finally, let's assess your strategic thinking and failure reflection.",
         questions: [
           {
-            id: 'pm-ai-leverage',
-            question: 'Where do you think AI would add the highest leverage and value in your current PM (Product Manager) role?',
+            id: 'pm-s5',
+            question: 'Company can expand into adjacent market OR deepen core product. You choose based on:',
+            helperText: 'Tests strategic thinking and competitive advantage',
+            isScenario: true,
             options: [
-              { value: 'writing-prds', label: 'Writing PRDs (Product Requirements Documents) faster', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'research-synthesis', label: 'Synthesizing qualitative user research insights', icon: <Users size={24} weight="duotone" /> },
-              { value: 'prioritization', label: 'Prioritization frameworks and trade-off modeling', icon: <Target size={24} weight="duotone" /> },
-              { value: 'impact-prediction', label: 'Predicting feature and roadmap business impact', icon: <ChartLineUp size={24} weight="duotone" /> }
+              { value: 'tam-size', label: 'TAM size', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'core-competency', label: 'Core competency + execution advantage', icon: <Target size={24} weight="duotone" /> },
+              { value: 'investor-pressure', label: 'Investor pressure', icon: <Users size={24} weight="duotone" /> },
+              { value: 'trend-momentum', label: 'Trend momentum', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'pm-failure-reflection',
-            question: 'When you look back at your career, what do you think caused your most expensive product mistake or failure?',
-            helperText: 'Tests self-awareness and seniority',
+            id: 'pm-s6',
+            question: 'In hindsight, your most expensive mistake would likely come from:',
+            helperText: 'Tests strategic thinking and failure patterns',
+            isScenario: true,
             options: [
-              { value: 'poor-data', label: 'Poor data quality or insufficient metrics', icon: <XCircle size={24} weight="duotone" /> },
-              { value: 'wrong-assumptions', label: 'Incorrect assumptions about user needs', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'stakeholder-pressure', label: 'Stakeholder pressure overriding product judgment', icon: <Users size={24} weight="duotone" /> },
-              { value: 'execution-constraints', label: 'Execution constraints (time, resources, dependencies)', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'wrong-leadership', label: 'Hiring wrong leadership', icon: <Users size={24} weight="duotone" /> },
+              { value: 'market-timing', label: 'Misreading market timing', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'underinvest-data', label: 'Underinvesting in data infrastructure', icon: <Database size={24} weight="duotone" /> },
+              { value: 'feature-overbuilding', label: 'Feature overbuilding', icon: <Code size={24} weight="duotone" /> }
             ]
           }
         ]
