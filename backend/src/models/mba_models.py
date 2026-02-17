@@ -38,13 +38,29 @@ class MBAQuizRequest(BaseModel):
     pm_s5: Optional[str] = Field(None, alias="pm-s5")  # Expansion vs Focus
     pm_s6: Optional[str] = Field(None, alias="pm-s6")  # Biggest Strategic Failure
 
-    # Finance
-    finance_metrics_conflict: Optional[str] = Field(None, alias="finance-metrics-conflict")
-    finance_forecast_miss: Optional[str] = Field(None, alias="finance-forecast-miss")
-    finance_ai_usage: Optional[str] = Field(None, alias="finance-ai-usage")
-    finance_decision_speed: Optional[str] = Field(None, alias="finance-decision-speed")
-    finance_stakeholder_conflict: Optional[str] = Field(None, alias="finance-stakeholder-conflict")
-    finance_leadership_weight: Optional[str] = Field(None, alias="finance-leadership-weight")
+    # Finance - 0-3 years (Entry level)
+    fm_e1: Optional[str] = Field(None, alias="fm-e1")  # Revenue Forecast Variance
+    fm_e2: Optional[str] = Field(None, alias="fm-e2")  # Sales Team Wants Higher Targets
+    fm_e3: Optional[str] = Field(None, alias="fm-e3")  # Data Discrepancy
+    fm_e4: Optional[str] = Field(None, alias="fm-e4")  # Automating Reporting (AI Fluency)
+    fm_e5: Optional[str] = Field(None, alias="fm-e5")  # Budget Cuts Required
+    fm_e6: Optional[str] = Field(None, alias="fm-e6")  # Cross-functional Planning Meeting (Ownership)
+    
+    # Finance - 3-8 years (Mid level)
+    fm_m1: Optional[str] = Field(None, alias="fm-m1")  # Building a 3-Year Financial Model
+    fm_m2: Optional[str] = Field(None, alias="fm-m2")  # Partnering with Product Team
+    fm_m3: Optional[str] = Field(None, alias="fm-m3")  # Forecasting in Uncertainty
+    fm_m4: Optional[str] = Field(None, alias="fm-m4")  # Ensuring Data Reliability
+    fm_m5: Optional[str] = Field(None, alias="fm-m5")  # Leveraging AI in Finance (AI Fluency)
+    fm_m6: Optional[str] = Field(None, alias="fm-m6")  # Influencing Senior Leaders (Ownership)
+    
+    # Finance - 8+ years (Senior level)
+    fm_s1: Optional[str] = Field(None, alias="fm-s1")  # Capital Allocation Decision
+    fm_s2: Optional[str] = Field(None, alias="fm-s2")  # M&A Evaluation
+    fm_s3: Optional[str] = Field(None, alias="fm-s3")  # Leading Finance Transformation (AI Fluency)
+    fm_s4: Optional[str] = Field(None, alias="fm-s4")  # Managing Board-Level Reporting (Ownership)
+    fm_s5: Optional[str] = Field(None, alias="fm-s5")  # Enterprise Risk Exposure
+    fm_s6: Optional[str] = Field(None, alias="fm-s6")  # Building High-Performance Finance Team
 
     # Sales
     sales_pipeline_reality: Optional[str] = Field(None, alias="sales-pipeline-reality")

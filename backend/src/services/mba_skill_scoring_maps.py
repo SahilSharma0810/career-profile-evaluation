@@ -43,13 +43,29 @@ QUESTION_SKILL_MAP = {
     'pm-s5': ['strategic_thinking'],  # Expansion vs Focus
     'pm-s6': ['strategic_thinking'],  # Biggest Strategic Failure
 
-    # Finance Questions
-    'finance-metrics-conflict': ['business_partnering', 'data_integrity', 'leadership'],
-    'finance-forecast-miss': ['financial_modeling', 'data_integrity'],
-    'finance-decision-speed': ['data_integrity', 'strategic_thinking'],
-    'finance-ai-application': ['ai_literacy'],
-    'finance-leadership-weight': ['business_partnering', 'leadership'],
-    'finance-impact-type': ['financial_modeling', 'strategic_thinking'],
+    # Finance Questions - 0-3 years (Entry level)
+    'fm-e1': ['financial_modeling'],  # Revenue Forecast Variance
+    'fm-e2': ['business_partnering'],  # Sales Team Wants Higher Targets
+    'fm-e3': ['data_integrity'],  # Data Discrepancy
+    'fm-e4': ['ai_literacy'],  # Automating Reporting (AI Fluency)
+    'fm-e5': ['strategic_thinking'],  # Budget Cuts Required
+    'fm-e6': ['leadership', 'business_partnering'],  # Cross-functional Planning Meeting (Ownership)
+    
+    # Finance Questions - 3-8 years (Mid level)
+    'fm-m1': ['financial_modeling'],  # Building a 3-Year Financial Model
+    'fm-m2': ['business_partnering', 'strategic_thinking'],  # Partnering with Product Team
+    'fm-m3': ['strategic_thinking'],  # Forecasting in Uncertainty
+    'fm-m4': ['data_integrity'],  # Ensuring Data Reliability
+    'fm-m5': ['ai_literacy'],  # Leveraging AI in Finance (AI Fluency)
+    'fm-m6': ['leadership', 'business_partnering'],  # Influencing Senior Leaders (Ownership)
+    
+    # Finance Questions - 8+ years (Senior level)
+    'fm-s1': ['strategic_thinking'],  # Capital Allocation Decision
+    'fm-s2': ['financial_modeling', 'strategic_thinking'],  # M&A Evaluation
+    'fm-s3': ['leadership', 'ai_literacy'],  # Leading Finance Transformation (AI Fluency)
+    'fm-s4': ['leadership', 'strategic_thinking'],  # Managing Board-Level Reporting (Ownership)
+    'fm-s5': ['strategic_thinking'],  # Enterprise Risk Exposure
+    'fm-s6': ['leadership', 'business_partnering'],  # Building High-Performance Finance Team
 
     # Sales Questions
     'sales-pipeline-reality': ['revenue_operations', 'strategic_thinking'],
@@ -247,48 +263,136 @@ ANSWER_SCORES = {
         'feature-overbuilding': 1  # Tactical mistake
     },
 
-    # -------------------- FINANCE --------------------
-
-    'finance-metrics-conflict': {
-        'recheck-quietly': 2,  # Developing: Insecure, passive
-        'present-as-is': 3,  # Proficient: Honest but blunt
-        'scenarios': 5,  # Expert: Strategic communication
-        'align-narrative': 4   # Advanced: Influential partnership
+    # -------------------- FINANCE - 0-3 YEARS (ENTRY) --------------------
+    
+    'fm-e1': {  # Revenue Forecast Variance - Financial Modeling
+        'assume-sales-underperformed': 2,  # A=2
+        'adjust-forecast': 1,  # B=1
+        'revisit-assumptions': 2,  # C=2 (best answer, but entry level)
+        'blame-market': 2  # D=2
     },
-
-    'finance-forecast-miss': {
-        'conservative-buffers': 2,  # Developing: Band-aid solution
-        'granular-drivers': 4,  # Advanced: More detail
-        'scenario-modeling': 5,  # Expert: Strategic modeling
-        'predictive-models': 5   # Expert: Advanced analytics
+    
+    'fm-e2': {  # Sales Team Wants Higher Targets - Business Partnering
+        'agree-maintain-alignment': 1,  # A=1
+        'reject-proposal': 2,  # B=2
+        'share-model-scenarios': 2,  # C=2 (best answer)
+        'escalate-cfo': 2  # D=2
     },
-
-    'finance-decision-speed': {
-        'delay-decision': 1,  # Beginner: Risk-averse
-        'historical-averages': 2,  # Developing: Simplistic
-        'confidence-intervals': 5,  # Expert: Statistical rigor
-        'ai-anomalies': 5   # Expert: AI-powered analysis
+    
+    'fm-e3': {  # Data Discrepancy - Data Integrity
+        'ignore-differences': 1,  # A=1
+        'update-sheet': 1,  # B=1
+        'trace-reconcile': 2,  # C=2 (best answer)
+        'send-disclaimer': 2  # D=2
     },
-
-    'finance-ai-application': {
-        'faster-reporting': 2,  # Developing: Tactical efficiency
-        'anomaly-detection': 4,  # Advanced: Analytical value
-        'forecasting': 5,  # Expert: Strategic value
-        'prescriptive': 5   # Expert: Decision automation
+    
+    'fm-e4': {  # Automating Reporting - AI Literacy (AI Fluency)
+        'continue-manual': 1,  # A=1
+        'ask-intern': 2,  # B=2
+        'explore-automation': 2,  # C=2 (best answer)
+        'reduce-reporting': 1  # D=1
     },
-
-    'finance-leadership-weight': {
-        'leadership': 2,  # Developing: Passive role
-        'cross-functional': 3,  # Proficient: Collaborative
-        'shared': 4,  # Advanced: Partnership
-        'me': 5   # Expert: Full accountability
+    
+    'fm-e5': {  # Budget Cuts Required - Strategic Thinking
+        'cut-equally': 2,  # A=2
+        'cut-largest': 2,  # B=2
+        'analyze-roi-strategic': 5,  # C=5 (best answer)
+        'freeze-hiring': 2  # D=2
     },
-
-    'finance-impact-type': {
-        'cost-reduction': 3,  # Proficient: Defensive value
-        'revenue-optimization': 5,  # Expert: Revenue impact
-        'risk-mitigation': 3,  # Proficient: Defensive value
-        'strategic-pivot': 5   # Expert: Transformational
+    
+    'fm-e6': {  # Cross-functional Planning Meeting - Leadership & Business Partnering (Ownership)
+        'stay-silent': 1,  # A=1
+        'support-finance': 2,  # B=2
+        'facilitate-data-scenarios': 5,  # C=5 (best answer)
+        'defer-decision': 2  # D=2
+    },
+    
+    # -------------------- FINANCE - 3-8 YEARS (MID) --------------------
+    
+    'fm-m1': {  # Building a 3-Year Financial Model - Financial Modeling
+        'extend-growth': 3,  # A=3
+        'copy-competitor': 2,  # B=2
+        'driver-based-scenarios': 5,  # C=5 (best answer)
+        'optimistic-only': 1  # D=1
+    },
+    
+    'fm-m2': {  # Partnering with Product Team - Business Partnering & Strategic Thinking
+        'block-uncertainty': 2,  # A=2
+        'approve-no-analysis': 1,  # B=1
+        'build-business-case': 2,  # C=2 (best answer)
+        'delay-indefinitely': 1  # D=1
+    },
+    
+    'fm-m3': {  # Forecasting in Uncertainty - Strategic Financial Planning
+        'single-point': 3,  # A=3
+        'conservative-only': 2,  # B=2
+        'scenarios-sensitivity': 5,  # C=5 (best answer)
+        'wait-stability': 1  # D=1
+    },
+    
+    'fm-m4': {  # Ensuring Data Reliability - Data Integrity
+        'trust-submissions': 1,  # A=1
+        'audit-randomly': 2,  # B=2
+        'validation-reconciliation': 4,  # C=4 (best answer)
+        'centralize-manual': 2  # D=2
+    },
+    
+    'fm-m5': {  # Leveraging AI in Finance - AI Literacy (AI Fluency)
+        'avoid-ai-risk': 1,  # A=1
+        'use-without-validation': 1,  # B=1
+        'ai-validate-outputs': 2,  # C=2 (best answer)
+        'replace-analysts': 1  # D=1
+    },
+    
+    'fm-m6': {  # Influencing Senior Leaders - Leadership & Executive Business Partnering (Ownership)
+        'approve-expansion': 1,  # A=1
+        'oppose-no-data': 2,  # B=2
+        'present-scenarios-risk': 4,  # C=4 (best answer)
+        'stay-neutral': 1  # D=1
+    },
+    
+    # -------------------- FINANCE - 8+ YEARS (SENIOR) --------------------
+    
+    'fm-s1': {  # Capital Allocation Decision - Strategic Thinking
+        'even-distribution': 1,  # A=1
+        'prioritize-largest': 2,  # B=2
+        'allocate-roi-strategic': 4,  # C=4 (best answer)
+        'protect-historical': 1  # D=1
+    },
+    
+    'fm-s2': {  # M&A Evaluation - Financial Modeling & Strategic Thinking
+        'focus-revenue-synergy': 2,  # A=2
+        'look-ebitda': 2,  # B=2
+        'evaluate-comprehensive': 2,  # C=2 (best answer)
+        'follow-board': 1  # D=1
+    },
+    
+    'fm-s3': {  # Leading Finance Transformation - Leadership & AI Literacy (AI Fluency)
+        'add-headcount': 2,  # A=2
+        'maintain-status': 1,  # B=1
+        'drive-automation-governance': 2,  # C=2 (best answer)
+        'outsource-everything': 2  # D=2
+    },
+    
+    'fm-s4': {  # Managing Board-Level Reporting - Executive Leadership & Strategic Clarity (Ownership)
+        'defend-aggressively': 2,  # A=2
+        'revise-immediately': 2,  # B=2
+        'walk-through-transparent': 4,  # C=4 (best answer)
+        'defer-ceo': 1  # D=1
+    },
+    
+    'fm-s5': {  # Enterprise Risk Exposure - Strategic Thinking
+        'freeze-investments': 2,  # A=2
+        'ignore-long-term': 1,  # B=1
+        'rebalance-strategic': 4,  # C=4 (best answer)
+        'reduce-analytics': 1  # D=1
+    },
+    
+    'fm-s6': {  # Building High-Performance Finance Team - Leadership & Business Partnering
+        'focus-technical': 2,  # A=2
+        'hire-new-team': 1,  # B=1
+        'develop-storytelling': 2,  # C=2 (best answer)
+        'increase-compliance': 2  # D=2
     },
 
     # -------------------- SALES --------------------

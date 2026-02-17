@@ -409,275 +409,287 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
   'finance': {
     // 0-3 years experience (Entry level)
     '0-3': [
-    // Screen 3: Finance Questions 1-2
+      // Screen 1: FM-E1, FM-E2
       {
         id: 'finance-screen-1',
-        initialChatText: "Let's assess your analytical depth and stakeholder management.",
+        initialChatText: "Let's dive into your financial analysis and business partnering approach.",
         questions: [
           {
-            id: 'finance-model-contradiction',
-            question: 'Your financial model shows approximately 20% downside risk, contradicting leadership\'s intuition. What do you do?',
-            helperText: 'Tests executive communication maturity',
+            id: 'fm-e1',
+            question: 'You created a revenue forecast for the quarter. Actual revenue came 18% lower than projected. Your manager asks what happened. What is your first step?',
+            helperText: 'Tests financial modeling and analytical thinking',
             isScenario: true,
             options: [
-              { value: 'recheck-quietly', label: 'Re-check all assumptions quietly before presenting', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'present-as-is', label: 'Present model as-is with full transparency', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'scenarios', label: 'Build multiple upside/downside scenario models', icon: <Path size={24} weight="duotone" /> },
-              { value: 'align-narrative', label: 'Align narrative with leadership before presenting', icon: <Users size={24} weight="duotone" /> }
+              { value: 'assume-sales-underperformed', label: 'Assume sales underperformed and report that', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'adjust-forecast', label: 'Adjust next quarter\'s forecast without analysis', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'revisit-assumptions', label: 'Revisit assumptions, drivers, and variance breakdown (volume, price, churn)', icon: <Target size={24} weight="duotone" /> },
+              { value: 'blame-market', label: 'Blame market conditions broadly', icon: <XCircle size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'finance-forecast-miss',
-            question: 'Your quarterly forecast missed by 18% QoQ (Quarter over Quarter). Root cause is unclear. What changes do you make for next quarter?',
-            helperText: 'Tests analytical depth',
+            id: 'fm-e2',
+            question: 'Sales leadership pushes for higher targets, but your analysis shows limited capacity. How do you respond?',
+            helperText: 'Tests business partnering and influence',
             isScenario: true,
             options: [
-              { value: 'conservative-buffers', label: 'Add conservative buffers to all projections', icon: <Target size={24} weight="duotone" /> },
-              { value: 'granular-drivers', label: 'Break down into more granular business drivers', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'scenario-modeling', label: 'Build scenario + sensitivity modeling framework', icon: <Path size={24} weight="duotone" /> },
-              { value: 'predictive-models', label: 'Use predictive models with leading indicators', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'agree-maintain-alignment', label: 'Agree to maintain alignment', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'reject-proposal', label: 'Reject proposal immediately', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'share-model-scenarios', label: 'Share model assumptions and scenario analysis to align on realistic targets', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'escalate-cfo', label: 'Escalate to CFO', icon: <Users size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Finance Questions 3-4
+      // Screen 2: FM-E3, FM-E4
       {
         id: 'finance-screen-2',
-        initialChatText: "Let's explore your approach to data quality and AI application.",
+        initialChatText: "Now let's explore your data integrity and AI adoption.",
         questions: [
           {
-            id: 'finance-data-quality',
-            question: 'Key datasets are noisy and incomplete, but urgent business decisions cannot wait. What do you do?',
-            helperText: 'Tests real-world analytics maturity',
+            id: 'fm-e3',
+            question: 'You notice revenue numbers in dashboard don\'t match finance sheet. What do you do?',
+            helperText: 'Tests data integrity and rigor',
             isScenario: true,
             options: [
-              { value: 'delay-decision', label: 'Delay decision until data quality improves', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'historical-averages', label: 'Use historical averages as proxy', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'confidence-intervals', label: 'Build confidence intervals to show uncertainty', icon: <Target size={24} weight="duotone" /> },
-              { value: 'ai-anomalies', label: 'Use AI to flag anomalies & reduce bias', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'ignore-differences', label: 'Ignore minor differences', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'update-sheet', label: 'Update your sheet to match dashboard', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'trace-reconcile', label: 'Trace source of discrepancy and reconcile data before reporting', icon: <Target size={24} weight="duotone" /> },
+              { value: 'send-disclaimer', label: 'Send numbers with disclaimer', icon: <CheckCircle size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'finance-ai-value',
-            question: 'Where do you think AI would deliver actual business value today in your finance and analytics work?',
+            id: 'fm-e4',
+            question: 'You spend 6 hours weekly updating Excel reports manually. Best approach?',
+            helperText: 'Tests AI literacy and automation thinking',
+            isScenario: true,
             options: [
-              { value: 'faster-reporting', label: 'Faster reporting - automating report generation', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'anomaly-detection', label: 'Anomaly detection - flagging unusual patterns', icon: <Target size={24} weight="duotone" /> },
-              { value: 'forecasting', label: 'Forecasting and scenario simulations', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'prescriptive', label: 'Prescriptive recommendations - actionable insights', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'continue-manual', label: 'Continue manually to avoid risk', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'ask-intern', label: 'Ask intern to do it', icon: <Users size={24} weight="duotone" /> },
+              { value: 'explore-automation', label: 'Explore automation using Excel macros / BI tools / AI', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'reduce-reporting', label: 'Reduce reporting depth', icon: <ChartBar size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Finance Questions 5-6
+      // Screen 3: FM-E5, FM-E6
       {
         id: 'finance-screen-3',
-        initialChatText: "Finally, let's understand your accountability and business impact.",
+        initialChatText: "Finally, let's assess your strategic thinking and leadership.",
         questions: [
           {
-            id: 'finance-ownership',
-            question: 'In your current role, who do you think ultimately owns the outcome and business impact of your financial analysis?',
-            helperText: 'Tests trust and seniority',
+            id: 'fm-e5',
+            question: 'Company needs to cut 10% cost. What is your approach?',
+            helperText: 'Tests strategic thinking and cost analysis',
+            isScenario: true,
             options: [
-              { value: 'leadership', label: 'Leadership team makes the final decisions', icon: <Users size={24} weight="duotone" /> },
-              { value: 'cross-functional', label: 'Cross-functional team owns it collectively', icon: <Buildings size={24} weight="duotone" /> },
-              { value: 'shared', label: 'Me and leadership share ownership jointly', icon: <Target size={24} weight="duotone" /> },
-              { value: 'me', label: 'I own the outcome and accountability', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'cut-equally', label: 'Cut equally across departments', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'cut-largest', label: 'Cut largest cost center first', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'analyze-roi-strategic', label: 'Analyze ROI, strategic importance, and variable vs fixed cost', icon: <Target size={24} weight="duotone" /> },
+              { value: 'freeze-hiring', label: 'Freeze hiring only', icon: <Users size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'finance-impact',
-            question: 'Looking back at your career, which type of financial analysis do you think created the most business impact?',
-            helperText: 'Tests business orientation',
+            id: 'fm-e6',
+            question: 'In a business review, teams disagree on spending allocation.',
+            helperText: 'Tests leadership and business partnering',
+            isScenario: true,
             options: [
-              { value: 'cost-reduction', label: 'Cost reduction - identifying savings opportunities', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'revenue-optimization', label: 'Revenue optimization - pricing or growth strategies', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'risk-mitigation', label: 'Risk mitigation - preventing financial losses', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'strategic-pivot', label: 'Strategic pivot - changing business direction', icon: <Path size={24} weight="duotone" /> }
+              { value: 'stay-silent', label: 'Stay silent', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'support-finance', label: 'Support finance position only', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'facilitate-data-scenarios', label: 'Facilitate discussion using data-backed scenarios', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'defer-decision', label: 'Defer decision', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 3-8 years experience (Mid level) - using same questions for now
+    // 3-8 years experience (Mid level)
     '3-8': [
-      // Screen 3: Finance Questions 1-2
+      // Screen 1: FM-M1, FM-M2
       {
         id: 'finance-screen-1',
-        initialChatText: "Let's assess your analytical depth and stakeholder management.",
+        initialChatText: "Let's assess your financial modeling and business partnering depth.",
         questions: [
           {
-            id: 'finance-model-contradiction',
-            question: 'Your financial model shows approximately 20% downside risk, contradicting leadership\'s intuition. What do you do?',
-            helperText: 'Tests executive communication maturity',
+            id: 'fm-m1',
+            question: 'You\'re asked to build a 3-year projection for a new business line. Best approach?',
+            helperText: 'Tests financial modeling sophistication',
             isScenario: true,
             options: [
-              { value: 'recheck-quietly', label: 'Re-check all assumptions quietly before presenting', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'present-as-is', label: 'Present model as-is with full transparency', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'scenarios', label: 'Build multiple upside/downside scenario models', icon: <Path size={24} weight="duotone" /> },
-              { value: 'align-narrative', label: 'Align narrative with leadership before presenting', icon: <Users size={24} weight="duotone" /> }
+              { value: 'extend-growth', label: 'Extend current year numbers with growth %', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'copy-competitor', label: 'Copy competitor assumptions', icon: <Buildings size={24} weight="duotone" /> },
+              { value: 'driver-based-scenarios', label: 'Build driver-based model (acquisition, pricing, churn, cost structure) with scenarios', icon: <Target size={24} weight="duotone" /> },
+              { value: 'optimistic-only', label: 'Present optimistic case only', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'finance-forecast-miss',
-            question: 'Your quarterly forecast missed by 18% QoQ (Quarter over Quarter). Root cause is unclear. What changes do you make for next quarter?',
-            helperText: 'Tests analytical depth',
+            id: 'fm-m2',
+            question: 'Product wants to launch a feature with unclear monetization.',
+            helperText: 'Tests business partnering and strategic thinking',
             isScenario: true,
             options: [
-              { value: 'conservative-buffers', label: 'Add conservative buffers to all projections', icon: <Target size={24} weight="duotone" /> },
-              { value: 'granular-drivers', label: 'Break down into more granular business drivers', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'scenario-modeling', label: 'Build scenario + sensitivity modeling framework', icon: <Path size={24} weight="duotone" /> },
-              { value: 'predictive-models', label: 'Use predictive models with leading indicators', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'block-uncertainty', label: 'Block it due to uncertainty', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'approve-no-analysis', label: 'Approve without analysis', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'build-business-case', label: 'Build business case with cost assumptions, revenue scenarios, and risk analysis', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'delay-indefinitely', label: 'Delay decision indefinitely', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Finance Questions 3-4
+      // Screen 2: FM-M3, FM-M4
       {
         id: 'finance-screen-2',
-        initialChatText: "Let's explore your approach to data quality and AI application.",
+        initialChatText: "Now let's explore your forecasting approach and data governance.",
         questions: [
           {
-            id: 'finance-data-quality',
-            question: 'Key datasets are noisy and incomplete, but urgent business decisions cannot wait. What do you do?',
-            helperText: 'Tests real-world analytics maturity',
+            id: 'fm-m3',
+            question: 'Market conditions are volatile. How do you forecast?',
+            helperText: 'Tests strategic financial planning',
             isScenario: true,
             options: [
-              { value: 'delay-decision', label: 'Delay decision until data quality improves', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'historical-averages', label: 'Use historical averages as proxy', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'confidence-intervals', label: 'Build confidence intervals to show uncertainty', icon: <Target size={24} weight="duotone" /> },
-              { value: 'ai-anomalies', label: 'Use AI to flag anomalies & reduce bias', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'single-point', label: 'Single-point forecast', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'conservative-only', label: 'Conservative estimate only', icon: <Target size={24} weight="duotone" /> },
+              { value: 'scenarios-sensitivity', label: 'Base, upside, and downside scenarios with sensitivity analysis', icon: <Path size={24} weight="duotone" /> },
+              { value: 'wait-stability', label: 'Wait for stability', icon: <Clock size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'finance-ai-value',
-            question: 'Where do you think AI would deliver actual business value today in your finance and analytics work?',
+            id: 'fm-m4',
+            question: 'Multiple teams input financial data. Best governance approach?',
+            helperText: 'Tests data integrity and process design',
+            isScenario: true,
             options: [
-              { value: 'faster-reporting', label: 'Faster reporting - automating report generation', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'anomaly-detection', label: 'Anomaly detection - flagging unusual patterns', icon: <Target size={24} weight="duotone" /> },
-              { value: 'forecasting', label: 'Forecasting and scenario simulations', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'prescriptive', label: 'Prescriptive recommendations - actionable insights', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'trust-submissions', label: 'Trust team submissions', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'audit-randomly', label: 'Audit randomly', icon: <Target size={24} weight="duotone" /> },
+              { value: 'validation-reconciliation', label: 'Implement validation checks, reconciliation processes, and ownership clarity', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'centralize-manual', label: 'Centralize everything manually', icon: <Gear size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Finance Questions 5-6
+      // Screen 3: FM-M5, FM-M6
       {
         id: 'finance-screen-3',
-        initialChatText: "Finally, let's understand your accountability and business impact.",
+        initialChatText: "Finally, let's assess your AI adoption and executive influence.",
         questions: [
           {
-            id: 'finance-ownership',
-            question: 'In your current role, who do you think ultimately owns the outcome and business impact of your financial analysis?',
-            helperText: 'Tests trust and seniority',
+            id: 'fm-m5',
+            question: 'AI tools can automate variance analysis.',
+            helperText: 'Tests AI literacy and validation thinking',
+            isScenario: true,
             options: [
-              { value: 'leadership', label: 'Leadership team makes the final decisions', icon: <Users size={24} weight="duotone" /> },
-              { value: 'cross-functional', label: 'Cross-functional team owns it collectively', icon: <Buildings size={24} weight="duotone" /> },
-              { value: 'shared', label: 'Me and leadership share ownership jointly', icon: <Target size={24} weight="duotone" /> },
-              { value: 'me', label: 'I own the outcome and accountability', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'avoid-ai-risk', label: 'Avoid AI due to risk', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'use-without-validation', label: 'Use AI outputs without validation', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'ai-validate-outputs', label: 'Use AI to generate insights but validate outputs before decision-making', icon: <Target size={24} weight="duotone" /> },
+              { value: 'replace-analysts', label: 'Replace analysts fully', icon: <Users size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'finance-impact',
-            question: 'Looking back at your career, which type of financial analysis do you think created the most business impact?',
-            helperText: 'Tests business orientation',
+            id: 'fm-m6',
+            question: 'CEO wants aggressive expansion but cash runway is limited.',
+            helperText: 'Tests leadership and executive business partnering',
+            isScenario: true,
             options: [
-              { value: 'cost-reduction', label: 'Cost reduction - identifying savings opportunities', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'revenue-optimization', label: 'Revenue optimization - pricing or growth strategies', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'risk-mitigation', label: 'Risk mitigation - preventing financial losses', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'strategic-pivot', label: 'Strategic pivot - changing business direction', icon: <Path size={24} weight="duotone" /> }
+              { value: 'approve-expansion', label: 'Approve expansion', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'oppose-no-data', label: 'Oppose without data', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'present-scenarios-risk', label: 'Present scenario models, risk exposure, and capital strategy options', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'stay-neutral', label: 'Stay neutral', icon: <ChartBar size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 8+ years experience (Senior level) - using same questions for now
+    // 8+ years experience (Senior level)
     '8+': [
-      // Screen 3: Finance Questions 1-2
+      // Screen 1: FM-S1, FM-S2
       {
         id: 'finance-screen-1',
-        initialChatText: "Let's assess your analytical depth and stakeholder management.",
+        initialChatText: "Let's assess your strategic capital allocation and M&A thinking.",
         questions: [
           {
-            id: 'finance-model-contradiction',
-            question: 'Your financial model shows approximately 20% downside risk, contradicting leadership\'s intuition. What do you do?',
-            helperText: 'Tests executive communication maturity',
+            id: 'fm-s1',
+            question: 'You manage portfolio-level budgeting across divisions. What defines strong allocation?',
+            helperText: 'Tests strategic thinking and capital allocation',
             isScenario: true,
             options: [
-              { value: 'recheck-quietly', label: 'Re-check all assumptions quietly before presenting', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'present-as-is', label: 'Present model as-is with full transparency', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'scenarios', label: 'Build multiple upside/downside scenario models', icon: <Path size={24} weight="duotone" /> },
-              { value: 'align-narrative', label: 'Align narrative with leadership before presenting', icon: <Users size={24} weight="duotone" /> }
+              { value: 'even-distribution', label: 'Even distribution', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'prioritize-largest', label: 'Prioritize largest teams', icon: <Users size={24} weight="duotone" /> },
+              { value: 'allocate-roi-strategic', label: 'Allocate based on ROI, strategic positioning, and long-term value creation', icon: <Target size={24} weight="duotone" /> },
+              { value: 'protect-historical', label: 'Protect historical budgets', icon: <CheckCircle size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'finance-forecast-miss',
-            question: 'Your quarterly forecast missed by 18% QoQ (Quarter over Quarter). Root cause is unclear. What changes do you make for next quarter?',
-            helperText: 'Tests analytical depth',
+            id: 'fm-s2',
+            question: 'Company is considering acquiring a smaller competitor. What is your approach?',
+            helperText: 'Tests financial modeling and strategic thinking',
             isScenario: true,
             options: [
-              { value: 'conservative-buffers', label: 'Add conservative buffers to all projections', icon: <Target size={24} weight="duotone" /> },
-              { value: 'granular-drivers', label: 'Break down into more granular business drivers', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'scenario-modeling', label: 'Build scenario + sensitivity modeling framework', icon: <Path size={24} weight="duotone" /> },
-              { value: 'predictive-models', label: 'Use predictive models with leading indicators', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'focus-revenue-synergy', label: 'Focus only on revenue synergy', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'look-ebitda', label: 'Look only at EBITDA multiple', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'evaluate-comprehensive', label: 'Evaluate synergy, integration cost, cultural fit, risk, and long-term value', icon: <Target size={24} weight="duotone" /> },
+              { value: 'follow-board', label: 'Follow board preference', icon: <Users size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Finance Questions 3-4
+      // Screen 2: FM-S3, FM-S4
       {
         id: 'finance-screen-2',
-        initialChatText: "Let's explore your approach to data quality and AI application.",
+        initialChatText: "Now let's explore your finance transformation and board-level communication.",
         questions: [
           {
-            id: 'finance-data-quality',
-            question: 'Key datasets are noisy and incomplete, but urgent business decisions cannot wait. What do you do?',
-            helperText: 'Tests real-world analytics maturity',
+            id: 'fm-s3',
+            question: 'Finance processes are manual and fragmented.',
+            helperText: 'Tests leadership and AI literacy',
             isScenario: true,
             options: [
-              { value: 'delay-decision', label: 'Delay decision until data quality improves', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'historical-averages', label: 'Use historical averages as proxy', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'confidence-intervals', label: 'Build confidence intervals to show uncertainty', icon: <Target size={24} weight="duotone" /> },
-              { value: 'ai-anomalies', label: 'Use AI to flag anomalies & reduce bias', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'add-headcount', label: 'Add more headcount', icon: <Users size={24} weight="duotone" /> },
+              { value: 'maintain-status', label: 'Maintain status quo', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'drive-automation-governance', label: 'Drive automation roadmap, data governance, and KPI standardization', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'outsource-everything', label: 'Outsource everything', icon: <Buildings size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'finance-ai-value',
-            question: 'Where do you think AI would deliver actual business value today in your finance and analytics work?',
+            id: 'fm-s4',
+            question: 'Board challenges your forecast assumptions.',
+            helperText: 'Tests executive leadership and strategic clarity',
+            isScenario: true,
             options: [
-              { value: 'faster-reporting', label: 'Faster reporting - automating report generation', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'anomaly-detection', label: 'Anomaly detection - flagging unusual patterns', icon: <Target size={24} weight="duotone" /> },
-              { value: 'forecasting', label: 'Forecasting and scenario simulations', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'prescriptive', label: 'Prescriptive recommendations - actionable insights', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'defend-aggressively', label: 'Defend aggressively', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'revise-immediately', label: 'Revise immediately', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'walk-through-transparent', label: 'Walk through assumptions, sensitivities, and risk buffers transparently', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'defer-ceo', label: 'Defer to CEO', icon: <Users size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Finance Questions 5-6
+      // Screen 3: FM-S5, FM-S6
       {
         id: 'finance-screen-3',
-        initialChatText: "Finally, let's understand your accountability and business impact.",
+        initialChatText: "Finally, let's assess your enterprise risk management and team development.",
         questions: [
           {
-            id: 'finance-ownership',
-            question: 'In your current role, who do you think ultimately owns the outcome and business impact of your financial analysis?',
-            helperText: 'Tests trust and seniority',
+            id: 'fm-s5',
+            question: 'Macroeconomic downturn impacts demand projections. Best response?',
+            helperText: 'Tests strategic thinking and risk management',
+            isScenario: true,
             options: [
-              { value: 'leadership', label: 'Leadership team makes the final decisions', icon: <Users size={24} weight="duotone" /> },
-              { value: 'cross-functional', label: 'Cross-functional team owns it collectively', icon: <Buildings size={24} weight="duotone" /> },
-              { value: 'shared', label: 'Me and leadership share ownership jointly', icon: <Target size={24} weight="duotone" /> },
-              { value: 'me', label: 'I own the outcome and accountability', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'freeze-investments', label: 'Freeze all investments', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'ignore-long-term', label: 'Ignore long-term vision', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'rebalance-strategic', label: 'Rebalance cost structure, preserve cash, and protect strategic bets', icon: <Target size={24} weight="duotone" /> },
+              { value: 'reduce-analytics', label: 'Reduce analytics budget', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'finance-impact',
-            question: 'Looking back at your career, which type of financial analysis do you think created the most business impact?',
-            helperText: 'Tests business orientation',
+            id: 'fm-s6',
+            question: 'Finance team is strong technically but weak in business influence.',
+            helperText: 'Tests leadership and business partnering',
+            isScenario: true,
             options: [
-              { value: 'cost-reduction', label: 'Cost reduction - identifying savings opportunities', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'revenue-optimization', label: 'Revenue optimization - pricing or growth strategies', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'risk-mitigation', label: 'Risk mitigation - preventing financial losses', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'strategic-pivot', label: 'Strategic pivot - changing business direction', icon: <Path size={24} weight="duotone" /> }
+              { value: 'focus-technical', label: 'Focus only on technical upskilling', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'hire-new-team', label: 'Hire new team entirely', icon: <Users size={24} weight="duotone" /> },
+              { value: 'develop-storytelling', label: 'Develop storytelling, business acumen, and cross-functional exposure', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'increase-compliance', label: 'Increase compliance controls', icon: <CheckCircle size={24} weight="duotone" /> }
             ]
           }
         ]
