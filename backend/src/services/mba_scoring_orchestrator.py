@@ -224,21 +224,47 @@ def _score_finance_maturity(responses: Dict[str, Any]) -> int:
 
 
 def _score_sales_maturity(responses: Dict[str, Any]) -> int:
-    """Score Sales based on strategic depth"""
-    score = 50
-
-    if responses.get('sales-pipeline-reality') in ['analyze-winloss', 'tighten-qualification']:
-        score += 15
-
-    if responses.get('sales-ai-usage') in ['deal-risk', 'pricing-optimization']:
-        score += 10
-
-    if responses.get('sales-forecasting') in ['predictive-models', 'historical-patterns']:
-        score += 15
-
-    if responses.get('sales-ownership') in ['region-business', 'team-number']:
-        score += 10
-
+    """Score Sales based on strategic depth - experience-based questions"""
+    from .mba_skill_scoring_maps import ANSWER_SCORES
+    
+    score = 50  # Base score
+    experience = responses.get('experience', '')
+    
+    # Map experience to level
+    experience_level = _map_experience_to_level(experience)
+    
+    # Score based on experience level
+    if experience_level == '0-3':
+        # Entry level questions (SM-E1 to SM-E6)
+        # Exclude E4 (AI) and E5 (ownership) as they're used in separate calculations
+        questions = ['sm-e1', 'sm-e2', 'sm-e3', 'sm-e6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                # Convert 1-5 score to maturity points (max 10 points per question)
+                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
+    
+    elif experience_level == '3-8':
+        # Mid level questions (SM-M1 to SM-M6)
+        # Exclude M4 (AI) and M5 (ownership) as they're used in separate calculations
+        questions = ['sm-m1', 'sm-m2', 'sm-m3', 'sm-m6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
+    elif experience_level == '8+':
+        # Senior level questions (SM-S1 to SM-S6)
+        # Exclude S4 (AI) and S5 (ownership) as they're used in separate calculations
+        questions = ['sm-s1', 'sm-s2', 'sm-s3', 'sm-s6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
     return min(score, 100)
 
 
@@ -336,6 +362,26 @@ def _calculate_ai_fluency(role: str, responses: Dict[str, Any]) -> int:
                 # Convert 1-5 score to AI fluency points
                 # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
                 score += (answer_score - 1) * 10 + 10
+    elif role == 'sales':
+        # Sales uses experience-based AI questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct AI question based on experience
+        ai_question_map = {
+            '0-3': 'sm-e4',  # Repetitive Manual Reporting
+            '3-8': 'sm-m4',  # AI in Prospecting
+            '8+': 'sm-s4'    # AI-Driven Sales Transformation
+        }
+        
+        ai_key = ai_question_map.get(experience_level)
+        if ai_key:
+            ai_answer = responses.get(ai_key)
+            if ai_answer and ai_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ai_key].get(ai_answer, 0)
+                # Convert 1-5 score to AI fluency points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
+                score += (answer_score - 1) * 10 + 10
     else:
         # Other roles use existing logic
         ai_question_keys = {
@@ -411,6 +457,26 @@ def _calculate_ownership(role: str, responses: Dict[str, Any]) -> int:
             '0-3': 'fm-e6',  # Cross-functional Planning Meeting
             '3-8': 'fm-m6',  # Influencing Senior Leaders
             '8+': 'fm-s4'    # Managing Board-Level Reporting
+        }
+        
+        ownership_key = ownership_question_map.get(experience_level)
+        if ownership_key:
+            ownership_answer = responses.get(ownership_key)
+            if ownership_answer and ownership_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ownership_key].get(ownership_answer, 0)
+                # Convert 1-5 score to ownership points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
+                score += (answer_score - 1) * 10 + 10
+    elif role == 'sales':
+        # Sales uses experience-based ownership questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct ownership question based on experience
+        ownership_question_map = {
+            '0-3': 'sm-e5',  # Pricing Pushback
+            '3-8': 'sm-m5',  # Declining Win Rate
+            '8+': 'sm-s5'    # Board-Level Revenue Forecast
         }
         
         ownership_key = ownership_question_map.get(experience_level)
@@ -591,14 +657,53 @@ def _generate_readiness_tags(score: int, maturity: str, role: str, responses: Di
                 tags.append("Team Builder")
 
     elif role == 'sales':
-        if responses.get('sales-pipeline-reality') in ['tighten-qualification', 'analyze-winloss']:
-            tags.append("Process-Oriented")
-        if responses.get('sales-ai-usage') in ['deal-risk', 'pricing-optimization']:
-            tags.append("AI-Powered Sales")
-        if responses.get('sales-target-miss') in ['icp-mismatch', 'sales-motion']:
-            tags.append("Strategic Thinker")
-        if responses.get('sales-ownership') in ['region-business', 'team-number']:
-            tags.append("Leader")
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        if experience_level == '0-3':
+            # Entry level tags
+            if responses.get('sm-e1') == 'audit-standardize':
+                tags.append("Data-Driven")
+            if responses.get('sm-e2') == 'reengage-objections':
+                tags.append("Deal Execution Expert")
+            if responses.get('sm-e3') == 'analyze-funnel':
+                tags.append("Analytical Thinker")
+            if responses.get('sm-e4') == 'explore-automation':
+                tags.append("AI-Adopter")
+            if responses.get('sm-e5') == 'investigate-value':
+                tags.append("Strategic Thinker")
+            if responses.get('sm-e6') == 'align-data':
+                tags.append("Cross-Functional Leader")
+        
+        elif experience_level == '3-8':
+            # Mid level tags
+            if responses.get('sm-m1') == 'strengthen-forecasting':
+                tags.append("Revenue Operations Expert")
+            if responses.get('sm-m2') == 'map-stakeholders':
+                tags.append("Enterprise Deal Expert")
+            if responses.get('sm-m3') == 'define-icp':
+                tags.append("Strategic Sales Leader")
+            if responses.get('sm-m4') == 'use-ai-validate':
+                tags.append("AI-Capable")
+            if responses.get('sm-m5') == 'analyze-loss-reasons':
+                tags.append("Data-Driven")
+            if responses.get('sm-m6') == 'standardize-playbooks':
+                tags.append("Team Builder")
+        
+        elif experience_level == '8+':
+            # Senior level tags
+            if responses.get('sm-s1') == 'reevaluate-strategy':
+                tags.append("Revenue Strategist")
+            if responses.get('sm-s2') == 'allocate-cac-ltv':
+                tags.append("Portfolio Strategist")
+            if responses.get('sm-s3') == 'diversify-revenue':
+                tags.append("Risk Strategist")
+            if responses.get('sm-s4') == 'define-use-cases':
+                tags.append("AI Strategist")
+            if responses.get('sm-s5') == 'walk-through-assumptions':
+                tags.append("Executive Leader")
+            if responses.get('sm-s6') == 'clear-segmentation':
+                tags.append("Revenue Org Builder")
 
     elif role == 'marketing':
         if responses.get('marketing-conflicting-signals') in ['ltv-cac-cohort', 'revenue-attribution']:

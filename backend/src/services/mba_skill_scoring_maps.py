@@ -67,13 +67,29 @@ QUESTION_SKILL_MAP = {
     'fm-s5': ['strategic_thinking'],  # Enterprise Risk Exposure
     'fm-s6': ['leadership', 'business_partnering'],  # Building High-Performance Finance Team
 
-    # Sales Questions
-    'sales-pipeline-reality': ['revenue_operations', 'strategic_thinking'],
-    'sales-deal-stuck': ['deal_execution', 'strategic_thinking'],
-    'sales-ai-usage': ['ai_literacy'],
-    'sales-target-miss': ['sales_strategy', 'strategic_thinking'],
-    'sales-forecasting': ['revenue_operations', 'data_driven_pm'],  # Using data_driven as proxy
-    'sales-ownership': ['leadership', 'sales_strategy'],
+    # Sales Questions - 0-3 years (Entry level)
+    'sm-e1': ['revenue_operations'],  # CRM Data Is Inconsistent
+    'sm-e2': ['deal_execution'],  # A Large Deal Is Stuck
+    'sm-e3': ['sales_strategy'],  # Monthly Target Missed
+    'sm-e4': ['ai_literacy'],  # Repetitive Manual Reporting (AI Fluency)
+    'sm-e5': ['strategic_thinking'],  # Pricing Pushback (Ownership)
+    'sm-e6': ['leadership', 'revenue_operations'],  # Cross-Team Alignment
+    
+    # Sales Questions - 3-8 years (Mid level)
+    'sm-m1': ['revenue_operations'],  # Scaling Revenue Predictability
+    'sm-m2': ['deal_execution'],  # Complex Enterprise Deal
+    'sm-m3': ['sales_strategy'],  # Entering a New Segment
+    'sm-m4': ['ai_literacy'],  # AI in Prospecting (AI Fluency)
+    'sm-m5': ['strategic_thinking'],  # Declining Win Rate (Ownership)
+    'sm-m6': ['leadership'],  # Managing Sales Team Performance
+    
+    # Sales Questions - 8+ years (Senior level)
+    'sm-s1': ['strategic_thinking'],  # Long-Term Revenue Strategy
+    'sm-s2': ['revenue_operations', 'strategic_thinking'],  # Portfolio Revenue Allocation
+    'sm-s3': ['strategic_thinking'],  # Enterprise Risk Exposure
+    'sm-s4': ['ai_literacy'],  # AI-Driven Sales Transformation (AI Fluency)
+    'sm-s5': ['leadership', 'revenue_operations'],  # Board-Level Revenue Forecast (Ownership)
+    'sm-s6': ['leadership'],  # Building High-Performance Revenue Org
 
     # Marketing Questions
     'marketing-conflicting-signals': ['growth_marketing', 'marketing_analytics', 'strategic_thinking'],
@@ -395,48 +411,136 @@ ANSWER_SCORES = {
         'increase-compliance': 2  # D=2
     },
 
-    # -------------------- SALES --------------------
+    # -------------------- SALES - 0-3 YEARS (ENTRY) --------------------
 
-    'sales-pipeline-reality': {
-        'push-volume': 1,  # Beginner: Activity trap
-        'tighten-qualification': 5,  # Expert: Process thinking
-        'analyze-winloss': 5,  # Expert: Data-driven diagnosis
-        'change-pricing': 3   # Proficient: Quick fix attempt
+    'sm-e1': {  # CRM Data Is Inconsistent - Revenue Operations
+        'ignore-senior-reps': 1,  # A=1: Ignore it since senior reps manage their own pipeline
+        'close-randomly': 1,  # B=1: Close old deals randomly to clean dashboard
+        'audit-standardize': 4,  # C=4: Audit deal stages, validate data with reps, and standardize update process
+        'excel-separate': 2   # D=2: Create a new Excel sheet and track separately
     },
 
-    'sales-deal-stuck': {
-        'increase-followups': 1,  # Beginner: Activity trap
-        'escalate-internally': 3,  # Proficient: Relationship leverage
-        'analyze-blockers': 5,  # Expert: Pattern recognition
-        'change-structure': 5   # Expert: Creative restructuring
+    'sm-e2': {  # A Large Deal Is Stuck - Deal Execution
+        'wait-respond': 1,  # A=1: Wait for them to respond
+        'offer-discount': 2,  # B=2: Offer a discount immediately
+        'reengage-objections': 4,  # C=4: Re-engage by understanding objections and reframing value
+        'escalate-ceo': 2   # D=2: Escalate to CEO immediately
     },
 
-    'sales-ai-usage': {
-        'email-drafts': 2,  # Developing: Tactical speed
-        'call-summaries': 3,  # Proficient: Documentation help
-        'deal-risk': 5,  # Expert: Strategic prediction
-        'pricing-optimization': 5   # Expert: Revenue optimization
+    'sm-e3': {  # Monthly Target Missed - Sales Strategy
+        'push-harder': 2,  # A=2: Push team to work harder next month
+        'blame-marketing': 1,  # B=1: Blame marketing for weak leads
+        'analyze-funnel': 2,  # C=2: Analyze funnel metrics (lead quality, conversion rates, deal velocity)
+        'increase-discounts': 2   # D=2: Increase discounts across the board
     },
 
-    'sales-target-miss': {
-        'lead-quality': 1,  # Beginner: Blaming marketing
-        'icp-mismatch': 5,  # Expert: Strategic diagnosis
-        'sales-motion': 5,  # Expert: Process design thinking
-        'market-conditions': 2   # Developing: External blame
+    'sm-e4': {  # Repetitive Manual Reporting - AI Literacy (AI Fluency)
+        'continue-manual': 1,  # A=1: Continue manual reporting
+        'ask-admin': 2,  # B=2: Ask admin team to do it
+        'explore-automation': 2,  # C=2: Explore CRM automation, dashboards, or AI reporting tools
+        'reduce-detail': 1   # D=1: Reduce reporting detail
     },
 
-    'sales-forecasting': {
-        'rep-judgment': 2,  # Developing: Subjective
-        'weighted-pipeline': 3,  # Proficient: Basic process
-        'historical-patterns': 4,  # Advanced: Data-informed
-        'predictive-models': 5   # Expert: Advanced analytics
+    'sm-e5': {  # Pricing Pushback - Strategic Thinking (Ownership)
+        'offer-discount-immediate': 2,  # A=2: Offer immediate 20% discount
+        'assume-product': 1,  # B=1: Assume product isn't good enough
+        'investigate-value': 4,  # C=4: Investigate value perception, competitor positioning, and ICP fit
+        'reduce-base-pricing': 1   # D=1: Reduce base pricing for everyone
     },
 
-    'sales-ownership': {
-        'activities': 2,  # Developing: Junior accountability
-        'revenue-number': 4,  # Advanced: Individual contributor
-        'team-number': 5,  # Expert: Manager accountability
-        'region-business': 5   # Expert: Executive accountability
+    'sm-e6': {  # Cross-Team Alignment - Leadership & Revenue Ops
+        'stay-out': 1,  # A=1: Stay out of it
+        'support-sales': 2,  # B=2: Support Sales team only
+        'align-data': 2,  # C=2: Align both teams using data (MQL to SQL conversion, lead quality analysis)
+        'escalate-conflict': 2   # D=2: Escalate conflict
+    },
+
+    # -------------------- SALES - 3-8 YEARS (MID) --------------------
+
+    'sm-m1': {  # Scaling Revenue Predictability - Revenue Operations
+        'increase-targets': 2,  # A=2: Increase targets
+        'hire-more-reps': 2,  # B=2: Hire more reps immediately
+        'strengthen-forecasting': 4,  # C=4: Strengthen forecasting model, pipeline hygiene, and stage conversion analysis
+        'focus-quarter-end': 2   # D=2: Focus only on closing quarter-end deals
+    },
+
+    'sm-m2': {  # Complex Enterprise Deal - Deal Execution
+        'offer-max-discount': 2,  # A=2: Offer maximum discount to close quickly
+        'agree-all-customizations': 1,  # B=1: Agree to all customizations
+        'map-stakeholders': 4,  # C=4: Map stakeholders, decision process, value justification, and risk mitigation
+        'avoid-complex': 1   # D=1: Avoid complex deals
+    },
+
+    'sm-m3': {  # Entering a New Segment - Sales Strategy
+        'replicate-pitch': 1,  # A=1: Replicate same sales pitch
+        'increase-ad-budget': 2,  # B=2: Increase ad budget
+        'define-icp': 4,  # C=4: Define ICP, pricing adjustments, sales cycle expectations, and enablement needs
+        'assign-existing-reps': 2   # D=2: Assign existing reps without change
+    },
+
+    'sm-m4': {  # AI in Prospecting - AI Literacy (AI Fluency)
+        'avoid-ai-fear': 1,  # A=1: Avoid AI due to fear of errors
+        'fully-automate': 1,  # B=1: Fully automate without oversight
+        'use-ai-validate': 2,  # C=2: Use AI for prospect prioritization while validating outputs
+        'continue-manual-outreach': 2   # D=2: Continue manual outreach
+    },
+
+    'sm-m5': {  # Declining Win Rate - Strategic Thinking (Ownership)
+        'increase-discounts': 2,  # A=2: Increase discounts
+        'replace-reps': 2,  # B=2: Replace lowest-performing reps
+        'analyze-loss-reasons': 2,  # C=2: Analyze deal loss reasons, competitor trends, and sales messaging gaps
+        'ignore-temporarily': 1   # D=1: Ignore temporarily
+    },
+
+    'sm-m6': {  # Managing Sales Team Performance - Leadership
+        'focus-top-performers': 2,  # A=2: Focus only on top performers
+        'let-underperformers': 1,  # B=1: Let underperformers figure it out
+        'standardize-playbooks': 2,  # C=2: Standardize playbooks, coaching, and performance benchmarks
+        'reduce-targets': 1   # D=1: Reduce targets
+    },
+
+    # -------------------- SALES - 8+ YEARS (SENIOR) --------------------
+
+    'sm-s1': {  # Long-Term Revenue Strategy - Strategic Thinking
+        'increase-targets-aggressive': 2,  # A=2: Increase targets aggressively
+        'increase-discounting': 1,  # B=1: Increase discounting
+        'reevaluate-strategy': 4,  # C=4: Re-evaluate ICP, pricing strategy, channel mix, and product-market fit
+        'replace-team': 1   # D=1: Replace entire sales team
+    },
+
+    'sm-s2': {  # Portfolio Revenue Allocation - Revenue Operations & Strategy
+        'equal-distribution': 1,  # A=1: Equal distribution
+        'favor-dominant': 2,  # B=2: Favor historically dominant channel
+        'allocate-cac-ltv': 4,  # C=4: Allocate based on CAC, LTV, scalability, and margin impact
+        'follow-last-year': 1   # D=1: Follow last year's budget
+    },
+
+    'sm-s3': {  # Enterprise Risk Exposure - Strategic Thinking
+        'continue-focus': 2,  # A=2: Continue focus on them
+        'increase-dependency': 1,  # B=1: Increase dependency
+        'diversify-revenue': 4,  # C=4: Diversify revenue base and reduce concentration risk
+        'ignore-risk': 1   # D=1: Ignore risk
+    },
+
+    'sm-s4': {  # AI-Driven Sales Transformation - AI Literacy (AI Fluency)
+        'buy-expensive-tool': 2,  # A=2: Buy expensive AI tool immediately
+        'resist-transformation': 1,  # B=1: Resist transformation
+        'define-use-cases': 2,  # C=2: Define use cases (forecasting, scoring, automation), ROI, and phased rollout
+        'fully-automate-sales': 1   # D=1: Fully automate sales
+    },
+
+    'sm-s5': {  # Board-Level Revenue Forecast - Leadership & Revenue Ops (Ownership)
+        'defend-emotionally': 2,  # A=2: Defend emotionally
+        'revise-numbers': 2,  # B=2: Revise numbers quickly
+        'walk-through-assumptions': 2,  # C=2: Walk through assumptions, pipeline health, sensitivity scenarios
+        'defer-finance': 1   # D=1: Defer to finance
+    },
+
+    'sm-s6': {  # Building High-Performance Revenue Org - Leadership
+        'more-pressure': 2,  # A=2: More pressure on targets
+        'increase-commissions': 2,  # B=2: Increase commissions only
+        'clear-segmentation': 4,  # C=4: Clear segmentation, enablement structure, performance systems, and culture alignment
+        'reduce-reporting': 1   # D=1: Reduce reporting
     },
 
     # -------------------- MARKETING --------------------

@@ -62,13 +62,29 @@ class MBAQuizRequest(BaseModel):
     fm_s5: Optional[str] = Field(None, alias="fm-s5")  # Enterprise Risk Exposure
     fm_s6: Optional[str] = Field(None, alias="fm-s6")  # Building High-Performance Finance Team
 
-    # Sales
-    sales_pipeline_reality: Optional[str] = Field(None, alias="sales-pipeline-reality")
-    sales_deal_stuck: Optional[str] = Field(None, alias="sales-deal-stuck")
-    sales_ai_usage: Optional[str] = Field(None, alias="sales-ai-usage")
-    sales_target_miss: Optional[str] = Field(None, alias="sales-target-miss")
-    sales_forecasting: Optional[str] = Field(None, alias="sales-forecasting")
-    sales_ownership: Optional[str] = Field(None, alias="sales-ownership")
+    # Sales - 0-3 years (Entry level)
+    sm_e1: Optional[str] = Field(None, alias="sm-e1")  # CRM Data Is Inconsistent
+    sm_e2: Optional[str] = Field(None, alias="sm-e2")  # A Large Deal Is Stuck
+    sm_e3: Optional[str] = Field(None, alias="sm-e3")  # Monthly Target Missed
+    sm_e4: Optional[str] = Field(None, alias="sm-e4")  # Repetitive Manual Reporting (AI Fluency)
+    sm_e5: Optional[str] = Field(None, alias="sm-e5")  # Pricing Pushback (Ownership)
+    sm_e6: Optional[str] = Field(None, alias="sm-e6")  # Cross-Team Alignment
+    
+    # Sales - 3-8 years (Mid level)
+    sm_m1: Optional[str] = Field(None, alias="sm-m1")  # Scaling Revenue Predictability
+    sm_m2: Optional[str] = Field(None, alias="sm-m2")  # Complex Enterprise Deal
+    sm_m3: Optional[str] = Field(None, alias="sm-m3")  # Entering a New Segment
+    sm_m4: Optional[str] = Field(None, alias="sm-m4")  # AI in Prospecting (AI Fluency)
+    sm_m5: Optional[str] = Field(None, alias="sm-m5")  # Declining Win Rate (Ownership)
+    sm_m6: Optional[str] = Field(None, alias="sm-m6")  # Managing Sales Team Performance
+    
+    # Sales - 8+ years (Senior level)
+    sm_s1: Optional[str] = Field(None, alias="sm-s1")  # Long-Term Revenue Strategy
+    sm_s2: Optional[str] = Field(None, alias="sm-s2")  # Portfolio Revenue Allocation
+    sm_s3: Optional[str] = Field(None, alias="sm-s3")  # Enterprise Risk Exposure
+    sm_s4: Optional[str] = Field(None, alias="sm-s4")  # AI-Driven Sales Transformation (AI Fluency)
+    sm_s5: Optional[str] = Field(None, alias="sm-s5")  # Board-Level Revenue Forecast (Ownership)
+    sm_s6: Optional[str] = Field(None, alias="sm-s6")  # Building High-Performance Revenue Org
 
     # Marketing
     marketing_conflicting_signals: Optional[str] = Field(None, alias="marketing-conflicting-signals")

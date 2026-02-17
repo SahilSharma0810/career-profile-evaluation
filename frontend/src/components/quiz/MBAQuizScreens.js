@@ -702,278 +702,287 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
   'sales': {
     // 0-3 years experience (Entry level)
     '0-3': [
-    // Screen 3: Sales Questions 1-2
+      // Screen 1: Sales Questions 1-2
       {
         id: 'sales-screen-1',
         initialChatText: "Let's dive into your sales approach and revenue thinking.",
         questions: [
           {
-            id: 'sales-pipeline-reality',
-            question: 'Your sales pipeline coverage is 3× the target, but your close rate is dropping. What would be your first move?',
-            helperText: 'Tests revenue maturity',
+            id: 'sm-e1',
+            question: 'You notice that many deals in the CRM are marked as "Negotiation" for over 45 days with no activity logged. What is your best first step?',
+            helperText: 'Tests revenue operations',
             isScenario: true,
             options: [
-              { value: 'push-volume', label: 'Push more volume into the pipeline', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'tighten-qualification', label: 'Tighten lead qualification criteria', icon: <Target size={24} weight="duotone" /> },
-              { value: 'analyze-winloss', label: 'Analyze win/loss patterns deeply', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'change-pricing', label: 'Change pricing or packaging structure', icon: <CurrencyInr size={24} weight="duotone" /> }
+              { value: 'ignore-senior-reps', label: 'Ignore it since senior reps manage their own pipeline', icon: <Users size={24} weight="duotone" /> },
+              { value: 'close-randomly', label: 'Close old deals randomly to clean dashboard', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'audit-standardize', label: 'Audit deal stages, validate data with reps, and standardize update process', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'excel-separate', label: 'Create a new Excel sheet and track separately', icon: <PresentationChart size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'sales-deal-stuck',
-            question: 'A large deal is stuck at final approval stage for weeks. What do you do?',
-            helperText: 'Tests pattern recognition',
+            id: 'sm-e2',
+            question: 'A high-value prospect has gone silent after pricing discussion. What do you do?',
+            helperText: 'Tests deal execution',
             isScenario: true,
             options: [
-              { value: 'increase-followups', label: 'Increase follow-up frequency with the prospect', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'escalate-internally', label: 'Escalate to senior leadership internally', icon: <Users size={24} weight="duotone" /> },
-              { value: 'analyze-blockers', label: 'Analyze historical blockers from similar deals', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'change-structure', label: 'Restructure the deal terms', icon: <Path size={24} weight="duotone" /> }
+              { value: 'wait-respond', label: 'Wait for them to respond', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'offer-discount', label: 'Offer a discount immediately', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'reengage-objections', label: 'Re-engage by understanding objections and reframing value', icon: <Target size={24} weight="duotone" /> },
+              { value: 'escalate-ceo', label: 'Escalate to CEO immediately', icon: <Users size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Sales Questions 3-4
+      // Screen 2: Sales Questions 3-4
       {
         id: 'sales-screen-2',
-        initialChatText: "Now let's explore your AI application and systems thinking.",
+        initialChatText: "Now let's explore your sales strategy and AI application.",
         questions: [
           {
-            id: 'sales-ai-usage',
-            question: 'Where do you think AI actually helps and adds value in your sales work today?',
-            helperText: 'Tests senior AI usage',
+            id: 'sm-e3',
+            question: 'Your team missed monthly revenue target by 12%. What is the most structured response?',
+            helperText: 'Tests sales strategy',
+            isScenario: true,
             options: [
-              { value: 'email-drafts', label: 'Email drafts - writing prospect communications', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'call-summaries', label: 'Call summaries - documenting conversations', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'deal-risk', label: 'Deal risk prediction - forecasting win probability', icon: <Target size={24} weight="duotone" /> },
-              { value: 'pricing-optimization', label: 'Pricing and discount optimization strategies', icon: <CurrencyInr size={24} weight="duotone" /> }
+              { value: 'push-harder', label: 'Push team to work harder next month', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'blame-marketing', label: 'Blame marketing for weak leads', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'analyze-funnel', label: 'Analyze funnel metrics (lead quality, conversion rates, deal velocity)', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'increase-discounts', label: 'Increase discounts across the board', icon: <CurrencyInr size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'sales-target-miss',
-            question: 'You missed your sales quota despite strong activity metrics (calls, meetings, demos). What do you think is the root cause?',
-            helperText: 'Tests systems thinking',
+            id: 'sm-e4',
+            question: 'You spend hours preparing weekly pipeline reports manually. Best approach?',
+            helperText: 'Tests AI literacy',
             isScenario: true,
             options: [
-              { value: 'lead-quality', label: 'Poor lead quality from marketing', icon: <Target size={24} weight="duotone" /> },
-              { value: 'icp-mismatch', label: 'ICP (Ideal Customer Profile) mismatch', icon: <Users size={24} weight="duotone" /> },
-              { value: 'sales-motion', label: 'Flawed sales motion or process design', icon: <Path size={24} weight="duotone" /> },
-              { value: 'market-conditions', label: 'External market conditions', icon: <ChartLineUp size={24} weight="duotone" /> }
+              { value: 'continue-manual', label: 'Continue manual reporting', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'ask-admin', label: 'Ask admin team to do it', icon: <Users size={24} weight="duotone" /> },
+              { value: 'explore-automation', label: 'Explore CRM automation, dashboards, or AI reporting tools', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'reduce-detail', label: 'Reduce reporting detail', icon: <PresentationChart size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Sales Questions 5-6
+      // Screen 3: Sales Questions 5-6
       {
         id: 'sales-screen-3',
-        initialChatText: "Finally, let's assess your data maturity and ownership level.",
+        initialChatText: "Finally, let's assess your strategic thinking and leadership.",
         questions: [
           {
-            id: 'sales-forecasting',
-            question: 'What do you think your sales forecast is primarily based on today?',
-            helperText: 'Tests data maturity',
+            id: 'sm-e5',
+            question: 'Multiple prospects say pricing is too high.',
+            helperText: 'Tests strategic thinking',
+            isScenario: true,
             options: [
-              { value: 'rep-judgment', label: 'Rep judgment - sales team intuition and estimates', icon: <Users size={24} weight="duotone" /> },
-              { value: 'weighted-pipeline', label: 'Weighted pipeline - stage-based probability scoring', icon: <Target size={24} weight="duotone" /> },
-              { value: 'historical-patterns', label: 'Historical patterns - past performance trends', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'predictive-models', label: 'Predictive models - AI-driven forecasting', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'offer-discount-immediate', label: 'Offer immediate 20% discount', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'assume-product', label: 'Assume product isn\'t good enough', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'investigate-value', label: 'Investigate value perception, competitor positioning, and ICP fit', icon: <Target size={24} weight="duotone" /> },
+              { value: 'reduce-base-pricing', label: 'Reduce base pricing for everyone', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'sales-ownership',
-            question: 'In your current sales role, what do you think you own and are accountable for?',
-            helperText: 'Tests seniority',
+            id: 'sm-e6',
+            question: 'Marketing blames Sales for low conversion. Sales blames Marketing for poor leads.',
+            helperText: 'Tests leadership & revenue ops',
+            isScenario: true,
             options: [
-              { value: 'activities', label: 'Activities - calls, meetings, and demos', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'revenue-number', label: 'Revenue number - personal quota achievement', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'team-number', label: 'Team number - managing team quota', icon: <Users size={24} weight="duotone" /> },
-              { value: 'region-business', label: 'Region or business unit performance', icon: <Buildings size={24} weight="duotone" /> }
+              { value: 'stay-out', label: 'Stay out of it', icon: <Users size={24} weight="duotone" /> },
+              { value: 'support-sales', label: 'Support Sales team only', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'align-data', label: 'Align both teams using data (MQL to SQL conversion, lead quality analysis)', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'escalate-conflict', label: 'Escalate conflict', icon: <XCircle size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 3-8 years experience (Mid level) - using same questions for now
+    // 3-8 years experience (Mid level)
     '3-8': [
-      // Screen 3: Sales Questions 1-2
+      // Screen 1: Sales Questions 1-2
       {
         id: 'sales-screen-1',
         initialChatText: "Let's dive into your sales approach and revenue thinking.",
         questions: [
           {
-            id: 'sales-pipeline-reality',
-            question: 'Your sales pipeline coverage is 3× the target, but your close rate is dropping. What would be your first move?',
-            helperText: 'Tests revenue maturity',
+            id: 'sm-m1',
+            question: 'Your revenue is growing but unpredictable month to month. What is your approach?',
+            helperText: 'Tests revenue operations',
             isScenario: true,
             options: [
-              { value: 'push-volume', label: 'Push more volume into the pipeline', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'tighten-qualification', label: 'Tighten lead qualification criteria', icon: <Target size={24} weight="duotone" /> },
-              { value: 'analyze-winloss', label: 'Analyze win/loss patterns deeply', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'change-pricing', label: 'Change pricing or packaging structure', icon: <CurrencyInr size={24} weight="duotone" /> }
+              { value: 'increase-targets', label: 'Increase targets', icon: <Target size={24} weight="duotone" /> },
+              { value: 'hire-more-reps', label: 'Hire more reps immediately', icon: <Users size={24} weight="duotone" /> },
+              { value: 'strengthen-forecasting', label: 'Strengthen forecasting model, pipeline hygiene, and stage conversion analysis', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'focus-quarter-end', label: 'Focus only on closing quarter-end deals', icon: <Clock size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'sales-deal-stuck',
-            question: 'A large deal is stuck at final approval stage for weeks. What do you do?',
-            helperText: 'Tests pattern recognition',
+            id: 'sm-m2',
+            question: 'An enterprise client requires custom pricing, integrations, and long procurement cycles. What do you prioritize?',
+            helperText: 'Tests deal execution',
             isScenario: true,
             options: [
-              { value: 'increase-followups', label: 'Increase follow-up frequency with the prospect', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'escalate-internally', label: 'Escalate to senior leadership internally', icon: <Users size={24} weight="duotone" /> },
-              { value: 'analyze-blockers', label: 'Analyze historical blockers from similar deals', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'change-structure', label: 'Restructure the deal terms', icon: <Path size={24} weight="duotone" /> }
+              { value: 'offer-max-discount', label: 'Offer maximum discount to close quickly', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'agree-all-customizations', label: 'Agree to all customizations', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'map-stakeholders', label: 'Map stakeholders, decision process, value justification, and risk mitigation', icon: <Target size={24} weight="duotone" /> },
+              { value: 'avoid-complex', label: 'Avoid complex deals', icon: <XCircle size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Sales Questions 3-4
+      // Screen 2: Sales Questions 3-4
       {
         id: 'sales-screen-2',
-        initialChatText: "Now let's explore your AI application and systems thinking.",
+        initialChatText: "Now let's explore your sales strategy and AI application.",
         questions: [
           {
-            id: 'sales-ai-usage',
-            question: 'Where do you think AI actually helps and adds value in your sales work today?',
-            helperText: 'Tests senior AI usage',
+            id: 'sm-m3',
+            question: 'Leadership wants to expand into mid-market from SMB. What is your first step?',
+            helperText: 'Tests sales strategy',
+            isScenario: true,
             options: [
-              { value: 'email-drafts', label: 'Email drafts - writing prospect communications', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'call-summaries', label: 'Call summaries - documenting conversations', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'deal-risk', label: 'Deal risk prediction - forecasting win probability', icon: <Target size={24} weight="duotone" /> },
-              { value: 'pricing-optimization', label: 'Pricing and discount optimization strategies', icon: <CurrencyInr size={24} weight="duotone" /> }
+              { value: 'replicate-pitch', label: 'Replicate same sales pitch', icon: <PresentationChart size={24} weight="duotone" /> },
+              { value: 'increase-ad-budget', label: 'Increase ad budget', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'define-icp', label: 'Define ICP, pricing adjustments, sales cycle expectations, and enablement needs', icon: <Target size={24} weight="duotone" /> },
+              { value: 'assign-existing-reps', label: 'Assign existing reps without change', icon: <Users size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'sales-target-miss',
-            question: 'You missed your sales quota despite strong activity metrics (calls, meetings, demos). What do you think is the root cause?',
-            helperText: 'Tests systems thinking',
+            id: 'sm-m4',
+            question: 'AI tools can automate lead scoring and outreach personalization.',
+            helperText: 'Tests AI literacy',
             isScenario: true,
             options: [
-              { value: 'lead-quality', label: 'Poor lead quality from marketing', icon: <Target size={24} weight="duotone" /> },
-              { value: 'icp-mismatch', label: 'ICP (Ideal Customer Profile) mismatch', icon: <Users size={24} weight="duotone" /> },
-              { value: 'sales-motion', label: 'Flawed sales motion or process design', icon: <Path size={24} weight="duotone" /> },
-              { value: 'market-conditions', label: 'External market conditions', icon: <ChartLineUp size={24} weight="duotone" /> }
+              { value: 'avoid-ai-fear', label: 'Avoid AI due to fear of errors', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'fully-automate', label: 'Fully automate without oversight', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'use-ai-validate', label: 'Use AI for prospect prioritization while validating outputs', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'continue-manual-outreach', label: 'Continue manual outreach', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Sales Questions 5-6
+      // Screen 3: Sales Questions 5-6
       {
         id: 'sales-screen-3',
-        initialChatText: "Finally, let's assess your data maturity and ownership level.",
+        initialChatText: "Finally, let's assess your strategic thinking and leadership.",
         questions: [
           {
-            id: 'sales-forecasting',
-            question: 'What do you think your sales forecast is primarily based on today?',
-            helperText: 'Tests data maturity',
+            id: 'sm-m5',
+            question: 'Win rate dropped from 30% to 18%. Your structured action?',
+            helperText: 'Tests strategic thinking',
+            isScenario: true,
             options: [
-              { value: 'rep-judgment', label: 'Rep judgment - sales team intuition and estimates', icon: <Users size={24} weight="duotone" /> },
-              { value: 'weighted-pipeline', label: 'Weighted pipeline - stage-based probability scoring', icon: <Target size={24} weight="duotone" /> },
-              { value: 'historical-patterns', label: 'Historical patterns - past performance trends', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'predictive-models', label: 'Predictive models - AI-driven forecasting', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'increase-discounts', label: 'Increase discounts', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'replace-reps', label: 'Replace lowest-performing reps', icon: <Users size={24} weight="duotone" /> },
+              { value: 'analyze-loss-reasons', label: 'Analyze deal loss reasons, competitor trends, and sales messaging gaps', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'ignore-temporarily', label: 'Ignore temporarily', icon: <Clock size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'sales-ownership',
-            question: 'In your current sales role, what do you think you own and are accountable for?',
-            helperText: 'Tests seniority',
+            id: 'sm-m6',
+            question: 'Two high performers dominate revenue; rest lag significantly.',
+            helperText: 'Tests leadership',
+            isScenario: true,
             options: [
-              { value: 'activities', label: 'Activities - calls, meetings, and demos', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'revenue-number', label: 'Revenue number - personal quota achievement', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'team-number', label: 'Team number - managing team quota', icon: <Users size={24} weight="duotone" /> },
-              { value: 'region-business', label: 'Region or business unit performance', icon: <Buildings size={24} weight="duotone" /> }
+              { value: 'focus-top-performers', label: 'Focus only on top performers', icon: <Trophy size={24} weight="duotone" /> },
+              { value: 'let-underperformers', label: 'Let underperformers figure it out', icon: <Users size={24} weight="duotone" /> },
+              { value: 'standardize-playbooks', label: 'Standardize playbooks, coaching, and performance benchmarks', icon: <Target size={24} weight="duotone" /> },
+              { value: 'reduce-targets', label: 'Reduce targets', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 8+ years experience (Senior level) - using same questions for now
+    // 8+ years experience (Senior level)
     '8+': [
-      // Screen 3: Sales Questions 1-2
+      // Screen 1: Sales Questions 1-2
       {
         id: 'sales-screen-1',
         initialChatText: "Let's dive into your sales approach and revenue thinking.",
         questions: [
           {
-            id: 'sales-pipeline-reality',
-            question: 'Your sales pipeline coverage is 3× the target, but your close rate is dropping. What would be your first move?',
-            helperText: 'Tests revenue maturity',
+            id: 'sm-s1',
+            question: 'Company growth has plateaued. What defines a strong revenue strategy?',
+            helperText: 'Tests strategic thinking',
             isScenario: true,
             options: [
-              { value: 'push-volume', label: 'Push more volume into the pipeline', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'tighten-qualification', label: 'Tighten lead qualification criteria', icon: <Target size={24} weight="duotone" /> },
-              { value: 'analyze-winloss', label: 'Analyze win/loss patterns deeply', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'change-pricing', label: 'Change pricing or packaging structure', icon: <CurrencyInr size={24} weight="duotone" /> }
+              { value: 'increase-targets-aggressive', label: 'Increase targets aggressively', icon: <Target size={24} weight="duotone" /> },
+              { value: 'increase-discounting', label: 'Increase discounting', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'reevaluate-strategy', label: 'Re-evaluate ICP, pricing strategy, channel mix, and product-market fit', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'replace-team', label: 'Replace entire sales team', icon: <Users size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'sales-deal-stuck',
-            question: 'A large deal is stuck at final approval stage for weeks. What do you do?',
-            helperText: 'Tests pattern recognition',
+            id: 'sm-s2',
+            question: 'You oversee multiple revenue channels (Inbound, Outbound, Partnerships). How do you allocate budget?',
+            helperText: 'Tests revenue operations & strategy',
             isScenario: true,
             options: [
-              { value: 'increase-followups', label: 'Increase follow-up frequency with the prospect', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'escalate-internally', label: 'Escalate to senior leadership internally', icon: <Users size={24} weight="duotone" /> },
-              { value: 'analyze-blockers', label: 'Analyze historical blockers from similar deals', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'change-structure', label: 'Restructure the deal terms', icon: <Path size={24} weight="duotone" /> }
+              { value: 'equal-distribution', label: 'Equal distribution', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'favor-dominant', label: 'Favor historically dominant channel', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'allocate-cac-ltv', label: 'Allocate based on CAC, LTV, scalability, and margin impact', icon: <Target size={24} weight="duotone" /> },
+              { value: 'follow-last-year', label: 'Follow last year\'s budget', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Sales Questions 3-4
+      // Screen 2: Sales Questions 3-4
       {
         id: 'sales-screen-2',
-        initialChatText: "Now let's explore your AI application and systems thinking.",
+        initialChatText: "Now let's explore your strategic thinking and AI application.",
         questions: [
           {
-            id: 'sales-ai-usage',
-            question: 'Where do you think AI actually helps and adds value in your sales work today?',
-            helperText: 'Tests senior AI usage',
+            id: 'sm-s3',
+            question: '40% of revenue comes from 3 large clients.',
+            helperText: 'Tests strategic thinking',
+            isScenario: true,
             options: [
-              { value: 'email-drafts', label: 'Email drafts - writing prospect communications', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'call-summaries', label: 'Call summaries - documenting conversations', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'deal-risk', label: 'Deal risk prediction - forecasting win probability', icon: <Target size={24} weight="duotone" /> },
-              { value: 'pricing-optimization', label: 'Pricing and discount optimization strategies', icon: <CurrencyInr size={24} weight="duotone" /> }
+              { value: 'continue-focus', label: 'Continue focus on them', icon: <Target size={24} weight="duotone" /> },
+              { value: 'increase-dependency', label: 'Increase dependency', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'diversify-revenue', label: 'Diversify revenue base and reduce concentration risk', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'ignore-risk', label: 'Ignore risk', icon: <XCircle size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'sales-target-miss',
-            question: 'You missed your sales quota despite strong activity metrics (calls, meetings, demos). What do you think is the root cause?',
-            helperText: 'Tests systems thinking',
+            id: 'sm-s4',
+            question: 'Board wants AI-driven revenue transformation.',
+            helperText: 'Tests AI literacy',
             isScenario: true,
             options: [
-              { value: 'lead-quality', label: 'Poor lead quality from marketing', icon: <Target size={24} weight="duotone" /> },
-              { value: 'icp-mismatch', label: 'ICP (Ideal Customer Profile) mismatch', icon: <Users size={24} weight="duotone" /> },
-              { value: 'sales-motion', label: 'Flawed sales motion or process design', icon: <Path size={24} weight="duotone" /> },
-              { value: 'market-conditions', label: 'External market conditions', icon: <ChartLineUp size={24} weight="duotone" /> }
+              { value: 'buy-expensive-tool', label: 'Buy expensive AI tool immediately', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'resist-transformation', label: 'Resist transformation', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'define-use-cases', label: 'Define use cases (forecasting, scoring, automation), ROI, and phased rollout', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'fully-automate-sales', label: 'Fully automate sales', icon: <Gear size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Sales Questions 5-6
+      // Screen 3: Sales Questions 5-6
       {
         id: 'sales-screen-3',
-        initialChatText: "Finally, let's assess your data maturity and ownership level.",
+        initialChatText: "Finally, let's assess your leadership and organizational thinking.",
         questions: [
           {
-            id: 'sales-forecasting',
-            question: 'What do you think your sales forecast is primarily based on today?',
-            helperText: 'Tests data maturity',
+            id: 'sm-s5',
+            question: 'Board challenges your forecast accuracy.',
+            helperText: 'Tests leadership & revenue ops',
+            isScenario: true,
             options: [
-              { value: 'rep-judgment', label: 'Rep judgment - sales team intuition and estimates', icon: <Users size={24} weight="duotone" /> },
-              { value: 'weighted-pipeline', label: 'Weighted pipeline - stage-based probability scoring', icon: <Target size={24} weight="duotone" /> },
-              { value: 'historical-patterns', label: 'Historical patterns - past performance trends', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'predictive-models', label: 'Predictive models - AI-driven forecasting', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'defend-emotionally', label: 'Defend emotionally', icon: <Users size={24} weight="duotone" /> },
+              { value: 'revise-numbers', label: 'Revise numbers quickly', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'walk-through-assumptions', label: 'Walk through assumptions, pipeline health, sensitivity scenarios', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'defer-finance', label: 'Defer to finance', icon: <PresentationChart size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'sales-ownership',
-            question: 'In your current sales role, what do you think you own and are accountable for?',
-            helperText: 'Tests seniority',
+            id: 'sm-s6',
+            question: 'Revenue team grew from 20 to 80 members. What is critical?',
+            helperText: 'Tests leadership',
+            isScenario: true,
             options: [
-              { value: 'activities', label: 'Activities - calls, meetings, and demos', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'revenue-number', label: 'Revenue number - personal quota achievement', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'team-number', label: 'Team number - managing team quota', icon: <Users size={24} weight="duotone" /> },
-              { value: 'region-business', label: 'Region or business unit performance', icon: <Buildings size={24} weight="duotone" /> }
+              { value: 'more-pressure', label: 'More pressure on targets', icon: <Target size={24} weight="duotone" /> },
+              { value: 'increase-commissions', label: 'Increase commissions only', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'clear-segmentation', label: 'Clear segmentation, enablement structure, performance systems, and culture alignment', icon: <Users size={24} weight="duotone" /> },
+              { value: 'reduce-reporting', label: 'Reduce reporting', icon: <PresentationChart size={24} weight="duotone" /> }
             ]
           }
         ]
