@@ -490,5 +490,87 @@
       "primaryColor": "#F8F8F8",
       "backgroundColor": "#F8F8F8"
     }
+  ],
+  "tech": [
+    {
+      "name": "Google",
+      "industry": "Technology",
+      "domain": "google.com",
+      "logoUrl": "https://cdn.brandfetch.io/id6O2oGzv-/theme/light/logo.svg?c=1bxr7gxzdn6mzgbjzpm3kmpnhxbr1yfVuU6",
+      "primaryColor": "#4285F4",
+      "backgroundColor": "#4285F4"
+    },
+    {
+      "name": "Microsoft",
+      "industry": "Technology",
+      "domain": "microsoft.com",
+      "logoUrl": "https://cdn.brandfetch.io/microsoft.com/w/400",
+      "primaryColor": "#F8F8F8",
+      "backgroundColor": "#F8F8F8"
+    },
+    {
+      "name": "Amazon",
+      "industry": "E-commerce & Cloud",
+      "domain": "amazon.com",
+      "logoUrl": "https://cdn.brandfetch.io/idawOgYOsG/theme/light/logo.svg?c=1bxr7gxzdn6mzgbjzpm3kmpnhxbr1yfVuU6",
+      "primaryColor": "#FF9900",
+      "backgroundColor": "#FF9900"
+    },
+    {
+      "name": "Meta",
+      "industry": "Social Media & AI",
+      "domain": "meta.com",
+      "logoUrl": "https://cdn.brandfetch.io/idWvz5T3V7/w/400/h/400/theme/dark/icon.png?c=1bxr7gxzdn6mzgbjzpm3kmpnhxbr1yfVuU6",
+      "primaryColor": "#1C1E21",
+      "backgroundColor": "#1C1E21"
+    },
+    {
+      "name": "Netflix",
+      "industry": "Entertainment & Streaming",
+      "domain": "netflix.com",
+      "logoUrl": "https://cdn.brandfetch.io/ideQwN5lBE/theme/light/logo.svg?c=1bxr7gxzdn6mzgbjzpm3kmpnhxbr1yfVuU6",
+      "primaryColor": "#E50914",
+      "backgroundColor": "#E50914"
+    },
+    {
+      "name": "Stripe",
+      "industry": "Payments & Fintech",
+      "domain": "stripe.com",
+      "logoUrl": "https://cdn.brandfetch.io/idxAg10C0L/theme/light/logo.svg?c=1bxr7gxzdn6mzgbjzpm3kmpnhxbr1yfVuU6",
+      "primaryColor": "#635BFF",
+      "backgroundColor": "#635BFF"
+    },
+    {
+      "name": "GitHub",
+      "industry": "Developer Tools",
+      "domain": "github.com",
+      "logoUrl": "https://cdn.brandfetch.io/github.com/w/400",
+      "primaryColor": "#F8F8F8",
+      "backgroundColor": "#F8F8F8"
+    },
+    {
+      "name": "Atlassian",
+      "industry": "Enterprise Software",
+      "domain": "atlassian.com",
+      "logoUrl": "https://cdn.brandfetch.io/idlQIwGMOK/theme/light/logo.svg?c=1bxr7gxzdn6mzgbjzpm3kmpnhxbr1yfVuU6",
+      "primaryColor": "#172b4d",
+      "backgroundColor": "#172b4d"
+    },
+    {
+      "name": "Postman",
+      "industry": "API Platform",
+      "domain": "postman.com",
+      "logoUrl": "https://cdn.brandfetch.io/postman.com/w/400",
+      "primaryColor": "#F8F8F8",
+      "backgroundColor": "#F8F8F8"
+    },
+    {
+      "name": "Vercel",
+      "industry": "Web Development",
+      "domain": "vercel.com",
+      "logoUrl": "https://cdn.brandfetch.io/vercel.com/w/400",
+      "primaryColor": "#000000",
+      "backgroundColor": "#000000"
+    }
   ]
 }

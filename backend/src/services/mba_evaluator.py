@@ -38,7 +38,8 @@ def _get_role_display_name(role: str) -> str:
         'sales': 'Sales Professional',
         'marketing': 'Marketing Professional',
         'operations': 'Operations Professional',
-        'founder': 'Founder/Entrepreneur'
+        'founder': 'Founder/Entrepreneur',
+        'tech': 'Tech Engineer'
     }
     return role_mapping.get(role, role)
 

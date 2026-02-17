@@ -1426,7 +1426,8 @@ const getRoleDisplayLabel = (roleKey) => {
     'sales': 'Sales / Growth / Revenue',
     'marketing': 'Marketing / Brand / Performance Marketing',
     'operations': 'Operations / Supply Chain / Strategy',
-    'founder': 'Startup Founder / Entrepreneur'
+    'founder': 'Startup Founder / Entrepreneur',
+    'tech': 'Engineering / DevOps / Tech Roles'
   };
   return roleMapping[roleKey] || roleKey;
 };
@@ -2322,7 +2323,8 @@ const MBAResultsPage = () => {
                         results.meta?.role === 'sales' ? 'sales' :
                           results.meta?.role === 'marketing' ? 'marketing' :
                             results.meta?.role === 'operations' ? 'operations' :
-                              'your role';
+                              results.meta?.role === 'tech' ? 'engineering' :
+                                'your role';
 
                     // Use OpenAI personalized description or create role-specific fallback
                     let description = openAITool?.personalized_use_case || tool.use_case;
