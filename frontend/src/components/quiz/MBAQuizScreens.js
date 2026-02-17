@@ -1575,278 +1575,287 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
   'founder': {
     // 0-3 years experience (Entry level)
     '0-3': [
-    // Screen 3: Founder Questions 1-2
+      // Screen 1: SF-E1, SF-E2
       {
         id: 'founder-screen-1',
         initialChatText: "Let's explore your founder mindset and strategic approach.",
         questions: [
           {
-            id: 'founder-mvp-failure',
-            question: 'Users are signing up for your product but not returning. What do you do?',
-            helperText: 'Tests founder maturity',
+            id: 'sf-e1',
+            question: 'You have an idea for an AI-powered career guidance app. You\'re excited and ready to build the MVP. What should you do first?',
+            helperText: 'Tests venture building',
             isScenario: true,
             options: [
-              { value: 'add-features', label: 'Add more features to increase value', icon: <Code size={24} weight="duotone" /> },
-              { value: 'increase-marketing', label: 'Increase marketing to get more users', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'reframe-problem', label: 'Reframe the problem you\'re solving', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'pivot-icp', label: 'Pivot to a different ICP (Ideal Customer Profile)', icon: <Users size={24} weight="duotone" /> }
+              { value: 'hire-developers', label: 'Hire developers immediately', icon: <Code size={24} weight="duotone" /> },
+              { value: 'build-full-product', label: 'Build a full-featured product before launch', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'validate-demand', label: 'Validate demand through user interviews, landing pages, or small experiments', icon: <Users size={24} weight="duotone" /> },
+              { value: 'raise-funding', label: 'Raise funding first', icon: <CurrencyInr size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'founder-ai-dependency',
-            question: 'Which team dependency do you think AI would help you remove or reduce first in your startup?',
-            helperText: 'Tests AI strategy',
+            id: 'sf-e2',
+            question: 'After launch, you get sign-ups but very few users are willing to pay. What is your most structured response?',
+            helperText: 'Tests business fundamentals',
+            isScenario: true,
             options: [
-              { value: 'engineering', label: 'Engineering - building and shipping product', icon: <Code size={24} weight="duotone" /> },
-              { value: 'marketing', label: 'Marketing - customer acquisition and content', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'ops', label: 'Operations - workflows and processes', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'decision-making', label: 'Decision-making - strategic choices and insights', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'reduce-pricing', label: 'Reduce pricing drastically', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'assume-no-value', label: 'Assume users don\'t value the product', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'reassess-value-prop', label: 'Reassess value proposition, ICP fit, and pricing strategy', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'increase-marketing', label: 'Increase marketing spend', icon: <MegaphoneSimple size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Founder Questions 3-4
+      // Screen 2: SF-E3, SF-E4
       {
         id: 'founder-screen-2',
-        initialChatText: "Now let's assess your business maturity and resource prioritization.",
+        initialChatText: "Now let's assess your strategic thinking and resourcefulness.",
         questions: [
           {
-            id: 'founder-scale-pain',
-            question: 'Your revenue is growing but profit margins are falling. What do you think is the root cause?',
-            helperText: 'Tests business maturity',
+            id: 'sf-e3',
+            question: 'You have only 4 months of runway and a small team. What is your priority?',
+            helperText: 'Tests strategic thinking',
             isScenario: true,
             options: [
-              { value: 'pricing', label: 'Pricing strategy is too aggressive', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'ops-inefficiency', label: 'Operations inefficiency at scale', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'customer-mix', label: 'Customer mix - acquiring wrong segment', icon: <Users size={24} weight="duotone" /> },
-              { value: 'data-blindness', label: 'Data blindness - not tracking unit economics', icon: <Database size={24} weight="duotone" /> }
+              { value: 'build-multiple-features', label: 'Build multiple features', icon: <Code size={24} weight="duotone" /> },
+              { value: 'hire-aggressively', label: 'Hire aggressively', icon: <Users size={24} weight="duotone" /> },
+              { value: 'focus-core-value', label: 'Focus on core value proposition and revenue-generating experiments', icon: <Target size={24} weight="duotone" /> },
+              { value: 'rebrand-product', label: 'Rebrand product', icon: <MegaphoneSimple size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'founder-resource-constraint',
-            question: 'You have only 3 people and 6 months of runway. What would you optimize for?',
-            helperText: 'Tests founder intent',
+            id: 'sf-e4',
+            question: 'As founder, you handle sales, product, and hiring simultaneously. How do you operate effectively?',
+            helperText: 'Tests founder resourcefulness',
             isScenario: true,
             options: [
-              { value: 'growth', label: 'Growth - maximize user acquisition', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'profitability', label: 'Profitability - reach break-even', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'learning', label: 'Learning - validate key assumptions', icon: <Lightbulb size={24} weight="duotone" /> },
-              { value: 'fundraising', label: 'Fundraising - build deck and meet investors', icon: <Rocket size={24} weight="duotone" /> }
+              { value: 'react-to-tasks', label: 'React to tasks as they come', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'work-longer-hours', label: 'Work longer hours only', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'prioritize-high-impact', label: 'Prioritize high-impact tasks aligned with survival and growth', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'delegate-everything', label: 'Delegate everything without oversight', icon: <Users size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Founder Questions 5-6
+      // Screen 3: SF-E5, SF-E6
       {
         id: 'founder-screen-3',
-        initialChatText: "Finally, let's understand your AI strategy and self-awareness.",
+        initialChatText: "Finally, let's understand your AI strategy and leadership approach.",
         questions: [
           {
-            id: 'founder-ai-advantage',
-            question: 'How do you think AI helps your startup the most right now?',
-            helperText: 'Tests strategic thinking',
+            id: 'sf-e5',
+            question: 'AI tools can automate content, analytics, and support. How do you approach this?',
+            helperText: 'Tests AI literacy',
+            isScenario: true,
             options: [
-              { value: 'speed', label: 'Speed - shipping faster and iterating quickly', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'cost', label: 'Cost - reducing burn rate and expenses', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'insight', label: 'Insight - better data-driven decisions', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'differentiation', label: 'Differentiation - unique competitive advantage', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'avoid-ai-tools', label: 'Avoid AI tools', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'fully-rely-ai', label: 'Fully rely on AI without oversight', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'use-ai-validate', label: 'Use AI to improve productivity while validating outputs', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'replace-team', label: 'Replace team members', icon: <Users size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'founder-failure-pattern',
-            question: 'When you reflect on your journey, what do you think was your biggest mistake so far?',
-            helperText: 'Tests reflection depth',
+            id: 'sf-e6',
+            question: 'You and your co-founder disagree on product direction. What do you do?',
+            helperText: 'Tests leadership',
+            isScenario: true,
             options: [
-              { value: 'hiring-early', label: 'Hiring too early - scaling team prematurely', icon: <Users size={24} weight="duotone" /> },
-              { value: 'scaling-fast', label: 'Scaling too fast - overextending operations', icon: <Rocket size={24} weight="duotone" /> },
-              { value: 'weak-data', label: 'Weak data - not tracking metrics early enough', icon: <Database size={24} weight="duotone" /> },
-              { value: 'poor-problem', label: 'Poor problem selection - solving wrong problem', icon: <Target size={24} weight="duotone" /> }
+              { value: 'push-decision', label: 'Push your decision forcefully', icon: <Target size={24} weight="duotone" /> },
+              { value: 'avoid-discussion', label: 'Avoid discussion', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'align-vision-validate', label: 'Align on long-term vision and validate direction through user data', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'escalate-investors', label: 'Escalate to investors', icon: <CurrencyInr size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 3-8 years experience (Mid level) - using same questions for now
+    // 3-8 years experience (Mid level)
     '3-8': [
-      // Screen 3: Founder Questions 1-2
+      // Screen 1: SF-M1, SF-M2
       {
         id: 'founder-screen-1',
-        initialChatText: "Let's explore your founder mindset and strategic approach.",
+        initialChatText: "Let's explore your scaling strategy and business fundamentals.",
         questions: [
           {
-            id: 'founder-mvp-failure',
-            question: 'Users are signing up for your product but not returning. What do you do?',
-            helperText: 'Tests founder maturity',
+            id: 'sf-m1',
+            question: 'You\'ve achieved early traction and consistent revenue growth. What is your next focus?',
+            helperText: 'Tests venture building',
             isScenario: true,
             options: [
-              { value: 'add-features', label: 'Add more features to increase value', icon: <Code size={24} weight="duotone" /> },
-              { value: 'increase-marketing', label: 'Increase marketing to get more users', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'reframe-problem', label: 'Reframe the problem you\'re solving', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'pivot-icp', label: 'Pivot to a different ICP (Ideal Customer Profile)', icon: <Users size={24} weight="duotone" /> }
+              { value: 'launch-multiple-products', label: 'Launch multiple new products', icon: <Code size={24} weight="duotone" /> },
+              { value: 'raise-funds', label: 'Raise funds immediately', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'strengthen-distribution', label: 'Strengthen distribution channels, unit economics, and retention', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'increase-burn-rate', label: 'Increase burn rate', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'founder-ai-dependency',
-            question: 'Which team dependency do you think AI would help you remove or reduce first in your startup?',
-            helperText: 'Tests AI strategy',
+            id: 'sf-m2',
+            question: 'CAC is rising and margins are shrinking. Your approach?',
+            helperText: 'Tests business fundamentals',
+            isScenario: true,
             options: [
-              { value: 'engineering', label: 'Engineering - building and shipping product', icon: <Code size={24} weight="duotone" /> },
-              { value: 'marketing', label: 'Marketing - customer acquisition and content', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'ops', label: 'Operations - workflows and processes', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'decision-making', label: 'Decision-making - strategic choices and insights', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'increase-prices', label: 'Increase prices immediately', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'cut-marketing', label: 'Cut marketing entirely', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'optimize-channels-ltv', label: 'Optimize acquisition channels, LTV, pricing, and cost structure', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'ignore-temporarily', label: 'Ignore temporarily', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Founder Questions 3-4
+      // Screen 2: SF-M3, SF-M4
       {
         id: 'founder-screen-2',
-        initialChatText: "Now let's assess your business maturity and resource prioritization.",
+        initialChatText: "Now let's assess your leadership and strategic thinking.",
         questions: [
           {
-            id: 'founder-scale-pain',
-            question: 'Your revenue is growing but profit margins are falling. What do you think is the root cause?',
-            helperText: 'Tests business maturity',
+            id: 'sf-m3',
+            question: 'You\'re hiring your first senior leaders. What matters most?',
+            helperText: 'Tests leadership',
             isScenario: true,
             options: [
-              { value: 'pricing', label: 'Pricing strategy is too aggressive', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'ops-inefficiency', label: 'Operations inefficiency at scale', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'customer-mix', label: 'Customer mix - acquiring wrong segment', icon: <Users size={24} weight="duotone" /> },
-              { value: 'data-blindness', label: 'Data blindness - not tracking unit economics', icon: <Database size={24} weight="duotone" /> }
+              { value: 'hire-fast', label: 'Hire fast', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'hire-friends', label: 'Hire friends', icon: <Users size={24} weight="duotone" /> },
+              { value: 'hire-culture-alignment', label: 'Hire for cultural alignment, ownership mindset, and complementary strengths', icon: <Target size={24} weight="duotone" /> },
+              { value: 'outsource-leadership', label: 'Outsource leadership', icon: <Buildings size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'founder-resource-constraint',
-            question: 'You have only 3 people and 6 months of runway. What would you optimize for?',
-            helperText: 'Tests founder intent',
+            id: 'sf-m4',
+            question: 'A well-funded competitor enters your market. How do you respond?',
+            helperText: 'Tests strategic thinking',
             isScenario: true,
             options: [
-              { value: 'growth', label: 'Growth - maximize user acquisition', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'profitability', label: 'Profitability - reach break-even', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'learning', label: 'Learning - validate key assumptions', icon: <Lightbulb size={24} weight="duotone" /> },
-              { value: 'fundraising', label: 'Fundraising - build deck and meet investors', icon: <Rocket size={24} weight="duotone" /> }
+              { value: 'panic-pivot', label: 'Panic and pivot immediately', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'slash-pricing', label: 'Slash pricing', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'double-down-differentiation', label: 'Double down on differentiation and strengthen customer relationships', icon: <Trophy size={24} weight="duotone" /> },
+              { value: 'reduce-marketing', label: 'Reduce marketing', icon: <MegaphoneSimple size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Founder Questions 5-6
+      // Screen 3: SF-M5, SF-M6
       {
         id: 'founder-screen-3',
-        initialChatText: "Finally, let's understand your AI strategy and self-awareness.",
+        initialChatText: "Finally, let's understand your AI strategy and investor management.",
         questions: [
           {
-            id: 'founder-ai-advantage',
-            question: 'How do you think AI helps your startup the most right now?',
-            helperText: 'Tests strategic thinking',
+            id: 'sf-m5',
+            question: 'You want to scale customer acquisition without scaling team proportionally. How do you approach this?',
+            helperText: 'Tests AI literacy',
+            isScenario: true,
             options: [
-              { value: 'speed', label: 'Speed - shipping faster and iterating quickly', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'cost', label: 'Cost - reducing burn rate and expenses', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'insight', label: 'Insight - better data-driven decisions', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'differentiation', label: 'Differentiation - unique competitive advantage', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'increase-headcount', label: 'Increase headcount', icon: <Users size={24} weight="duotone" /> },
+              { value: 'avoid-automation', label: 'Avoid automation risk', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'use-ai-efficiency', label: 'Use AI for personalization, analytics, and operational efficiency', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'cut-support', label: 'Cut support', icon: <Gear size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'founder-failure-pattern',
-            question: 'When you reflect on your journey, what do you think was your biggest mistake so far?',
-            helperText: 'Tests reflection depth',
+            id: 'sf-m6',
+            question: 'Investors push for aggressive expansion; data shows moderate sustainable growth. What do you do?',
+            helperText: 'Tests leadership & strategic thinking',
+            isScenario: true,
             options: [
-              { value: 'hiring-early', label: 'Hiring too early - scaling team prematurely', icon: <Users size={24} weight="duotone" /> },
-              { value: 'scaling-fast', label: 'Scaling too fast - overextending operations', icon: <Rocket size={24} weight="duotone" /> },
-              { value: 'weak-data', label: 'Weak data - not tracking metrics early enough', icon: <Database size={24} weight="duotone" /> },
-              { value: 'poor-problem', label: 'Poor problem selection - solving wrong problem', icon: <Target size={24} weight="duotone" /> }
+              { value: 'follow-investor-pressure', label: 'Follow investor pressure blindly', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'ignore-investors', label: 'Ignore investors', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'present-data-backed-plan', label: 'Present data-backed plan balancing growth and sustainability', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'delay-communication', label: 'Delay communication', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 8+ years experience (Senior level) - using same questions for now
+    // 8+ years experience (Senior level)
     '8+': [
-      // Screen 3: Founder Questions 1-2
+      // Screen 1: SF-S1, SF-S2
       {
         id: 'founder-screen-1',
-        initialChatText: "Let's explore your founder mindset and strategic approach.",
+        initialChatText: "Let's explore your portfolio strategy and long-term vision.",
         questions: [
           {
-            id: 'founder-mvp-failure',
-            question: 'Users are signing up for your product but not returning. What do you do?',
-            helperText: 'Tests founder maturity',
+            id: 'sf-s1',
+            question: 'Your company now has 3 product lines. How do you allocate focus?',
+            helperText: 'Tests venture building & strategic thinking',
             isScenario: true,
             options: [
-              { value: 'add-features', label: 'Add more features to increase value', icon: <Code size={24} weight="duotone" /> },
-              { value: 'increase-marketing', label: 'Increase marketing to get more users', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'reframe-problem', label: 'Reframe the problem you\'re solving', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'pivot-icp', label: 'Pivot to a different ICP (Ideal Customer Profile)', icon: <Users size={24} weight="duotone" /> }
+              { value: 'equal-attention', label: 'Equal attention to all', icon: <Target size={24} weight="duotone" /> },
+              { value: 'focus-legacy', label: 'Focus only on legacy product', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'allocate-strategic-fit', label: 'Allocate based on strategic fit, margin profile, and long-term potential', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'expand-randomly', label: 'Expand randomly', icon: <Rocket size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'founder-ai-dependency',
-            question: 'Which team dependency do you think AI would help you remove or reduce first in your startup?',
-            helperText: 'Tests AI strategy',
+            id: 'sf-s2',
+            question: 'Market dynamics are shifting due to AI disruption. How do you respond?',
+            helperText: 'Tests strategic thinking',
+            isScenario: true,
             options: [
-              { value: 'engineering', label: 'Engineering - building and shipping product', icon: <Code size={24} weight="duotone" /> },
-              { value: 'marketing', label: 'Marketing - customer acquisition and content', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'ops', label: 'Operations - workflows and processes', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'decision-making', label: 'Decision-making - strategic choices and insights', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'maintain-roadmap', label: 'Maintain existing roadmap', icon: <Path size={24} weight="duotone" /> },
+              { value: 'react-impulsively', label: 'React impulsively', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'reevaluate-positioning', label: 'Re-evaluate positioning, capabilities, and 3–5 year vision', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'cut-costs-only', label: 'Cut costs only', icon: <CurrencyInr size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Founder Questions 3-4
+      // Screen 2: SF-S3, SF-S4
       {
         id: 'founder-screen-2',
-        initialChatText: "Now let's assess your business maturity and resource prioritization.",
+        initialChatText: "Now let's assess your organizational leadership and capital allocation.",
         questions: [
           {
-            id: 'founder-scale-pain',
-            question: 'Your revenue is growing but profit margins are falling. What do you think is the root cause?',
-            helperText: 'Tests business maturity',
+            id: 'sf-s3',
+            question: 'Company has grown from 20 to 250 employees. What becomes critical?',
+            helperText: 'Tests leadership',
             isScenario: true,
             options: [
-              { value: 'pricing', label: 'Pricing strategy is too aggressive', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'ops-inefficiency', label: 'Operations inefficiency at scale', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'customer-mix', label: 'Customer mix - acquiring wrong segment', icon: <Users size={24} weight="duotone" /> },
-              { value: 'data-blindness', label: 'Data blindness - not tracking unit economics', icon: <Database size={24} weight="duotone" /> }
+              { value: 'founder-all-decisions', label: 'Founder makes all decisions', icon: <Users size={24} weight="duotone" /> },
+              { value: 'minimal-process', label: 'Minimal process', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'define-org-structure', label: 'Define org structure, accountability systems, and leadership layers', icon: <Buildings size={24} weight="duotone" /> },
+              { value: 'increase-meetings', label: 'Increase meetings', icon: <Clock size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'founder-resource-constraint',
-            question: 'You have only 3 people and 6 months of runway. What would you optimize for?',
-            helperText: 'Tests founder intent',
+            id: 'sf-s4',
+            question: 'You\'ve raised significant funding. Best approach?',
+            helperText: 'Tests business fundamentals',
             isScenario: true,
             options: [
-              { value: 'growth', label: 'Growth - maximize user acquisition', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'profitability', label: 'Profitability - reach break-even', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'learning', label: 'Learning - validate key assumptions', icon: <Lightbulb size={24} weight="duotone" /> },
-              { value: 'fundraising', label: 'Fundraising - build deck and meet investors', icon: <Rocket size={24} weight="duotone" /> }
+              { value: 'spend-aggressively', label: 'Spend aggressively for growth', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'protect-capital', label: 'Protect capital without investing', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'allocate-capital-roi', label: 'Allocate capital based on ROI, strategic advantage, and risk profile', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'increase-burn-outpace', label: 'Increase burn to outpace competitors', icon: <Rocket size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Founder Questions 5-6
+      // Screen 3: SF-S5, SF-S6
       {
         id: 'founder-screen-3',
-        initialChatText: "Finally, let's understand your AI strategy and self-awareness.",
+        initialChatText: "Finally, let's understand your AI transformation strategy and culture building.",
         questions: [
           {
-            id: 'founder-ai-advantage',
-            question: 'How do you think AI helps your startup the most right now?',
-            helperText: 'Tests strategic thinking',
+            id: 'sf-s5',
+            question: 'Board wants company-wide AI transformation. How do you approach this?',
+            helperText: 'Tests AI literacy',
+            isScenario: true,
             options: [
-              { value: 'speed', label: 'Speed - shipping faster and iterating quickly', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'cost', label: 'Cost - reducing burn rate and expenses', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'insight', label: 'Insight - better data-driven decisions', icon: <Brain size={24} weight="duotone" /> },
-              { value: 'differentiation', label: 'Differentiation - unique competitive advantage', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'implement-ai-everywhere', label: 'Implement AI everywhere immediately', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'resist-change', label: 'Resist change', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'identify-pilot-scale', label: 'Identify high-impact areas, pilot initiatives, measure ROI, then scale', icon: <Target size={24} weight="duotone" /> },
+              { value: 'replace-teams', label: 'Replace teams entirely', icon: <Users size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'founder-failure-pattern',
-            question: 'When you reflect on your journey, what do you think was your biggest mistake so far?',
-            helperText: 'Tests reflection depth',
+            id: 'sf-s6',
+            question: 'As organization scales, culture begins to fragment. What is your priority?',
+            helperText: 'Tests leadership',
+            isScenario: true,
             options: [
-              { value: 'hiring-early', label: 'Hiring too early - scaling team prematurely', icon: <Users size={24} weight="duotone" /> },
-              { value: 'scaling-fast', label: 'Scaling too fast - overextending operations', icon: <Rocket size={24} weight="duotone" /> },
-              { value: 'weak-data', label: 'Weak data - not tracking metrics early enough', icon: <Database size={24} weight="duotone" /> },
-              { value: 'poor-problem', label: 'Poor problem selection - solving wrong problem', icon: <Target size={24} weight="duotone" /> }
+              { value: 'focus-revenue-only', label: 'Focus only on revenue', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'let-culture-evolve', label: 'Let culture evolve randomly', icon: <Users size={24} weight="duotone" /> },
+              { value: 'define-values-principles', label: 'Define values, leadership principles, and accountability mechanisms', icon: <Trophy size={24} weight="duotone" /> },
+              { value: 'increase-monitoring', label: 'Increase monitoring', icon: <ChartBar size={24} weight="duotone" /> }
             ]
           }
         ]

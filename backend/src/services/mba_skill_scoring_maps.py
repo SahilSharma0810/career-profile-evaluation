@@ -139,13 +139,29 @@ QUESTION_SKILL_MAP = {
     'om-s5': ['strategic_thinking'],  # Expansion into New Geography
     'om-s6': ['leadership', 'operations_excellence'],  # Building High-Performance Ops Team
 
-    # Founder Questions
-    'founder-mvp-failure': ['venture_building', 'user_centricity'],  # Using user_centricity as proxy
-    'founder-ai-dependency': ['ai_literacy', 'founder_resourcefulness'],
-    'founder-scale-pain': ['business_fundamentals', 'strategic_thinking'],
-    'founder-resource-constraint': ['founder_resourcefulness', 'business_fundamentals'],
-    'founder-ai-advantage': ['ai_literacy', 'strategic_thinking'],
-    'founder-failure-pattern': ['leadership', 'venture_building'],
+    # Founder Questions - 0-3 years (Entry level)
+    'sf-e1': ['venture_building'],  # Validating a Startup Idea
+    'sf-e2': ['business_fundamentals'],  # Early Revenue Challenge
+    'sf-e3': ['strategic_thinking'],  # Limited Budget, Big Goals
+    'sf-e4': ['founder_resourcefulness'],  # Wearing Multiple Hats
+    'sf-e5': ['ai_literacy'],  # Using AI in Early Startup (AI Fluency)
+    'sf-e6': ['leadership'],  # Co-Founder Conflict (Ownership)
+    
+    # Founder Questions - 3-8 years (Mid level)
+    'sf-m1': ['venture_building'],  # Scaling After Product-Market Fit
+    'sf-m2': ['business_fundamentals'],  # Unit Economics Under Pressure
+    'sf-m3': ['leadership'],  # Hiring Leadership Team (Ownership)
+    'sf-m4': ['strategic_thinking'],  # Competitive Pressure
+    'sf-m5': ['ai_literacy'],  # Leveraging AI for Scale (AI Fluency)
+    'sf-m6': ['leadership', 'strategic_thinking'],  # Investor Alignment
+    
+    # Founder Questions - 8+ years (Senior level)
+    'sf-s1': ['venture_building', 'strategic_thinking'],  # Building Multi-Product Portfolio
+    'sf-s2': ['strategic_thinking'],  # Long-Term Vision Recalibration
+    'sf-s3': ['leadership'],  # Enterprise Governance & Scale (Ownership)
+    'sf-s4': ['business_fundamentals'],  # Capital Allocation Discipline
+    'sf-s5': ['ai_literacy'],  # AI-Driven Business Reinvention (AI Fluency)
+    'sf-s6': ['leadership'],  # Founder Legacy & Culture
 
     # Tech/Engineering Questions (0-3 years)
     'tech-product-thinking': ['product_thinking', 'ownership'],
@@ -839,48 +855,136 @@ ANSWER_SCORES = {
         'reduce-documentation': 1   # D=1
     },
 
-    # -------------------- FOUNDER --------------------
+    # -------------------- FOUNDER - 0-3 YEARS (ENTRY) --------------------
 
-    'founder-mvp-failure': {
-        'add-features': 1,  # Beginner: Feature factory
-        'increase-marketing': 2,  # Developing: Distribution only
-        'reframe-problem': 5,  # Expert: Problem understanding
-        'pivot-icp': 5   # Expert: Customer understanding
+    'sf-e1': {  # Validating a Startup Idea - Venture Building
+        'hire-developers': 2,  # A=2
+        'build-full-product': 1,  # B=1
+        'validate-demand': 4,  # C=4 (best answer)
+        'raise-funding': 2   # D=2
     },
 
-    'founder-ai-dependency': {
-        'engineering': 4,  # Advanced: Common bottleneck
-        'marketing': 3,  # Proficient: Distribution help
-        'ops': 3,  # Proficient: Efficiency help
-        'decision-making': 5   # Expert: Strategic leverage
+    'sf-e2': {  # Early Revenue Challenge - Business Fundamentals
+        'reduce-pricing': 2,  # A=2
+        'assume-no-value': 1,  # B=1
+        'reassess-value-prop': 2,  # C=2 (best answer)
+        'increase-marketing': 2   # D=2
     },
 
-    'founder-scale-pain': {
-        'pricing': 5,  # Expert: Unit economics
-        'ops-inefficiency': 3,  # Proficient: Execution issue
-        'customer-mix': 5,  # Expert: Segment understanding
-        'data-blindness': 4   # Advanced: Instrumentation gap
+    'sf-e3': {  # Limited Budget, Big Goals - Strategic Thinking
+        'build-multiple-features': 1,  # A=1
+        'hire-aggressively': 1,  # B=1
+        'focus-core-value': 2,  # C=2 (best answer)
+        'rebrand-product': 2   # D=2
     },
 
-    'founder-resource-constraint': {
-        'growth': 3,  # Proficient: Topline focus
-        'profitability': 4,  # Advanced: Unit economics
-        'learning': 5,  # Expert: Hypothesis validation
-        'fundraising': 2   # Developing: Chasing capital
+    'sf-e4': {  # Wearing Multiple Hats - Founder Resourcefulness
+        'react-to-tasks': 2,  # A=2
+        'work-longer-hours': 2,  # B=2
+        'prioritize-high-impact': 2,  # C=2 (best answer)
+        'delegate-everything': 1   # D=1
     },
 
-    'founder-ai-advantage': {
-        'speed': 3,  # Proficient: Tactical advantage
-        'cost': 3,  # Proficient: Efficiency play
-        'insight': 5,  # Expert: Intelligence advantage
-        'differentiation': 5   # Expert: Product moat
+    'sf-e5': {  # Using AI in Early Startup - AI Literacy (AI Fluency)
+        'avoid-ai-tools': 1,  # A=1
+        'fully-rely-ai': 1,  # B=1
+        'use-ai-validate': 2,  # C=2 (best answer)
+        'replace-team': 1   # D=1
     },
 
-    'founder-failure-pattern': {
-        'hiring-early': 3,  # Proficient: Execution mistake
-        'scaling-fast': 3,  # Proficient: Timing mistake
-        'weak-data': 5,  # Expert: Instrumentation gap
-        'poor-problem': 5   # Expert: Market understanding
+    'sf-e6': {  # Co-Founder Conflict - Leadership (Ownership)
+        'push-decision': 2,  # A=2
+        'avoid-discussion': 1,  # B=1
+        'align-vision-validate': 3,  # C=3 (best answer)
+        'escalate-investors': 1   # D=1
+    },
+
+    # -------------------- FOUNDER - 3-8 YEARS (MID) --------------------
+
+    'sf-m1': {  # Scaling After Product-Market Fit - Venture Building
+        'launch-multiple-products': 2,  # A=2
+        'raise-funds': 2,  # B=2
+        'strengthen-distribution': 4,  # C=4 (best answer)
+        'increase-burn-rate': 1   # D=1
+    },
+
+    'sf-m2': {  # Unit Economics Under Pressure - Business Fundamentals
+        'increase-prices': 2,  # A=2
+        'cut-marketing': 1,  # B=1
+        'optimize-channels-ltv': 4,  # C=4 (best answer)
+        'ignore-temporarily': 1   # D=1
+    },
+
+    'sf-m3': {  # Hiring Leadership Team - Leadership (Ownership)
+        'hire-fast': 2,  # A=2
+        'hire-friends': 1,  # B=1
+        'hire-culture-alignment': 4,  # C=4 (best answer)
+        'outsource-leadership': 1   # D=1
+    },
+
+    'sf-m4': {  # Competitive Pressure - Strategic Thinking
+        'panic-pivot': 2,  # A=2
+        'slash-pricing': 1,  # B=1
+        'double-down-differentiation': 4,  # C=4 (best answer)
+        'reduce-marketing': 1   # D=1
+    },
+
+    'sf-m5': {  # Leveraging AI for Scale - AI Literacy (AI Fluency)
+        'increase-headcount': 2,  # A=2
+        'avoid-automation': 1,  # B=1
+        'use-ai-efficiency': 4,  # C=4 (best answer)
+        'cut-support': 1   # D=1
+    },
+
+    'sf-m6': {  # Investor Alignment - Leadership & Strategic Thinking
+        'follow-investor-pressure': 2,  # A=2
+        'ignore-investors': 1,  # B=1
+        'present-data-backed-plan': 4,  # C=4 (best answer)
+        'delay-communication': 1   # D=1
+    },
+
+    # -------------------- FOUNDER - 8+ YEARS (SENIOR) --------------------
+
+    'sf-s1': {  # Building Multi-Product Portfolio - Venture Building & Strategic Thinking
+        'equal-attention': 1,  # A=1
+        'focus-legacy': 2,  # B=2
+        'allocate-strategic-fit': 4,  # C=4 (best answer)
+        'expand-randomly': 1   # D=1
+    },
+
+    'sf-s2': {  # Long-Term Vision Recalibration - Strategic Thinking
+        'maintain-roadmap': 2,  # A=2
+        'react-impulsively': 1,  # B=1
+        'reevaluate-positioning': 4,  # C=4 (best answer)
+        'cut-costs-only': 2   # D=2
+    },
+
+    'sf-s3': {  # Enterprise Governance & Scale - Leadership (Ownership)
+        'founder-all-decisions': 2,  # A=2
+        'minimal-process': 1,  # B=1
+        'define-org-structure': 4,  # C=4 (best answer)
+        'increase-meetings': 2   # D=2
+    },
+
+    'sf-s4': {  # Capital Allocation Discipline - Business Fundamentals
+        'spend-aggressively': 2,  # A=2
+        'protect-capital': 1,  # B=1
+        'allocate-capital-roi': 4,  # C=4 (best answer)
+        'increase-burn-outpace': 1   # D=1
+    },
+
+    'sf-s5': {  # AI-Driven Business Reinvention - AI Literacy (AI Fluency)
+        'implement-ai-everywhere': 2,  # A=2
+        'resist-change': 1,  # B=1
+        'identify-pilot-scale': 4,  # C=4 (best answer)
+        'replace-teams': 1   # D=1
+    },
+
+    'sf-s6': {  # Founder Legacy & Culture - Leadership
+        'focus-revenue-only': 2,  # A=2
+        'let-culture-evolve': 1,  # B=1
+        'define-values-principles': 4,  # C=4 (best answer)
+        'increase-monitoring': 2   # D=2
     },
 
     # -------------------- TECH/ENGINEERING (0-3 years) --------------------

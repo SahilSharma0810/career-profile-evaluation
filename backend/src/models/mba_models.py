@@ -134,13 +134,29 @@ class MBAQuizRequest(BaseModel):
     om_s5: Optional[str] = Field(None, alias="om-s5")  # Expansion into New Geography
     om_s6: Optional[str] = Field(None, alias="om-s6")  # Building High-Performance Ops Team
 
-    # Founder
-    founder_mvp_failure: Optional[str] = Field(None, alias="founder-mvp-failure")
-    founder_ai_dependency: Optional[str] = Field(None, alias="founder-ai-dependency")
-    founder_scale_pain: Optional[str] = Field(None, alias="founder-scale-pain")
-    founder_resource_constraint: Optional[str] = Field(None, alias="founder-resource-constraint")
-    founder_ai_advantage: Optional[str] = Field(None, alias="founder-ai-advantage")
-    founder_failure_pattern: Optional[str] = Field(None, alias="founder-failure-pattern")
+    # Founder - 0-3 years (Entry level)
+    sf_e1: Optional[str] = Field(None, alias="sf-e1")  # Validating a Startup Idea
+    sf_e2: Optional[str] = Field(None, alias="sf-e2")  # Early Revenue Challenge
+    sf_e3: Optional[str] = Field(None, alias="sf-e3")  # Limited Budget, Big Goals
+    sf_e4: Optional[str] = Field(None, alias="sf-e4")  # Wearing Multiple Hats
+    sf_e5: Optional[str] = Field(None, alias="sf-e5")  # Using AI in Early Startup (AI Fluency)
+    sf_e6: Optional[str] = Field(None, alias="sf-e6")  # Co-Founder Conflict (Ownership)
+    
+    # Founder - 3-8 years (Mid level)
+    sf_m1: Optional[str] = Field(None, alias="sf-m1")  # Scaling After Product-Market Fit
+    sf_m2: Optional[str] = Field(None, alias="sf-m2")  # Unit Economics Under Pressure
+    sf_m3: Optional[str] = Field(None, alias="sf-m3")  # Hiring Leadership Team (Ownership)
+    sf_m4: Optional[str] = Field(None, alias="sf-m4")  # Competitive Pressure
+    sf_m5: Optional[str] = Field(None, alias="sf-m5")  # Leveraging AI for Scale (AI Fluency)
+    sf_m6: Optional[str] = Field(None, alias="sf-m6")  # Investor Alignment
+    
+    # Founder - 8+ years (Senior level)
+    sf_s1: Optional[str] = Field(None, alias="sf-s1")  # Building Multi-Product Portfolio
+    sf_s2: Optional[str] = Field(None, alias="sf-s2")  # Long-Term Vision Recalibration
+    sf_s3: Optional[str] = Field(None, alias="sf-s3")  # Enterprise Governance & Scale (Ownership)
+    sf_s4: Optional[str] = Field(None, alias="sf-s4")  # Capital Allocation Discipline
+    sf_s5: Optional[str] = Field(None, alias="sf-s5")  # AI-Driven Business Reinvention (AI Fluency)
+    sf_s6: Optional[str] = Field(None, alias="sf-s6")  # Founder Legacy & Culture
 
     # Tech/Engineering (0-3 years)
     tech_product_thinking: Optional[str] = Field(None, alias="tech-product-thinking")

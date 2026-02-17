@@ -359,18 +359,45 @@ def _score_operations_maturity(responses: Dict[str, Any]) -> int:
 
 
 def _score_founder_maturity(responses: Dict[str, Any]) -> int:
-    """Score Founder based on strategic depth"""
-    score = 50
-
-    if responses.get('founder-mvp-failure') in ['reframe-problem', 'pivot-icp']:
-        score += 15
-
-    if responses.get('founder-scale-pain') in ['data-blindness', 'customer-mix']:
-        score += 10
-
-    if responses.get('founder-ai-advantage') in ['insight', 'differentiation']:
-        score += 15
-
+    """Score Founder based on strategic depth - experience-based questions"""
+    from .mba_skill_scoring_maps import ANSWER_SCORES
+    
+    score = 50  # Base score
+    experience = responses.get('experience', '')
+    
+    # Map experience to level
+    experience_level = _map_experience_to_level(experience)
+    
+    # Score based on experience level
+    if experience_level == '0-3':
+        # Entry level questions (SF-E1 to SF-E6)
+        # Exclude E5 (AI) and E6 (ownership) as they're used in separate calculations
+        questions = ['sf-e1', 'sf-e2', 'sf-e3', 'sf-e4']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                # Convert 1-4 score to maturity points (max 10 points per question)
+                score += (answer_score - 1) * 3.33  # 1→0, 2→3.33, 3→6.67, 4→10
+    elif experience_level == '3-8':
+        # Mid level questions (SF-M1 to SF-M6)
+        # Exclude M3 (ownership) and M5 (AI) as they're used in separate calculations
+        questions = ['sf-m1', 'sf-m2', 'sf-m4', 'sf-m6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 3.33
+    elif experience_level == '8+':
+        # Senior level questions (SF-S1 to SF-S6)
+        # Exclude S3 (ownership) and S5 (AI) as they're used in separate calculations
+        questions = ['sf-s1', 'sf-s2', 'sf-s4', 'sf-s6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 3.33
+    
     return min(score, 100)
 
 
@@ -480,32 +507,26 @@ def _calculate_ai_fluency(role: str, responses: Dict[str, Any]) -> int:
                 # Convert 1-5 score to AI fluency points
                 # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
                 score += (answer_score - 1) * 10 + 10
-    else:
-        # Other roles use existing logic
-        ai_question_keys = {
-            'founder': 'founder-ai-advantage'
+    elif role == 'founder':
+        # Founder uses experience-based AI questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct AI question based on experience
+        ai_question_map = {
+            '0-3': 'sf-e5',  # Using AI in Early Startup
+            '3-8': 'sf-m5',  # Leveraging AI for Scale
+            '8+': 'sf-s5'    # AI-Driven Business Reinvention
         }
-
-        ai_key = ai_question_keys.get(role)
+        
+        ai_key = ai_question_map.get(experience_level)
         if ai_key:
             ai_answer = responses.get(ai_key)
-
-            # Strategic/Advanced AI usage
-            advanced_answers = [
-                'insight', 'differentiation'  # Founder
-            ]
-
-            # Tactical AI usage
-            tactical_answers = [
-                'speed', 'cost'  # Founder
-            ]
-
-            if ai_answer in advanced_answers:
-                score += 50  # AI-Strategic or AI-Native
-            elif ai_answer in tactical_answers:
-                score += 30  # AI-Capable
-            else:
-                score += 10  # AI-Curious
+            if ai_answer and ai_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ai_key].get(ai_answer, 0)
+                # Convert 1-4 score to AI fluency points
+                # 1→+10, 2→+20, 3→+30, 4→+40
+                score += (answer_score - 1) * 10 + 10
 
     return min(score, 100)
 
@@ -616,25 +637,26 @@ def _calculate_ownership(role: str, responses: Dict[str, Any]) -> int:
                 # Convert 1-5 score to ownership points
                 # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
                 score += (answer_score - 1) * 10 + 10
-    else:
-        # Other roles use existing logic
-        ownership_keys = {
-            'founder': 'founder-resource-constraint'
+    elif role == 'founder':
+        # Founder uses experience-based ownership questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct ownership question based on experience
+        ownership_question_map = {
+            '0-3': 'sf-e6',  # Co-Founder Conflict
+            '3-8': 'sf-m3',  # Hiring Leadership Team
+            '8+': 'sf-s3'    # Enterprise Governance & Scale
         }
-
-        ownership_key = ownership_keys.get(role)
+        
+        ownership_key = ownership_question_map.get(experience_level)
         if ownership_key:
             ownership_answer = responses.get(ownership_key)
-
-            # High ownership answers
-            high_ownership = [
-                'learning', 'profitability'  # Founder
-            ]
-
-            if ownership_answer in high_ownership:
-                score += 40
-            else:
-                score += 20
+            if ownership_answer and ownership_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ownership_key].get(ownership_answer, 0)
+                # Convert 1-4 score to ownership points
+                # 1→+10, 2→+20, 3→+30, 4→+40
+                score += (answer_score - 1) * 10 + 10
 
     return min(score, 100)
 
@@ -927,12 +949,53 @@ def _generate_readiness_tags(score: int, maturity: str, role: str, responses: Di
                 tags.append("Org Builder")
 
     elif role == 'founder':
-        if responses.get('founder-mvp-failure') in ['reframe-problem', 'pivot-icp']:
-            tags.append("Product Thinker")
-        if responses.get('founder-scale-pain') in ['pricing', 'customer-mix']:
-            tags.append("Business Fundamentals")
-        if responses.get('founder-ai-advantage') in ['insight', 'differentiation']:
-            tags.append("AI-First Founder")
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        if experience_level == '0-3':
+            # Entry level tags
+            if responses.get('sf-e1') == 'validate-demand':
+                tags.append("Validation-Focused")
+            if responses.get('sf-e2') == 'reassess-value-prop':
+                tags.append("Business Fundamentals")
+            if responses.get('sf-e3') == 'focus-core-value':
+                tags.append("Strategic Prioritizer")
+            if responses.get('sf-e4') == 'prioritize-high-impact':
+                tags.append("Resourceful Founder")
+            if responses.get('sf-e5') == 'use-ai-validate':
+                tags.append("AI-Adopter")
+            if responses.get('sf-e6') == 'align-vision-validate':
+                tags.append("Collaborative Leader")
+        
+        elif experience_level == '3-8':
+            # Mid level tags
+            if responses.get('sf-m1') == 'strengthen-distribution':
+                tags.append("Scale Strategist")
+            if responses.get('sf-m2') == 'optimize-channels-ltv':
+                tags.append("Unit Economics Expert")
+            if responses.get('sf-m3') == 'hire-culture-alignment':
+                tags.append("Team Builder")
+            if responses.get('sf-m4') == 'double-down-differentiation':
+                tags.append("Competitive Strategist")
+            if responses.get('sf-m5') == 'use-ai-efficiency':
+                tags.append("AI-Capable")
+            if responses.get('sf-m6') == 'present-data-backed-plan':
+                tags.append("Data-Driven Leader")
+        
+        elif experience_level == '8+':
+            # Senior level tags
+            if responses.get('sf-s1') == 'allocate-strategic-fit':
+                tags.append("Portfolio Strategist")
+            if responses.get('sf-s2') == 'reevaluate-positioning':
+                tags.append("Strategic Visionary")
+            if responses.get('sf-s3') == 'define-org-structure':
+                tags.append("Organizational Leader")
+            if responses.get('sf-s4') == 'allocate-capital-roi':
+                tags.append("Capital Allocator")
+            if responses.get('sf-s5') == 'identify-pilot-scale':
+                tags.append("AI Strategist")
+            if responses.get('sf-s6') == 'define-values-principles':
+                tags.append("Culture Builder")
 
     # Add AI maturity tag if high
     if maturity == AIMaturityLevel.AI_NATIVE:
