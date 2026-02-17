@@ -115,13 +115,29 @@ QUESTION_SKILL_MAP = {
     'mm-s5': ['strategic_thinking'],  # Entering New Geography
     'mm-s6': ['leadership'],  # Building a High-Performance Marketing Org (Ownership)
 
-    # Operations Questions
-    'operations-scale-stress': ['operations_excellence', 'supply_chain', 'strategic_thinking'],
-    'operations-cost-sla': ['operations_excellence', 'process_automation'],
-    'operations-ai-leverage': ['ai_literacy', 'process_automation'],
-    'operations-metric-priority': ['leadership', 'operations_excellence'],
-    'operations-data-constraint': ['strategic_thinking', 'operations_excellence'],
-    'operations-purpose': ['leadership', 'strategic_thinking'],
+    # Operations Questions - 0-3 years (Entry level)
+    'om-e1': ['operations_excellence'],  # Order Fulfillment Delays
+    'om-e2': ['supply_chain', 'data_integrity'],  # Inventory Mismatch
+    'om-e3': ['process_automation'],  # Repetitive Manual Reporting
+    'om-e4': ['supply_chain'],  # Vendor Delays
+    'om-e5': ['ai_literacy'],  # Using AI in Operations (AI Fluency)
+    'om-e6': ['leadership', 'operations_excellence'],  # Cross-Team Process Breakdown (Ownership)
+    
+    # Operations Questions - 3-8 years (Mid level)
+    'om-m1': ['operations_excellence'],  # Rising Operational Costs
+    'om-m2': ['supply_chain'],  # Supply Chain Disruption
+    'om-m3': ['strategic_thinking', 'operations_excellence'],  # Scaling Operations
+    'om-m4': ['ai_literacy'],  # Automation Opportunity (AI Fluency)
+    'om-m5': ['operations_excellence', 'data_integrity'],  # Data-Driven Decision Making
+    'om-m6': ['leadership'],  # Managing Cross-Functional Execution (Ownership)
+    
+    # Operations Questions - 8+ years (Senior level)
+    'om-s1': ['strategic_thinking'],  # Long-Term Operations Strategy
+    'om-s2': ['supply_chain'],  # Supply Chain Risk Concentration
+    'om-s3': ['ai_literacy', 'process_automation'],  # Enterprise Automation Roadmap (AI Fluency)
+    'om-s4': ['leadership'],  # Board-Level Performance Challenge (Ownership)
+    'om-s5': ['strategic_thinking'],  # Expansion into New Geography
+    'om-s6': ['leadership', 'operations_excellence'],  # Building High-Performance Ops Team
 
     # Founder Questions
     'founder-mvp-failure': ['venture_building', 'user_centricity'],  # Using user_centricity as proxy
@@ -691,48 +707,136 @@ ANSWER_SCORES = {
         'reduce-reporting': 1   # D=1: Reduce reporting
     },
 
-    # -------------------- OPERATIONS --------------------
+    # -------------------- OPERATIONS - 0-3 YEARS (ENTRY) --------------------
 
-    'operations-scale-stress': {
-        'hiring-capacity': 2,  # Developing: Throwing headcount
-        'process-design': 5,  # Expert: Systems thinking
-        'data-visibility': 5,  # Expert: Instrumentation first
-        'vendor-reliability': 4   # Advanced: Supply chain thinking
+    'om-e1': {  # Order Fulfillment Delays - Operations Excellence
+        'increase-delivery-timelines': 1,  # A=1
+        'blame-warehouse-staff': 1,  # B=1
+        'analyze-fulfillment-cycle': 4,  # C=4 (best answer)
+        'offer-discounts': 2   # D=2
     },
 
-    'operations-cost-sla': {
-        'headcount': 1,  # Beginner: Throwing bodies
-        'process-bottlenecks': 5,  # Expert: Root cause analysis
-        'demand-variability': 4,  # Advanced: Demand management
-        'automation-gaps': 5   # Expert: Tech leverage
+    'om-e2': {  # Inventory Mismatch - Supply Chain & Data Integrity
+        'adjust-system-match': 2,  # A=2
+        'ignore-small-discrepancy': 1,  # B=1
+        'investigate-root-cause': 2,  # C=2 (best answer)
+        'order-more-inventory': 2   # D=2
     },
 
-    'operations-ai-leverage': {
-        'reporting': 2,  # Developing: Tactical speed
-        'forecasting': 4,  # Advanced: Planning support
-        'automation': 5,  # Expert: Process automation
-        'decision-optimization': 5   # Expert: Strategic value
+    'om-e3': {  # Repetitive Manual Reporting - Process Automation
+        'continue-manually': 1,  # A=1
+        'reduce-reporting-scope': 2,  # B=2
+        'explore-automation': 2,  # C=2 (best answer)
+        'delegate-without-docs': 2   # D=2
     },
 
-    'operations-metric-priority': {
-        'task-completion': 2,  # Developing: Activity metric
-        'cost-per-unit': 4,  # Advanced: Efficiency metric
-        'sla-adherence': 4,  # Advanced: Customer commitment
-        'margin': 5   # Expert: Business outcome
+    'om-e4': {  # Vendor Delays - Supply Chain Management
+        'terminate-contract': 2,  # A=2
+        'ignore-delays': 1,  # B=1
+        'review-slas-discuss': 4,  # C=4 (best answer)
+        'increase-buffer-inventory': 2   # D=2
     },
 
-    'operations-data-constraint': {
-        'wait': 1,  # Beginner: Paralysis
-        'use-proxies': 4,  # Advanced: Pragmatic workaround
-        'early-warning': 5,  # Expert: Leading indicators
-        'ai-prediction': 5   # Expert: Predictive modeling
+    'om-e5': {  # Using AI in Operations - AI Literacy (AI Fluency)
+        'avoid-using-ai': 1,  # A=1
+        'replace-planning-team': 1,  # B=1
+        'pilot-ai-forecasting': 2,  # C=2 (best answer)
+        'use-ai-without-verification': 1   # D=1
     },
 
-    'operations-purpose': {
-        'execute-plans': 2,  # Developing: Order-taking
-        'reduce-cost': 3,  # Proficient: Tactical focus
-        'enable-scale': 5,  # Expert: Strategic partner
-        'competitive-advantage': 5   # Expert: Strategic weapon
+    'om-e6': {  # Cross-Team Process Breakdown - Leadership & Operations Excellence (Ownership)
+        'stay-out-conflict': 1,  # A=1
+        'support-own-team': 2,  # B=2
+        'map-end-to-end': 4,  # C=4 (best answer)
+        'escalate-immediately': 1   # D=1
+    },
+
+    # -------------------- OPERATIONS - 3-8 YEARS (MID) --------------------
+
+    'om-m1': {  # Rising Operational Costs - Operations Excellence
+        'cut-costs-equally': 2,  # A=2
+        'reduce-workforce': 2,  # B=2
+        'conduct-cost-driver-analysis': 2,  # C=2 (best answer)
+        'increase-pricing': 2   # D=2
+    },
+
+    'om-m2': {  # Supply Chain Disruption - Supply Chain Strategy
+        'pause-operations': 1,  # A=1
+        'increase-customer-prices': 2,  # B=2
+        'activate-alternate-suppliers': 2,  # C=2 (best answer)
+        'wait-resolution': 1   # D=1
+    },
+
+    'om-m3': {  # Scaling Operations - Strategic Thinking & Operations Excellence
+        'increase-overtime': 2,  # A=2
+        'hire-aggressively': 2,  # B=2
+        'redesign-workflows': 4,  # C=4 (best answer)
+        'slow-down-growth': 2   # D=2
+    },
+
+    'om-m4': {  # Automation Opportunity - AI Literacy (AI Fluency)
+        'add-more-approvers': 1,  # A=1
+        'remove-approvals': 1,  # B=1
+        'evaluate-workflow-automation': 2,  # C=2 (best answer)
+        'ignore-issue': 1   # D=1
+    },
+
+    'om-m5': {  # Data-Driven Decision Making - Operations Excellence & Data Governance
+        'choose-favorable-metric': 1,  # A=1
+        'report-average': 2,  # B=2
+        'standardize-kpi-definitions': 4,  # C=4 (best answer)
+        'reduce-reporting': 1   # D=1
+    },
+
+    'om-m6': {  # Managing Cross-Functional Execution - Leadership (Ownership)
+        'let-teams-manage': 2,  # A=2
+        'increase-pressure': 2,  # B=2
+        'implement-launch-checklists': 2,  # C=2 (best answer)
+        'delay-launches': 2   # D=2
+    },
+
+    # -------------------- OPERATIONS - 8+ YEARS (SENIOR) --------------------
+
+    'om-s1': {  # Long-Term Operations Strategy - Strategic Thinking
+        'increase-headcount': 2,  # A=2
+        'maintain-current-structure': 1,  # B=1
+        'redesign-operating-model': 4,  # C=4 (best answer)
+        'cut-costs-aggressively': 2   # D=2
+    },
+
+    'om-s2': {  # Supply Chain Risk Concentration - Supply Chain Strategy
+        'continue-as-is': 1,  # A=1
+        'increase-dependency': 1,  # B=1
+        'diversify-supplier-base': 4,  # C=4 (best answer)
+        'increase-inventory-buffer': 2   # D=2
+    },
+
+    'om-s3': {  # Enterprise Automation Roadmap - AI Literacy & Process Automation (AI Fluency)
+        'buy-multiple-tools': 2,  # A=2
+        'resist-change': 1,  # B=1
+        'define-phased-automation': 2,  # C=2 (best answer)
+        'fully-automate-without-pilots': 1   # D=1
+    },
+
+    'om-s4': {  # Board-Level Performance Challenge - Leadership (Ownership)
+        'defend-current-processes': 2,  # A=2
+        'revise-metrics-presentation': 1,  # B=1
+        'present-root-cause-analysis': 4,  # C=4 (best answer)
+        'defer-to-ceo': 1   # D=1
+    },
+
+    'om-s5': {  # Expansion into New Geography - Strategic Thinking
+        'replicate-domestic-model': 1,  # A=1
+        'focus-only-logistics': 2,  # B=2
+        'assess-regulatory-supplier': 4,  # C=4 (best answer)
+        'increase-pricing': 1   # D=1
+    },
+
+    'om-s6': {  # Building High-Performance Ops Team - Leadership & Operations Excellence
+        'increase-monitoring-only': 2,  # A=2
+        'focus-only-daily-execution': 2,  # B=2
+        'establish-clear-ownership': 2,  # C=2 (best answer)
+        'reduce-documentation': 1   # D=1
     },
 
     # -------------------- FOUNDER --------------------

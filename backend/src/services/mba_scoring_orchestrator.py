@@ -314,18 +314,47 @@ def _score_marketing_maturity(responses: Dict[str, Any]) -> int:
 
 
 def _score_operations_maturity(responses: Dict[str, Any]) -> int:
-    """Score Operations based on strategic depth"""
-    score = 50
-
-    if responses.get('operations-scale-stress') in ['data-visibility', 'process-design']:
-        score += 15
-
-    if responses.get('operations-ai-leverage') in ['decision-optimization', 'automation']:
-        score += 10
-
-    if responses.get('operations-strategic-role') in ['competitive-advantage', 'enable-scale']:
-        score += 15
-
+    """Score Operations based on strategic depth - experience-based questions"""
+    from .mba_skill_scoring_maps import ANSWER_SCORES
+    
+    score = 50  # Base score
+    experience = responses.get('experience', '')
+    
+    # Map experience to level
+    experience_level = _map_experience_to_level(experience)
+    
+    # Score based on experience level
+    if experience_level == '0-3':
+        # Entry level questions (OM-E1 to OM-E6)
+        # Exclude E5 (AI) and E6 (ownership) as they're used in separate calculations
+        questions = ['om-e1', 'om-e2', 'om-e3', 'om-e4']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                # Convert 1-5 score to maturity points (max 10 points per question)
+                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
+    
+    elif experience_level == '3-8':
+        # Mid level questions (OM-M1 to OM-M6)
+        # Exclude M4 (AI) and M6 (ownership) as they're used in separate calculations
+        questions = ['om-m1', 'om-m2', 'om-m3', 'om-m5']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
+    elif experience_level == '8+':
+        # Senior level questions (OM-S1 to OM-S6)
+        # Exclude S3 (AI) and S4 (ownership) as they're used in separate calculations
+        questions = ['om-s1', 'om-s2', 'om-s5', 'om-s6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
     return min(score, 100)
 
 
@@ -431,10 +460,29 @@ def _calculate_ai_fluency(role: str, responses: Dict[str, Any]) -> int:
                 # Convert 1-5 score to AI fluency points
                 # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
                 score += (answer_score - 1) * 10 + 10
+    elif role == 'operations':
+        # Operations uses experience-based AI questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct AI question based on experience
+        ai_question_map = {
+            '0-3': 'om-e5',  # Using AI in Operations
+            '3-8': 'om-m4',  # Automation Opportunity
+            '8+': 'om-s3'    # Enterprise Automation Roadmap
+        }
+        
+        ai_key = ai_question_map.get(experience_level)
+        if ai_key:
+            ai_answer = responses.get(ai_key)
+            if ai_answer and ai_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ai_key].get(ai_answer, 0)
+                # Convert 1-5 score to AI fluency points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
+                score += (answer_score - 1) * 10 + 10
     else:
         # Other roles use existing logic
         ai_question_keys = {
-            'operations': 'operations-ai-leverage',
             'founder': 'founder-ai-advantage'
         }
 
@@ -444,13 +492,11 @@ def _calculate_ai_fluency(role: str, responses: Dict[str, Any]) -> int:
 
             # Strategic/Advanced AI usage
             advanced_answers = [
-                'decision-optimization', 'automation',  # Operations
                 'insight', 'differentiation'  # Founder
             ]
 
             # Tactical AI usage
             tactical_answers = [
-                'forecasting', 'reporting',  # Operations
                 'speed', 'cost'  # Founder
             ]
 
@@ -550,10 +596,29 @@ def _calculate_ownership(role: str, responses: Dict[str, Any]) -> int:
                 # Convert 1-5 score to ownership points
                 # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
                 score += (answer_score - 1) * 10 + 10
+    elif role == 'operations':
+        # Operations uses experience-based ownership questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct ownership question based on experience
+        ownership_question_map = {
+            '0-3': 'om-e6',  # Cross-Team Process Breakdown
+            '3-8': 'om-m6',  # Managing Cross-Functional Execution
+            '8+': 'om-s4'    # Board-Level Performance Challenge
+        }
+        
+        ownership_key = ownership_question_map.get(experience_level)
+        if ownership_key:
+            ownership_answer = responses.get(ownership_key)
+            if ownership_answer and ownership_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ownership_key].get(ownership_answer, 0)
+                # Convert 1-5 score to ownership points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
+                score += (answer_score - 1) * 10 + 10
     else:
         # Other roles use existing logic
         ownership_keys = {
-            'operations': 'operations-ownership',
             'founder': 'founder-resource-constraint'
         }
 
@@ -563,7 +628,6 @@ def _calculate_ownership(role: str, responses: Dict[str, Any]) -> int:
 
             # High ownership answers
             high_ownership = [
-                'margin', 'sla-adherence',  # Operations
                 'learning', 'profitability'  # Founder
             ]
 
@@ -814,12 +878,53 @@ def _generate_readiness_tags(score: int, maturity: str, role: str, responses: Di
                 tags.append("Org Builder")
 
     elif role == 'operations':
-        if responses.get('operations-scale-stress') in ['process-design', 'data-visibility']:
-            tags.append("Systems Thinker")
-        if responses.get('operations-ai-leverage') in ['automation', 'decision-optimization']:
-            tags.append("AI-Leveraged Ops")
-        if responses.get('operations-purpose') in ['enable-scale', 'competitive-advantage']:
-            tags.append("Strategic Partner")
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        if experience_level == '0-3':
+            # Entry level tags
+            if responses.get('om-e1') == 'analyze-fulfillment-cycle':
+                tags.append("Operations Excellence")
+            if responses.get('om-e2') == 'investigate-root-cause':
+                tags.append("Data Integrity Focused")
+            if responses.get('om-e3') == 'explore-automation':
+                tags.append("Process Automation")
+            if responses.get('om-e4') == 'review-slas-discuss':
+                tags.append("Supply Chain Strategist")
+            if responses.get('om-e5') == 'pilot-ai-forecasting':
+                tags.append("AI-Adopter")
+            if responses.get('om-e6') == 'map-end-to-end':
+                tags.append("Leadership Potential")
+        
+        elif experience_level == '3-8':
+            # Mid level tags
+            if responses.get('om-m1') == 'conduct-cost-driver-analysis':
+                tags.append("Operations Excellence")
+            if responses.get('om-m2') == 'activate-alternate-suppliers':
+                tags.append("Supply Chain Strategist")
+            if responses.get('om-m3') == 'redesign-workflows':
+                tags.append("Strategic Thinker")
+            if responses.get('om-m4') == 'evaluate-workflow-automation':
+                tags.append("AI-Capable")
+            if responses.get('om-m5') == 'standardize-kpi-definitions':
+                tags.append("Data Governance Expert")
+            if responses.get('om-m6') == 'implement-launch-checklists':
+                tags.append("Cross-Functional Leader")
+        
+        elif experience_level == '8+':
+            # Senior level tags
+            if responses.get('om-s1') == 'redesign-operating-model':
+                tags.append("Strategic Operations Leader")
+            if responses.get('om-s2') == 'diversify-supplier-base':
+                tags.append("Risk Strategist")
+            if responses.get('om-s3') == 'define-phased-automation':
+                tags.append("AI Strategist")
+            if responses.get('om-s4') == 'present-root-cause-analysis':
+                tags.append("Board-Level Leader")
+            if responses.get('om-s5') == 'assess-regulatory-supplier':
+                tags.append("Global Operations Strategist")
+            if responses.get('om-s6') == 'establish-clear-ownership':
+                tags.append("Org Builder")
 
     elif role == 'founder':
         if responses.get('founder-mvp-failure') in ['reframe-problem', 'pivot-icp']:

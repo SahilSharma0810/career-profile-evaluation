@@ -1284,278 +1284,287 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
   'operations': {
     // 0-3 years experience (Entry level)
     '0-3': [
-    // Screen 3: Operations Questions 1-2
+      // Screen 1: OM-E1, OM-E2
       {
         id: 'operations-screen-1',
         initialChatText: "Let's explore your operations thinking and problem-solving approach.",
         questions: [
           {
-            id: 'operations-scale-stress',
-            question: 'Your product demand doubles in just 90 days. What do you think will break first in your operations?',
-            helperText: 'Tests system-level thinking',
+            id: 'om-e1',
+            question: 'Customer complaints about late deliveries have increased by 25% in the last month. There has been no major demand spike. What is your first step?',
+            helperText: 'Tests Operations Excellence',
             isScenario: true,
             options: [
-              { value: 'hiring-capacity', label: 'Hiring capacity - unable to scale team fast enough', icon: <Users size={24} weight="duotone" /> },
-              { value: 'process-design', label: 'Process design - workflows not built for scale', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'data-visibility', label: 'Data visibility - losing insights at scale', icon: <Database size={24} weight="duotone" /> },
-              { value: 'vendor-reliability', label: 'Vendor reliability - third-party dependencies', icon: <Buildings size={24} weight="duotone" /> }
+              { value: 'increase-delivery-timelines', label: 'Increase delivery timelines on the website', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'blame-warehouse-staff', label: 'Blame warehouse staff', icon: <Users size={24} weight="duotone" /> },
+              { value: 'analyze-fulfillment-cycle', label: 'Analyze fulfillment cycle time, bottlenecks, and error rates', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'offer-discounts', label: 'Offer discounts to affected customers', icon: <CurrencyInr size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'operations-cost-sla',
-            question: 'Your operational costs are rising while SLA (Service Level Agreement) performance is dropping. What would you fix first?',
-            helperText: 'Tests ops maturity',
+            id: 'om-e2',
+            question: 'System shows 1,200 units in stock, but physical count shows 1,050 units. What do you do?',
+            helperText: 'Tests Supply Chain & Data Integrity',
             isScenario: true,
             options: [
-              { value: 'headcount', label: 'Headcount - hire more people', icon: <Users size={24} weight="duotone" /> },
-              { value: 'process-bottlenecks', label: 'Process bottlenecks - fix inefficient workflows', icon: <Path size={24} weight="duotone" /> },
-              { value: 'demand-variability', label: 'Demand variability - better forecasting', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'automation-gaps', label: 'Automation gaps - identify manual work to automate', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'adjust-system-match', label: 'Adjust system to match physical count', icon: <Database size={24} weight="duotone" /> },
+              { value: 'ignore-small-discrepancy', label: 'Ignore small discrepancy', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'investigate-root-cause', label: 'Investigate root cause (process gap, shrinkage, system error) before updating', icon: <Target size={24} weight="duotone" /> },
+              { value: 'order-more-inventory', label: 'Order more inventory immediately', icon: <ShoppingCart size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Operations Questions 3-4
+      // Screen 2: OM-E3, OM-E4
       {
         id: 'operations-screen-2',
-        initialChatText: "Now let's assess your AI application and accountability.",
+        initialChatText: "Now let's assess your process automation and supply chain management.",
         questions: [
           {
-            id: 'operations-ai-leverage',
-            question: 'Where do you think AI delivers the highest ROI (Return on Investment) in your operations work?',
-            helperText: 'Tests AI application depth',
+            id: 'om-e3',
+            question: 'You spend hours manually consolidating data from multiple spreadsheets weekly. Best approach?',
+            helperText: 'Tests Process Automation',
+            isScenario: true,
             options: [
-              { value: 'reporting', label: 'Reporting - automated dashboards and insights', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'forecasting', label: 'Forecasting - demand and capacity prediction', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'automation', label: 'Automation - eliminating manual workflows', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'decision-optimization', label: 'Decision optimization - smarter resource allocation', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'continue-manually', label: 'Continue manually to avoid risk', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'reduce-reporting-scope', label: 'Reduce reporting scope', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'explore-automation', label: 'Explore automation using BI tools or scripts', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'delegate-without-docs', label: 'Delegate without documentation', icon: <Users size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'operations-ownership',
-            question: 'Which metric do you think keeps you up at night and worries you the most?',
-            helperText: 'Tests accountability',
+            id: 'om-e4',
+            question: 'A key supplier frequently delays shipments, impacting operations.',
+            helperText: 'Tests Supply Chain Management',
+            isScenario: true,
             options: [
-              { value: 'task-completion', label: 'Task completion - getting things done on time', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'cost-per-unit', label: 'Cost per unit - operational efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'sla-adherence', label: 'SLA (Service Level Agreement) adherence - meeting commitments', icon: <Target size={24} weight="duotone" /> },
-              { value: 'margin', label: 'Margin - profitability of operations', icon: <ChartBar size={24} weight="duotone" /> }
+              { value: 'terminate-contract', label: 'Immediately terminate contract', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'ignore-delays', label: 'Ignore delays', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'review-slas-discuss', label: 'Review SLAs, discuss root causes, and evaluate alternate suppliers', icon: <Target size={24} weight="duotone" /> },
+              { value: 'increase-buffer-inventory', label: 'Increase buffer inventory without analysis', icon: <ShoppingCart size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Operations Questions 5-6
+      // Screen 3: OM-E5, OM-E6
       {
         id: 'operations-screen-3',
-        initialChatText: "Finally, let's understand your pragmatism and strategic framing.",
+        initialChatText: "Finally, let's understand your AI literacy and leadership approach.",
         questions: [
           {
-            id: 'operations-data-constraint',
-            question: 'Your operations data is delayed by 2 weeks, but decisions need to be made now. What do you do?',
-            helperText: 'Tests senior pragmatism',
+            id: 'om-e5',
+            question: 'AI tools can forecast demand more accurately than manual estimation.',
+            helperText: 'Tests AI Literacy',
             isScenario: true,
             options: [
-              { value: 'wait', label: 'Wait for accurate data before making decisions', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'use-proxies', label: 'Use proxy metrics as temporary alternatives', icon: <Target size={24} weight="duotone" /> },
-              { value: 'early-warning', label: 'Build real-time early-warning indicator system', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'ai-prediction', label: 'Use AI models to predict missing data', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'avoid-using-ai', label: 'Avoid using AI', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'replace-planning-team', label: 'Replace planning team entirely', icon: <Users size={24} weight="duotone" /> },
+              { value: 'pilot-ai-forecasting', label: 'Pilot AI forecasting while validating against historical data', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'use-ai-without-verification', label: 'Use AI outputs without verification', icon: <Lightning size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'operations-strategic-role',
-            question: 'In your view, what do you think operations exists primarily to accomplish?',
-            helperText: 'Tests senior framing',
+            id: 'om-e6',
+            question: 'Operations blames procurement for delays; procurement blames operations.',
+            helperText: 'Tests Leadership & Operations Excellence',
+            isScenario: true,
             options: [
-              { value: 'execute-plans', label: 'Execute plans - deliver on commitments', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'reduce-cost', label: 'Reduce cost - maximize efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'enable-scale', label: 'Enable scale - support rapid growth', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'competitive-advantage', label: 'Drive competitive advantage - ops as strategy', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'stay-out-conflict', label: 'Stay out of conflict', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'support-own-team', label: 'Support your own team', icon: <Users size={24} weight="duotone" /> },
+              { value: 'map-end-to-end', label: 'Map end-to-end process and identify breakdown points collaboratively', icon: <Path size={24} weight="duotone" /> },
+              { value: 'escalate-immediately', label: 'Escalate immediately', icon: <Target size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 3-8 years experience (Mid level) - using same questions for now
+    // 3-8 years experience (Mid level)
     '3-8': [
-      // Screen 3: Operations Questions 1-2
+      // Screen 1: OM-M1, OM-M2
       {
         id: 'operations-screen-1',
-        initialChatText: "Let's explore your operations thinking and problem-solving approach.",
+        initialChatText: "Let's explore your operations thinking and strategic problem-solving approach.",
         questions: [
           {
-            id: 'operations-scale-stress',
-            question: 'Your product demand doubles in just 90 days. What do you think will break first in your operations?',
-            helperText: 'Tests system-level thinking',
+            id: 'om-m1',
+            question: 'Operational costs have increased by 18% year-over-year without proportional revenue growth. What is your structured response?',
+            helperText: 'Tests Operations Excellence',
             isScenario: true,
             options: [
-              { value: 'hiring-capacity', label: 'Hiring capacity - unable to scale team fast enough', icon: <Users size={24} weight="duotone" /> },
-              { value: 'process-design', label: 'Process design - workflows not built for scale', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'data-visibility', label: 'Data visibility - losing insights at scale', icon: <Database size={24} weight="duotone" /> },
-              { value: 'vendor-reliability', label: 'Vendor reliability - third-party dependencies', icon: <Buildings size={24} weight="duotone" /> }
+              { value: 'cut-costs-equally', label: 'Cut costs across all departments equally', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'reduce-workforce', label: 'Reduce workforce', icon: <Users size={24} weight="duotone" /> },
+              { value: 'conduct-cost-driver-analysis', label: 'Conduct cost-driver analysis and optimize high-impact inefficiencies', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'increase-pricing', label: 'Increase pricing', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'operations-cost-sla',
-            question: 'Your operational costs are rising while SLA (Service Level Agreement) performance is dropping. What would you fix first?',
-            helperText: 'Tests ops maturity',
+            id: 'om-m2',
+            question: 'A major supplier shuts down unexpectedly. Your first strategic move?',
+            helperText: 'Tests Supply Chain Strategy',
             isScenario: true,
             options: [
-              { value: 'headcount', label: 'Headcount - hire more people', icon: <Users size={24} weight="duotone" /> },
-              { value: 'process-bottlenecks', label: 'Process bottlenecks - fix inefficient workflows', icon: <Path size={24} weight="duotone" /> },
-              { value: 'demand-variability', label: 'Demand variability - better forecasting', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'automation-gaps', label: 'Automation gaps - identify manual work to automate', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'pause-operations', label: 'Pause operations', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'increase-customer-prices', label: 'Increase customer prices immediately', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'activate-alternate-suppliers', label: 'Activate alternate suppliers and assess risk diversification', icon: <Buildings size={24} weight="duotone" /> },
+              { value: 'wait-resolution', label: 'Wait for resolution', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Operations Questions 3-4
+      // Screen 2: OM-M3, OM-M4
       {
         id: 'operations-screen-2',
-        initialChatText: "Now let's assess your AI application and accountability.",
+        initialChatText: "Now let's assess your scaling strategy and automation thinking.",
         questions: [
           {
-            id: 'operations-ai-leverage',
-            question: 'Where do you think AI delivers the highest ROI (Return on Investment) in your operations work?',
-            helperText: 'Tests AI application depth',
+            id: 'om-m3',
+            question: 'Demand has doubled in 12 months. Current processes are breaking. What is critical?',
+            helperText: 'Tests Strategic Thinking & Operations Excellence',
+            isScenario: true,
             options: [
-              { value: 'reporting', label: 'Reporting - automated dashboards and insights', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'forecasting', label: 'Forecasting - demand and capacity prediction', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'automation', label: 'Automation - eliminating manual workflows', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'decision-optimization', label: 'Decision optimization - smarter resource allocation', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'increase-overtime', label: 'Increase overtime hours', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'hire-aggressively', label: 'Hire aggressively without structure', icon: <Users size={24} weight="duotone" /> },
+              { value: 'redesign-workflows', label: 'Redesign workflows, capacity planning, and process automation', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'slow-down-growth', label: 'Slow down growth', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'operations-ownership',
-            question: 'Which metric do you think keeps you up at night and worries you the most?',
-            helperText: 'Tests accountability',
+            id: 'om-m4',
+            question: 'A manual approval process causes 2-day delays.',
+            helperText: 'Tests AI Literacy',
+            isScenario: true,
             options: [
-              { value: 'task-completion', label: 'Task completion - getting things done on time', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'cost-per-unit', label: 'Cost per unit - operational efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'sla-adherence', label: 'SLA (Service Level Agreement) adherence - meeting commitments', icon: <Target size={24} weight="duotone" /> },
-              { value: 'margin', label: 'Margin - profitability of operations', icon: <ChartBar size={24} weight="duotone" /> }
+              { value: 'add-more-approvers', label: 'Add more approvers', icon: <Users size={24} weight="duotone" /> },
+              { value: 'remove-approvals', label: 'Remove approvals entirely', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'evaluate-workflow-automation', label: 'Evaluate workflow automation with controls and audit trail', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'ignore-issue', label: 'Ignore issue', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Operations Questions 5-6
+      // Screen 3: OM-M5, OM-M6
       {
         id: 'operations-screen-3',
-        initialChatText: "Finally, let's understand your pragmatism and strategic framing.",
+        initialChatText: "Finally, let's understand your data governance and leadership approach.",
         questions: [
           {
-            id: 'operations-data-constraint',
-            question: 'Your operations data is delayed by 2 weeks, but decisions need to be made now. What do you do?',
-            helperText: 'Tests senior pragmatism',
+            id: 'om-m5',
+            question: 'Multiple dashboards show conflicting performance metrics.',
+            helperText: 'Tests Operations Excellence & Data Governance',
             isScenario: true,
             options: [
-              { value: 'wait', label: 'Wait for accurate data before making decisions', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'use-proxies', label: 'Use proxy metrics as temporary alternatives', icon: <Target size={24} weight="duotone" /> },
-              { value: 'early-warning', label: 'Build real-time early-warning indicator system', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'ai-prediction', label: 'Use AI models to predict missing data', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'choose-favorable-metric', label: 'Choose the most favorable metric', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'report-average', label: 'Report average', icon: <Target size={24} weight="duotone" /> },
+              { value: 'standardize-kpi-definitions', label: 'Standardize KPI definitions and reconcile data sources', icon: <Database size={24} weight="duotone" /> },
+              { value: 'reduce-reporting', label: 'Reduce reporting', icon: <XCircle size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'operations-strategic-role',
-            question: 'In your view, what do you think operations exists primarily to accomplish?',
-            helperText: 'Tests senior framing',
+            id: 'om-m6',
+            question: 'Product launches often face operational readiness issues.',
+            helperText: 'Tests Leadership',
+            isScenario: true,
             options: [
-              { value: 'execute-plans', label: 'Execute plans - deliver on commitments', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'reduce-cost', label: 'Reduce cost - maximize efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'enable-scale', label: 'Enable scale - support rapid growth', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'competitive-advantage', label: 'Drive competitive advantage - ops as strategy', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'let-teams-manage', label: 'Let teams manage independently', icon: <Users size={24} weight="duotone" /> },
+              { value: 'increase-pressure', label: 'Increase pressure on operations', icon: <Target size={24} weight="duotone" /> },
+              { value: 'implement-launch-checklists', label: 'Implement launch checklists, accountability owners, and milestone tracking', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'delay-launches', label: 'Delay launches', icon: <Clock size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 8+ years experience (Senior level) - using same questions for now
+    // 8+ years experience (Senior level)
     '8+': [
-      // Screen 3: Operations Questions 1-2
+      // Screen 1: OM-S1, OM-S2
       {
         id: 'operations-screen-1',
-        initialChatText: "Let's explore your operations thinking and problem-solving approach.",
+        initialChatText: "Let's explore your strategic operations thinking and long-term planning.",
         questions: [
           {
-            id: 'operations-scale-stress',
-            question: 'Your product demand doubles in just 90 days. What do you think will break first in your operations?',
-            helperText: 'Tests system-level thinking',
+            id: 'om-s1',
+            question: 'Company growth has plateaued due to operational constraints. What defines strong operational strategy?',
+            helperText: 'Tests Strategic Thinking',
             isScenario: true,
             options: [
-              { value: 'hiring-capacity', label: 'Hiring capacity - unable to scale team fast enough', icon: <Users size={24} weight="duotone" /> },
-              { value: 'process-design', label: 'Process design - workflows not built for scale', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'data-visibility', label: 'Data visibility - losing insights at scale', icon: <Database size={24} weight="duotone" /> },
-              { value: 'vendor-reliability', label: 'Vendor reliability - third-party dependencies', icon: <Buildings size={24} weight="duotone" /> }
+              { value: 'increase-headcount', label: 'Increase headcount', icon: <Users size={24} weight="duotone" /> },
+              { value: 'maintain-current-structure', label: 'Maintain current structure', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'redesign-operating-model', label: 'Redesign operating model aligned with long-term growth goals', icon: <Target size={24} weight="duotone" /> },
+              { value: 'cut-costs-aggressively', label: 'Cut costs aggressively', icon: <CurrencyInr size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'operations-cost-sla',
-            question: 'Your operational costs are rising while SLA (Service Level Agreement) performance is dropping. What would you fix first?',
-            helperText: 'Tests ops maturity',
+            id: 'om-s2',
+            question: '60% of raw materials come from one geographic region.',
+            helperText: 'Tests Supply Chain Strategy',
             isScenario: true,
             options: [
-              { value: 'headcount', label: 'Headcount - hire more people', icon: <Users size={24} weight="duotone" /> },
-              { value: 'process-bottlenecks', label: 'Process bottlenecks - fix inefficient workflows', icon: <Path size={24} weight="duotone" /> },
-              { value: 'demand-variability', label: 'Demand variability - better forecasting', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'automation-gaps', label: 'Automation gaps - identify manual work to automate', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'continue-as-is', label: 'Continue as is', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'increase-dependency', label: 'Increase dependency', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'diversify-supplier-base', label: 'Diversify supplier base and build contingency plans', icon: <Buildings size={24} weight="duotone" /> },
+              { value: 'increase-inventory-buffer', label: 'Increase inventory buffer only', icon: <ShoppingCart size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Operations Questions 3-4
+      // Screen 2: OM-S3, OM-S4
       {
         id: 'operations-screen-2',
-        initialChatText: "Now let's assess your AI application and accountability.",
+        initialChatText: "Now let's assess your automation strategy and board-level leadership.",
         questions: [
           {
-            id: 'operations-ai-leverage',
-            question: 'Where do you think AI delivers the highest ROI (Return on Investment) in your operations work?',
-            helperText: 'Tests AI application depth',
+            id: 'om-s3',
+            question: 'Board wants digital transformation across operations. Your approach?',
+            helperText: 'Tests AI Literacy & Process Automation',
+            isScenario: true,
             options: [
-              { value: 'reporting', label: 'Reporting - automated dashboards and insights', icon: <PresentationChart size={24} weight="duotone" /> },
-              { value: 'forecasting', label: 'Forecasting - demand and capacity prediction', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'automation', label: 'Automation - eliminating manual workflows', icon: <Gear size={24} weight="duotone" /> },
-              { value: 'decision-optimization', label: 'Decision optimization - smarter resource allocation', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'buy-multiple-tools', label: 'Buy multiple tools immediately', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'resist-change', label: 'Resist change', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'define-phased-automation', label: 'Define phased automation roadmap with ROI tracking', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'fully-automate-without-pilots', label: 'Fully automate without pilots', icon: <Lightning size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'operations-ownership',
-            question: 'Which metric do you think keeps you up at night and worries you the most?',
-            helperText: 'Tests accountability',
+            id: 'om-s4',
+            question: 'Board questions declining operational efficiency metrics.',
+            helperText: 'Tests Leadership',
+            isScenario: true,
             options: [
-              { value: 'task-completion', label: 'Task completion - getting things done on time', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'cost-per-unit', label: 'Cost per unit - operational efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'sla-adherence', label: 'SLA (Service Level Agreement) adherence - meeting commitments', icon: <Target size={24} weight="duotone" /> },
-              { value: 'margin', label: 'Margin - profitability of operations', icon: <ChartBar size={24} weight="duotone" /> }
+              { value: 'defend-current-processes', label: 'Defend current processes', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'revise-metrics-presentation', label: 'Revise metrics presentation', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'present-root-cause-analysis', label: 'Present root-cause analysis, benchmark data, and improvement plan', icon: <Target size={24} weight="duotone" /> },
+              { value: 'defer-to-ceo', label: 'Defer to CEO', icon: <Users size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Operations Questions 5-6
+      // Screen 3: OM-S5, OM-S6
       {
         id: 'operations-screen-3',
-        initialChatText: "Finally, let's understand your pragmatism and strategic framing.",
+        initialChatText: "Finally, let's understand your expansion strategy and team building approach.",
         questions: [
           {
-            id: 'operations-data-constraint',
-            question: 'Your operations data is delayed by 2 weeks, but decisions need to be made now. What do you do?',
-            helperText: 'Tests senior pragmatism',
+            id: 'om-s5',
+            question: 'Company plans to expand internationally. Operationally, what matters most?',
+            helperText: 'Tests Strategic Thinking',
             isScenario: true,
             options: [
-              { value: 'wait', label: 'Wait for accurate data before making decisions', icon: <Clock size={24} weight="duotone" /> },
-              { value: 'use-proxies', label: 'Use proxy metrics as temporary alternatives', icon: <Target size={24} weight="duotone" /> },
-              { value: 'early-warning', label: 'Build real-time early-warning indicator system', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'ai-prediction', label: 'Use AI models to predict missing data', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'replicate-domestic-model', label: 'Replicate domestic model', icon: <Gear size={24} weight="duotone" /> },
+              { value: 'focus-only-logistics', label: 'Focus only on logistics', icon: <ShoppingCart size={24} weight="duotone" /> },
+              { value: 'assess-regulatory-supplier', label: 'Assess regulatory, supplier ecosystem, cost structure, and scalability', icon: <Target size={24} weight="duotone" /> },
+              { value: 'increase-pricing', label: 'Increase pricing', icon: <CurrencyInr size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'operations-strategic-role',
-            question: 'In your view, what do you think operations exists primarily to accomplish?',
-            helperText: 'Tests senior framing',
+            id: 'om-s6',
+            question: 'Operations team grew from 25 to 100 people. What is critical?',
+            helperText: 'Tests Leadership & Operations Excellence',
+            isScenario: true,
             options: [
-              { value: 'execute-plans', label: 'Execute plans - deliver on commitments', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'reduce-cost', label: 'Reduce cost - maximize efficiency', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'enable-scale', label: 'Enable scale - support rapid growth', icon: <TrendUp size={24} weight="duotone" /> },
-              { value: 'competitive-advantage', label: 'Drive competitive advantage - ops as strategy', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'increase-monitoring-only', label: 'Increase monitoring only', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'focus-only-daily-execution', label: 'Focus only on daily execution', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'establish-clear-ownership', label: 'Establish clear ownership, performance metrics, and continuous improvement culture', icon: <Users size={24} weight="duotone" /> },
+              { value: 'reduce-documentation', label: 'Reduce documentation', icon: <XCircle size={24} weight="duotone" /> }
             ]
           }
         ]

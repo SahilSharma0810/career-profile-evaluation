@@ -110,13 +110,29 @@ class MBAQuizRequest(BaseModel):
     mm_s5: Optional[str] = Field(None, alias="mm-s5")  # Entering New Geography
     mm_s6: Optional[str] = Field(None, alias="mm-s6")  # Building a High-Performance Marketing Org (Ownership)
 
-    # Operations
-    operations_scale_stress: Optional[str] = Field(None, alias="operations-scale-stress")
-    operations_cost_sla: Optional[str] = Field(None, alias="operations-cost-sla")
-    operations_ai_leverage: Optional[str] = Field(None, alias="operations-ai-leverage")
-    operations_ownership: Optional[str] = Field(None, alias="operations-ownership")
-    operations_data_constraint: Optional[str] = Field(None, alias="operations-data-constraint")
-    operations_strategic_role: Optional[str] = Field(None, alias="operations-strategic-role")
+    # Operations - 0-3 years (Entry level)
+    om_e1: Optional[str] = Field(None, alias="om-e1")  # Order Fulfillment Delays
+    om_e2: Optional[str] = Field(None, alias="om-e2")  # Inventory Mismatch
+    om_e3: Optional[str] = Field(None, alias="om-e3")  # Repetitive Manual Reporting
+    om_e4: Optional[str] = Field(None, alias="om-e4")  # Vendor Delays
+    om_e5: Optional[str] = Field(None, alias="om-e5")  # Using AI in Operations (AI Fluency)
+    om_e6: Optional[str] = Field(None, alias="om-e6")  # Cross-Team Process Breakdown (Ownership)
+    
+    # Operations - 3-8 years (Mid level)
+    om_m1: Optional[str] = Field(None, alias="om-m1")  # Rising Operational Costs
+    om_m2: Optional[str] = Field(None, alias="om-m2")  # Supply Chain Disruption
+    om_m3: Optional[str] = Field(None, alias="om-m3")  # Scaling Operations
+    om_m4: Optional[str] = Field(None, alias="om-m4")  # Automation Opportunity (AI Fluency)
+    om_m5: Optional[str] = Field(None, alias="om-m5")  # Data-Driven Decision Making
+    om_m6: Optional[str] = Field(None, alias="om-m6")  # Managing Cross-Functional Execution (Ownership)
+    
+    # Operations - 8+ years (Senior level)
+    om_s1: Optional[str] = Field(None, alias="om-s1")  # Long-Term Operations Strategy
+    om_s2: Optional[str] = Field(None, alias="om-s2")  # Supply Chain Risk Concentration
+    om_s3: Optional[str] = Field(None, alias="om-s3")  # Enterprise Automation Roadmap (AI Fluency)
+    om_s4: Optional[str] = Field(None, alias="om-s4")  # Board-Level Performance Challenge (Ownership)
+    om_s5: Optional[str] = Field(None, alias="om-s5")  # Expansion into New Geography
+    om_s6: Optional[str] = Field(None, alias="om-s6")  # Building High-Performance Ops Team
 
     # Founder
     founder_mvp_failure: Optional[str] = Field(None, alias="founder-mvp-failure")
