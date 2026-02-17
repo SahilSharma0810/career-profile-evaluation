@@ -90,11 +90,9 @@ def calculate_mba_readiness_score(responses: Dict[str, Any]) -> Dict[str, Any]:
 def _calculate_experience_score(experience: str) -> int:
     """Map experience to score (0-100)"""
     experience_map = {
-        '0-2': 40,
-        '2-5': 60,
-        '5-8': 80,
-        '8-12': 95,
-        '12+': 100
+        '0-3': 40,
+        '3-8': 70,
+        '8+': 95
     }
     return experience_map.get(experience, 50)
 
@@ -169,11 +167,13 @@ def _score_pm_maturity(responses: Dict[str, Any]) -> int:
 
 def _map_experience_to_level(experience: str) -> str:
     """Map experience string to level (0-3, 3-8, 8+)"""
-    if experience in ['0-1', '1-3', '0-2', '2-5']:
+    # Frontend now sends values directly as '0-3', '3-8', '8+'
+    # Keep backward compatibility with old values for any cached data
+    if experience in ['0-3', '0-1', '1-3', '0-2', '2-5']:
         return '0-3'
-    elif experience in ['3-6', '6-10', '5-8', '8-12']:
+    elif experience in ['3-8', '3-6', '6-10', '5-8', '8-12']:
         return '3-8'
-    elif experience in ['10+', '12+']:
+    elif experience in ['8+', '10+', '12+']:
         return '8+'
     else:
         # Default to mid-level if unknown

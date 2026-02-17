@@ -9,7 +9,7 @@ class MBAQuizRequest(BaseModel):
     """Request model for MBA evaluation"""
     # Required fields
     role: str = Field(..., description="User's selected role (pm, finance, sales, marketing, operations, founder, tech)")
-    experience: str = Field(..., description="Years of experience (0-2, 2-5, 5-8, 8-12, 12+)")
+    experience: str = Field(..., description="Years of experience (0-3, 3-8, 8+)")
     career_goal: str = Field(..., description="Career goal (career-growth, skill-development, role-transition, entrepreneurship)")
 
     # Role-specific responses (all optional since different roles have different questions)

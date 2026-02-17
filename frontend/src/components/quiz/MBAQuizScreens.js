@@ -51,11 +51,9 @@ export const MBA_INTAKE_SCREEN_1 = {
       id: 'experience',
       question: 'How many years of total work experience do you have?',
       options: [
-        { value: '0-1', label: '0–1 year', icon: <Clock size={24} weight="duotone" /> },
-        { value: '1-3', label: '1–3 years', icon: <Timer size={24} weight="duotone" /> },
-        { value: '3-6', label: '3–6 years', icon: <Briefcase size={24} weight="duotone" /> },
-        { value: '6-10', label: '6–10 years', icon: <TrendUp size={24} weight="duotone" /> },
-        { value: '10+', label: '10+ years', icon: <Trophy size={24} weight="duotone" /> }
+        { value: '0-3', label: '0–3 years', icon: <Clock size={24} weight="duotone" /> },
+        { value: '3-8', label: '3–8 years', icon: <Briefcase size={24} weight="duotone" /> },
+        { value: '8+', label: '8+ years', icon: <Trophy size={24} weight="duotone" /> }
       ]
     }
   ],
@@ -70,11 +68,9 @@ export const MBA_INTAKE_SCREEN_1 = {
       'tech': 'Excellent! Engineers with business acumen and AI skills are becoming strategic leaders in tech companies.'
     },
     experience: {
-      '0-1': 'Early in your career - perfect time to build strong business + AI foundations!',
-      '1-3': 'Great timing! You have enough context to leverage AI strategically in your role.',
-      '3-6': "You're at an inflection point. AI skills can accelerate your path to senior/leadership roles.",
-      '6-10': 'Solid experience! AI + business acumen will position you for executive opportunities.',
-      '10+': 'Seasoned professional! AI mastery will multiply your decades of business insight.'
+      '0-3': 'Early in your career - perfect time to build strong business + AI foundations!',
+      '3-8': "You're at an inflection point. AI skills can accelerate your path to senior/leadership roles.",
+      '8+': 'Seasoned professional! AI mastery will multiply your decades of business insight.'
     }
   }
 };
@@ -115,7 +111,7 @@ export const MBA_INTAKE_SCREEN_2 = {
 // Role-specific deep-dive questions
 // NEW STRUCTURE: Questions are now organized by role AND experience level
 // Structure: { 'role': { '0-3': [screens...], '3-8': [screens...], '8+': [screens...] } }
-// Experience mapping: '0-1'/'1-3' -> '0-3', '3-6'/'6-10' -> '3-8', '10+' -> '8+'
+// Experience levels: '0-3', '3-8', '8+'
 export const MBA_ROLE_SPECIFIC_SCREENS = {
   'pm': {
     // 0-3 years experience (Entry level)
@@ -2152,14 +2148,10 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
 
 // Helper function to map frontend experience values to document experience levels
 export const mapExperienceToLevel = (experience) => {
-  // Frontend: '0-1', '1-3', '3-6', '6-10', '10+'
-  // Document: '0-3', '3-8', '8+'
-  if (experience === '0-1' || experience === '1-3') {
-    return '0-3';
-  } else if (experience === '3-6' || experience === '6-10') {
-    return '3-8';
-  } else if (experience === '10+') {
-    return '8+';
+  // Frontend and Document now use the same values: '0-3', '3-8', '8+'
+  // Return as-is since they match, or default to mid-level if unknown
+  if (experience === '0-3' || experience === '3-8' || experience === '8+') {
+    return experience;
   }
   // Default to mid-level if unknown
   return '3-8';
