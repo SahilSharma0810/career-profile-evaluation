@@ -1872,7 +1872,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
         initialChatText: "Let's explore your product thinking and business impact awareness.",
         questions: [
           {
-            id: 'tech-product-thinking',
+            id: 'tm-e1',
             question: 'You built a feature that took significant effort. After launch, usage is very low. The Product Manager hasn\'t raised concerns yet. What do you do?',
             helperText: 'Tests product thinking and ownership',
             isScenario: true,
@@ -1884,7 +1884,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
             ]
           },
           {
-            id: 'tech-business-impact',
+            id: 'tm-e2',
             question: 'You reduced server response time by 25%, but users haven\'t directly complained about speed before. How do you evaluate the value of your work?',
             helperText: 'Tests business impact awareness',
             isScenario: true,
@@ -1903,7 +1903,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
         initialChatText: "Now let's assess your execution approach and prioritization thinking.",
         questions: [
           {
-            id: 'tech-execution-accountability',
+            id: 'tm-e3',
             question: 'Two days before release, you discover a bug that may impact 5% of users. What is the best action?',
             helperText: 'Tests execution and accountability',
             isScenario: true,
@@ -1915,7 +1915,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
             ]
           },
           {
-            id: 'tech-prioritization',
+            id: 'tm-e4',
             question: 'You have: Task A: Refactor messy code (no immediate visible impact). Task B: Add minor UI feature requested by Sales. Both take equal time. How do you decide?',
             helperText: 'Tests prioritization thinking',
             isScenario: true,
@@ -1934,7 +1934,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
         initialChatText: "Finally, let's understand your AI literacy and ownership mindset.",
         questions: [
           {
-            id: 'tech-ai-literacy',
+            id: 'tm-e5',
             question: 'Your manager suggests adopting an AI coding assistant for the team. What should you evaluate?',
             helperText: 'Tests AI literacy in business context',
             options: [
@@ -1945,7 +1945,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
             ]
           },
           {
-            id: 'tech-ownership',
+            id: 'tm-e6',
             question: 'A production issue occurred due to a decision you made, though it wasn\'t fully your fault. What do you do?',
             helperText: 'Tests ownership mindset',
             isScenario: true,
@@ -1967,7 +1967,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
         initialChatText: "Let's explore your feature ROI evaluation and cost management thinking.",
         questions: [
           {
-            id: 'tech-feature-roi',
+            id: 'tm-m1',
             question: 'A new feature requires 6 weeks of engineering effort and may increase retention by 3%. What matters most before committing?',
             helperText: 'Tests feature ROI evaluation',
             isScenario: true,
@@ -1979,7 +1979,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
             ]
           },
           {
-            id: 'tech-cost-escalation',
+            id: 'tm-m2',
             question: 'Cloud costs increased 50% year-over-year. Growth is only 15%. What\'s your first strategic step?',
             helperText: 'Tests cost escalation management',
             isScenario: true,
@@ -1998,7 +1998,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
         initialChatText: "Now let's assess your cross-functional collaboration and tech debt management.",
         questions: [
           {
-            id: 'tech-sales-product-conflict',
+            id: 'tm-m3',
             question: 'Sales closed a major deal promising a custom feature not on roadmap. What do you do?',
             helperText: 'Tests sales vs product conflict resolution',
             isScenario: true,
@@ -2010,7 +2010,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
             ]
           },
           {
-            id: 'tech-debt-speed',
+            id: 'tm-m4',
             question: 'Engineering wants refactoring. Leadership wants faster feature releases. How do you respond?',
             helperText: 'Tests tech debt vs speed balance',
             isScenario: true,
@@ -2029,7 +2029,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
         initialChatText: "Finally, let's understand your AI investment decisions and resource allocation.",
         questions: [
           {
-            id: 'tech-ai-investment',
+            id: 'tm-m5',
             question: 'Leadership wants to add AI chatbot to product. Your evaluation criteria?',
             helperText: 'Tests AI investment decision making',
             options: [
@@ -2040,7 +2040,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
             ]
           },
           {
-            id: 'tech-resource-allocation',
+            id: 'tm-m6',
             question: 'You have limited engineering bandwidth. Options: Infra optimization, New revenue feature, Internal tooling. How do you decide?',
             helperText: 'Tests resource allocation thinking',
             isScenario: true,
@@ -2062,7 +2062,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
         initialChatText: "Let's explore your strategic trade-offs and capital allocation thinking.",
         questions: [
           {
-            id: 'tech-strategic-tradeoff',
+            id: 'tm-s1',
             question: 'You must choose between: Improving reliability (reduces churn risk) OR Launching a revenue-driving feature. Decision should be based on?',
             helperText: 'Tests strategic trade-off thinking',
             isScenario: true,
@@ -2074,7 +2074,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
             ]
           },
           {
-            id: 'tech-capital-allocation',
+            id: 'tm-s2',
             question: 'You receive ₹3 Cr for engineering improvement. Best approach?',
             helperText: 'Tests capital allocation thinking',
             isScenario: true,
@@ -2093,7 +2093,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
         initialChatText: "Now let's assess your understanding of engineering as competitive advantage and scalability.",
         questions: [
           {
-            id: 'tech-competitive-advantage',
+            id: 'tm-s3',
             question: 'When does tech become a moat?',
             helperText: 'Tests understanding of engineering as competitive advantage',
             options: [
@@ -2104,7 +2104,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
             ]
           },
           {
-            id: 'tech-scalability',
+            id: 'tm-s4',
             question: 'You expect 5x user growth in 2 years but revenue is tight today. What\'s the best strategy?',
             helperText: 'Tests long-term scalability thinking',
             isScenario: true,
@@ -2123,7 +2123,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
         initialChatText: "Finally, let's understand your AI strategy and portfolio balancing.",
         questions: [
           {
-            id: 'tech-ai-strategy',
+            id: 'tm-s5',
             question: 'How do you decide if AI should be core product vs supporting feature?',
             helperText: 'Tests AI as strategy thinking',
             options: [
@@ -2134,7 +2134,7 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
             ]
           },
           {
-            id: 'tech-portfolio-balancing',
+            id: 'tm-s6',
             question: 'How should engineering capacity typically be allocated?',
             helperText: 'Tests portfolio balancing thinking',
             options: [

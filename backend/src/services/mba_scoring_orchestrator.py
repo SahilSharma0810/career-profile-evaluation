@@ -116,6 +116,8 @@ def _calculate_role_maturity(role: str, responses: Dict[str, Any]) -> int:
         return _score_operations_maturity(responses)
     elif role == 'founder':
         return _score_founder_maturity(responses)
+    elif role == 'tech':
+        return _score_tech_maturity(responses)
     else:
         return 50  # Default for student/other
 
@@ -401,6 +403,51 @@ def _score_founder_maturity(responses: Dict[str, Any]) -> int:
     return min(score, 100)
 
 
+def _score_tech_maturity(responses: Dict[str, Any]) -> int:
+    """Score Tech/Engineering based on strategic depth - experience-based questions"""
+    from .mba_skill_scoring_maps import ANSWER_SCORES
+    
+    score = 50  # Base score
+    experience = responses.get('experience', '')
+    
+    # Map experience to level
+    experience_level = _map_experience_to_level(experience)
+    
+    # Score based on experience level
+    if experience_level == '0-3':
+        # Entry level questions (TM-E1 to TM-E6)
+        # Exclude E5 (AI) and E6 (ownership) as they're used in separate calculations
+        questions = ['tm-e1', 'tm-e2', 'tm-e3', 'tm-e4']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                # Convert 1-5 score to maturity points (max 10 points per question)
+                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
+    
+    elif experience_level == '3-8':
+        # Mid level questions (TM-M1 to TM-M6)
+        # Exclude M4 (ownership) and M5 (AI) as they're used in separate calculations
+        questions = ['tm-m1', 'tm-m2', 'tm-m3', 'tm-m6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
+    elif experience_level == '8+':
+        # Senior level questions (TM-S1 to TM-S6)
+        # Exclude S4 (ownership) and S5 (AI) as they're used in separate calculations
+        questions = ['tm-s1', 'tm-s2', 'tm-s3', 'tm-s6']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
+    return min(score, 100)
+
+
 def _calculate_ai_fluency(role: str, responses: Dict[str, Any]) -> int:
     """Calculate AI fluency score based on AI-related answers"""
     from .mba_skill_scoring_maps import ANSWER_SCORES
@@ -526,6 +573,26 @@ def _calculate_ai_fluency(role: str, responses: Dict[str, Any]) -> int:
                 answer_score = ANSWER_SCORES[ai_key].get(ai_answer, 0)
                 # Convert 1-4 score to AI fluency points
                 # 1→+10, 2→+20, 3→+30, 4→+40
+                score += (answer_score - 1) * 10 + 10
+    elif role == 'tech':
+        # Tech uses experience-based AI questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct AI question based on experience
+        ai_question_map = {
+            '0-3': 'tm-e5',  # TM-E5: AI Literacy (Business Context)
+            '3-8': 'tm-m5',  # TM-M5: AI Investment Decision
+            '8+': 'tm-s5'    # TM-S5: AI as Strategy
+        }
+        
+        ai_key = ai_question_map.get(experience_level)
+        if ai_key:
+            ai_answer = responses.get(ai_key)
+            if ai_answer and ai_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ai_key].get(ai_answer, 0)
+                # Convert 1-5 score to AI fluency points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
                 score += (answer_score - 1) * 10 + 10
 
     return min(score, 100)
@@ -656,6 +723,26 @@ def _calculate_ownership(role: str, responses: Dict[str, Any]) -> int:
                 answer_score = ANSWER_SCORES[ownership_key].get(ownership_answer, 0)
                 # Convert 1-4 score to ownership points
                 # 1→+10, 2→+20, 3→+30, 4→+40
+                score += (answer_score - 1) * 10 + 10
+    elif role == 'tech':
+        # Tech uses experience-based ownership questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct ownership question based on experience
+        ownership_question_map = {
+            '0-3': 'tm-e6',  # TM-E6: Ownership Mindset
+            '3-8': 'tm-m4',  # TM-M4: Tech Debt vs Speed
+            '8+': 'tm-s4'    # TM-S4: Long-Term Scalability
+        }
+        
+        ownership_key = ownership_question_map.get(experience_level)
+        if ownership_key:
+            ownership_answer = responses.get(ownership_key)
+            if ownership_answer and ownership_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ownership_key].get(ownership_answer, 0)
+                # Convert 1-5 score to ownership points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
                 score += (answer_score - 1) * 10 + 10
 
     return min(score, 100)
@@ -997,6 +1084,55 @@ def _generate_readiness_tags(score: int, maturity: str, role: str, responses: Di
             if responses.get('sf-s6') == 'define-values-principles':
                 tags.append("Culture Builder")
 
+    elif role == 'tech':
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        if experience_level == '0-3':
+            # Entry level tags
+            if responses.get('tm-e1') == 'review-data':
+                tags.append("Data-Driven Engineer")
+            if responses.get('tm-e2') == 'ux-cost':
+                tags.append("Business-Minded")
+            if responses.get('tm-e3') == 'inform-stakeholders':
+                tags.append("Accountable")
+            if responses.get('tm-e4') == 'business-impact':
+                tags.append("Strategic Prioritizer")
+            if responses.get('tm-e5') == 'productivity-cost':
+                tags.append("AI-Adopter")
+            if responses.get('tm-e6') == 'take-ownership':
+                tags.append("Ownership Mindset")
+        
+        elif experience_level == '3-8':
+            # Mid level tags
+            if responses.get('tm-m1') == 'revenue-opportunity':
+                tags.append("ROI-Focused")
+            if responses.get('tm-m2') == 'analyze-drivers':
+                tags.append("Cost-Conscious")
+            if responses.get('tm-m3') == 'evaluate-align':
+                tags.append("Cross-Functional Leader")
+            if responses.get('tm-m4') == 'balance-debt':
+                tags.append("Strategic Balancer")
+            if responses.get('tm-m5') == 'pain-point-roi':
+                tags.append("AI-Capable")
+            if responses.get('tm-m6') == 'growth-priorities':
+                tags.append("Strategic Allocator")
+        
+        elif experience_level == '8+':
+            # Senior level tags
+            if responses.get('tm-s1') == 'long-term-strategy':
+                tags.append("Strategic Thinker")
+            if responses.get('tm-s2') == 'allocate-roi':
+                tags.append("Capital Allocator")
+            if responses.get('tm-s3') == 'switching-cost-value':
+                tags.append("Business Strategist")
+            if responses.get('tm-s4') == 'modular-incremental':
+                tags.append("Scalability Expert")
+            if responses.get('tm-s5') == 'strategic-differentiation':
+                tags.append("AI Strategist")
+            if responses.get('tm-s6') == 'balanced-allocation':
+                tags.append("Portfolio Strategist")
+
     # Add AI maturity tag if high
     if maturity == AIMaturityLevel.AI_NATIVE:
         tags.append("AI Native")
@@ -1011,7 +1147,8 @@ def _generate_readiness_tags(score: int, maturity: str, role: str, responses: Di
             'sales': 'Sales Professional',
             'marketing': 'Marketer',
             'operations': 'Operations Professional',
-            'founder': 'Founder'
+            'founder': 'Founder',
+            'tech': 'Tech Engineer'
         }
         if role in role_identifiers:
             tags.append(role_identifiers[role])

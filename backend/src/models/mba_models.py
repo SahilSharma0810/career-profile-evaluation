@@ -159,28 +159,28 @@ class MBAQuizRequest(BaseModel):
     sf_s6: Optional[str] = Field(None, alias="sf-s6")  # Founder Legacy & Culture
 
     # Tech/Engineering (0-3 years)
-    tech_product_thinking: Optional[str] = Field(None, alias="tech-product-thinking")
-    tech_business_impact: Optional[str] = Field(None, alias="tech-business-impact")
-    tech_execution_accountability: Optional[str] = Field(None, alias="tech-execution-accountability")
-    tech_prioritization: Optional[str] = Field(None, alias="tech-prioritization")
-    tech_ai_literacy: Optional[str] = Field(None, alias="tech-ai-literacy")
-    tech_ownership: Optional[str] = Field(None, alias="tech-ownership")
+    tm_e1: Optional[str] = Field(None, alias="tm-e1")  # Product Thinking
+    tm_e2: Optional[str] = Field(None, alias="tm-e2")  # Business Impact Awareness
+    tm_e3: Optional[str] = Field(None, alias="tm-e3")  # Execution & Accountability
+    tm_e4: Optional[str] = Field(None, alias="tm-e4")  # Prioritization Thinking
+    tm_e5: Optional[str] = Field(None, alias="tm-e5")  # AI Literacy (Business Context) - Used for AI Fluency
+    tm_e6: Optional[str] = Field(None, alias="tm-e6")  # Ownership Mindset - Used for Ownership
 
     # Tech/Engineering (3-8 years)
-    tech_feature_roi: Optional[str] = Field(None, alias="tech-feature-roi")
-    tech_cost_escalation: Optional[str] = Field(None, alias="tech-cost-escalation")
-    tech_sales_product_conflict: Optional[str] = Field(None, alias="tech-sales-product-conflict")
-    tech_debt_speed: Optional[str] = Field(None, alias="tech-debt-speed")
-    tech_ai_investment: Optional[str] = Field(None, alias="tech-ai-investment")
-    tech_resource_allocation: Optional[str] = Field(None, alias="tech-resource-allocation")
+    tm_m1: Optional[str] = Field(None, alias="tm-m1")  # Feature ROI Evaluation
+    tm_m2: Optional[str] = Field(None, alias="tm-m2")  # Cost Escalation
+    tm_m3: Optional[str] = Field(None, alias="tm-m3")  # Sales vs Product Conflict
+    tm_m4: Optional[str] = Field(None, alias="tm-m4")  # Tech Debt vs Speed - Used for Ownership
+    tm_m5: Optional[str] = Field(None, alias="tm-m5")  # AI Investment Decision - Used for AI Fluency
+    tm_m6: Optional[str] = Field(None, alias="tm-m6")  # Resource Allocation
 
     # Tech/Engineering (8+ years)
-    tech_strategic_tradeoff: Optional[str] = Field(None, alias="tech-strategic-tradeoff")
-    tech_capital_allocation: Optional[str] = Field(None, alias="tech-capital-allocation")
-    tech_competitive_advantage: Optional[str] = Field(None, alias="tech-competitive-advantage")
-    tech_scalability: Optional[str] = Field(None, alias="tech-scalability")
-    tech_ai_strategy: Optional[str] = Field(None, alias="tech-ai-strategy")
-    tech_portfolio_balancing: Optional[str] = Field(None, alias="tech-portfolio-balancing")
+    tm_s1: Optional[str] = Field(None, alias="tm-s1")  # Strategic Trade-off
+    tm_s2: Optional[str] = Field(None, alias="tm-s2")  # Capital Allocation
+    tm_s3: Optional[str] = Field(None, alias="tm-s3")  # Engineering as Competitive Advantage
+    tm_s4: Optional[str] = Field(None, alias="tm-s4")  # Long-Term Scalability - Used for Ownership
+    tm_s5: Optional[str] = Field(None, alias="tm-s5")  # AI as Strategy - Used for AI Fluency
+    tm_s6: Optional[str] = Field(None, alias="tm-s6")  # Portfolio Balancing
 
     class Config:
         populate_by_name = True  # Allow both alias and field name

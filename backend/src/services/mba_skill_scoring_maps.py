@@ -164,28 +164,28 @@ QUESTION_SKILL_MAP = {
     'sf-s6': ['leadership'],  # Founder Legacy & Culture
 
     # Tech/Engineering Questions (0-3 years)
-    'tech-product-thinking': ['product_thinking', 'ownership'],
-    'tech-business-impact': ['business_impact_awareness', 'strategic_thinking'],
-    'tech-execution-accountability': ['execution', 'accountability'],
-    'tech-prioritization': ['prioritization', 'business_impact_awareness'],
-    'tech-ai-literacy': ['ai_literacy'],
-    'tech-ownership': ['ownership', 'leadership'],
+    'tm-e1': ['product_thinking', 'ownership'],  # Product Thinking
+    'tm-e2': ['business_impact_awareness', 'strategic_thinking'],  # Business Impact Awareness
+    'tm-e3': ['execution', 'accountability'],  # Execution & Accountability
+    'tm-e4': ['prioritization', 'business_impact_awareness'],  # Prioritization Thinking
+    'tm-e5': ['ai_literacy'],  # AI Literacy (Business Context) - Used for AI Fluency
+    'tm-e6': ['ownership', 'leadership'],  # Ownership Mindset - Used for Ownership
 
     # Tech/Engineering Questions (3-8 years)
-    'tech-feature-roi': ['product_thinking', 'strategic_thinking'],
-    'tech-cost-escalation': ['business_impact_awareness', 'strategic_thinking'],
-    'tech-sales-product-conflict': ['leadership', 'business_partnering'],
-    'tech-debt-speed': ['strategic_thinking', 'prioritization'],
-    'tech-ai-investment': ['ai_literacy', 'strategic_thinking'],
-    'tech-resource-allocation': ['strategic_thinking', 'capital_allocation'],
+    'tm-m1': ['product_thinking', 'strategic_thinking'],  # Feature ROI Evaluation
+    'tm-m2': ['business_impact_awareness', 'strategic_thinking'],  # Cost Escalation
+    'tm-m3': ['leadership', 'business_partnering'],  # Sales vs Product Conflict
+    'tm-m4': ['strategic_thinking', 'prioritization'],  # Tech Debt vs Speed - Used for Ownership
+    'tm-m5': ['ai_literacy', 'strategic_thinking'],  # AI Investment Decision - Used for AI Fluency
+    'tm-m6': ['strategic_thinking', 'capital_allocation'],  # Resource Allocation
 
     # Tech/Engineering Questions (8+ years)
-    'tech-strategic-tradeoff': ['strategic_thinking', 'capital_allocation'],
-    'tech-capital-allocation': ['capital_allocation', 'strategic_thinking'],
-    'tech-competitive-advantage': ['strategic_thinking', 'product_thinking'],
-    'tech-scalability': ['strategic_thinking', 'product_thinking'],
-    'tech-ai-strategy': ['ai_literacy', 'strategic_thinking'],
-    'tech-portfolio-balancing': ['strategic_thinking', 'capital_allocation']
+    'tm-s1': ['strategic_thinking', 'capital_allocation'],  # Strategic Trade-off
+    'tm-s2': ['capital_allocation', 'strategic_thinking'],  # Capital Allocation
+    'tm-s3': ['strategic_thinking', 'product_thinking'],  # Engineering as Competitive Advantage
+    'tm-s4': ['strategic_thinking', 'product_thinking'],  # Long-Term Scalability - Used for Ownership
+    'tm-s5': ['ai_literacy', 'strategic_thinking'],  # AI as Strategy - Used for AI Fluency
+    'tm-s6': ['strategic_thinking', 'capital_allocation']  # Portfolio Balancing
 }
 
 
@@ -989,134 +989,134 @@ ANSWER_SCORES = {
 
     # -------------------- TECH/ENGINEERING (0-3 years) --------------------
 
-    'tech-product-thinking': {
-        'move-next-task': 0,  # Very Weak: No ownership
-        'suggest-features': 2,  # Weak: Solution before diagnosis
-        'review-data': 4,  # Strong: Data-first thinking
-        'blame-marketing': 1   # Very Weak: Blame shifting
+    'tm-e1': {  # TM-E1: Product Thinking
+        'move-next-task': 1,  # A (1): No ownership
+        'suggest-features': 2,  # B (2): Solution before diagnosis
+        'review-data': 4,  # C (4): Data-first thinking
+        'blame-marketing': 1   # D (1): Blame shifting
     },
 
-    'tech-business-impact': {
-        'code-quality': 2,  # Weak: Technical focus only
-        'ux-cost': 4,  # Strong: Business impact awareness
-        'deployment': 1,  # Very Weak: Narrow focus
-        'doesnt-matter': 0   # Very Weak: No business sense
+    'tm-e2': {  # TM-E2: Business Impact Awareness
+        'code-quality': 2,  # A (2): Technical focus only
+        'ux-cost': 4,  # B (4): Business impact awareness
+        'deployment': 1,  # C (1): Narrow focus
+        'doesnt-matter': 1   # D (1): No business sense
     },
 
-    'tech-execution-accountability': {
-        'ignore-small': 0,  # Very Weak: No accountability
-        'inform-stakeholders': 4,  # Strong: Transparent and responsible
-        'fix-quietly': 2,  # Weak: Good intent but poor communication
-        'delay-release': 1   # Very Weak: Reactive
+    'tm-e3': {  # TM-E3: Execution & Accountability
+        'ignore-small': 1,  # A (1): No accountability
+        'inform-stakeholders': 4,  # B (4): Transparent and responsible
+        'fix-quietly': 2,  # C (2): Good intent but poor communication
+        'delay-release': 1   # D (1): Reactive
     },
 
-    'tech-prioritization': {
-        'technically-interesting': 1,  # Very Weak: Self-interest
-        'business-impact': 4,  # Strong: Business-oriented
-        'always-sales': 2,  # Weak: No balance
-        'always-refactor': 2   # Weak: No balance
+    'tm-e4': {  # TM-E4: Prioritization Thinking
+        'technically-interesting': 1,  # A (1): Self-interest
+        'business-impact': 4,  # B (4): Business-oriented
+        'always-sales': 2,  # C (2): No balance
+        'always-refactor': 1   # D (1): No balance
     },
 
-    'tech-ai-literacy': {
-        'competitor-usage': 2,  # Weak: Follower mindset
-        'productivity-cost': 4,  # Strong: ROI thinking
-        'trending': 0,  # Very Weak: Trend-chasing
-        'junior-likes': 1   # Very Weak: Wrong criteria
+    'tm-e5': {  # TM-E5: AI Literacy (Business Context) - Used for AI Fluency
+        'competitor-usage': 2,  # A (2): Follower mindset
+        'productivity-cost': 4,  # B (4): ROI thinking
+        'trending': 1,  # C (1): Trend-chasing
+        'junior-likes': 1   # D (1): Wrong criteria
     },
 
-    'tech-ownership': {
-        'highlight-others': 2,  # Weak: Defensive
-        'take-ownership': 4,  # Strong: Ownership mindset
-        'stay-silent': 1,  # Very Weak: Passive
-        'escalate-blame': 0   # Very Weak: Blame-shifting
+    'tm-e6': {  # TM-E6: Ownership Mindset - Used for Ownership
+        'highlight-others': 2,  # A (2): Defensive
+        'take-ownership': 4,  # B (4): Ownership mindset
+        'stay-silent': 1,  # C (1): Passive
+        'escalate-blame': 1   # D (1): Blame-shifting
     },
 
     # -------------------- TECH/ENGINEERING (3-8 years) --------------------
 
-    'tech-feature-roi': {
-        'technical-feasibility': 2,  # Weak: Technical focus
-        'revenue-opportunity': 4,  # Strong: Business ROI thinking
-        'team-excitement': 0,  # Very Weak: Wrong criteria
-        'competitor-parity': 1   # Very Weak: Follower mindset
+    'tm-m1': {  # TM-M1: Feature ROI Evaluation
+        'technical-feasibility': 2,  # A (2): Technical focus
+        'revenue-opportunity': 4,  # B (4): Business ROI thinking
+        'team-excitement': 1,  # C (1): Wrong criteria
+        'competitor-parity': 1   # D (1): Follower mindset
     },
 
-    'tech-cost-escalation': {
-        'immediate-overhaul': 2,  # Weak: Reactive
-        'analyze-drivers': 4,  # Strong: Analytical approach
-        'reduce-features': 1,  # Very Weak: Wrong solution
-        'wait-cfo': 1   # Very Weak: No ownership
+    'tm-m2': {  # TM-M2: Cost Escalation
+        'immediate-overhaul': 2,  # A (2): Reactive
+        'analyze-drivers': 4,  # B (4): Analytical approach
+        'reduce-features': 1,  # C (1): Wrong solution
+        'wait-cfo': 1   # D (1): No ownership
     },
 
-    'tech-sales-product-conflict': {
-        'build-immediately': 2,  # Weak: Reactive
-        'reject-firmly': 0,  # Very Weak: Inflexible
-        'evaluate-align': 4,  # Strong: Balanced decision-making
-        'escalate-conflict': 1   # Very Weak: Avoidance
+    'tm-m3': {  # TM-M3: Sales vs Product Conflict
+        'build-immediately': 2,  # A (2): Reactive
+        'reject-firmly': 1,  # B (1): Inflexible
+        'evaluate-align': 4,  # C (4): Balanced decision-making
+        'escalate-conflict': 1   # D (1): Avoidance
     },
 
-    'tech-debt-speed': {
-        'prioritize-features': 2,  # Weak: Short-term focus
-        'balance-debt': 4,  # Strong: Strategic balance
-        'focus-health': 1,  # Very Weak: Ignoring business
-        'ignore-pressure': 1   # Very Weak: Poor stakeholder management
+    'tm-m4': {  # TM-M4: Tech Debt vs Speed - Used for Ownership
+        'prioritize-features': 2,  # A (2): Short-term focus
+        'balance-debt': 4,  # B (4): Strategic balance
+        'focus-health': 1,  # C (1): Ignoring business
+        'ignore-pressure': 1   # D (1): Poor stakeholder management
     },
 
-    'tech-ai-investment': {
-        'trend-value': 0,  # Very Weak: Trend-chasing
-        'pain-point-roi': 4,  # Strong: Outcome-driven
-        'competitive-pressure': 2,  # Weak: Follower mindset
-        'ease-implementation': 1   # Very Weak: Wrong criteria
+    'tm-m5': {  # TM-M5: AI Investment Decision - Used for AI Fluency
+        'trend-value': 1,  # A (1): Trend-chasing
+        'pain-point-roi': 4,  # B (4): Outcome-driven
+        'competitive-pressure': 2,  # C (2): Follower mindset
+        'ease-implementation': 1   # D (1): Wrong criteria
     },
 
-    'tech-resource-allocation': {
-        'highest-impact': 2,  # Weak: Tactical
-        'growth-priorities': 4,  # Strong: Strategic alignment
-        'technically-complex': 1,  # Very Weak: Self-interest
-        'team-vote': 1   # Very Weak: No leadership
+    'tm-m6': {  # TM-M6: Resource Allocation
+        'highest-impact': 2,  # A (2): Tactical
+        'growth-priorities': 4,  # B (4): Strategic alignment
+        'technically-complex': 1,  # C (1): Self-interest
+        'team-vote': 1   # D (1): No leadership
     },
 
     # -------------------- TECH/ENGINEERING (8+ years) --------------------
 
-    'tech-strategic-tradeoff': {
-        'immediate-revenue': 2,  # Weak: Short-term focus
-        'long-term-strategy': 4,  # Strong: Strategic thinking
-        'engineering-preference': 1,  # Very Weak: Biased
-        'ceo-urgency': 1   # Very Weak: Reactive
+    'tm-s1': {  # TM-S1: Strategic Trade-off
+        'immediate-revenue': 2,  # A (2): Short-term focus
+        'long-term-strategy': 4,  # B (4): Strategic thinking
+        'engineering-preference': 1,  # C (1): Biased
+        'ceo-urgency': 1   # D (1): Reactive
     },
 
-    'tech-capital-allocation': {
-        'hire-aggressively': 2,  # Weak: Single lever
-        'invest-ai': 1,  # Very Weak: Over-concentration
-        'allocate-roi': 4,  # Strong: ROI-based allocation
-        'preserve-capital': 1   # Very Weak: Risk-averse
+    'tm-s2': {  # TM-S2: Capital Allocation
+        'hire-aggressively': 2,  # A (2): Single lever
+        'invest-ai': 1,  # B (1): Over-concentration
+        'allocate-roi': 4,  # C (4): ROI-based allocation
+        'preserve-capital': 1   # D (1): Risk-averse
     },
 
-    'tech-competitive-advantage': {
-        'complex-architecture': 2,  # Weak: Technical focus
-        'switching-cost-value': 4,  # Strong: Business moat thinking
-        'high-infra-cost': 1,  # Very Weak: Wrong understanding
-        'large-team': 0   # Very Weak: Wrong understanding
+    'tm-s3': {  # TM-S3: Engineering as Competitive Advantage
+        'complex-architecture': 2,  # A (2): Technical focus
+        'switching-cost-value': 4,  # B (4): Business moat thinking
+        'high-infra-cost': 1,  # C (1): Wrong understanding
+        'large-team': 1   # D (1): Wrong understanding
     },
 
-    'tech-scalability': {
-        'overbuild-now': 2,  # Weak: Premature optimization
-        'modular-incremental': 4,  # Strong: Pragmatic scaling
-        'ignore-projections': 1,  # Very Weak: Short-sighted
-        'freeze-innovation': 0   # Very Weak: Stagnation
+    'tm-s4': {  # TM-S4: Long-Term Scalability - Used for Ownership
+        'overbuild-now': 2,  # A (2): Premature optimization
+        'modular-incremental': 4,  # B (4): Pragmatic scaling
+        'ignore-projections': 1,  # C (1): Short-sighted
+        'freeze-innovation': 1   # D (1): Stagnation
     },
 
-    'tech-ai-strategy': {
-        'industry-trend': 1,  # Very Weak: Follower
-        'strategic-differentiation': 4,  # Strong: Strategic thinking
-        'investor-excitement': 0,  # Very Weak: Wrong driver
-        'team-expertise': 2   # Weak: Capability focus only
+    'tm-s5': {  # TM-S5: AI as Strategy - Used for AI Fluency
+        'industry-trend': 1,  # A (1): Follower
+        'strategic-differentiation': 4,  # B (4): Strategic thinking
+        'investor-excitement': 1,  # C (1): Wrong driver
+        'team-expertise': 2   # D (2): Capability focus only
     },
 
-    'tech-portfolio-balancing': {
-        'all-features': 1,  # Very Weak: Growth bias
-        'balanced-allocation': 4,  # Strong: Strategic balance
-        'mostly-refactoring': 1,  # Very Weak: Over-optimization
-        'engineering-interest': 0   # Very Weak: Wrong driver
+    'tm-s6': {  # TM-S6: Portfolio Balancing
+        'all-features': 2,  # A (2): Growth bias
+        'balanced-allocation': 4,  # B (4): Strategic balance
+        'mostly-refactoring': 1,  # C (1): Over-optimization
+        'engineering-interest': 1   # D (1): Wrong driver
     }
 }
 
