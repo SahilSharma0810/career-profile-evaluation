@@ -86,13 +86,29 @@ class MBAQuizRequest(BaseModel):
     sm_s5: Optional[str] = Field(None, alias="sm-s5")  # Board-Level Revenue Forecast (Ownership)
     sm_s6: Optional[str] = Field(None, alias="sm-s6")  # Building High-Performance Revenue Org
 
-    # Marketing
-    marketing_conflicting_signals: Optional[str] = Field(None, alias="marketing-conflicting-signals")
-    marketing_budget_shock: Optional[str] = Field(None, alias="marketing-budget-shock")
-    marketing_ai_application: Optional[str] = Field(None, alias="marketing-ai-application")
-    marketing_attribution_reality: Optional[str] = Field(None, alias="marketing-attribution-reality")
-    marketing_scale_failure: Optional[str] = Field(None, alias="marketing-scale-failure")
-    marketing_leadership_metric: Optional[str] = Field(None, alias="marketing-leadership-metric")
+    # Marketing - 0-3 years (Entry level)
+    mm_e1: Optional[str] = Field(None, alias="mm-e1")  # Campaign CAC Suddenly Increases
+    mm_e2: Optional[str] = Field(None, alias="mm-e2")  # Low Conversion Landing Page
+    mm_e3: Optional[str] = Field(None, alias="mm-e3")  # Planning a New Growth Campaign
+    mm_e4: Optional[str] = Field(None, alias="mm-e4")  # Manual Performance Reporting (AI Fluency)
+    mm_e5: Optional[str] = Field(None, alias="mm-e5")  # Brand vs Performance Debate
+    mm_e6: Optional[str] = Field(None, alias="mm-e6")  # Marketing-Sales Misalignment (Ownership)
+    
+    # Marketing - 3-8 years (Mid level)
+    mm_m1: Optional[str] = Field(None, alias="mm-m1")  # Scaling Growth Efficiently
+    mm_m2: Optional[str] = Field(None, alias="mm-m2")  # Multi-Channel Attribution Challenge
+    mm_m3: Optional[str] = Field(None, alias="mm-m3")  # Launching a New Market Segment
+    mm_m4: Optional[str] = Field(None, alias="mm-m4")  # AI in Creative Optimization (AI Fluency)
+    mm_m5: Optional[str] = Field(None, alias="mm-m5")  # Campaign Underperformance
+    mm_m6: Optional[str] = Field(None, alias="mm-m6")  # Leading a Performance Team (Ownership)
+    
+    # Marketing - 8+ years (Senior level)
+    mm_s1: Optional[str] = Field(None, alias="mm-s1")  # Long-Term Brand vs Performance Balance
+    mm_s2: Optional[str] = Field(None, alias="mm-s2")  # Portfolio Channel Allocation
+    mm_s3: Optional[str] = Field(None, alias="mm-s3")  # Enterprise-Level Attribution Redesign
+    mm_s4: Optional[str] = Field(None, alias="mm-s4")  # AI-Led Marketing Transformation (AI Fluency)
+    mm_s5: Optional[str] = Field(None, alias="mm-s5")  # Entering New Geography
+    mm_s6: Optional[str] = Field(None, alias="mm-s6")  # Building a High-Performance Marketing Org (Ownership)
 
     # Operations
     operations_scale_stress: Optional[str] = Field(None, alias="operations-scale-stress")

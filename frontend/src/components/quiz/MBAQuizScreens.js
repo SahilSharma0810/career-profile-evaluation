@@ -993,281 +993,287 @@ export const MBA_ROLE_SPECIFIC_SCREENS = {
   'marketing': {
     // 0-3 years experience (Entry level)
     '0-3': [
-    // Screen 3: Marketing Questions 1-2
+      // Screen 1: MM-E1, MM-E2
       {
         id: 'marketing-screen-1',
-        initialChatText: "Let's explore your marketing analytics and strategic thinking.",
+        initialChatText: "Let's explore your marketing analytics and campaign optimization approach.",
         questions: [
           {
-            id: 'marketing-conflicting-signals',
-            question: 'Your CTR (Click-Through Rate) is up, CAC (Customer Acquisition Cost) is up, but Revenue is down. What metric do you trust most to make decisions?',
-            helperText: 'Tests metric hierarchy understanding',
+            id: 'mm-e1',
+            question: "You're running paid ads for lead generation. Over the last 2 weeks, Cost per Acquisition (CAC) has increased by 30%, while impressions remain stable. What is your first step?",
+            helperText: 'Tests Marketing Analytics',
             isScenario: true,
             options: [
-              { value: 'ctr', label: 'Trust CTR (Click-Through Rate)', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'cac', label: 'Trust CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'ltv-cac-cohort', label: 'Analyze LTV/CAC (Lifetime Value to CAC ratio) by cohort', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'revenue-attribution', label: 'Build a comprehensive revenue attribution model', icon: <Target size={24} weight="duotone" /> }
+              { value: 'increase-budget', label: 'Increase budget to regain volume', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'pause-campaigns', label: 'Pause all campaigns immediately', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'analyze-funnel-metrics', label: 'Analyze funnel metrics (CTR, CPC, conversion rate, audience segmentation)', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'change-creatives-randomly', label: 'Change ad creatives randomly', icon: <Lightning size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'marketing-budget-shock',
-            question: 'Your marketing budget is cut by 30%, but growth targets remain unchanged. What would you cut first?',
-            helperText: 'Tests ROI thinking',
+            id: 'mm-e2',
+            question: 'Your campaign drives traffic successfully, but landing page conversion rate is low (2%). What do you do?',
+            helperText: 'Tests Campaign Optimization',
             isScenario: true,
             options: [
-              { value: 'experiments', label: 'New experiments and testing', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'branding', label: 'Brand awareness campaigns', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'low-ltv-segments', label: 'Low LTV (Lifetime Value) customer segments', icon: <Target size={24} weight="duotone" /> },
-              { value: 'agency-spend', label: 'External agency spend', icon: <CurrencyInr size={24} weight="duotone" /> }
+              { value: 'increase-traffic', label: 'Increase traffic volume', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'assume-audience-wrong', label: 'Assume audience is wrong', icon: <Users size={24} weight="duotone" /> },
+              { value: 'run-ab-tests', label: 'Run A/B tests on messaging, CTA, and page layout', icon: <Target size={24} weight="duotone" /> },
+              { value: 'add-more-content', label: 'Add more content to the page', icon: <PresentationChart size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Marketing Questions 3-4
+      // Screen 2: MM-E3, MM-E4
       {
         id: 'marketing-screen-2',
-        initialChatText: "Now let's assess your AI maturity and pragmatic decision-making.",
+        initialChatText: "Now let's assess your growth marketing strategy and AI adoption.",
         questions: [
           {
-            id: 'marketing-ai-application',
-            question: 'Where do you think AI creates a defensible competitive advantage in marketing?',
-            helperText: 'Tests AI maturity',
+            id: 'mm-e3',
+            question: "You're launching a new AI Resume Builder feature. How do you start?",
+            helperText: 'Tests Growth Marketing',
+            isScenario: true,
             options: [
-              { value: 'content-generation', label: 'Content generation - creating marketing copy at scale', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'creative-testing', label: 'Creative testing - rapid A/B experimentation', icon: <Target size={24} weight="duotone" /> },
-              { value: 'audience-prediction', label: 'Audience prediction - identifying high-intent segments', icon: <Users size={24} weight="duotone" /> },
-              { value: 'automated-optimization', label: 'Automated optimization loops - self-improving campaigns', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'launch-ads-immediately', label: 'Launch ads immediately', icon: <Rocket size={24} weight="duotone" /> },
+              { value: 'copy-competitor-messaging', label: 'Copy competitor messaging', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'define-persona-strategy', label: 'Define target persona, value proposition, channels, and success metrics', icon: <Target size={24} weight="duotone" /> },
+              { value: 'increase-brand-posts', label: 'Increase brand posts on social media', icon: <Users size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'marketing-attribution-reality',
-            question: 'Your attribution data is unreliable and inconsistent. What do you do?',
-            helperText: 'Tests senior pragmatism',
+            id: 'mm-e4',
+            question: 'You manually create weekly campaign reports using spreadsheets. Best approach?',
+            helperText: 'Tests AI Literacy',
             isScenario: true,
             options: [
-              { value: 'accept-imperfect', label: 'Accept imperfect data and move forward', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'switch-model', label: 'Switch to a different attribution model', icon: <Path size={24} weight="duotone" /> },
-              { value: 'directional-insights', label: 'Build directional insights with caveats', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'ai-infer-patterns', label: 'Use AI to infer hidden patterns', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'continue-manually', label: 'Continue manually to avoid errors', icon: <Clock size={24} weight="duotone" /> },
+              { value: 'reduce-frequency', label: 'Reduce report frequency', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'use-automation-ai', label: 'Use automation tools, dashboards, or AI to streamline reporting', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'delegate-without-structure', label: 'Delegate without structure', icon: <Users size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Marketing Questions 5-6
+      // Screen 3: MM-E5, MM-E6
       {
         id: 'marketing-screen-3',
-        initialChatText: "Finally, let's understand your systems thinking and accountability.",
+        initialChatText: "Finally, let's understand your strategic thinking and leadership approach.",
         questions: [
           {
-            id: 'marketing-scale-failure',
-            question: 'Your growth campaign scaled initially but now has completely stalled. What do you think is the most likely reason?',
-            helperText: 'Tests systems thinking',
+            id: 'mm-e5',
+            question: 'Brand team wants long-term awareness campaigns. Performance team wants short-term ROI campaigns.',
+            helperText: 'Tests Strategic Thinking',
             isScenario: true,
             options: [
-              { value: 'saturation', label: 'Market saturation - ran out of addressable audience', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'messaging-mismatch', label: 'Messaging mismatch with new audience segments', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'funnel-leakage', label: 'Conversion funnel leakage at scale', icon: <Path size={24} weight="duotone" /> },
-              { value: 'ops-constraints', label: 'Operations constraints (fulfillment, support)', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'support-performance-only', label: 'Support performance only', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'support-brand-only', label: 'Support brand only', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'propose-balanced-mix', label: 'Propose a balanced mix aligned with business goals', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'escalate-conflict', label: 'Escalate conflict', icon: <Users size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'marketing-leadership-metric',
-            question: 'Which metric do you defend and own in leadership reviews and stakeholder meetings?',
-            helperText: 'Tests senior accountability',
+            id: 'mm-e6',
+            question: 'Sales says marketing leads are poor quality.',
+            helperText: 'Tests Leadership & Analytics',
+            isScenario: true,
             options: [
-              { value: 'leads', label: 'Leads - total lead volume generated', icon: <Users size={24} weight="duotone" /> },
-              { value: 'cac', label: 'CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'revenue-contribution', label: 'Revenue contribution - marketing-attributed revenue', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'ltv', label: 'LTV (Lifetime Value) of acquired customers', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'defend-marketing', label: 'Defend marketing team', icon: <Users size={24} weight="duotone" /> },
+              { value: 'ignore-feedback', label: 'Ignore feedback', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'analyze-mql-sql', label: 'Analyze MQL → SQL conversion and refine targeting', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'reduce-lead-generation', label: 'Reduce lead generation efforts', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 3-8 years experience (Mid level) - using same questions for now
+    // 3-8 years experience (Mid level)
     '3-8': [
-      // Screen 3: Marketing Questions 1-2
+      // Screen 1: MM-M1, MM-M2
       {
         id: 'marketing-screen-1',
-        initialChatText: "Let's explore your marketing analytics and strategic thinking.",
+        initialChatText: "Let's explore your growth marketing and analytics capabilities.",
         questions: [
           {
-            id: 'marketing-conflicting-signals',
-            question: 'Your CTR (Click-Through Rate) is up, CAC (Customer Acquisition Cost) is up, but Revenue is down. What metric do you trust most to make decisions?',
-            helperText: 'Tests metric hierarchy understanding',
+            id: 'mm-m1',
+            question: 'Your campaigns are delivering growth, but CAC is rising gradually each quarter. What is your structured approach?',
+            helperText: 'Tests Growth Marketing & Campaign Optimization',
             isScenario: true,
             options: [
-              { value: 'ctr', label: 'Trust CTR (Click-Through Rate)', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'cac', label: 'Trust CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'ltv-cac-cohort', label: 'Analyze LTV/CAC (Lifetime Value to CAC ratio) by cohort', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'revenue-attribution', label: 'Build a comprehensive revenue attribution model', icon: <Target size={24} weight="duotone" /> }
+              { value: 'increase-budgets', label: 'Increase budgets to maintain growth', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'cut-brand-spend', label: 'Cut brand spend entirely', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'optimize-channel-mix', label: 'Optimize channel mix, creative testing, audience segmentation, and LTV analysis', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'accept-higher-cac', label: 'Accept higher CAC', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'marketing-budget-shock',
-            question: 'Your marketing budget is cut by 30%, but growth targets remain unchanged. What would you cut first?',
-            helperText: 'Tests ROI thinking',
+            id: 'mm-m2',
+            question: 'Attribution data across Meta, Google, and CRM does not match.',
+            helperText: 'Tests Marketing Analytics',
             isScenario: true,
             options: [
-              { value: 'experiments', label: 'New experiments and testing', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'branding', label: 'Brand awareness campaigns', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'low-ltv-segments', label: 'Low LTV (Lifetime Value) customer segments', icon: <Target size={24} weight="duotone" /> },
-              { value: 'agency-spend', label: 'External agency spend', icon: <CurrencyInr size={24} weight="duotone" /> }
+              { value: 'trust-last-click', label: 'Trust last-click attribution blindly', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'choose-best-numbers', label: 'Choose platform with best numbers', icon: <ChartLineUp size={24} weight="duotone" /> },
+              { value: 'investigate-reconcile', label: 'Investigate attribution model and reconcile cross-channel data', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'report-highest-number', label: 'Report highest number', icon: <Target size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Marketing Questions 3-4
+      // Screen 2: MM-M3, MM-M4
       {
         id: 'marketing-screen-2',
-        initialChatText: "Now let's assess your AI maturity and pragmatic decision-making.",
+        initialChatText: "Now let's assess your strategic thinking and AI application.",
         questions: [
           {
-            id: 'marketing-ai-application',
-            question: 'Where do you think AI creates a defensible competitive advantage in marketing?',
-            helperText: 'Tests AI maturity',
+            id: 'mm-m3',
+            question: 'Company wants to target working professionals instead of students. What is your first move?',
+            helperText: 'Tests Strategic Thinking',
+            isScenario: true,
             options: [
-              { value: 'content-generation', label: 'Content generation - creating marketing copy at scale', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'creative-testing', label: 'Creative testing - rapid A/B experimentation', icon: <Target size={24} weight="duotone" /> },
-              { value: 'audience-prediction', label: 'Audience prediction - identifying high-intent segments', icon: <Users size={24} weight="duotone" /> },
-              { value: 'automated-optimization', label: 'Automated optimization loops - self-improving campaigns', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'use-same-messaging', label: 'Use same messaging', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'increase-influencer', label: 'Increase influencer partnerships', icon: <Users size={24} weight="duotone" /> },
+              { value: 'conduct-market-research', label: 'Conduct market research and reposition value proposition', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'reduce-budget', label: 'Reduce budget', icon: <CurrencyInr size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'marketing-attribution-reality',
-            question: 'Your attribution data is unreliable and inconsistent. What do you do?',
-            helperText: 'Tests senior pragmatism',
+            id: 'mm-m4',
+            question: 'AI tools can generate multiple ad creatives automatically.',
+            helperText: 'Tests AI Literacy',
             isScenario: true,
             options: [
-              { value: 'accept-imperfect', label: 'Accept imperfect data and move forward', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'switch-model', label: 'Switch to a different attribution model', icon: <Path size={24} weight="duotone" /> },
-              { value: 'directional-insights', label: 'Build directional insights with caveats', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'ai-infer-patterns', label: 'Use AI to infer hidden patterns', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'use-ai-without-testing', label: 'Use AI creatives without testing', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'avoid-ai-tools', label: 'Avoid AI tools', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'use-ai-validate-testing', label: 'Use AI for ideation but validate through structured A/B testing', icon: <Target size={24} weight="duotone" /> },
+              { value: 'replace-creative-team', label: 'Replace creative team', icon: <Users size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Marketing Questions 5-6
+      // Screen 3: MM-M5, MM-M6
       {
         id: 'marketing-screen-3',
-        initialChatText: "Finally, let's understand your systems thinking and accountability.",
+        initialChatText: "Finally, let's understand your campaign optimization and leadership approach.",
         questions: [
           {
-            id: 'marketing-scale-failure',
-            question: 'Your growth campaign scaled initially but now has completely stalled. What do you think is the most likely reason?',
-            helperText: 'Tests systems thinking',
+            id: 'mm-m5',
+            question: 'A flagship campaign underperformed despite high spend. What do you do?',
+            helperText: 'Tests Campaign Optimization',
             isScenario: true,
             options: [
-              { value: 'saturation', label: 'Market saturation - ran out of addressable audience', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'messaging-mismatch', label: 'Messaging mismatch with new audience segments', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'funnel-leakage', label: 'Conversion funnel leakage at scale', icon: <Path size={24} weight="duotone" /> },
-              { value: 'ops-constraints', label: 'Operations constraints (fulfillment, support)', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'reduce-marketing-budget', label: 'Reduce marketing budget', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'blame-external-factors', label: 'Blame external factors', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'analyze-audience-targeting', label: 'Analyze audience targeting, messaging alignment, and funnel conversion', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'stop-experimenting', label: 'Stop experimenting', icon: <CheckCircle size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'marketing-leadership-metric',
-            question: 'Which metric do you defend and own in leadership reviews and stakeholder meetings?',
-            helperText: 'Tests senior accountability',
+            id: 'mm-m6',
+            question: 'Your team has strong execution but lacks strategic alignment.',
+            helperText: 'Tests Leadership',
+            isScenario: true,
             options: [
-              { value: 'leads', label: 'Leads - total lead volume generated', icon: <Users size={24} weight="duotone" /> },
-              { value: 'cac', label: 'CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'revenue-contribution', label: 'Revenue contribution - marketing-attributed revenue', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'ltv', label: 'LTV (Lifetime Value) of acquired customers', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'push-higher-targets', label: 'Push for higher targets', icon: <Target size={24} weight="duotone" /> },
+              { value: 'focus-only-reporting', label: 'Focus only on reporting', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'align-team-objectives', label: 'Align team with clear growth objectives and performance benchmarks', icon: <Users size={24} weight="duotone" /> },
+              { value: 'micromanage-campaigns', label: 'Micromanage campaigns', icon: <Gear size={24} weight="duotone" /> }
             ]
           }
         ]
       }
     ],
-    // 8+ years experience (Senior level) - using same questions for now
+    // 8+ years experience (Senior level)
     '8+': [
-      // Screen 3: Marketing Questions 1-2
+      // Screen 1: MM-S1, MM-S2
       {
         id: 'marketing-screen-1',
-        initialChatText: "Let's explore your marketing analytics and strategic thinking.",
+        initialChatText: "Let's explore your strategic marketing and portfolio allocation thinking.",
         questions: [
           {
-            id: 'marketing-conflicting-signals',
-            question: 'Your CTR (Click-Through Rate) is up, CAC (Customer Acquisition Cost) is up, but Revenue is down. What metric do you trust most to make decisions?',
-            helperText: 'Tests metric hierarchy understanding',
+            id: 'mm-s1',
+            question: 'Growth has slowed. Short-term performance marketing is saturated. Your approach?',
+            helperText: 'Tests Strategic Thinking',
             isScenario: true,
             options: [
-              { value: 'ctr', label: 'Trust CTR (Click-Through Rate)', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'cac', label: 'Trust CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'ltv-cac-cohort', label: 'Analyze LTV/CAC (Lifetime Value to CAC ratio) by cohort', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'revenue-attribution', label: 'Build a comprehensive revenue attribution model', icon: <Target size={24} weight="duotone" /> }
+              { value: 'increase-discounts', label: 'Increase discounts', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'double-performance-budget', label: 'Double performance budget', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'strengthen-brand-equity', label: 'Strengthen brand equity while optimizing performance efficiency', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'reduce-marketing-investment', label: 'Reduce marketing investment', icon: <XCircle size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'marketing-budget-shock',
-            question: 'Your marketing budget is cut by 30%, but growth targets remain unchanged. What would you cut first?',
-            helperText: 'Tests ROI thinking',
+            id: 'mm-s2',
+            question: 'You oversee Paid, Organic, Influencer, and Partnerships channels. How do you allocate budget?',
+            helperText: 'Tests Growth Marketing & Strategic Thinking',
             isScenario: true,
             options: [
-              { value: 'experiments', label: 'New experiments and testing', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'branding', label: 'Brand awareness campaigns', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'low-ltv-segments', label: 'Low LTV (Lifetime Value) customer segments', icon: <Target size={24} weight="duotone" /> },
-              { value: 'agency-spend', label: 'External agency spend', icon: <CurrencyInr size={24} weight="duotone" /> }
+              { value: 'equal-distribution', label: 'Equal distribution', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'allocate-last-year', label: "Allocate based on last year's budget", icon: <Clock size={24} weight="duotone" /> },
+              { value: 'allocate-cac-ltv-roi', label: 'Allocate based on CAC, LTV, scalability, and marginal ROI', icon: <Target size={24} weight="duotone" /> },
+              { value: 'focus-one-channel', label: 'Focus only on one channel', icon: <TrendUp size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 4: Marketing Questions 3-4
+      // Screen 2: MM-S3, MM-S4
       {
         id: 'marketing-screen-2',
-        initialChatText: "Now let's assess your AI maturity and pragmatic decision-making.",
+        initialChatText: "Now let's assess your analytics leadership and AI transformation strategy.",
         questions: [
           {
-            id: 'marketing-ai-application',
-            question: 'Where do you think AI creates a defensible competitive advantage in marketing?',
-            helperText: 'Tests AI maturity',
+            id: 'mm-s3',
+            question: 'Board questions marketing ROI accuracy.',
+            helperText: 'Tests Marketing Analytics',
+            isScenario: true,
             options: [
-              { value: 'content-generation', label: 'Content generation - creating marketing copy at scale', icon: <Lightning size={24} weight="duotone" /> },
-              { value: 'creative-testing', label: 'Creative testing - rapid A/B experimentation', icon: <Target size={24} weight="duotone" /> },
-              { value: 'audience-prediction', label: 'Audience prediction - identifying high-intent segments', icon: <Users size={24} weight="duotone" /> },
-              { value: 'automated-optimization', label: 'Automated optimization loops - self-improving campaigns', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'defend-current-model', label: 'Defend current model', icon: <CheckCircle size={24} weight="duotone" /> },
+              { value: 'simplify-reporting', label: 'Simplify reporting', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'redesign-attribution-framework', label: 'Redesign attribution framework integrating CRM, cohort, and incrementality analysis', icon: <Target size={24} weight="duotone" /> },
+              { value: 'reduce-reporting-depth', label: 'Reduce reporting depth', icon: <XCircle size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'marketing-attribution-reality',
-            question: 'Your attribution data is unreliable and inconsistent. What do you do?',
-            helperText: 'Tests senior pragmatism',
+            id: 'mm-s4',
+            question: 'CEO wants AI-driven personalization at scale.',
+            helperText: 'Tests AI Literacy & Leadership',
             isScenario: true,
             options: [
-              { value: 'accept-imperfect', label: 'Accept imperfect data and move forward', icon: <CheckCircle size={24} weight="duotone" /> },
-              { value: 'switch-model', label: 'Switch to a different attribution model', icon: <Path size={24} weight="duotone" /> },
-              { value: 'directional-insights', label: 'Build directional insights with caveats', icon: <ChartBar size={24} weight="duotone" /> },
-              { value: 'ai-infer-patterns', label: 'Use AI to infer hidden patterns', icon: <Brain size={24} weight="duotone" /> }
+              { value: 'buy-expensive-tool', label: 'Buy expensive tool immediately', icon: <Lightning size={24} weight="duotone" /> },
+              { value: 'resist-change', label: 'Resist change', icon: <XCircle size={24} weight="duotone" /> },
+              { value: 'identify-pilot-scale', label: 'Identify high-impact use cases, pilot, measure ROI, then scale', icon: <Brain size={24} weight="duotone" /> },
+              { value: 'fully-automate-campaigns', label: 'Fully automate campaigns', icon: <Gear size={24} weight="duotone" /> }
             ]
           }
         ]
       },
-      // Screen 5: Marketing Questions 5-6
+      // Screen 3: MM-S5, MM-S6
       {
         id: 'marketing-screen-3',
-        initialChatText: "Finally, let's understand your systems thinking and accountability.",
+        initialChatText: "Finally, let's understand your strategic expansion and organizational leadership.",
         questions: [
           {
-            id: 'marketing-scale-failure',
-            question: 'Your growth campaign scaled initially but now has completely stalled. What do you think is the most likely reason?',
-            helperText: 'Tests systems thinking',
+            id: 'mm-s5',
+            question: "You're expanding into a new region with different cultural context. What is critical?",
+            helperText: 'Tests Strategic Thinking',
             isScenario: true,
             options: [
-              { value: 'saturation', label: 'Market saturation - ran out of addressable audience', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'messaging-mismatch', label: 'Messaging mismatch with new audience segments', icon: <MegaphoneSimple size={24} weight="duotone" /> },
-              { value: 'funnel-leakage', label: 'Conversion funnel leakage at scale', icon: <Path size={24} weight="duotone" /> },
-              { value: 'ops-constraints', label: 'Operations constraints (fulfillment, support)', icon: <Gear size={24} weight="duotone" /> }
+              { value: 'replicate-same-campaigns', label: 'Replicate same campaigns', icon: <MegaphoneSimple size={24} weight="duotone" /> },
+              { value: 'increase-paid-ads', label: 'Increase paid ads', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'localize-strategy', label: 'Localize messaging, pricing, and channel strategy', icon: <ChartBar size={24} weight="duotone" /> },
+              { value: 'focus-only-digital', label: 'Focus only on digital', icon: <Target size={24} weight="duotone" /> }
             ]
           },
           {
-            id: 'marketing-leadership-metric',
-            question: 'Which metric do you defend and own in leadership reviews and stakeholder meetings?',
-            helperText: 'Tests senior accountability',
+            id: 'mm-s6',
+            question: 'Marketing team grew from 15 to 60 members. What matters most now?',
+            helperText: 'Tests Leadership',
+            isScenario: true,
             options: [
-              { value: 'leads', label: 'Leads - total lead volume generated', icon: <Users size={24} weight="duotone" /> },
-              { value: 'cac', label: 'CAC (Customer Acquisition Cost)', icon: <CurrencyInr size={24} weight="duotone" /> },
-              { value: 'revenue-contribution', label: 'Revenue contribution - marketing-attributed revenue', icon: <ChartLineUp size={24} weight="duotone" /> },
-              { value: 'ltv', label: 'LTV (Lifetime Value) of acquired customers', icon: <Trophy size={24} weight="duotone" /> }
+              { value: 'increase-budget-only', label: 'Increase budget only', icon: <CurrencyInr size={24} weight="duotone" /> },
+              { value: 'focus-only-acquisition', label: 'Focus only on acquisition', icon: <TrendUp size={24} weight="duotone" /> },
+              { value: 'define-specialization-kpis', label: 'Define specialization, KPIs, experimentation culture, and leadership structure', icon: <Users size={24} weight="duotone" /> },
+              { value: 'reduce-reporting', label: 'Reduce reporting', icon: <ChartBar size={24} weight="duotone" /> }
             ]
           }
         ]

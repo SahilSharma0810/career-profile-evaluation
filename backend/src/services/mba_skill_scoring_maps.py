@@ -91,13 +91,29 @@ QUESTION_SKILL_MAP = {
     'sm-s5': ['leadership', 'revenue_operations'],  # Board-Level Revenue Forecast (Ownership)
     'sm-s6': ['leadership'],  # Building High-Performance Revenue Org
 
-    # Marketing Questions
-    'marketing-conflicting-signals': ['growth_marketing', 'marketing_analytics', 'strategic_thinking'],
-    'marketing-budget-shock': ['campaign_optimization', 'strategic_thinking'],
-    'marketing-ai-application': ['ai_literacy'],
-    'marketing-attribution-reality': ['marketing_analytics', 'strategic_thinking'],
-    'marketing-scale-failure': ['growth_marketing', 'strategic_thinking'],
-    'marketing-defend-metric': ['leadership', 'growth_marketing'],
+    # Marketing Questions - 0-3 years (Entry level)
+    'mm-e1': ['marketing_analytics'],  # Campaign CAC Suddenly Increases
+    'mm-e2': ['campaign_optimization'],  # Low Conversion Landing Page
+    'mm-e3': ['growth_marketing'],  # Planning a New Growth Campaign
+    'mm-e4': ['ai_literacy'],  # Manual Performance Reporting (AI Fluency)
+    'mm-e5': ['strategic_thinking'],  # Brand vs Performance Debate
+    'mm-e6': ['leadership', 'marketing_analytics'],  # Marketing-Sales Misalignment (Ownership)
+    
+    # Marketing Questions - 3-8 years (Mid level)
+    'mm-m1': ['growth_marketing', 'campaign_optimization'],  # Scaling Growth Efficiently
+    'mm-m2': ['marketing_analytics'],  # Multi-Channel Attribution Challenge
+    'mm-m3': ['strategic_thinking'],  # Launching a New Market Segment
+    'mm-m4': ['ai_literacy'],  # AI in Creative Optimization (AI Fluency)
+    'mm-m5': ['campaign_optimization'],  # Campaign Underperformance
+    'mm-m6': ['leadership'],  # Leading a Performance Team (Ownership)
+    
+    # Marketing Questions - 8+ years (Senior level)
+    'mm-s1': ['strategic_thinking'],  # Long-Term Brand vs Performance Balance
+    'mm-s2': ['growth_marketing', 'strategic_thinking'],  # Portfolio Channel Allocation
+    'mm-s3': ['marketing_analytics'],  # Enterprise-Level Attribution Redesign
+    'mm-s4': ['ai_literacy', 'leadership'],  # AI-Led Marketing Transformation (AI Fluency)
+    'mm-s5': ['strategic_thinking'],  # Entering New Geography
+    'mm-s6': ['leadership'],  # Building a High-Performance Marketing Org (Ownership)
 
     # Operations Questions
     'operations-scale-stress': ['operations_excellence', 'supply_chain', 'strategic_thinking'],
@@ -543,48 +559,136 @@ ANSWER_SCORES = {
         'reduce-reporting': 1   # D=1: Reduce reporting
     },
 
-    # -------------------- MARKETING --------------------
+    # -------------------- MARKETING - 0-3 YEARS (ENTRY) --------------------
 
-    'marketing-conflicting-signals': {
-        'ctr': 1,  # Beginner: Vanity metric
-        'cac': 3,  # Proficient: Cost awareness
-        'ltv-cac-cohort': 5,  # Expert: Unit economics
-        'revenue-attribution': 5   # Expert: Revenue connection
+    'mm-e1': {  # Campaign CAC Suddenly Increases - Marketing Analytics
+        'increase-budget': 2,  # A=2: Increase budget to regain volume
+        'pause-campaigns': 2,  # B=2: Pause all campaigns immediately
+        'analyze-funnel-metrics': 2,  # C=2: Analyze funnel metrics (CTR, CPC, conversion rate, audience segmentation)
+        'change-creatives-randomly': 1   # D=1: Change ad creatives randomly
     },
 
-    'marketing-budget-shock': {
-        'experiments': 1,  # Beginner: Killing learning
-        'branding': 3,  # Proficient: Cutting soft ROI
-        'low-ltv-segments': 5,  # Expert: Unit economics thinking
-        'agency-spend': 4   # Advanced: Cutting overhead
+    'mm-e2': {  # Low Conversion Landing Page - Campaign Optimization
+        'increase-traffic': 1,  # A=1: Increase traffic volume
+        'assume-audience-wrong': 2,  # B=2: Assume audience is wrong
+        'run-ab-tests': 2,  # C=2: Run A/B tests on messaging, CTA, and page layout
+        'add-more-content': 2   # D=2: Add more content to the page
     },
 
-    'marketing-ai-application': {
-        'content-generation': 2,  # Developing: Tactical speed
-        'creative-testing': 4,  # Advanced: Optimization
-        'audience-prediction': 5,  # Expert: Strategic targeting
-        'automated-optimization': 5   # Expert: Systematic advantage
+    'mm-e3': {  # Planning a New Growth Campaign - Growth Marketing
+        'launch-ads-immediately': 2,  # A=2: Launch ads immediately
+        'copy-competitor-messaging': 1,  # B=1: Copy competitor messaging
+        'define-persona-strategy': 4,  # C=4: Define target persona, value proposition, channels, and success metrics
+        'increase-brand-posts': 2   # D=2: Increase brand posts on social media
     },
 
-    'marketing-attribution-reality': {
-        'accept-imperfect': 2,  # Developing: Passive
-        'switch-model': 3,  # Proficient: Model-shopping
-        'directional-insights': 5,  # Expert: Pragmatic analytics
-        'ai-infer-patterns': 5   # Expert: Advanced inference
+    'mm-e4': {  # Manual Performance Reporting - AI Literacy (AI Fluency)
+        'continue-manually': 1,  # A=1: Continue manually to avoid errors
+        'reduce-frequency': 2,  # B=2: Reduce report frequency
+        'use-automation-ai': 2,  # C=2: Use automation tools, dashboards, or AI to streamline reporting
+        'delegate-without-structure': 2   # D=2: Delegate without structure
     },
 
-    'marketing-scale-failure': {
-        'saturation': 3,  # Proficient: Market awareness
-        'messaging-mismatch': 4,  # Advanced: Positioning insight
-        'funnel-leakage': 5,  # Expert: Conversion thinking
-        'ops-constraints': 5   # Expert: Systems thinking
+    'mm-e5': {  # Brand vs Performance Debate - Strategic Thinking
+        'support-performance-only': 2,  # A=2: Support performance only
+        'support-brand-only': 2,  # B=2: Support brand only
+        'propose-balanced-mix': 2,  # C=2: Propose a balanced mix aligned with business goals
+        'escalate-conflict': 2   # D=2: Escalate conflict
     },
 
-    'marketing-defend-metric': {
-        'leads': 2,  # Developing: Vanity metric
-        'cac': 3,  # Proficient: Cost awareness
-        'revenue-contribution': 5,  # Expert: Revenue accountability
-        'ltv': 5   # Expert: Long-term value
+    'mm-e6': {  # Marketing-Sales Misalignment - Leadership & Analytics (Ownership)
+        'defend-marketing': 2,  # A=2: Defend marketing team
+        'ignore-feedback': 1,  # B=1: Ignore feedback
+        'analyze-mql-sql': 2,  # C=2: Analyze MQL → SQL conversion and refine targeting
+        'reduce-lead-generation': 1   # D=1: Reduce lead generation efforts
+    },
+
+    # -------------------- MARKETING - 3-8 YEARS (MID) --------------------
+
+    'mm-m1': {  # Scaling Growth Efficiently - Growth Marketing & Campaign Optimization
+        'increase-budgets': 2,  # A=2: Increase budgets to maintain growth
+        'cut-brand-spend': 1,  # B=1: Cut brand spend entirely
+        'optimize-channel-mix': 4,  # C=4: Optimize channel mix, creative testing, audience segmentation, and LTV analysis
+        'accept-higher-cac': 2   # D=2: Accept higher CAC
+    },
+
+    'mm-m2': {  # Multi-Channel Attribution Challenge - Marketing Analytics
+        'trust-last-click': 1,  # A=1: Trust last-click attribution blindly
+        'choose-best-numbers': 1,  # B=1: Choose platform with best numbers
+        'investigate-reconcile': 4,  # C=4: Investigate attribution model and reconcile cross-channel data
+        'report-highest-number': 1   # D=1: Report highest number
+    },
+
+    'mm-m3': {  # Launching a New Market Segment - Strategic Thinking
+        'use-same-messaging': 1,  # A=1: Use same messaging
+        'increase-influencer': 2,  # B=2: Increase influencer partnerships
+        'conduct-market-research': 2,  # C=2: Conduct market research and reposition value proposition
+        'reduce-budget': 1   # D=1: Reduce budget
+    },
+
+    'mm-m4': {  # AI in Creative Optimization - AI Literacy (AI Fluency)
+        'use-ai-without-testing': 1,  # A=1: Use AI creatives without testing
+        'avoid-ai-tools': 1,  # B=1: Avoid AI tools
+        'use-ai-validate-testing': 2,  # C=2: Use AI for ideation but validate through structured A/B testing
+        'replace-creative-team': 1   # D=1: Replace creative team
+    },
+
+    'mm-m5': {  # Campaign Underperformance - Campaign Optimization
+        'reduce-marketing-budget': 2,  # A=2: Reduce marketing budget
+        'blame-external-factors': 1,  # B=1: Blame external factors
+        'analyze-audience-targeting': 2,  # C=2: Analyze audience targeting, messaging alignment, and funnel conversion
+        'stop-experimenting': 1   # D=1: Stop experimenting
+    },
+
+    'mm-m6': {  # Leading a Performance Team - Leadership (Ownership)
+        'push-higher-targets': 2,  # A=2: Push for higher targets
+        'focus-only-reporting': 2,  # B=2: Focus only on reporting
+        'align-team-objectives': 4,  # C=4: Align team with clear growth objectives and performance benchmarks
+        'micromanage-campaigns': 1   # D=1: Micromanage campaigns
+    },
+
+    # -------------------- MARKETING - 8+ YEARS (SENIOR) --------------------
+
+    'mm-s1': {  # Long-Term Brand vs Performance Balance - Strategic Thinking
+        'increase-discounts': 2,  # A=2: Increase discounts
+        'double-performance-budget': 2,  # B=2: Double performance budget
+        'strengthen-brand-equity': 4,  # C=4: Strengthen brand equity while optimizing performance efficiency
+        'reduce-marketing-investment': 1   # D=1: Reduce marketing investment
+    },
+
+    'mm-s2': {  # Portfolio Channel Allocation - Growth Marketing & Strategic Thinking
+        'equal-distribution': 1,  # A=1: Equal distribution
+        'allocate-last-year': 1,  # B=1: Allocate based on last year's budget
+        'allocate-cac-ltv-roi': 4,  # C=4: Allocate based on CAC, LTV, scalability, and marginal ROI
+        'focus-one-channel': 1   # D=1: Focus only on one channel
+    },
+
+    'mm-s3': {  # Enterprise-Level Attribution Redesign - Marketing Analytics
+        'defend-current-model': 2,  # A=2: Defend current model
+        'simplify-reporting': 1,  # B=1: Simplify reporting
+        'redesign-attribution-framework': 4,  # C=4: Redesign attribution framework integrating CRM, cohort, and incrementality analysis
+        'reduce-reporting-depth': 1   # D=1: Reduce reporting depth
+    },
+
+    'mm-s4': {  # AI-Led Marketing Transformation - AI Literacy & Leadership (AI Fluency)
+        'buy-expensive-tool': 2,  # A=2: Buy expensive tool immediately
+        'resist-change': 1,  # B=1: Resist change
+        'identify-pilot-scale': 2,  # C=2: Identify high-impact use cases, pilot, measure ROI, then scale
+        'fully-automate-campaigns': 1   # D=1: Fully automate campaigns
+    },
+
+    'mm-s5': {  # Entering New Geography - Strategic Thinking
+        'replicate-same-campaigns': 1,  # A=1: Replicate same campaigns
+        'increase-paid-ads': 2,  # B=2: Increase paid ads
+        'localize-strategy': 2,  # C=2: Localize messaging, pricing, and channel strategy
+        'focus-only-digital': 1   # D=1: Focus only on digital
+    },
+
+    'mm-s6': {  # Building a High-Performance Marketing Org - Leadership (Ownership)
+        'increase-budget-only': 2,  # A=2: Increase budget only
+        'focus-only-acquisition': 2,  # B=2: Focus only on acquisition
+        'define-specialization-kpis': 4,  # C=4: Define specialization, KPIs, experimentation culture, and leadership structure
+        'reduce-reporting': 1   # D=1: Reduce reporting
     },
 
     # -------------------- OPERATIONS --------------------

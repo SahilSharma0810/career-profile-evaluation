@@ -269,18 +269,47 @@ def _score_sales_maturity(responses: Dict[str, Any]) -> int:
 
 
 def _score_marketing_maturity(responses: Dict[str, Any]) -> int:
-    """Score Marketing based on strategic depth"""
-    score = 50
-
-    if responses.get('marketing-conflicting-signals') in ['ltv-cac-cohort', 'revenue-attribution']:
-        score += 15
-
-    if responses.get('marketing-ai-application') in ['automated-optimization', 'audience-prediction']:
-        score += 10
-
-    if responses.get('marketing-leadership-metric') in ['revenue-contribution', 'ltv']:
-        score += 15
-
+    """Score Marketing based on strategic depth - experience-based questions"""
+    from .mba_skill_scoring_maps import ANSWER_SCORES
+    
+    score = 50  # Base score
+    experience = responses.get('experience', '')
+    
+    # Map experience to level
+    experience_level = _map_experience_to_level(experience)
+    
+    # Score based on experience level
+    if experience_level == '0-3':
+        # Entry level questions (MM-E1 to MM-E6)
+        # Exclude E4 (AI) and E6 (ownership) as they're used in separate calculations
+        questions = ['mm-e1', 'mm-e2', 'mm-e3', 'mm-e5']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                # Convert 1-5 score to maturity points (max 10 points per question)
+                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
+    
+    elif experience_level == '3-8':
+        # Mid level questions (MM-M1 to MM-M6)
+        # Exclude M4 (AI) and M6 (ownership) as they're used in separate calculations
+        questions = ['mm-m1', 'mm-m2', 'mm-m3', 'mm-m5']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
+    elif experience_level == '8+':
+        # Senior level questions (MM-S1 to MM-S6)
+        # Exclude S4 (AI) and S6 (ownership) as they're used in separate calculations
+        questions = ['mm-s1', 'mm-s2', 'mm-s3', 'mm-s5']
+        for q_key in questions:
+            answer = responses.get(q_key)
+            if answer and q_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+                score += (answer_score - 1) * 2.5
+    
     return min(score, 100)
 
 
@@ -382,11 +411,29 @@ def _calculate_ai_fluency(role: str, responses: Dict[str, Any]) -> int:
                 # Convert 1-5 score to AI fluency points
                 # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
                 score += (answer_score - 1) * 10 + 10
+    elif role == 'marketing':
+        # Marketing uses experience-based AI questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct AI question based on experience
+        ai_question_map = {
+            '0-3': 'mm-e4',  # Manual Performance Reporting
+            '3-8': 'mm-m4',  # AI in Creative Optimization
+            '8+': 'mm-s4'    # AI-Led Marketing Transformation
+        }
+        
+        ai_key = ai_question_map.get(experience_level)
+        if ai_key:
+            ai_answer = responses.get(ai_key)
+            if ai_answer and ai_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ai_key].get(ai_answer, 0)
+                # Convert 1-5 score to AI fluency points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
+                score += (answer_score - 1) * 10 + 10
     else:
         # Other roles use existing logic
         ai_question_keys = {
-            'sales': 'sales-ai-usage',
-            'marketing': 'marketing-ai-application',
             'operations': 'operations-ai-leverage',
             'founder': 'founder-ai-advantage'
         }
@@ -397,16 +444,12 @@ def _calculate_ai_fluency(role: str, responses: Dict[str, Any]) -> int:
 
             # Strategic/Advanced AI usage
             advanced_answers = [
-                'deal-risk', 'pricing-optimization',  # Sales
-                'automated-optimization', 'audience-prediction',  # Marketing
                 'decision-optimization', 'automation',  # Operations
                 'insight', 'differentiation'  # Founder
             ]
 
             # Tactical AI usage
             tactical_answers = [
-                'call-summaries', 'email-drafts',  # Sales
-                'creative-testing', 'content-generation',  # Marketing
                 'forecasting', 'reporting',  # Operations
                 'speed', 'cost'  # Founder
             ]
@@ -487,11 +530,29 @@ def _calculate_ownership(role: str, responses: Dict[str, Any]) -> int:
                 # Convert 1-5 score to ownership points
                 # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
                 score += (answer_score - 1) * 10 + 10
+    elif role == 'marketing':
+        # Marketing uses experience-based ownership questions
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        # Map to correct ownership question based on experience
+        ownership_question_map = {
+            '0-3': 'mm-e6',  # Marketing-Sales Misalignment
+            '3-8': 'mm-m6',  # Leading a Performance Team
+            '8+': 'mm-s6'    # Building a High-Performance Marketing Org
+        }
+        
+        ownership_key = ownership_question_map.get(experience_level)
+        if ownership_key:
+            ownership_answer = responses.get(ownership_key)
+            if ownership_answer and ownership_key in ANSWER_SCORES:
+                answer_score = ANSWER_SCORES[ownership_key].get(ownership_answer, 0)
+                # Convert 1-5 score to ownership points
+                # 1→+10, 2→+20, 3→+30, 4→+40, 5→+50
+                score += (answer_score - 1) * 10 + 10
     else:
         # Other roles use existing logic
         ownership_keys = {
-            'sales': 'sales-ownership',
-            'marketing': 'marketing-leadership-metric',
             'operations': 'operations-ownership',
             'founder': 'founder-resource-constraint'
         }
@@ -502,8 +563,6 @@ def _calculate_ownership(role: str, responses: Dict[str, Any]) -> int:
 
             # High ownership answers
             high_ownership = [
-                'region-business', 'team-number',  # Sales
-                'revenue-contribution', 'ltv',  # Marketing
                 'margin', 'sla-adherence',  # Operations
                 'learning', 'profitability'  # Founder
             ]
@@ -706,14 +765,53 @@ def _generate_readiness_tags(score: int, maturity: str, role: str, responses: Di
                 tags.append("Revenue Org Builder")
 
     elif role == 'marketing':
-        if responses.get('marketing-conflicting-signals') in ['ltv-cac-cohort', 'revenue-attribution']:
-            tags.append("Unit Economics")
-        if responses.get('marketing-ai-application') in ['automated-optimization', 'audience-prediction']:
-            tags.append("AI-Native Marketer")
-        if responses.get('marketing-defend-metric') in ['revenue-contribution', 'ltv']:
-            tags.append("Revenue-Focused")
-        if responses.get('marketing-scale-failure') == 'funnel-leakage':
-            tags.append("Growth Hacker")
+        experience = responses.get('experience', '')
+        experience_level = _map_experience_to_level(experience)
+        
+        if experience_level == '0-3':
+            # Entry level tags
+            if responses.get('mm-e1') == 'analyze-funnel-metrics':
+                tags.append("Data-Driven Marketer")
+            if responses.get('mm-e2') == 'run-ab-tests':
+                tags.append("Optimization-Focused")
+            if responses.get('mm-e3') == 'define-persona-strategy':
+                tags.append("Strategic Planner")
+            if responses.get('mm-e4') == 'use-automation-ai':
+                tags.append("AI-Adopter")
+            if responses.get('mm-e5') == 'propose-balanced-mix':
+                tags.append("Balanced Thinker")
+            if responses.get('mm-e6') == 'analyze-mql-sql':
+                tags.append("Analytical Leader")
+        
+        elif experience_level == '3-8':
+            # Mid level tags
+            if responses.get('mm-m1') == 'optimize-channel-mix':
+                tags.append("Growth Strategist")
+            if responses.get('mm-m2') == 'investigate-reconcile':
+                tags.append("Analytics Expert")
+            if responses.get('mm-m3') == 'conduct-market-research':
+                tags.append("Strategic Marketer")
+            if responses.get('mm-m4') == 'use-ai-validate-testing':
+                tags.append("AI-Capable")
+            if responses.get('mm-m5') == 'analyze-audience-targeting':
+                tags.append("Data-Driven")
+            if responses.get('mm-m6') == 'align-team-objectives':
+                tags.append("Team Leader")
+        
+        elif experience_level == '8+':
+            # Senior level tags
+            if responses.get('mm-s1') == 'strengthen-brand-equity':
+                tags.append("Brand Strategist")
+            if responses.get('mm-s2') == 'allocate-cac-ltv-roi':
+                tags.append("Portfolio Strategist")
+            if responses.get('mm-s3') == 'redesign-attribution-framework':
+                tags.append("Analytics Leader")
+            if responses.get('mm-s4') == 'identify-pilot-scale':
+                tags.append("AI Strategist")
+            if responses.get('mm-s5') == 'localize-strategy':
+                tags.append("Global Marketer")
+            if responses.get('mm-s6') == 'define-specialization-kpis':
+                tags.append("Org Builder")
 
     elif role == 'operations':
         if responses.get('operations-scale-stress') in ['process-design', 'data-visibility']:
