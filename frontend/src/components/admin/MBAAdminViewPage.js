@@ -830,9 +830,9 @@ const MBAAdminViewPage = () => {
   };
 
   const getSkillLevelLabel = (level) => {
-    if (level === 1) return 'Needs Improvement';
-    if (level === 2) return 'Proficient';
-    return 'Strong';
+    if (level === 1) return 'Weak';
+    if (level === 2) return 'Needs Improvement';
+    return 'Proficient';
   };
 
   return (

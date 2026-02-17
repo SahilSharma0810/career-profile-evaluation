@@ -23,9 +23,9 @@ class SkillCategory(str, Enum):
 
 
 SKILL_LEVEL_LABELS = {
-    1: "Needs Improvement",
-    2: "Proficient",
-    3: "Strong"
+    1: "Weak",
+    2: "Needs Improvement",
+    3: "Proficient"
 }
 
 # Map internal 1-5 scores to external 1-3 levels
@@ -33,9 +33,9 @@ SKILL_LEVEL_LABELS = {
 def _map_score_to_level(score: int) -> int:
     """
     Map internal 1-5 scoring to simplified 1-3 levels:
-    - 1-2 → Level 1 (Needs Improvement)
-    - 3 → Level 2 (Proficient)
-    - 4-5 → Level 3 (Strong)
+    - 1-2 → Level 1 (Weak)
+    - 3 → Level 2 (Needs Improvement)
+    - 4-5 → Level 3 (Proficient)
     """
     if score <= 2:
         return 1
@@ -262,7 +262,7 @@ def infer_skills_from_responses(role: str, responses: Dict[str, Any]) -> Dict[st
             # Map to simplified 3-level system
             level = _map_score_to_level(internal_score)
         else:
-            # Default to 2 (Proficient) ONLY if no relevant questions answered
+            # Default to 2 (Needs Improvement) ONLY if no relevant questions answered
             level = 2
 
         # Attach metadata for frontend
@@ -274,7 +274,7 @@ def infer_skills_from_responses(role: str, responses: Dict[str, Any]) -> Dict[st
             'description': metadata.get('description', '')
         }
 
-    # Identify strengths (level >= 3) and gaps (level <= 1)
+    # Identify strengths (level >= 3 = Proficient) and gaps (level <= 1 = Weak)
     strengths = [name for name, data in skills.items() if data['level'] >= 3]
     gaps = [name for name, data in skills.items() if data['level'] <= 1]
 
