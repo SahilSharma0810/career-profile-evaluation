@@ -383,7 +383,15 @@ def _generate_mba_cache_key(payload: Dict[str, Any]) -> str:
     # Add all quiz response keys (excluding timestamps or random fields)
     for key, value in payload.items():
         if key not in cache_payload and not key.startswith('_'):
-            cache_payload[key] = value
+            # Normalize arrays by sorting for consistent hashing
+            if isinstance(value, list):
+                cache_payload[key] = sorted(value)
+            else:
+                cache_payload[key] = value
+    
+    # Normalize primaryGoal array if present
+    if 'primaryGoal' in cache_payload and isinstance(cache_payload['primaryGoal'], list):
+        cache_payload['primaryGoal'] = sorted(cache_payload['primaryGoal'])
     
     serialized = json.dumps(cache_payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(serialized.encode("utf-8")).hexdigest()

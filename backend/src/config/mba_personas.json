@@ -180,6 +180,36 @@
         }
       },
       "ideal_profile": "Founders with validated ideas and growing traction"
+    },
+    "tech": {
+      "id": "mba_tech_engineer",
+      "label": "Tech Engineer",
+      "role_context": "Business x AI Engineering Leadership",
+      "description": "Engineers who combine technical excellence with business acumen and AI fluency",
+      "maturity_variants": {
+        "ai_native": {
+          "badge_label": "AI-Native Engineering Leader",
+          "variant_description": "You're using AI strategically for product decisions, automation, and competitive advantage.",
+          "persona_tags": ["AI Native", "Engineering Leader", "Strategic Thinker"],
+          "key_strengths": ["AI-driven engineering", "Business impact awareness", "Strategic technical decisions"],
+          "mba_fit": "Ideal candidate for AI-focused programs. You can bridge technical excellence and business strategy."
+        },
+        "ai_strategic": {
+          "badge_label": "AI-Strategic Engineer",
+          "variant_description": "You understand AI's potential and are using it for productivity and business impact.",
+          "persona_tags": ["AI Strategic", "Engineer", "Business-Minded"],
+          "key_strengths": ["Product thinking", "AI tool adoption", "Business impact awareness"],
+          "mba_fit": "Strong candidate. Focus on deepening AI strategy skills and business acumen for maximum impact."
+        },
+        "developing": {
+          "badge_label": "Emerging Tech Professional",
+          "variant_description": "You have strong technical fundamentals. Business acumen and AI fluency are your next growth levers.",
+          "persona_tags": ["Engineer", "Foundation Building", "AI Curious"],
+          "key_strengths": ["Technical fundamentals", "Problem-solving", "Execution focus"],
+          "mba_fit": "Ready with focused upskilling. Prioritize AI literacy, product thinking, and strategic business skills."
+        }
+      },
+      "ideal_profile": "Engineers with 3-5+ years experience, strong technical skills, and growing business acumen"
     }
   }
 }
