@@ -478,8 +478,36 @@ const MBAGroupedQuestionScreen = ({
       const syntheticOption = { value: newValue, label: option.label };
       onResponse(questionId, syntheticOption, question);
 
-      // For multiselect, don't auto-advance - user will click Continue button
-      // But still check validation for button state
+      // Auto-advance if user has selected the maximum number of options
+      if (newValue.length === maxSelections && onAutoAdvance) {
+        // Check if all questions on this screen are answered
+        const updatedResponses = { ...responses, [questionId]: newValue };
+        const allAnswered = questions.every((q) => {
+          if (q.optional) {
+            return true;
+          }
+          if (q.conditional && q.showIf) {
+            if (!q.showIf(updatedResponses)) return true;
+          }
+          const response = updatedResponses[q.id];
+          // For multiselect questions, check min/max constraints
+          if (q.isMultiselect) {
+            if (!Array.isArray(response)) return false;
+            const qMinSelections = q.minSelections || 1;
+            const qMaxSelections = q.maxSelections || 3;
+            return response.length >= qMinSelections && response.length <= qMaxSelections;
+          }
+          return response !== undefined && response !== null;
+        });
+
+        if (allAnswered) {
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            onAutoAdvance();
+          }, 1000);
+        }
+      }
+
       return;
     } else {
       // Handle single select: replace value

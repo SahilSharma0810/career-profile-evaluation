@@ -59,18 +59,23 @@ const buildQuestionMap = () => {
   });
   
   // Add role-specific questions
-  Object.values(MBA_ROLE_SPECIFIC_SCREENS).forEach(screens => {
-    screens.forEach(screen => {
-      screen.questions.forEach(q => {
-        questionMap[q.id] = {
-          question: q.question,
-          helperText: q.helperText,
-          isScenario: q.isScenario,
-          options: q.options?.reduce((acc, opt) => {
-            acc[opt.value] = opt.label;
-            return acc;
-          }, {})
-        };
+  // MBA_ROLE_SPECIFIC_SCREENS is now nested: { role: { '0-3': [...], '3-8': [...], '8+': [...] } }
+  Object.values(MBA_ROLE_SPECIFIC_SCREENS).forEach(experienceLevels => {
+    // experienceLevels is an object like { '0-3': [...], '3-8': [...], '8+': [...] }
+    Object.values(experienceLevels).forEach(screens => {
+      // screens is an array of screen objects
+      screens.forEach(screen => {
+        screen.questions.forEach(q => {
+          questionMap[q.id] = {
+            question: q.question,
+            helperText: q.helperText,
+            isScenario: q.isScenario,
+            options: q.options?.reduce((acc, opt) => {
+              acc[opt.value] = opt.label;
+              return acc;
+            }, {})
+          };
+        });
       });
     });
   });
@@ -507,9 +512,9 @@ const SkillLevel = styled.div`
   text-transform: uppercase;
   
   ${props => {
-    if (props.level === 1) return `background: #fee2e2; color: #991b1b;`;
-    if (props.level === 2) return `background: #fff4ed; color: #D55D26;`;
-    return `background: #d1fae5; color: #065f46;`;
+    if (props.level === 1) return 'background: #fee2e2; color: #991b1b;';
+    if (props.level === 2) return 'background: #fff4ed; color: #D55D26;';
+    return 'background: #d1fae5; color: #065f46;';
   }}
 `;
 
@@ -825,9 +830,9 @@ const MBAAdminViewPage = () => {
   };
 
   const getSkillLevelLabel = (level) => {
-    if (level === 1) return 'Needs Improvement';
-    if (level === 2) return 'Proficient';
-    return 'Strong';
+    if (level === 1) return 'Weak';
+    if (level === 2) return 'Needs Improvement';
+    return 'Proficient';
   };
 
   return (

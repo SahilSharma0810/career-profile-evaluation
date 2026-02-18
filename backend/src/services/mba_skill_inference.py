@@ -23,9 +23,9 @@ class SkillCategory(str, Enum):
 
 
 SKILL_LEVEL_LABELS = {
-    1: "Needs Improvement",
-    2: "Proficient",
-    3: "Strong"
+    1: "Weak",
+    2: "Needs Improvement",
+    3: "Proficient"
 }
 
 # Map internal 1-5 scores to external 1-3 levels
@@ -33,9 +33,9 @@ SKILL_LEVEL_LABELS = {
 def _map_score_to_level(score: int) -> int:
     """
     Map internal 1-5 scoring to simplified 1-3 levels:
-    - 1-2 → Level 1 (Needs Improvement)
-    - 3 → Level 2 (Proficient)
-    - 4-5 → Level 3 (Strong)
+    - 1-2 → Level 1 (Weak)
+    - 3 → Level 2 (Needs Improvement)
+    - 4-5 → Level 3 (Proficient)
     """
     if score <= 2:
         return 1
@@ -49,7 +49,7 @@ def _map_score_to_level(score: int) -> int:
 ROLE_SKILL_MAPS = {
     'pm': [
         'product_strategy', 'data_driven_pm', 'user_centricity',
-        'ai_literacy', 'leadership', 'strategic_thinking'
+        'ai_literacy', 'leadership', 'strategic_thinking', 'capital_allocation'
     ],
     'finance': [
         'financial_modeling', 'business_partnering', 'data_integrity',
@@ -69,6 +69,10 @@ ROLE_SKILL_MAPS = {
     ],
     'founder': [
         'venture_building', 'business_fundamentals', 'founder_resourcefulness',
+        'ai_literacy', 'leadership', 'strategic_thinking'
+    ],
+    'tech': [
+        'product_thinking', 'business_impact_awareness', 'execution',
         'ai_literacy', 'leadership', 'strategic_thinking'
     ]
 }
@@ -172,6 +176,28 @@ SKILL_METADATA = {
     'founder_resourcefulness': {
         'title': 'Founder Resourcefulness',
         'description': 'Your ability to move fast with limited resources, prioritize ruthlessly, and find creative solutions to constraints.'
+    },
+
+    # Tech/Engineering Skills (3)
+    'product_thinking': {
+        'title': 'Product Thinking',
+        'description': 'Your ability to connect engineering work to user value, understand product impact, and think beyond code.'
+    },
+    'business_impact_awareness': {
+        'title': 'Business Impact Awareness',
+        'description': 'Your understanding of how technical decisions affect business outcomes, costs, and user experience.'
+    },
+    'execution': {
+        'title': 'Execution & Accountability',
+        'description': 'Your ability to deliver reliably, communicate trade-offs transparently, and take ownership of outcomes.'
+    },
+    'prioritization': {
+        'title': 'Prioritization Thinking',
+        'description': 'Your skill in balancing technical quality, business needs, and technical debt to maximize impact.'
+    },
+    'capital_allocation': {
+        'title': 'Capital Allocation Thinking',
+        'description': 'Your ability to allocate resources, budget, and time across products/initiatives based on ROI, strategic fit, and opportunity cost.'
     }
 }
 
@@ -236,7 +262,7 @@ def infer_skills_from_responses(role: str, responses: Dict[str, Any]) -> Dict[st
             # Map to simplified 3-level system
             level = _map_score_to_level(internal_score)
         else:
-            # Default to 2 (Proficient) ONLY if no relevant questions answered
+            # Default to 2 (Needs Improvement) ONLY if no relevant questions answered
             level = 2
 
         # Attach metadata for frontend
@@ -248,7 +274,7 @@ def infer_skills_from_responses(role: str, responses: Dict[str, Any]) -> Dict[st
             'description': metadata.get('description', '')
         }
 
-    # Identify strengths (level >= 3) and gaps (level <= 1)
+    # Identify strengths (level >= 3 = Proficient) and gaps (level <= 1 = Weak)
     strengths = [name for name, data in skills.items() if data['level'] >= 3]
     gaps = [name for name, data in skills.items() if data['level'] <= 1]
 

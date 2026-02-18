@@ -706,17 +706,17 @@ const SkillLevelTag = styled.span`
 
   ${props => {
     switch(props.level) {
-      case 'needs-improvement':
+      case 'weak':
         return `
           background-color: #fee2e2;
           color: #991b1b;
         `;
-      case 'proficient':
+      case 'needs-improvement':
         return `
           background-color: #fff4ed;
           color: #D55D26;
         `;
-      case 'strong':
+      case 'proficient':
         return `
           background-color: #d1fae5;
           color: #065f46;
@@ -1372,12 +1372,12 @@ const CustomTooltip = ({ active, payload, position }) => {
 // Helper function to get skill level tag info (3-level system)
 const getSkillLevelTag = (level) => {
   if (level === 1) {
-    return { label: 'Needs Improvement', type: 'needs-improvement' };
+    return { label: 'Weak', type: 'weak' };
   } else if (level === 2) {
-    return { label: 'Proficient', type: 'proficient' };
+    return { label: 'Needs Improvement', type: 'needs-improvement' };
   } else {
     // level === 3
-    return { label: 'Strong', type: 'strong' };
+    return { label: 'Proficient', type: 'proficient' };
   }
 };
 
@@ -1426,7 +1426,8 @@ const getRoleDisplayLabel = (roleKey) => {
     'sales': 'Sales / Growth / Revenue',
     'marketing': 'Marketing / Brand / Performance Marketing',
     'operations': 'Operations / Supply Chain / Strategy',
-    'founder': 'Startup Founder / Entrepreneur'
+    'founder': 'Startup Founder / Entrepreneur',
+    'tech': 'Engineering / DevOps / Tech Roles'
   };
   return roleMapping[roleKey] || roleKey;
 };
@@ -1821,9 +1822,9 @@ const MBAResultsPage = () => {
   // Map 3-level system to percentages (capped at 80% max)
   const getLevelPercentage = (level) => {
     switch(level) {
-      case 1: return 30;  // Needs Improvement
-      case 2: return 55;  // Proficient
-      case 3: return 75;  // Strong (capped under 80%)
+      case 1: return 30;  // Weak
+      case 2: return 55;  // Needs Improvement
+      case 3: return 75;  // Proficient (capped under 80%)
       default: return 55;
     }
   };
@@ -1914,37 +1915,37 @@ const MBAResultsPage = () => {
                         <>
                           Your skills profile shows{' '}
                           <strong>
-                            {strongCount} {strongCount === 1 ? 'strong skill' : 'strong skills'}
+                            {strongCount} {strongCount === 1 ? 'proficient skill' : 'proficient skills'}
                           </strong>{' '}
                           and{' '}
                           <strong>
-                            {needsImprovementCount} {needsImprovementCount === 1 ? 'area' : 'areas'} needing improvement
+                            {needsImprovementCount} {needsImprovementCount === 1 ? 'weak area' : 'weak areas'}
                           </strong>.
                         </>
                       );
                     } else if (strongCount > 0) {
-                      // Only strong skills
+                      // Only proficient skills
                       return (
                         <>
                           Your skills profile shows{' '}
                           <strong>
-                            {strongCount} {strongCount === 1 ? 'strong skill' : 'strong skills'}
+                            {strongCount} {strongCount === 1 ? 'proficient skill' : 'proficient skills'}
                           </strong>.
                         </>
                       );
                     } else if (needsImprovementCount > 0) {
-                      // Only areas needing improvement
+                      // Only weak areas
                       return (
                         <>
                           Your skills profile shows{' '}
                           <strong>
-                            {needsImprovementCount} {needsImprovementCount === 1 ? 'area' : 'areas'} needing improvement
+                            {needsImprovementCount} {needsImprovementCount === 1 ? 'weak area' : 'weak areas'}
                           </strong>.
                         </>
                       );
                     } else {
-                      // All proficient (no strong, no gaps)
-                      return <>Your skills are at a proficient level.</>;
+                      // All at needs improvement level (no proficient, no weak)
+                      return <>Your skills are at a needs improvement level.</>;
                     }
                   })()}
                 </DescriptionText>
@@ -2322,7 +2323,8 @@ const MBAResultsPage = () => {
                         results.meta?.role === 'sales' ? 'sales' :
                           results.meta?.role === 'marketing' ? 'marketing' :
                             results.meta?.role === 'operations' ? 'operations' :
-                              'your role';
+                              results.meta?.role === 'tech' ? 'engineering' :
+                                'your role';
 
                     // Use OpenAI personalized description or create role-specific fallback
                     let description = openAITool?.personalized_use_case || tool.use_case;

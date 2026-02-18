@@ -38,7 +38,8 @@ def _get_role_display_name(role: str) -> str:
         'sales': 'Sales Professional',
         'marketing': 'Marketing Professional',
         'operations': 'Operations Professional',
-        'founder': 'Founder/Entrepreneur'
+        'founder': 'Founder/Entrepreneur',
+        'tech': 'Tech Engineer'
     }
     return role_mapping.get(role, role)
 
@@ -51,7 +52,7 @@ def evaluate_mba_readiness(quiz_responses: Dict[str, Any]) -> Dict[str, Any]:
     Args:
         quiz_responses: {
             'role': 'pm',
-            'experience': '5-8',
+            'experience': '3-8',
             'career_goal': 'ai-leadership',
             'currentRole': 'Product Manager',
             ... (all role-specific answers)
@@ -99,7 +100,8 @@ def evaluate_mba_readiness(quiz_responses: Dict[str, Any]) -> Dict[str, Any]:
         'sales': 'sales-growth',
         'marketing': 'marketing',
         'operations': 'operations',
-        'founder': 'founder'
+        'founder': 'founder',
+        'tech': 'tech'
     }
     companies_key = role_mapping.get(role, 'product-manager')
     role_companies = transformation_companies_data.get(companies_key, [])
@@ -120,7 +122,7 @@ def evaluate_mba_readiness(quiz_responses: Dict[str, Any]) -> Dict[str, Any]:
         career_goals = [career_goal] if career_goal else ['improve-current']
     
     current_role_name = quiz_responses.get('currentRole') or _get_role_display_name(role)
-    experience = quiz_responses.get('experience', '3-5')
+    experience = quiz_responses.get('experience', '3-8')
 
     logger.info(f"Calling OpenAI for personalized content generation with goals: {career_goals}")
     openai_content = generate_mba_openai_content(
