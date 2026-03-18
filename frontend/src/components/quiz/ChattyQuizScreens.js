@@ -33,7 +33,8 @@ import {
   FolderOpen,
   Presentation,
   Timer,
-  GitBranch
+  GitBranch,
+  BrainIcon
 } from 'phosphor-react';
 
 // Tech Professional Path - Questions for users who selected 'tech' background
@@ -139,7 +140,7 @@ export const TECH_QUIZ_SCREENS = [
           { value: 'fullstack-sde', label: 'Full-Stack Engineer', icon: <Stack size={24} weight="duotone" /> },
           { value: 'data-ml', label: 'Data Science Engineer', icon: <ChartBar size={24} weight="duotone" /> },
           { value: 'devops-sre', label: 'DevOps Engineer', icon: <CloudArrowUp size={24} weight="duotone" /> },
-          { value: 'ai-ml-engineer', label: 'AI/ML Engineer', icon: <ChartBar size={24} weight="duotone" /> },
+          { value: 'ai-ml-engineer', label: 'AI/ML Engineer', icon: <BrainIcon size={24} weight="duotone" /> },
           { value: 'tech-lead', label: 'Tech Lead / Staff Engineer', icon: <ChartLineUp size={24} weight="duotone" /> }
         ]
       },
@@ -323,7 +324,7 @@ export const NON_TECH_QUIZ_SCREENS = [
           { value: 'fullstack', label: 'Full-Stack Engineer', icon: <Stack size={24} weight="duotone" /> },
           { value: 'data-ml', label: 'Data Science Engineer', icon: <ChartBar size={24} weight="duotone" /> },
           { value: 'devops-sre', label: 'DevOps Engineer', icon: <CloudArrowUp size={24} weight="duotone" /> },
-          { value: 'ai-ml-engineer', label: 'AI/ML Engineer', icon: <ChartBar size={24} weight="duotone" /> },
+          { value: 'ai-ml-engineer', label: 'AI/ML Engineer', icon: <BrainIcon size={24} weight="duotone" /> },
           { value: 'frontend', label: 'Frontend Engineer', icon: <MonitorPlay size={24} weight="duotone" /> },
           { value: 'not-sure', label: 'Not sure yet / Exploring', icon: <Lightbulb size={24} weight="duotone" /> }
         ]
