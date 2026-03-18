@@ -137,7 +137,9 @@ export const TECH_QUIZ_SCREENS = [
           { value: 'senior-fullstack', label: 'Senior Full-Stack Engineer', icon: <Stack size={24} weight="duotone" /> },
           { value: 'backend-sde', label: 'Backend / API Engineer', icon: <Database size={24} weight="duotone" /> },
           { value: 'fullstack-sde', label: 'Full-Stack Engineer', icon: <Stack size={24} weight="duotone" /> },
-          { value: 'data-ml', label: 'Data / ML Engineer', icon: <ChartBar size={24} weight="duotone" /> },
+          { value: 'data-ml', label: 'Data Science Engineer', icon: <ChartBar size={24} weight="duotone" /> },
+          { value: 'devops-sre', label: 'DevOps Engineer', icon: <CloudArrowUp size={24} weight="duotone" /> },
+          { value: 'ai-ml-engineer', label: 'AI/ML Engineer', icon: <ChartBar size={24} weight="duotone" /> },
           { value: 'tech-lead', label: 'Tech Lead / Staff Engineer', icon: <ChartLineUp size={24} weight="duotone" /> }
         ]
       },
@@ -166,7 +168,9 @@ export const TECH_QUIZ_SCREENS = [
         'senior-fullstack': 'Versatile path! Senior full-stack engineers are highly sought after with strong compensation.',
         'backend-sde': 'Solid choice! Backend engineering is always in demand with great career prospects.',
         'fullstack-sde': 'Versatile! Full-stack roles offer broad learning and lots of opportunities across companies.',
-        'data-ml': 'Future-focused! Data & ML roles are exploding with cutting-edge problems and high compensation.',
+        'data-ml': 'Future-focused! Data science roles are in high demand with strong compensation and growth.',
+        'devops-sre': 'Strong pick! DevOps engineers are critical for modern infrastructure and have excellent job security.',
+        'ai-ml-engineer': 'Cutting-edge! AI/ML roles are at the forefront of tech with high impact and compensation.',
         'tech-lead': 'Leadership track! Staff+ roles combine technical depth with impact - gateway to principal/architect.'
       },
       targetCompany: {
@@ -317,7 +321,9 @@ export const NON_TECH_QUIZ_SCREENS = [
         options: [
           { value: 'backend', label: 'Backend Engineer', icon: <Database size={24} weight="duotone" /> },
           { value: 'fullstack', label: 'Full-Stack Engineer', icon: <Stack size={24} weight="duotone" /> },
-          { value: 'data-ml', label: 'Data / ML Engineer', icon: <ChartBar size={24} weight="duotone" /> },
+          { value: 'data-ml', label: 'Data Science Engineer', icon: <ChartBar size={24} weight="duotone" /> },
+          { value: 'devops-sre', label: 'DevOps Engineer', icon: <CloudArrowUp size={24} weight="duotone" /> },
+          { value: 'ai-ml-engineer', label: 'AI/ML Engineer', icon: <ChartBar size={24} weight="duotone" /> },
           { value: 'frontend', label: 'Frontend Engineer', icon: <MonitorPlay size={24} weight="duotone" /> },
           { value: 'not-sure', label: 'Not sure yet / Exploring', icon: <Lightbulb size={24} weight="duotone" /> }
         ]
@@ -349,7 +355,9 @@ export const NON_TECH_QUIZ_SCREENS = [
       targetRole: {
         'backend': 'Great choice! Backend is always in demand with clear learning paths and strong salaries.',
         'fullstack': "Versatile! You'll learn end-to-end development with more job opportunities.",
-        'data-ml': 'Future-proof! Growing fast but can be harder to break into as first role without math background.',
+        'data-ml': 'Future-proof! Data science roles are growing fast with strong demand across industries.',
+        'devops-sre': 'Strong path! DevOps is critical to every tech company with excellent job security.',
+        'ai-ml-engineer': 'Cutting-edge! AI/ML roles are in high demand; math and coding foundations will help.',
         'frontend': 'Creative path! Perfect if you enjoy visual feedback and UX. Tons of jobs for career switchers.',
         'not-sure': "That's fine! I'll help you pick based on your background and learning style."
       },

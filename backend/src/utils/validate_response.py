@@ -76,7 +76,10 @@ class ResponseValidator:
 
         strong_coding = problem_solving in ["51-100", "100+"]
         has_system_design = system_design in ["once", "multiple"]
-        targets_engineering = target_role in ["faang-sde", "backend", "fullstack", "tech-lead"]
+        targets_engineering = target_role in [
+            "faang-sde", "backend", "fullstack", "tech-lead",
+            "backend-sde", "fullstack-sde", "data-ml", "devops-sre", "ai-ml-engineer"
+        ]
 
         if strong_coding or has_system_design:
             non_technical_roles = []

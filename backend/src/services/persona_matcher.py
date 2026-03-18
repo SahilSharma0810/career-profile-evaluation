@@ -124,12 +124,14 @@ def _match_nontech_persona(
     - targetRole: not-sure → "nontech_exploring"
     """
 
-    # Normalize targetRole
+    # Normalize targetRole (main CPE only; MBA uses separate quiz flow)
     role_mapping = {
         "frontend": "frontend",
         "backend": "backend",
         "fullstack": "fullstack",
         "data-ml": "dataml",
+        "devops-sre": "backend",  # infra-adjacent; use backend persona
+        "ai-ml-engineer": "dataml",
         "not-sure": "exploring",
         "exploring": "exploring"
     }

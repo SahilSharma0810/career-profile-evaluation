@@ -140,6 +140,20 @@ const normaliseGoals = (goals = {}) => ({
     : []
 });
 
+/**
+ * Derive program for attribution from quiz responses (target role and related fields).
+ * Maps to: software_development | data_science | devops | ai_ml
+ */
+const deriveProgramFromQuizResponses = (quizResponses = {}) => {
+  const targetRole = quizResponses.targetRole || '';
+  const roleToProgram = {
+    'data-ml': 'data_science',
+    'devops-sre': 'devops',
+    'ai-ml-engineer': 'ai_ml'
+  };
+  return roleToProgram[targetRole] || 'software_development';
+};
+
 const buildEvaluationPayload = (quizResponses, goals, background, questionsAndAnswers = []) => {
   if (!background) {
     throw new Error(
@@ -212,14 +226,15 @@ export const evaluateProfile = async (
     attribution.setAttribution('cpe_evaluated');
     const jwt = await generateJWT();
     const refererUrl = getURLWithUTMParams();
-  
+    const program = deriveProgramFromQuizResponses(quizResponses);
+
     await apiRequest(
       'POST', 
       '/api/v3/analytics/attributions/', 
       {
         attributions: {
           ...attribution.getAttribution(),
-          program: 'software_development',
+          program,
           product: 'scaler',
           sub_product: 'career_profile_tool',
           element: 'cpe_evaluate_btn'
