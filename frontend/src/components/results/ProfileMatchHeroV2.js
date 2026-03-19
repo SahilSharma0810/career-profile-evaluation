@@ -1496,7 +1496,10 @@ const ProfileMatchHeroV2 = ({
         'backend-dev': 'backend development roles',
         'fullstack-dev': 'full-stack development roles',
         'devops-eng': 'DevOps engineering roles',
-        'ml-engineer': 'ML engineering roles'
+        'devops-sre': 'DevOps engineering roles',
+        'ml-engineer': 'ML engineering roles',
+        'ai-ml-engineer': 'AI/ML engineering roles',
+        'data-ml': 'Data Science engineering roles'
       };
       return roleMap[role] || role;
     };

@@ -305,10 +305,20 @@ def _calculate_role_transition_gap(current_role: str, target_role: str) -> float
         ("qa-support", "tech-lead"): 10,
         ("qa-support", "staff"): 10,
 
-        # Data/ML transitions
+        # Data/ML and Data Science transitions
         ("devops", "data-ml"): 4,
         ("swe-product", "data-ml"): 3,
         ("swe-service", "data-ml"): 4,
+        # DevOps target (devops-sre)
+        ("devops", "devops-sre"): 0,
+        ("swe-product", "devops-sre"): 4,
+        ("swe-service", "devops-sre"): 4,
+        ("qa-support", "devops-sre"): 7,
+        # AI/ML Engineer target (treat like data-ml)
+        ("devops", "ai-ml-engineer"): 4,
+        ("swe-product", "ai-ml-engineer"): 3,
+        ("swe-service", "ai-ml-engineer"): 4,
+        ("qa-support", "ai-ml-engineer"): 7,
     }
 
     # Look up specific transition

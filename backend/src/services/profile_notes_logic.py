@@ -146,7 +146,7 @@ def _generate_nontech_notes(quiz_responses: Dict[str, Any], score: int) -> str:
         notes_parts.append("Backend path: Focus on Python/Node.js, SQL, and 2-3 API projects.")
     elif target_role in ["fullstack-dev", "fullstack-sde", "fullstack"]:
         notes_parts.append("Full-stack path: Master React + Node.js, deploy one complete app.")
-    elif target_role in ["data-analyst", "data-ml"]:
+    elif target_role in ["data-analyst", "data-ml", "ai-ml-engineer"]:
         notes_parts.append("Data path: Excel, SQL, and visualization tools (Power BI/Tableau).")
 
     if score >= 70 and time_per_week == "10+":

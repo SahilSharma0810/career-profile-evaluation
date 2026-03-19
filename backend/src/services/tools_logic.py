@@ -29,7 +29,7 @@ def generate_tool_recommendations(background: str, quiz_responses: Dict[str, Any
                 "React DevTools - Browser extension for debugging",
                 "Netlify or Vercel - One-click deployment platforms"
             ]
-        elif target_role == "data-ml":
+        elif target_role in ["data-ml", "ai-ml-engineer"]:
             tools = [
                 "Jupyter Notebook - Interactive Python environment",
                 "Pandas & NumPy - Data manipulation libraries",
@@ -44,6 +44,14 @@ def generate_tool_recommendations(background: str, quiz_responses: Dict[str, Any
                 "Excel Power Query - Advanced data transformation",
                 "Kaggle Datasets - Practice with real-world data",
                 "Google Data Studio - Free dashboard tool"
+            ]
+        elif target_role == "devops-sre":
+            tools = [
+                "Docker - Container basics (run, build images)",
+                "GitHub Actions - CI/CD and automation",
+                "Terraform or Pulumi - Infrastructure as Code basics",
+                "AWS Free Tier / GCP - Cloud fundamentals",
+                "Linux command line - Shell and scripting"
             ]
         else:
             tools = [
@@ -95,7 +103,7 @@ def generate_tool_recommendations(background: str, quiz_responses: Dict[str, Any
                 tools.append("Datadog or New Relic - Application monitoring")
                 tools.append("Sentry - Error tracking across stack")
 
-        elif current_skill in ["cloud", "containers", "cicd", "iac"] or current_role == "devops":
+        elif current_skill in ["cloud", "containers", "cicd", "iac"] or current_role == "devops" or target_role == "devops-sre":
             tools.extend([
                 "Terraform or Pulumi - Infrastructure as Code",
                 "Kubernetes Dashboard - K8s cluster management",
@@ -107,7 +115,7 @@ def generate_tool_recommendations(background: str, quiz_responses: Dict[str, Any
                 tools.append("Datadog - Cloud infrastructure monitoring")
                 tools.append("Vault - Secrets management")
 
-        elif target_role in ["data-ml", "data-engineer", "ml-engineer"]:
+        elif target_role in ["data-ml", "ai-ml-engineer", "data-engineer", "ml-engineer"]:
             tools.extend([
                 "MLflow - ML experiment tracking",
                 "Weights & Biases - Model training visualization",

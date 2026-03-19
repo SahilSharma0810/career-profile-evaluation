@@ -229,7 +229,7 @@ def call_openai_structured(
         "  * Legacy: career-switcher (treat as non-tech)\n"
         "- quizResponses.experience: '0-2', '3-5', '5-8', or '8+' years (NEW: 4 tiers instead of 3)\n"
         "- quizResponses.targetRole:\n"
-        "  * Tech: backend-sde, fullstack-sde, frontend-sde, data-ml, devops-sre, mobile-dev, tech-lead\n"
+        "  * Tech: backend-sde, fullstack-sde, frontend-sde, data-ml, devops-sre, ai-ml-engineer, mobile-dev, tech-lead\n"
         "  * Non-tech: backend-dev, fullstack-dev, data-analyst, automation-qa, exploring\n"
         "  * Legacy: faang-sde, backend, fullstack (still valid)\n"
         "- quizResponses.problemSolving: 0-10, 11-50, 51-100, 100+ (coding practice intensity - DERIVED from codingActivity/learningActivity)\n"

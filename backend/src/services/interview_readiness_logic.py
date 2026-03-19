@@ -149,8 +149,8 @@ def _calculate_non_tech_readiness(quiz_responses: Dict[str, Any]) -> Dict[str, A
         base += 2  # Some QA/support tech exposure
 
     # Boost based on clear target role (shows career direction)
-    if "data" in target_role:
-        base += 3   # Data/ML - focused technical path
+    if "data" in target_role or "ai-ml" in target_role or "ml" in target_role:
+        base += 3   # Data/ML/AI - focused technical path
     elif "backend" in target_role:
         base += 3   # Backend - serious engineering path
     elif "fullstack" in target_role:
