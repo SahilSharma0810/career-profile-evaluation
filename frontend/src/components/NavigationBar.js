@@ -378,6 +378,16 @@ const NavigationBar = ({
     });
   }, []);
 
+  const handleGoToDashboard = useCallback(() => {
+    tracker.click({
+      click_type: 'go_to_dashboard_btn_clicked',
+      custom: {
+        source: 'navbar'
+      }
+    });
+    window.location.replace('/academy/free-live-class');
+  }, []);
+
   // Scroll direction detection for CSAT banner
   useEffect(() => {
     if (!isResultsPage) return;
@@ -488,6 +498,9 @@ const NavigationBar = ({
                 <TextReEvaluateButton onClick={handleReEvaluate}>
                   Re-evaluate
                 </TextReEvaluateButton>
+                <DesktopDashboardButton onClick={handleGoToDashboard}>
+                  Go to Free Dashboard
+                </DesktopDashboardButton>
                 <IconButton onClick={handleReEvaluate} title="Re-evaluate">
                   <ArrowClockwise size={20} weight="bold" />
                 </IconButton>
