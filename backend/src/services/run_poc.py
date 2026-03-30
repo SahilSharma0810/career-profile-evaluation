@@ -8,6 +8,7 @@ from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
 from openai import OpenAI
+from opentelemetry import trace
 from pydantic import ValidationError
 from src.repositories.cache_repository import CacheRepository
 from src.models import FullProfileEvaluationResponse, enrich_full_profile_evaluation
@@ -25,6 +26,7 @@ from src.utils.label_mappings import get_role_label, get_company_label
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+tracer = trace.get_tracer(__name__)
 
 
 DEFAULT_INPUT: Dict[str, Any] = {
@@ -614,11 +616,20 @@ def run_poc(
     cache_repo = CacheRepository()
 
     cache_key = cache_repo.generate_cache_key(payload_for_cache, model_name)
-    cached_json = cache_repo.get(cache_key, model_name)
+
+    with tracer.start_as_current_span("cache.get") as span:
+        span.set_attribute("cache.model", model_name)
+        span.set_attribute("cache.key_prefix", cache_key[:16])
+        cached_json = cache_repo.get(cache_key, model_name)
+        span.set_attribute("cache.hit", bool(cached_json))
 
     if cached_json:
         logger.info("✅ CACHE HIT - Returning cached response (no OpenAI API call, instant response!)")
-        cache_repo.backfill_user_input(cache_key, model_name, original_payload)
+        with tracer.start_as_current_span("cache.backfill_user_input") as span:
+            span.set_attribute("cache.model", model_name)
+            span.set_attribute("cache.key_prefix", cache_key[:16])
+            updated = cache_repo.backfill_user_input(cache_key, model_name, original_payload)
+            span.set_attribute("cache.updated", bool(updated))
         result = FullProfileEvaluationResponse.model_validate_json(cached_json)
         result.response_id = cache_key
         return result
@@ -642,14 +653,17 @@ def run_poc(
     target_company = quiz_responses.get("targetCompany", "")
     target_company_label = quiz_responses.get("targetCompanyLabel") or get_company_label(target_company)
 
-    result = call_openai_structured(
-        api_key=api_key,
-        openai_model=model_name,
-        input_payload=payload_for_cache,  # Use payload without questionsAndAnswers
-        calculated_profile_score=calculated_score,
-        calculated_interview_readiness=interview_readiness_result,
-        target_company_label=target_company_label,
-    )
+    with tracer.start_as_current_span("openai.call_structured") as span:
+        span.set_attribute("openai.model", model_name)
+        span.set_attribute("cache.key_prefix", cache_key[:16])
+        result = call_openai_structured(
+            api_key=api_key,
+            openai_model=model_name,
+            input_payload=payload_for_cache,  # Use payload without questionsAndAnswers
+            calculated_profile_score=calculated_score,
+            calculated_interview_readiness=interview_readiness_result,
+            target_company_label=target_company_label,
+        )
 
     hardcoded_quick_wins = generate_quick_wins(background, quiz_responses)
     hardcoded_opportunities = generate_job_opportunities(background, quiz_responses)
@@ -718,7 +732,13 @@ def run_poc(
     result = FullProfileEvaluationResponse.model_validate(result_dict)
 
     result_json = result.model_dump_json()
-    cache_repo.set(cache_key, model_name, result_json, user_input=original_payload)  # Store original payload with questionsAndAnswers
+    with tracer.start_as_current_span("cache.set") as span:
+        span.set_attribute("cache.model", model_name)
+        span.set_attribute("cache.key_prefix", cache_key[:16])
+        ok = cache_repo.set(
+            cache_key, model_name, result_json, user_input=original_payload
+        )  # Store original payload with questionsAndAnswers
+        span.set_attribute("cache.write_ok", bool(ok))
     logger.info("💾 Response cached successfully - next identical request will be instant!")
 
     final_result = FullProfileEvaluationResponse.model_validate_json(result_json)

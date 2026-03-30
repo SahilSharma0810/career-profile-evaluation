@@ -19,6 +19,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from .settings import settings
 
 _otel_initialized: bool = False
+_otel_instrumented_libs: bool = False
 
 
 def _normalize_otlp_http_endpoint(base: str) -> str:
@@ -47,6 +48,48 @@ def _join_path(base: str, suffix: str) -> str:
     base = base.rstrip("/")
     suffix = suffix if suffix.startswith("/") else f"/{suffix}"
     return f"{base}{suffix}"
+
+def _try_instrument_common_libs() -> None:
+    """
+    Best-effort auto-instrumentation for common libraries used by this app.
+
+    This is intentionally defensive: if a lib isn't installed, we skip it.
+    """
+    global _otel_instrumented_libs
+    if _otel_instrumented_libs:
+        return
+
+    # NOTE: OpenAI's Python SDK uses httpx under the hood (unless overridden),
+    # and cache calls use psycopg2. Instrumenting these usually unlocks "real" spans.
+    try:
+        from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
+
+        HTTPXClientInstrumentor().instrument()
+    except Exception:
+        pass
+
+    try:
+        from opentelemetry.instrumentation.requests import RequestsInstrumentor
+
+        RequestsInstrumentor().instrument()
+    except Exception:
+        pass
+
+    try:
+        from opentelemetry.instrumentation.urllib3 import URLLib3Instrumentor
+
+        URLLib3Instrumentor().instrument()
+    except Exception:
+        pass
+
+    try:
+        from opentelemetry.instrumentation.psycopg2 import Psycopg2Instrumentor
+
+        Psycopg2Instrumentor().instrument()
+    except Exception:
+        pass
+
+    _otel_instrumented_libs = True
 
 
 def init_otel(app: FastAPI) -> None:
@@ -112,6 +155,9 @@ def init_otel(app: FastAPI) -> None:
 
     # Create spans per request.
     FastAPIInstrumentor.instrument_app(app)
+
+    # Create spans for outbound HTTP + Postgres calls where possible.
+    _try_instrument_common_libs()
 
     # Add lightweight request duration + 5xx error metrics.
     meter = metrics.get_meter(service_name)

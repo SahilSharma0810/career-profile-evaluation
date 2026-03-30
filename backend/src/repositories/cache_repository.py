@@ -7,11 +7,14 @@ import psycopg2
 from psycopg2 import pool
 from psycopg2.extras import RealDictCursor
 
+from opentelemetry import trace
+
 from src.config.exceptions import CacheError, DatabaseError
 from src.config.logging_config import get_logger
 from src.config.settings import settings
 
 logger = get_logger(__name__)
+tracer = trace.get_tracer(__name__)
 
 
 class CacheRepository:
@@ -20,6 +23,10 @@ class CacheRepository:
         self._disabled = False
 
     def _initialize_pool(self) -> Optional[pool.SimpleConnectionPool]:
+        with tracer.start_as_current_span("db.pool.initialize"):
+            return self._initialize_pool_inner()
+
+    def _initialize_pool_inner(self) -> Optional[pool.SimpleConnectionPool]:
         if self._disabled:
             return None
 
@@ -76,27 +83,33 @@ class CacheRepository:
             return None
 
         try:
-            with self._get_connection() as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    cur.execute(
-                        """
-                        SELECT response_json, user_input
-                        FROM response_cache
-                        WHERE cache_key = %s AND model = %s
-                        """,
-                        (cache_key, model)
-                    )
-                    result = cur.fetchone()
+            with tracer.start_as_current_span("db.cache.get") as span:
+                span.set_attribute("cache.key_prefix", cache_key[:16])
+                span.set_attribute("cache.model", model)
 
-                    if result:
-                        logger.info(f"✅ Cache HIT for key: {cache_key[:16]}...")
-                        response_data = result['response_json']
-                        if isinstance(response_data, dict):
-                            return json.dumps(response_data)
-                        return response_data
+                with self._get_connection() as conn:
+                    with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                        cur.execute(
+                            """
+                            SELECT response_json, user_input
+                            FROM response_cache
+                            WHERE cache_key = %s AND model = %s
+                            """,
+                            (cache_key, model)
+                        )
+                        result = cur.fetchone()
 
-                    logger.info(f"❌ Cache MISS for key: {cache_key[:16]}...")
-                    return None
+                        if result:
+                            logger.info(f"✅ Cache HIT for key: {cache_key[:16]}...")
+                            span.set_attribute("cache.hit", True)
+                            response_data = result["response_json"]
+                            if isinstance(response_data, dict):
+                                return json.dumps(response_data)
+                            return response_data
+
+                        logger.info(f"❌ Cache MISS for key: {cache_key[:16]}...")
+                        span.set_attribute("cache.hit", False)
+                        return None
 
         except Exception as exc:
             logger.warning(f"Cache read failed: {exc}")
@@ -199,6 +212,10 @@ class CacheRepository:
             return False
 
         try:
+            with tracer.start_as_current_span("db.cache.set") as span:
+                span.set_attribute("cache.key_prefix", cache_key[:16])
+                span.set_attribute("cache.model", model)
+
             user_input_json = None
             if user_input is not None:
                 user_input_json = json.dumps(user_input)
