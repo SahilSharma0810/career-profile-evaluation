@@ -271,8 +271,8 @@ async def test_sentry_and_otel(
     - JSON logs contain the same `trace_id` for correlation
     """
     settings = get_settings()
-    if settings.environment.lower() == "production":
-        raise HTTPException(status_code=404, detail="Not found")
+    # if settings.environment.lower() == "production":
+    #     raise HTTPException(status_code=404, detail="Not found")
 
     from opentelemetry import trace
     from src.config.request_context import get_request_id
