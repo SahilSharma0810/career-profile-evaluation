@@ -6,6 +6,7 @@ import hashlib
 import json
 import logging
 import os
+from uuid import uuid4
 from typing import Dict, Optional, Any
 
 from fastapi import FastAPI, HTTPException, APIRouter, Depends, Security, Header, Query, Request
@@ -17,6 +18,8 @@ from src.models import FullProfileEvaluationResponse
 from src.services.run_poc import run_poc
 from src.config.logging_config import setup_logging, get_logger
 from src.config.settings import get_settings
+from src.config.sentry_config import init_sentry, capture_exception
+from src.config.request_context import request_id_var
 
 # Setup logging
 setup_logging()
@@ -99,6 +102,19 @@ class CRTStoreResponse(BaseModel):
 
 
 app = FastAPI(title="Full Profile Evaluation API")
+
+
+@app.middleware("http")
+async def add_request_context(request: Request, call_next):
+    token = request_id_var.set(str(uuid4()))
+    try:
+        return await call_next(request)
+    finally:
+        request_id_var.reset(token)
+
+
+# Initialize Sentry once at app startup. No-op when SENTRY_DSN is not configured.
+init_sentry()
 
 # Create API router for all endpoints
 api_router = APIRouter()
@@ -224,9 +240,11 @@ async def evaluate_profile(request: EvaluationRequest) -> FullProfileEvaluationR
         logger.info("Profile evaluation completed successfully")
         return result
     except RuntimeError as exc:
+        capture_exception(exc)
         logger.exception("Evaluation failed due to configuration error")
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover - unexpected path
+        capture_exception(exc)
         logger.exception("Unexpected error while generating evaluation")
         raise HTTPException(
             status_code=500,
@@ -310,6 +328,7 @@ async def store_crt_quiz_responses(request: CRTStoreRequest) -> CRTStoreResponse
         return CRTStoreResponse(hash_key=hash_key)
         
     except Exception as exc:
+        capture_exception(exc)
         logger.exception(f"Failed to store CRT quiz responses: {exc}")
         raise HTTPException(
             status_code=500,
@@ -355,6 +374,7 @@ async def get_crt_quiz_responses(
     except HTTPException:
         raise
     except Exception as exc:
+        capture_exception(exc)
         logger.exception(f"Failed to retrieve CRT quiz responses: {exc}")
         raise HTTPException(
             status_code=500,
@@ -446,12 +466,47 @@ async def evaluate_mba_readiness(request: Dict[str, Any]):
         return result
 
     except Exception as exc:
+        capture_exception(exc)
         logger.exception(f"Failed to evaluate MBA readiness: {exc}")
         raise HTTPException(
             status_code=500,
             detail=f"Failed to generate MBA evaluation: {str(exc)}"
         ) from exc
 
+@api_router.post("/admin/test/sentry-otel")
+async def test_sentry_and_otel(
+    username: str = Depends(verify_admin_credentials),
+) -> Dict[str, Any]:
+    """
+    Staging-only diagnostic endpoint to verify:
+    - Sentry receives the exception (via `capture_exception`)
+    - SigNoz receives the request trace/span (via OpenTelemetry instrumentation)
+    - JSON logs contain the same `trace_id` for correlation
+    """
+    settings = get_settings()
+    # if settings.environment.lower() == "production":
+    #     raise HTTPException(status_code=404, detail="Not found")
+
+    from opentelemetry import trace
+    from src.config.request_context import get_request_id
+
+    span_context = trace.get_current_span().get_span_context()
+    trace_id = f"{span_context.trace_id:032x}" if span_context and getattr(span_context, "is_valid", False) else None
+    request_id = get_request_id()
+
+    try:
+        raise RuntimeError("Sentry/OTel test error (triggered by admin diagnostic route)")
+    except Exception as exc:
+        capture_exception(exc)
+        logger.exception("Sentry/OTel diagnostic route triggered an error")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "test": "sentry_otel",
+                "trace_id": trace_id,
+                "request_id": request_id,
+            },
+        ) from exc
 
 @mba_router.get("/admin/view/{cache_key}")
 async def get_mba_response_by_cache_key(
