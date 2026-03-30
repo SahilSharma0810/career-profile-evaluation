@@ -17,12 +17,16 @@ services:
       - SENTRY_DSN=${SENTRY_DSN}
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      # SigNoz / self-hosted OTLP gRPC (optional; omit to disable tracing)
-      - OPENTELEMETRY_ENDPOINT=${OPENTELEMETRY_ENDPOINT}
-      - OPENTELEMETRY_SERVICE_NAME=${OPENTELEMETRY_SERVICE_NAME}
+      # SigNoz / OTLP: 4317=gRPC, 4318=HTTP (auto picks protocol from port when PROTOCOL=auto)
+      - OPENTELEMETRY_ENDPOINT=${OPENTELEMETRY_ENDPOINT:-}
+      - OPENTELEMETRY_PROTOCOL=${OPENTELEMETRY_PROTOCOL:-auto}
+      - OPENTELEMETRY_SERVICE_NAME=${OPENTELEMETRY_SERVICE_NAME:-career-profile-evaluation-api}
       - OPENTELEMETRY_INSECURE=${OPENTELEMETRY_INSECURE:-true}
     networks:
       - app-network
+    depends_on:
+      otel-collector:
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/career-profile-tool/api/health"]
       interval: 30s
@@ -44,6 +48,19 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    networks:
+      - app-network
+    
+  otel-collector:
+    image: signoz/signoz-otel-collector:0.88.8
+    container_name: cpe-otel-collector
+    restart: unless-stopped
+    command: ["--config", "/config.yml"]
+    volumes:
+      - ./otel-collector-config.yml:/config.yml:ro
+    ports:
+      - "4317:4317"
+      - "4318:4318"
     networks:
       - app-network
 
