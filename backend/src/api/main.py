@@ -6,6 +6,7 @@ import hashlib
 import json
 import logging
 import os
+from uuid import uuid4
 from typing import Dict, Optional, Any
 
 from fastapi import FastAPI, HTTPException, APIRouter, Depends, Security, Header, Query, Request
@@ -17,6 +18,9 @@ from src.models import FullProfileEvaluationResponse
 from src.services.run_poc import run_poc
 from src.config.logging_config import setup_logging, get_logger
 from src.config.settings import get_settings
+from src.config.sentry_config import init_sentry, capture_exception
+from src.config.otel_config import init_otel
+from src.config.request_context import request_id_var
 
 # Setup logging
 setup_logging()
@@ -99,6 +103,20 @@ class CRTStoreResponse(BaseModel):
 
 
 app = FastAPI(title="Full Profile Evaluation API")
+
+
+@app.middleware("http")
+async def add_request_context(request: Request, call_next):
+    token = request_id_var.set(str(uuid4()))
+    try:
+        return await call_next(request)
+    finally:
+        request_id_var.reset(token)
+
+
+# Initialize integrations (no-ops if DSN / OTEL endpoint not configured).
+init_sentry()
+init_otel(app)
 
 # Create API router for all endpoints
 api_router = APIRouter()
@@ -224,9 +242,11 @@ async def evaluate_profile(request: EvaluationRequest) -> FullProfileEvaluationR
         logger.info("Profile evaluation completed successfully")
         return result
     except RuntimeError as exc:
+        capture_exception(exc)
         logger.exception("Evaluation failed due to configuration error")
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover - unexpected path
+        capture_exception(exc)
         logger.exception("Unexpected error while generating evaluation")
         raise HTTPException(
             status_code=500,
@@ -310,6 +330,7 @@ async def store_crt_quiz_responses(request: CRTStoreRequest) -> CRTStoreResponse
         return CRTStoreResponse(hash_key=hash_key)
         
     except Exception as exc:
+        capture_exception(exc)
         logger.exception(f"Failed to store CRT quiz responses: {exc}")
         raise HTTPException(
             status_code=500,
@@ -355,6 +376,7 @@ async def get_crt_quiz_responses(
     except HTTPException:
         raise
     except Exception as exc:
+        capture_exception(exc)
         logger.exception(f"Failed to retrieve CRT quiz responses: {exc}")
         raise HTTPException(
             status_code=500,
@@ -446,6 +468,7 @@ async def evaluate_mba_readiness(request: Dict[str, Any]):
         return result
 
     except Exception as exc:
+        capture_exception(exc)
         logger.exception(f"Failed to evaluate MBA readiness: {exc}")
         raise HTTPException(
             status_code=500,

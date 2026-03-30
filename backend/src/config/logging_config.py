@@ -3,6 +3,7 @@ import sys
 from typing import Any, Dict
 
 from .settings import settings
+from .request_context import get_request_id
 
 
 class JSONFormatter(logging.Formatter):
@@ -22,6 +23,8 @@ class JSONFormatter(logging.Formatter):
 
         if record.exc_info:
             log_data["exception"] = self.formatException(record.exc_info)
+        if hasattr(record, "trace_id") and record.trace_id:
+            log_data["trace_id"] = record.trace_id
         if hasattr(record, "request_id"):
             log_data["request_id"] = record.request_id
 
@@ -29,6 +32,31 @@ class JSONFormatter(logging.Formatter):
             log_data["user_id"] = record.user_id
 
         return json.dumps(log_data)
+
+
+class RequestContextFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        request_id = get_request_id()
+        if request_id:
+            record.request_id = request_id
+        return True
+
+
+class TraceContextFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        # Best-effort: when OpenTelemetry isn't initialized or no span is active,
+        # we simply omit trace_id from the JSON payload.
+        try:
+            from opentelemetry import trace
+
+            span_context = trace.get_current_span().get_span_context()
+            if span_context and getattr(span_context, "is_valid", False):
+                record.trace_id = f"{span_context.trace_id:032x}"
+        except Exception:
+            # Logging must never fail due to tracing issues.
+            pass
+
+        return True
 
 
 def setup_logging() -> None:
@@ -48,6 +76,8 @@ def setup_logging() -> None:
         )
 
     console_handler.setFormatter(formatter)
+    console_handler.addFilter(RequestContextFilter())
+    console_handler.addFilter(TraceContextFilter())
     root_logger.addHandler(console_handler)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("httpx").setLevel(logging.WARNING)
