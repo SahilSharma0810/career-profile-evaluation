@@ -15,20 +15,37 @@ services:
       - LOG_FORMAT=${LOG_FORMAT:-json}
       - PORT=8000
       - SENTRY_DSN=${SENTRY_DSN}
-      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4318}
       - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_SERVICE_NAME=${OTEL_SERVICE_NAME}
       # SECURITY: Admin credentials - MUST be set via environment variables (.env file)
       # No defaults - these must be explicitly configured
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
     networks:
       - app-network
+    depends_on:
+      otel-collector:
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/career-profile-tool/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  otel-collector:
+    image: signoz/signoz-otel-collector:0.88.8
+    container_name: cpe-otel-collector
+    restart: unless-stopped
+    command: ["--config", "/config.yml"]
+    volumes:
+      - ./otel-collector-config.yml:/config.yml:ro
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    networks:
+      - app-network
 
   frontend:
     build:

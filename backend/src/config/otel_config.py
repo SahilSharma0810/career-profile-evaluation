@@ -37,11 +37,13 @@ def init_otel(app: FastAPI) -> None:
         # Allow running without SigNoz/OTel enabled.
         return
 
+    service_name = os.getenv("OTEL_SERVICE_NAME", "").strip() or settings.app_name
+
     # SigNoz expects OTLP over HTTP (typically port 4318).
     # We keep configuration driven by OTEL_EXPORTER_OTLP_ENDPOINT and protocol env vars.
     resource = Resource(
         {
-            "service.name": settings.app_name,
+            "service.name": service_name,
             "service.version": settings.app_version,
             "deployment.environment": settings.environment,
         }
@@ -61,7 +63,7 @@ def init_otel(app: FastAPI) -> None:
     FastAPIInstrumentor.instrument_app(app)
 
     # Add lightweight request duration + 5xx error metrics.
-    meter = metrics.get_meter(settings.app_name)
+    meter = metrics.get_meter(service_name)
     http_request_duration_ms = meter.create_histogram("http.server.request_duration_ms")
     http_server_errors_total = meter.create_counter("http.server.errors_total")
 
