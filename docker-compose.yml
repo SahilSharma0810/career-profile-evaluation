@@ -17,6 +17,10 @@ services:
       - SENTRY_DSN=${SENTRY_DSN}
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      # SigNoz / self-hosted OTLP gRPC (optional; omit to disable tracing)
+      - OPENTELEMETRY_ENDPOINT=${OPENTELEMETRY_ENDPOINT}
+      - OPENTELEMETRY_SERVICE_NAME=${OPENTELEMETRY_SERVICE_NAME}
+      - OPENTELEMETRY_INSECURE=${OPENTELEMETRY_INSECURE:-true}
     networks:
       - app-network
     healthcheck:

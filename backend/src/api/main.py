@@ -6,6 +6,7 @@ import hashlib
 import json
 import logging
 import os
+from contextlib import asynccontextmanager
 from uuid import uuid4
 from typing import Dict, Optional, Any
 
@@ -101,7 +102,27 @@ class CRTStoreResponse(BaseModel):
     hash_key: str
 
 
-app = FastAPI(title="Full Profile Evaluation API")
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+    """
+    SigNoz / OpenTelemetry: instrument after routes exist (sail-mimic pattern).
+    Rebuilds middleware stack so FastAPIInstrumentor wraps the app correctly.
+    """
+    settings = get_settings()
+    if not settings.opentelemetry_endpoint:
+        yield
+        return
+
+    from src.config.telemetry import setup_telemetry, shutdown_telemetry
+
+    app.middleware_stack = None
+    setup_telemetry(app)
+    app.middleware_stack = app.build_middleware_stack()
+    yield
+    shutdown_telemetry(app)
+
+
+app = FastAPI(title="Full Profile Evaluation API", lifespan=_lifespan)
 
 
 @app.middleware("http")

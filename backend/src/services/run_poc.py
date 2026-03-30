@@ -21,10 +21,12 @@ from src.services.profile_notes_logic import generate_profile_strength_notes
 from src.services.current_profile_summary import generate_current_profile_summary
 from src.services.peer_comparison_logic import generate_peer_group_description, calculate_potential_percentile
 from src.utils.label_mappings import get_role_label, get_company_label
+from src.config.telemetry import get_tracer
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+_tracer = get_tracer(__name__)
 
 
 DEFAULT_INPUT: Dict[str, Any] = {
@@ -531,18 +533,25 @@ def call_openai_structured(
     for attempt in range(1, 4):
         completion = None
         try:
-            completion = client.chat.completions.create(
-                model=openai_model,
-                messages=messages,
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "FullProfileEvaluationResponse",
-                        "schema": schema,
-                        "strict": True,
-                    },
+            with _tracer.start_as_current_span(
+                "openai.chat.completions",
+                attributes={
+                    "openai.model": openai_model,
+                    "openai.attempt": attempt,
                 },
-            )
+            ):
+                completion = client.chat.completions.create(
+                    model=openai_model,
+                    messages=messages,
+                    response_format={
+                        "type": "json_schema",
+                        "json_schema": {
+                            "name": "FullProfileEvaluationResponse",
+                            "schema": schema,
+                            "strict": True,
+                        },
+                    },
+                )
         except Exception as exc:  # pragma: no cover - network/service errors
             if attempt == 3:
                 raise
