@@ -15,9 +15,11 @@ services:
       - LOG_FORMAT=${LOG_FORMAT:-json}
       - PORT=8000
       - SENTRY_DSN=${SENTRY_DSN}
-      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4318}
+      # docker-compose: export to local collector sidecar
+      # EB single-container: set OTEL_EXPORTER_OTLP_ENDPOINT directly to central SigNoz collector
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
       - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-      - OTEL_SERVICE_NAME=${OTEL_SERVICE_NAME}
+      - OTEL_SERVICE_NAME=${OTEL_SERVICE_NAME:-cpe-backend-staging}
       # SECURITY: Admin credentials - MUST be set via environment variables (.env file)
       # No defaults - these must be explicitly configured
       - ADMIN_USERNAME=${ADMIN_USERNAME}
