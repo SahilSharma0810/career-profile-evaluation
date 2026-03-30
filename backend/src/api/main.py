@@ -260,6 +260,42 @@ async def healthcheck() -> Dict[str, str]:
     return {"status": "ok"}
 
 
+@api_router.post("/admin/test/sentry-otel")
+async def test_sentry_and_otel(
+    username: str = Depends(verify_admin_credentials),
+) -> Dict[str, Any]:
+    """
+    Staging-only diagnostic endpoint to verify:
+    - Sentry receives the exception (via `capture_exception`)
+    - SigNoz receives the request trace/span (via OpenTelemetry instrumentation)
+    - JSON logs contain the same `trace_id` for correlation
+    """
+    settings = get_settings()
+    if settings.environment.lower() == "production":
+        raise HTTPException(status_code=404, detail="Not found")
+
+    from opentelemetry import trace
+    from src.config.request_context import get_request_id
+
+    span_context = trace.get_current_span().get_span_context()
+    trace_id = f"{span_context.trace_id:032x}" if span_context and getattr(span_context, "is_valid", False) else None
+    request_id = get_request_id()
+
+    try:
+        raise RuntimeError("Sentry/OTel test error (triggered by admin diagnostic route)")
+    except Exception as exc:
+        capture_exception(exc)
+        logger.exception("Sentry/OTel diagnostic route triggered an error")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "test": "sentry_otel",
+                "trace_id": trace_id,
+                "request_id": request_id,
+            },
+        ) from exc
+
+
 @api_router.get("/admin/view/response/{cache_key}")
 async def get_response_by_cache_key(
     cache_key: str,
