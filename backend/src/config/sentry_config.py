@@ -11,7 +11,7 @@ _sentry_enabled = False
 def init_sentry() -> None:
     global _sentry_enabled
 
-    if _sentry_enabled or not settings.sentry_dsn:
+    if _sentry_enabled or not settings.sentry_dsn or not settings.is_production:
         return
 
     sentry_sdk.init(
