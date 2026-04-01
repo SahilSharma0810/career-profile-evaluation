@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
 from pydantic import ValidationError
-from src.repositories.cache_repository import CacheRepository
+from src.repositories.cache_repository import get_cache_repository
 from src.models import FullProfileEvaluationResponse, enrich_full_profile_evaluation
 from src.models.models_raw import FullProfileEvaluationResponseRaw
 from src.services.quick_wins_logic import generate_quick_wins
@@ -720,14 +720,15 @@ async def run_poc(
 
     model_name = "gpt-4o"
 
-    cache_repo = CacheRepository()
+    cache_repo = get_cache_repository()
 
     cache_key = cache_repo.generate_cache_key(payload_for_cache, model_name)
     cached_json = cache_repo.get(cache_key, model_name)
 
     if cached_json:
         logger.info("✅ CACHE HIT - Returning cached response (no OpenAI API call, instant response!)")
-        cache_repo.backfill_user_input(cache_key, model_name, original_payload)
+        if not settings.load_test_mock_openai:
+            cache_repo.backfill_user_input(cache_key, model_name, original_payload)
         result = FullProfileEvaluationResponse.model_validate_json(cached_json)
         result.response_id = cache_key
         return result
