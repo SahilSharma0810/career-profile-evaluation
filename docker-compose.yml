@@ -22,6 +22,7 @@ services:
       - OPENTELEMETRY_PROTOCOL=${OPENTELEMETRY_PROTOCOL:-auto}
       - OPENTELEMETRY_SERVICE_NAME=${OPENTELEMETRY_SERVICE_NAME:-career-profile-evaluation-api}
       - OPENTELEMETRY_INSECURE=${OPENTELEMETRY_INSECURE:-true}
+      - LOAD_TEST_MOCK_OPENAI=${LOAD_TEST_MOCK_OPENAI:-false}
     networks:
       - app-network
     depends_on:
