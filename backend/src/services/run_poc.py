@@ -21,6 +21,7 @@ from src.services.profile_notes_logic import generate_profile_strength_notes
 from src.services.current_profile_summary import generate_current_profile_summary
 from src.services.peer_comparison_logic import generate_peer_group_description, calculate_potential_percentile
 from src.utils.label_mappings import get_role_label, get_company_label
+from src.config.settings import settings
 from src.config.telemetry import get_tracer
 
 load_dotenv()
@@ -602,6 +603,105 @@ async def call_openai_structured(
 
     raise RuntimeError("Exhausted attempts without valid response")
 
+
+def _build_mock_openai_response(
+    *,
+    input_payload: Dict[str, Any],
+    calculated_profile_score: int,
+    calculated_interview_readiness: Dict[str, Any],
+    target_company_label: str,
+) -> FullProfileEvaluationResponse:
+    """Return deterministic response for load testing with schema parity."""
+    quiz = input_payload.get("quizResponses", {})
+    current_role = quiz.get("currentRoleLabel") or quiz.get("currentRole") or "Software Engineer"
+    target_role = quiz.get("targetRoleLabel") or quiz.get("targetRole") or "Backend Engineer"
+    experience = quiz.get("experience", "0-2")
+    percentile = max(35, min(100, int(calculated_profile_score)))
+
+    raw_instance = FullProfileEvaluationResponseRaw.model_validate(
+        {
+            "profile_evaluation": {
+                "profile_strength_score": int(calculated_profile_score),
+                "profile_strength_notes": "Load-test mock response without OpenAI dependency.",
+                "current_profile": {
+                    "title": "Your Current Profile",
+                    "summary": f"Current role: {current_role}. Target role: {target_role}.",
+                    "key_stats": [
+                        {"label": "Current Role", "value": str(current_role), "icon": "briefcase"},
+                        {"label": "Target Role", "value": str(target_role), "icon": "target"},
+                        {"label": "Experience", "value": str(experience), "icon": "timer"},
+                    ],
+                },
+                "skill_analysis": {
+                    "strengths": ["Consistency", "Career focus", "Execution mindset"],
+                    "areas_to_develop": ["System design", "Interview depth", "Project complexity"],
+                },
+                "recommended_tools": ["Postman", "Docker", "Prometheus + Grafana"],
+                "experience_benchmark": {
+                    "your_experience_years": str(experience),
+                    "typical_for_target_role_years": str(experience),
+                    "gap_analysis": "On track with steady weekly preparation.",
+                },
+                "interview_readiness": {
+                    "technical_interview_percent": int(calculated_interview_readiness["technical_interview_percent"]),
+                    "hr_behavioral_percent": int(calculated_interview_readiness["hr_behavioral_percent"]),
+                    "technical_notes": f"Practice based on interview style at {target_company_label}.",
+                },
+                "peer_comparison": {
+                    "percentile": percentile,
+                    "potential_percentile": min(100, percentile + 12),
+                    "peer_group_description": "Tech professionals targeting similar roles in India",
+                    "summary": "Current profile is competitive with meaningful room for growth.",
+                    "metrics": {
+                        "profile_strength_percent": int(calculated_profile_score),
+                        "better_than_peers_percent": percentile,
+                    },
+                },
+                "success_likelihood": {
+                    "score_percent": max(35, int(calculated_profile_score)),
+                    "notes": "Consistency in preparation is likely to improve success outcomes.",
+                },
+                "quick_wins": [
+                    {
+                        "title": "Ship one backend service",
+                        "description": "Build, test, and deploy one backend service with observability.",
+                        "icon": "rocket",
+                    },
+                    {
+                        "title": "Do timed interview drills",
+                        "description": "Run two timed interview sessions each week and track mistakes.",
+                        "icon": "target",
+                    },
+                    {
+                        "title": "Review one design weekly",
+                        "description": "Practice one system design case weekly and document trade-offs.",
+                        "icon": "books",
+                    },
+                ],
+                "opportunities_you_qualify_for": [],
+                "recommended_roles_based_on_interests": [
+                    {
+                        "title": "Backend Engineer",
+                        "seniority": "Entry",
+                        "reason": "Good fit with your current trajectory and target role preference.",
+                    },
+                    {
+                        "title": "Full Stack Engineer",
+                        "seniority": "Mid-Senior",
+                        "reason": "Strong adjacent option with full lifecycle ownership.",
+                    },
+                    {
+                        "title": "DevOps Engineer",
+                        "seniority": "Mid-Senior",
+                        "reason": "Viable path if reliability and infra engineering are priorities.",
+                    },
+                ],
+                "badges": ["Load Test Mock Mode"],
+            }
+        }
+    )
+    return enrich_full_profile_evaluation(raw_instance)
+
 async def run_poc(
     *,
     input_payload: Optional[Dict[str, Any]] = None,
@@ -632,11 +732,7 @@ async def run_poc(
         result.response_id = cache_key
         return result
 
-    logger.info("🔴 CACHE MISS - Calling OpenAI API (this will cost money and take 2-5 seconds)")
-
-    api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set. Provide it via the environment variable.")
+    logger.info("🔴 CACHE MISS - Building evaluation response")
 
     background = payload_for_cache.get("background", "")
     quiz_responses = payload_for_cache.get("quizResponses", {})
@@ -651,14 +747,27 @@ async def run_poc(
     target_company = quiz_responses.get("targetCompany", "")
     target_company_label = quiz_responses.get("targetCompanyLabel") or get_company_label(target_company)
 
-    result = await call_openai_structured(
-        api_key=api_key,
-        openai_model=model_name,
-        input_payload=payload_for_cache,  # Use payload without questionsAndAnswers
-        calculated_profile_score=calculated_score,
-        calculated_interview_readiness=interview_readiness_result,
-        target_company_label=target_company_label,
-    )
+    if settings.load_test_mock_openai:
+        logger.info("🧪 LOAD_TEST_MOCK_OPENAI=true - OpenAI call bypassed for load testing")
+        result = _build_mock_openai_response(
+            input_payload=payload_for_cache,
+            calculated_profile_score=calculated_score,
+            calculated_interview_readiness=interview_readiness_result,
+            target_company_label=target_company_label,
+        )
+    else:
+        logger.info("🔴 CACHE MISS - Calling OpenAI API (this will cost money and take 2-5 seconds)")
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("OPENAI_API_KEY is not set. Provide it via the environment variable.")
+        result = await call_openai_structured(
+            api_key=api_key,
+            openai_model=model_name,
+            input_payload=payload_for_cache,  # Use payload without questionsAndAnswers
+            calculated_profile_score=calculated_score,
+            calculated_interview_readiness=interview_readiness_result,
+            target_company_label=target_company_label,
+        )
 
     hardcoded_quick_wins = generate_quick_wins(background, quiz_responses)
     hardcoded_opportunities = generate_job_opportunities(background, quiz_responses)
