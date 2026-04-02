@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     db_pool_timeout: int = 30
     cache_enabled: bool = True
     cache_ttl: Optional[int] = None 
+    load_test_mock_openai: bool = False
     allowed_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
 
     def get_cors_origins(self) -> List[str]:
