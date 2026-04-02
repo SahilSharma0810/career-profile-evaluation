@@ -255,7 +255,7 @@ async def evaluate_profile(request: EvaluationRequest) -> FullProfileEvaluationR
     logger.info("Received profile evaluation request")
 
     try:
-        result = run_poc(
+        result = await run_poc(
             input_payload=request.model_dump(),
         )
         logger.info("Profile evaluation completed successfully")
