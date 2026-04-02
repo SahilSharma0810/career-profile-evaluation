@@ -1,0 +1,46 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    send_batch_size: 1000
+    timeout: 10s
+  resourcedetection:
+    detectors: [env, system, ec2]
+    timeout: 2s
+  memory_limiter:
+    check_interval: 2s
+    limit_mib: 150
+    spike_limit_mib: 35
+
+extensions:
+  health_check: {}
+
+exporters:
+  otlphttp:
+    endpoint: "http://collector.signoz.scaler.com:4318/"
+    tls:
+      insecure: true
+      insecure_skip_verify: true
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 25s
+      max_elapsed_time: 2m
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [resourcedetection, batch, memory_limiter]
+      exporters: [otlphttp]
+    metrics:
+      receivers: [otlp]
+      processors: [resourcedetection, batch, memory_limiter]
+      exporters: [otlphttp]

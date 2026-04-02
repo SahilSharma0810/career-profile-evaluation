@@ -10,8 +10,10 @@ from psycopg2.extras import RealDictCursor
 from src.config.exceptions import CacheError, DatabaseError
 from src.config.logging_config import get_logger
 from src.config.settings import settings
+from src.config.telemetry import get_tracer
 
 logger = get_logger(__name__)
+_tracer = get_tracer(__name__)
 
 
 class CacheRepository:
@@ -75,32 +77,42 @@ class CacheRepository:
         if self._disabled or not settings.cache_enabled:
             return None
 
-        try:
-            with self._get_connection() as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    cur.execute(
-                        """
-                        SELECT response_json, user_input
-                        FROM response_cache
-                        WHERE cache_key = %s AND model = %s
-                        """,
-                        (cache_key, model)
-                    )
-                    result = cur.fetchone()
+        with _tracer.start_as_current_span(
+            "profile_cache.get",
+            attributes={
+                "cache.model": model,
+                "cache.key_prefix": cache_key[:16],
+            },
+        ) as span:
+            try:
+                with self._get_connection() as conn:
+                    with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                        cur.execute(
+                            """
+                            SELECT response_json, user_input
+                            FROM response_cache
+                            WHERE cache_key = %s AND model = %s
+                            """,
+                            (cache_key, model)
+                        )
+                        result = cur.fetchone()
 
-                    if result:
-                        logger.info(f"✅ Cache HIT for key: {cache_key[:16]}...")
-                        response_data = result['response_json']
-                        if isinstance(response_data, dict):
-                            return json.dumps(response_data)
-                        return response_data
+                        if result:
+                            span.set_attribute("cache.hit", True)
+                            logger.info(f"✅ Cache HIT for key: {cache_key[:16]}...")
+                            response_data = result['response_json']
+                            if isinstance(response_data, dict):
+                                return json.dumps(response_data)
+                            return response_data
 
-                    logger.info(f"❌ Cache MISS for key: {cache_key[:16]}...")
-                    return None
+                        span.set_attribute("cache.hit", False)
+                        logger.info(f"❌ Cache MISS for key: {cache_key[:16]}...")
+                        return None
 
-        except Exception as exc:
-            logger.warning(f"Cache read failed: {exc}")
-            return None
+            except Exception as exc:
+                span.record_exception(exc)
+                logger.warning(f"Cache read failed: {exc}")
+                return None
 
     def get_by_key(self, cache_key: str, model: str) -> Optional[Dict[str, Any]]:
         """
@@ -198,32 +210,41 @@ class CacheRepository:
         if self._disabled or not settings.cache_enabled:
             return False
 
-        try:
-            user_input_json = None
-            if user_input is not None:
-                user_input_json = json.dumps(user_input)
+        with _tracer.start_as_current_span(
+            "profile_cache.set",
+            attributes={
+                "cache.model": model,
+                "cache.key_prefix": cache_key[:16],
+            },
+        ) as span:
+            try:
+                user_input_json = None
+                if user_input is not None:
+                    user_input_json = json.dumps(user_input)
 
-            with self._get_connection() as conn:
-                with conn.cursor() as cur:
-                    cur.execute(
-                        """
-                        INSERT INTO response_cache (cache_key, model, user_input, response_json)
-                        VALUES (%s, %s, %s::jsonb, %s::jsonb)
-                        ON CONFLICT (cache_key, model)
-                        DO UPDATE SET
-                            user_input = COALESCE(EXCLUDED.user_input, response_cache.user_input),
-                            response_json = EXCLUDED.response_json,
-                            updated_at = CURRENT_TIMESTAMP
-                        """,
-                        (cache_key, model, user_input_json, response_json)
-                    )
+                with self._get_connection() as conn:
+                    with conn.cursor() as cur:
+                        cur.execute(
+                            """
+                            INSERT INTO response_cache (cache_key, model, user_input, response_json)
+                            VALUES (%s, %s, %s::jsonb, %s::jsonb)
+                            ON CONFLICT (cache_key, model)
+                            DO UPDATE SET
+                                user_input = COALESCE(EXCLUDED.user_input, response_cache.user_input),
+                                response_json = EXCLUDED.response_json,
+                                updated_at = CURRENT_TIMESTAMP
+                            """,
+                            (cache_key, model, user_input_json, response_json)
+                        )
 
-            logger.info(f"💾 Cache WRITE for key: {cache_key[:16]}...")
-            return True
+                span.set_attribute("cache.write", True)
+                logger.info(f"💾 Cache WRITE for key: {cache_key[:16]}...")
+                return True
 
-        except Exception as exc:
-            logger.error(f"Cache write failed: {exc}")
-            return False
+            except Exception as exc:
+                span.record_exception(exc)
+                logger.error(f"Cache write failed: {exc}")
+                return False
 
     def delete(self, cache_key: str, model: str) -> bool:
         try:

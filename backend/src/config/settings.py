@@ -40,6 +40,12 @@ class Settings(BaseSettings):
     admin_username: str
     admin_password: str
 
+    # SigNoz / OpenTelemetry OTLP (gRPC). Leave empty to disable tracing.
+    opentelemetry_endpoint: Optional[str] = None
+    opentelemetry_service_name: str = "cpe-backend-staging"
+    # Set False if your collector uses TLS (e.g. https); self-hosted gRPC is usually insecure.
+    opentelemetry_insecure: bool = True
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

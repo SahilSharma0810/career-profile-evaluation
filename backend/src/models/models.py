@@ -384,6 +384,11 @@ def enrich_full_profile_evaluation(
     success["status"] = success_status
     success["label"] = _success_label_from_status(success_status)
 
+    # Raw OpenAI schema types this field as List[str]; the API model expects JobOpportunityCard.
+    # The model often fills required JSON fields with title strings, which would fail validation.
+    # Opportunities are always replaced in run_poc via generate_job_opportunities — discard LLM output.
+    profile["opportunities_you_qualify_for"] = []
+
     # Rebuild model to ensure all type hints are resolved (required when using Optional)
     FullProfileEvaluationResponse.model_rebuild()
     return FullProfileEvaluationResponse.model_validate(data)

@@ -1,13 +1,13 @@
 import hashlib
+import asyncio
 import json
 import logging
 import os
 import sys
-from time import sleep
 from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import AsyncOpenAI
 from pydantic import ValidationError
 from src.repositories.cache_repository import CacheRepository
 from src.models import FullProfileEvaluationResponse, enrich_full_profile_evaluation
@@ -21,10 +21,12 @@ from src.services.profile_notes_logic import generate_profile_strength_notes
 from src.services.current_profile_summary import generate_current_profile_summary
 from src.services.peer_comparison_logic import generate_peer_group_description, calculate_potential_percentile
 from src.utils.label_mappings import get_role_label, get_company_label
+from src.config.telemetry import get_tracer
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+_tracer = get_tracer(__name__)
 
 
 DEFAULT_INPUT: Dict[str, Any] = {
@@ -178,7 +180,7 @@ def _filter_and_rerank_roles(
     return [role for role, score in sorted_roles]
 
 
-def call_openai_structured(
+async def call_openai_structured(
     *,
     api_key: Optional[str],
     openai_model: str,
@@ -187,7 +189,7 @@ def call_openai_structured(
     calculated_interview_readiness: Dict[str, Any],
     target_company_label: str,
 ) -> FullProfileEvaluationResponse:
-    client = OpenAI(api_key=api_key) if api_key else OpenAI()
+    client = AsyncOpenAI(api_key=api_key) if api_key else AsyncOpenAI()
 
     system_instruction = (
         "You are a career advisor specializing in the Indian tech market. Given the candidate's background, quiz responses, and goals, "
@@ -531,28 +533,35 @@ def call_openai_structured(
     for attempt in range(1, 4):
         completion = None
         try:
-            completion = client.chat.completions.create(
-                model=openai_model,
-                messages=messages,
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "FullProfileEvaluationResponse",
-                        "schema": schema,
-                        "strict": True,
-                    },
+            with _tracer.start_as_current_span(
+                "openai.chat.completions",
+                attributes={
+                    "openai.model": openai_model,
+                    "openai.attempt": attempt,
                 },
-            )
+            ):
+                completion = await client.chat.completions.create(
+                    model=openai_model,
+                    messages=messages,
+                    response_format={
+                        "type": "json_schema",
+                        "json_schema": {
+                            "name": "FullProfileEvaluationResponse",
+                            "schema": schema,
+                            "strict": True,
+                        },
+                    },
+                )
         except Exception as exc:  # pragma: no cover - network/service errors
             if attempt == 3:
                 raise
-            sleep(1.5 * attempt)
+            await asyncio.sleep(1.5 * attempt)
             continue
 
         if completion is None:
             if attempt == 3:
                 raise RuntimeError("OpenAI completion failed without raising an exception")
-            sleep(1.5 * attempt)
+            await asyncio.sleep(1.5 * attempt)
             continue
 
         content = completion.choices[0].message.content or ""
@@ -589,11 +598,11 @@ def call_openai_structured(
             {"role": "assistant", "content": content or ""},
             {"role": "user", "content": correction_prompt},
         ]
-        sleep(1.5 * attempt)
+        await asyncio.sleep(1.5 * attempt)
 
     raise RuntimeError("Exhausted attempts without valid response")
 
-def run_poc(
+async def run_poc(
     *,
     input_payload: Optional[Dict[str, Any]] = None,
 ) -> FullProfileEvaluationResponse:
@@ -642,7 +651,7 @@ def run_poc(
     target_company = quiz_responses.get("targetCompany", "")
     target_company_label = quiz_responses.get("targetCompanyLabel") or get_company_label(target_company)
 
-    result = call_openai_structured(
+    result = await call_openai_structured(
         api_key=api_key,
         openai_model=model_name,
         input_payload=payload_for_cache,  # Use payload without questionsAndAnswers
@@ -742,8 +751,10 @@ def main() -> int:
         payload = DEFAULT_INPUT
 
     try:
-        raw = run_poc(
-            input_payload=payload,
+        raw = asyncio.run(
+            run_poc(
+                input_payload=payload,
+            )
         )
     except Exception as exc:
         print(f"OpenAI API call failed: {exc}", file=sys.stderr)
