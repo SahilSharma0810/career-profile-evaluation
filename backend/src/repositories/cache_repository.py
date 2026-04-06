@@ -14,6 +14,7 @@ from src.config.telemetry import get_tracer
 
 logger = get_logger(__name__)
 _tracer = get_tracer(__name__)
+_shared_cache_repository: Optional["CacheRepository"] = None
 
 
 class CacheRepository:
@@ -330,3 +331,11 @@ class CacheRepository:
                     return True
         except Exception:
             return False
+
+
+def get_cache_repository() -> CacheRepository:
+    """Return a process-level shared cache repository instance."""
+    global _shared_cache_repository
+    if _shared_cache_repository is None:
+        _shared_cache_repository = CacheRepository()
+    return _shared_cache_repository
