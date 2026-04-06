@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
 from pydantic import ValidationError
-from src.repositories.cache_repository import CacheRepository
+from src.repositories.cache_repository import get_cache_repository
 from src.models import FullProfileEvaluationResponse, enrich_full_profile_evaluation
 from src.models.models_raw import FullProfileEvaluationResponseRaw
 from src.services.quick_wins_logic import generate_quick_wins
@@ -620,7 +620,7 @@ async def run_poc(
 
     model_name = "gpt-4o"
 
-    cache_repo = CacheRepository()
+    cache_repo = get_cache_repository()
 
     cache_key = cache_repo.generate_cache_key(payload_for_cache, model_name)
     cached_json = cache_repo.get(cache_key, model_name)
