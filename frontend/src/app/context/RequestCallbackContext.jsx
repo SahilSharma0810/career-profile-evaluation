@@ -3,7 +3,8 @@ import React, {
   useCallback,
   useContext,
   useMemo,
-  useState
+  useState,
+  useRef
 } from 'react';
 
 import RequestCallbackModal from "../components/RequestCallbackModal";
@@ -13,18 +14,14 @@ import attribution from "../../utils/attribution";
 import { generateJWT } from "../../utils/api";
 import { getURLWithUTMParams } from "../../utils/url";
 import { sendLSQActivity } from "../../utils/leadSquared";
+import { useProfile } from '../../context/ProfileContext';
+import { getAdminPageLink, getRCBProgramForTargetRole } from '../../utils/evaluationLogic';
 
 const RequestCallbackContext = createContext({
   open: () => {}
 });
 
-const INITIAL_FORM_STATE = {
-  program: '',
-  jobTitle: ''
-};
-
 const SUBMISSION_STATUS = {
-  IDLE: 'idle',
   LOADING: 'loading',
   SUCCESS: 'success',
   ERROR: 'error'
@@ -41,72 +38,46 @@ const PROGRAM_NAME_MAPPING = {
   ai_ml: "AI/ML",
 };
 
+const PROGRAM_URL_MAPPING = {
+  academy: 'https://www.scaler.com/academy/',
+  data_science: 'https://www.scaler.com/courses/data-science-course/',
+  devops: 'https://www.scaler.com/courses/devops-course/',
+  ai_ml: 'https://www.scaler.com/courses/ai-machine-learning-course/'
+};
+
 export const RequestCallbackProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [formState, setFormState] = useState(INITIAL_FORM_STATE);
-  const [submissionStatus, setSubmissionStatus] = useState(
-    SUBMISSION_STATUS.IDLE
-  );
+  const [submissionStatus, setSubmissionStatus] = useState(SUBMISSION_STATUS.LOADING);
   const [errorMessage, setErrorMessage] = useState('');
+  const [currentProgram, setCurrentProgram] = useState('');
   const [clickSource, setClickSource] = useState('');
+  const submitRef = useRef(null);
 
-  const open = useCallback((initialState = {}) => {
-    setFormState({
-      program: initialState.program || '',
-      jobTitle: initialState.jobTitle || ''
-    });
-    setClickSource(initialState.source || 'unknown');
-    setIsOpen(true);
-  }, []);
+  const { evaluationResults, quizResponses } = useProfile();
 
-  const close = useCallback(() => {
-    setIsOpen(false);
-    setFormState(INITIAL_FORM_STATE);
-    setSubmissionStatus(SUBMISSION_STATUS.IDLE);
-    setErrorMessage('');
-    setClickSource('');
-  }, []);
-
-  const updateField = useCallback((field, value) => {
-    if (value) {
-      tracker.click({
-        click_type: 'form_input_filled',
-        custom: {
-          field: field
-        }
-      });
-    }
-    setFormState((prev) => ({
-      ...prev,
-      [field]: value
-    }));
-  }, []);
-
-  const submit = useCallback(async (adminPageLink = null) => {
+  const submit = useCallback(async (program, source) => {
     setSubmissionStatus(SUBMISSION_STATUS.LOADING);
     setErrorMessage('');
 
     attribution.setAttribution('cpe_requested_callback', {
-      program:
-        PROGRAMS_MAPPING[formState.program] ||
-        formState.program ||
-        'software_development'
+      program: PROGRAMS_MAPPING[program] || program || 'software_development'
     });
 
-    const programName = PROGRAM_NAME_MAPPING[formState.program] || formState.program || "";
+    const programName = PROGRAM_NAME_MAPPING[program] || program || "";
+    const adminPageLink = getAdminPageLink(evaluationResults?.response_id);
 
     try {
-      await sendLSQActivity({ 
+      await sendLSQActivity({
         activityName: 'rcb_from_cpe',
         fields: [programName, adminPageLink]
       });
 
       const jwt = await generateJWT();
       const refererUrl = getURLWithUTMParams();
-    
+
       await apiRequest(
-        'POST', 
-        '/api/v3/analytics/attributions/', 
+        'POST',
+        '/api/v3/analytics/attributions/',
         {
           attributions: {
             ...attribution.getAttribution(),
@@ -130,16 +101,13 @@ export const RequestCallbackProvider = ({ children }) => {
       tracker.click({
         click_type: 'rcb_form_submitted',
         custom: {
-          source: clickSource,
-          program: formState.program,
-          job_title: formState.jobTitle || 'not_specified'
+          source,
+          program,
+          job_title: 'not_specified'
         }
       });
 
       setSubmissionStatus(SUBMISSION_STATUS.SUCCESS);
-      setTimeout(() => {
-        close();
-      }, 2000);
     } catch (error) {
       console.error('Request callback submission failed:', error);
       setSubmissionStatus(SUBMISSION_STATUS.ERROR);
@@ -149,7 +117,36 @@ export const RequestCallbackProvider = ({ children }) => {
         'Failed to submit request. Please try again.';
       setErrorMessage(errorMsg);
     }
-  }, [close, formState, clickSource]);
+  }, [evaluationResults]);
+
+  const open = useCallback((initialState = {}) => {
+    const targetRole = quizResponses?.targetRole || '';
+    const program = initialState.program || getRCBProgramForTargetRole(targetRole);
+    const source = initialState.source || 'unknown';
+
+    setCurrentProgram(program);
+    setClickSource(source);
+    setIsOpen(true);
+
+    // Store params for retry
+    submitRef.current = { program, source };
+
+    submit(program, source);
+  }, [quizResponses, submit]);
+
+  const close = useCallback(() => {
+    setIsOpen(false);
+    setErrorMessage('');
+    setClickSource('');
+    setCurrentProgram('');
+    submitRef.current = null;
+  }, []);
+
+  const retry = useCallback(() => {
+    if (submitRef.current) {
+      submit(submitRef.current.program, submitRef.current.source);
+    }
+  }, [submit]);
 
   const contextValue = useMemo(
     () => ({
@@ -163,21 +160,15 @@ export const RequestCallbackProvider = ({ children }) => {
       {children}
       <RequestCallbackModal
         isOpen={isOpen}
-        program={formState.program}
-        jobTitle={formState.jobTitle}
-        onChangeField={updateField}
         onClose={close}
-        onSubmit={submit}
+        onRetry={retry}
         submissionStatus={submissionStatus}
         errorMessage={errorMessage}
+        programName={PROGRAM_NAME_MAPPING[currentProgram] || ''}
+        programUrl={PROGRAM_URL_MAPPING[currentProgram] || ''}
       />
     </RequestCallbackContext.Provider>
   );
 };
 
 export const useRequestCallback = () => useContext(RequestCallbackContext);
-
-
-
-
-  

@@ -3,14 +3,14 @@ import styled from 'styled-components';
 export const PrimaryButton = styled.button`
   width: 100%;
   padding: 14px 20px;
-  background: linear-gradient(135deg, #b30158 0%, #8a0145 100%);
+  background: var(--accent);
   color: white;
   border: none;
-  border-radius: 0;
-  font-size: 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -19,8 +19,8 @@ export const PrimaryButton = styled.button`
   gap: 8px;
 
   &:hover:not(:disabled) {
-    background: linear-gradient(135deg, #8a0145 0%, #b30158 100%);
-    box-shadow: 0 4px 12px rgba(179, 1, 88, 0.3);
+    background: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     transform: translateY(-1px);
   }
 
@@ -29,7 +29,7 @@ export const PrimaryButton = styled.button`
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 `;
@@ -48,5 +48,3 @@ export const LoadingSpinner = styled.div`
     }
   }
 `;
-
-
