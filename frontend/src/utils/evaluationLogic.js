@@ -150,6 +150,16 @@ export const getProgramKeyForTargetRole = (targetRole = '') => {
   return roleToProgram[targetRole] || 'software_development';
 };
 
+/** Maps quiz `targetRole` to RCB modal program option values. */
+export const getRCBProgramForTargetRole = (targetRole = '') => {
+  const roleToProgram = {
+    'data-ml': 'data_science',
+    'devops-sre': 'devops',
+    'ai-ml-engineer': 'ai_ml'
+  };
+  return roleToProgram[targetRole] || 'academy';
+};
+
 /**
  * Derive program for attribution from quiz responses (target role and related fields).
  * Maps to: software_development | data_science | devops | ai_ml

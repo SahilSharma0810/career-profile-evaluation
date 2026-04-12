@@ -26,6 +26,7 @@ import oliveBranchRight from '../../assets/Right-Olive-branch.png';
 import PeerComparisonCard from './PeerComparisonCard';
 import { useRequestCallback } from '../../app/context/RequestCallbackContext';
 import tracker from '../../utils/tracker';
+import { getRCBProgramForTargetRole } from '../../utils/evaluationLogic';
 import useSectionViewTracking from '../../hooks/useSectionViewTracking';
 
 const HeroContainer = styled.div`
@@ -1294,6 +1295,8 @@ const ProfileMatchHeroV2 = ({
   hideCTAs = false
 }) => {
   const { open: openCallbackModal } = useRequestCallback();
+  const targetRole = quizResponses?.targetRole || '';
+  const defaultProgram = getRCBProgramForTargetRole(targetRole);
   const [displayScore, setDisplayScore] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [showArrows, setShowArrows] = useState(false);
@@ -1350,8 +1353,8 @@ const ProfileMatchHeroV2 = ({
         source: 'results_career_consultation_cta'
       }
     });
-    openCallbackModal?.({ source: 'results_career_consultation_cta' });
-  }, [openCallbackModal]);
+    openCallbackModal?.({ source: 'results_career_consultation_cta', program: defaultProgram });
+  }, [openCallbackModal, defaultProgram]);
 
   // Animate score when it changes or component mounts
   useEffect(() => {
@@ -1587,8 +1590,8 @@ const ProfileMatchHeroV2 = ({
         source: 'results_bottom_cta'
       }
     });
-    openCallbackModal?.({ source: 'results_bottom_cta' });
-  }, [openCallbackModal]);
+    openCallbackModal?.({ source: 'results_bottom_cta', program: defaultProgram });
+  }, [openCallbackModal, defaultProgram]);
 
   return (
     <HeroContainer ref={heroRef} id="cpe-hero-section">

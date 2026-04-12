@@ -4,6 +4,7 @@ import { Phone } from 'phosphor-react';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import { useRequestCallback } from '../../app/context/RequestCallbackContext';
 import tracker from '../../utils/tracker';
+import { getRCBProgramForTargetRole } from '../../utils/evaluationLogic';
 import useSectionViewTracking from '../../hooks/useSectionViewTracking';
 import HeroChapter from './chapters/HeroChapter';
 import TenXEngineerChapter from './chapters/TenXEngineerChapter';
@@ -142,6 +143,9 @@ const ReportPage = ({
     customAttributes: { page: 'cpe_results' }
   });
 
+  const targetRole = quizResponses?.targetRole || '';
+  const defaultProgram = getRCBProgramForTargetRole(targetRole);
+
   const handleCTAClick = useCallback((source) => {
     if (isPreview) {
       onPreviewCTAClick?.();
@@ -149,8 +153,8 @@ const ReportPage = ({
     }
     tracker.click({ click_type: 'rcb_btn_clicked', custom: { source } });
     tracker.ctaClick({ click_type: 'rcb_btn_clicked', custom: { source } });
-    openCallbackModal?.({ source });
-  }, [isPreview, onPreviewCTAClick, openCallbackModal]);
+    openCallbackModal?.({ source, program: defaultProgram });
+  }, [isPreview, onPreviewCTAClick, openCallbackModal, defaultProgram]);
 
   const score = evaluationResults?.profile_strength_score || 0;
   const strengths = evaluationResults?.skill_analysis?.strengths || [];
