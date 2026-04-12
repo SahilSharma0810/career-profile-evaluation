@@ -1282,7 +1282,7 @@ const TooltipBox = styled.div`
   border-radius: 0;
   border: 1px solid #3a3a3a;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--sans);
   width: 340px;
   z-index: 100;
   position: relative;
