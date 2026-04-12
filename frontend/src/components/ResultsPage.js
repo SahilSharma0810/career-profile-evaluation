@@ -16,7 +16,7 @@ const pulse = keyframes`
 
 const LoadingWrapper = styled.div`
   min-height: 100vh;
-  background: #ffffff;
+  background: var(--white);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,37 +25,40 @@ const LoadingWrapper = styled.div`
 `;
 
 const LoadingBrand = styled.div`
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #94a3b8;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--ink4);
   margin-bottom: 48px;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 `;
 
 const LoadingText = styled.div`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--ink);
   margin-bottom: 8px;
   animation: ${pulse} 2s ease-in-out infinite;
 `;
 
 const LoadingSubtext = styled.div`
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--ink4);
   margin-bottom: 40px;
 `;
 
 const ProgressTrack = styled.div`
   width: 280px;
   height: 3px;
-  background: #f1f5f9;
+  background: var(--line);
   overflow: hidden;
 `;
 
 const ProgressFill = styled.div`
   height: 100%;
-  background: #1e293b;
+  background: var(--accent);
   transition: width 0.3s ease;
   width: ${props => props.$progress}%;
 `;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Phone } from 'phosphor-react';
+import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import { useRequestCallback } from '../../app/context/RequestCallbackContext';
 import tracker from '../../utils/tracker';
 import useSectionViewTracking from '../../hooks/useSectionViewTracking';
@@ -16,7 +17,102 @@ import FinalCTAChapter from './chapters/FinalCTAChapter';
 
 const PageWrapper = styled.div`
   min-height: 100vh;
-  background: #ffffff;
+  background: var(--white);
+`;
+
+const TopBar = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--sans);
+
+  @media (max-width: 768px) {
+    padding: 12px 20px;
+  }
+
+  svg {
+    height: 22px;
+    width: auto;
+  }
+`;
+
+const TopBarDivider = styled.span`
+  color: var(--line2);
+  font-size: 0.875rem;
+`;
+
+const TopBarLabel = styled.span`
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink3);
+`;
+
+const StickyBottom = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--accent-eye);
+  padding: 12px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    padding: 10px 16px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  @media print {
+    display: none;
+  }
+`;
+
+const StickyText = styled.div`
+  color: var(--white);
+`;
+
+const StickyTitle = styled.div`
+  font-size: 0.875rem;
+  font-weight: 700;
+`;
+
+const StickySubtitle = styled.div`
+  font-size: 0.75rem;
+  opacity: 0.8;
+`;
+
+const StickyBtn = styled.button`
+  background: var(--white);
+  color: var(--accent-eye);
+  border: none;
+  padding: 10px 24px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+`;
+
+const BottomSpacer = styled.div`
+  height: 56px;
 `;
 
 const ReportPage = ({
@@ -59,6 +155,12 @@ const ReportPage = ({
 
   return (
     <PageWrapper>
+      <TopBar>
+        <ScalerLogo aria-label="Scaler" />
+        <TopBarDivider>/</TopBarDivider>
+        <TopBarLabel>Career Report</TopBarLabel>
+      </TopBar>
+
       <HeroChapter
         score={score}
         targetRole={targetRole}
@@ -99,6 +201,22 @@ const ReportPage = ({
           targetRole={targetRole}
           onCTAClick={() => handleCTAClick('report_final_cta')}
         />
+      )}
+
+      {!hideCTAs && (
+        <>
+          <StickyBottom>
+            <StickyText>
+              <StickyTitle>One move can change your trajectory.</StickyTitle>
+              <StickySubtitle>30 min with a senior Scaler mentor. Free. Tailored to your profile.</StickySubtitle>
+            </StickyText>
+            <StickyBtn onClick={() => handleCTAClick('report_sticky_cta')}>
+              <Phone size={14} weight="fill" />
+              Get free consultation
+            </StickyBtn>
+          </StickyBottom>
+          <BottomSpacer />
+        </>
       )}
     </PageWrapper>
   );

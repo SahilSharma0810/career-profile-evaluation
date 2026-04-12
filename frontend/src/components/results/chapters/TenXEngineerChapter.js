@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 const Section = styled.section`
   padding: 80px 0;
-  background: #ffffff;
-  border-bottom: 1px solid #f1f5f9;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
 
   @media (max-width: 768px) {
     padding: 48px 0;
@@ -12,45 +12,65 @@ const Section = styled.section`
 `;
 
 const Container = styled.div`
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 40px;
+
+  @media (max-width: 768px) {
+    padding: 0 24px;
+  }
 `;
 
 const ChapterLabel = styled.div`
-  font-size: 0.8125rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--accent-eye);
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 16px;
 `;
 
 const Title = styled.h2`
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--serif);
+  font-size: 2.25rem;
+  font-weight: 500;
+  color: var(--ink);
   margin: 0 0 12px;
-  line-height: 1.3;
+  line-height: 1.15;
 
   @media (max-width: 768px) {
-    font-size: 1.375rem;
+    font-size: 1.625rem;
   }
 `;
 
 const Subtitle = styled.p`
   font-size: 0.9375rem;
-  color: #64748b;
-  margin: 0 0 36px;
+  color: var(--ink3);
+  margin: 0 0 40px;
   line-height: 1.5;
+`;
+
+const TwoCol = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
 `;
 
 const PointsList = styled.ol`
   list-style: none;
   counter-reset: tenx;
   padding: 0;
-  margin: 0 0 48px;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 `;
 
 const Point = styled.li`
@@ -58,61 +78,155 @@ const Point = styled.li`
   display: flex;
   gap: 16px;
   align-items: flex-start;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
 
   &::before {
     content: counter(tenx, decimal-leading-zero);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: #94a3b8;
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--line2);
     flex-shrink: 0;
-    width: 24px;
-    padding-top: 2px;
+    width: 32px;
+    padding-top: 0;
   }
 `;
 
 const PointText = styled.span`
   font-size: 0.9375rem;
-  color: #334155;
+  color: var(--ink2);
   line-height: 1.6;
-`;
 
-const StatsRow = styled.div`
-  display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
-  padding: 32px;
-  background: #f8fafc;
-  border: 1px solid #f1f5f9;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 24px;
-    padding: 24px;
+  strong {
+    color: var(--ink);
   }
 `;
 
-const StatBlock = styled.div`
-  flex: 1;
-  min-width: 200px;
+const StatsCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
-const StatValue = styled.div`
-  font-size: 2rem;
+const StatCard = styled.div`
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 28px;
+`;
+
+const LinkedInRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+`;
+
+const LinkedInIcon = styled.div`
+  width: 18px;
+  height: 18px;
+  background: #0A66C2;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
   font-weight: 700;
-  color: #1e293b;
+  font-size: 0.625rem;
 `;
 
-const StatLabel = styled.div`
+const LinkedInLabel = styled.div`
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: var(--ink4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
+const BigStatValue = styled.div`
+  font-family: var(--serif);
+  font-size: 2.75rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 6px;
+`;
+
+const BigStatLabel = styled.div`
   font-size: 0.8125rem;
-  color: #64748b;
-  line-height: 1.4;
-  margin-top: 4px;
+  color: var(--ink3);
+  line-height: 1.5;
+`;
+
+const BarChart = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+`;
+
+const BarRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const BarYear = styled.div`
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: ${props => props.$highlight ? '700' : '500'};
+  color: ${props => props.$highlight ? 'var(--ink)' : 'var(--ink4)'};
+  width: 36px;
+`;
+
+const Bar = styled.div`
+  height: 10px;
+  background: ${props => props.$highlight ? 'var(--accent)' : 'var(--line2)'};
+  width: ${props => props.$width}%;
+  transition: width 0.5s ease;
+`;
+
+const BarLabel = styled.div`
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: var(--ink4);
+`;
+
+const SecondStatCard = styled.div`
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 28px;
+`;
+
+const SecondStatValue = styled.div`
+  font-family: var(--serif);
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 8px;
+`;
+
+const SecondStatLabel = styled.div`
+  font-size: 0.8125rem;
+  color: var(--ink3);
+  line-height: 1.5;
 `;
 
 const StatSource = styled.div`
-  font-size: 0.6875rem;
-  color: #94a3b8;
-  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  color: var(--ink4);
+  margin-top: 10px;
 `;
 
 const ROLE_NAMES = {
@@ -142,36 +256,68 @@ const TenXEngineerChapter = ({ targetRole }) => {
           Not a unicorn. A real engineer who uses AI as leverage — every single day.
         </Subtitle>
 
-        <PointsList>
-          <Point>
-            <PointText>Uses Cursor or Copilot for every feature — not just autocomplete, full refactors</PointText>
-          </Point>
-          <Point>
-            <PointText>Reviews AI-generated code critically — catches hallucinations before they ship</PointText>
-          </Point>
-          <Point>
-            <PointText>Ships AI-integrated features: RAG pipelines, agents, AI-assisted workflows</PointText>
-          </Point>
-          <Point>
-            <PointText>Designs systems with AI in the architecture — not bolted on after</PointText>
-          </Point>
-          <Point>
-            <PointText>Answers "how would AI change your design?" in interviews without hesitation</PointText>
-          </Point>
-        </PointsList>
+        <TwoCol>
+          <PointsList>
+            <Point>
+              <PointText>Uses <strong>Cursor or Copilot</strong> for every feature — not just autocomplete, full refactors</PointText>
+            </Point>
+            <Point>
+              <PointText>Reviews <strong>AI-generated code critically</strong> — catches hallucinations before they ship</PointText>
+            </Point>
+            <Point>
+              <PointText>Ships <strong>AI-integrated features</strong>: RAG pipelines, agents, AI-assisted workflows</PointText>
+            </Point>
+            <Point>
+              <PointText>Designs <strong>systems with AI in the architecture</strong> — not bolted on after</PointText>
+            </Point>
+            <Point>
+              <PointText>Answers <strong>"how would AI change your design?"</strong> in interviews without hesitation</PointText>
+            </Point>
+          </PointsList>
 
-        <StatsRow>
-          <StatBlock>
-            <StatValue>4×</StatValue>
-            <StatLabel>growth in job postings mentioning generative AI skills — since 2023</StatLabel>
-            <StatSource>LinkedIn, Generative AI in job postings</StatSource>
-          </StatBlock>
-          <StatBlock>
-            <StatValue>66%</StatValue>
-            <StatLabel>of hiring managers won't hire engineers without demonstrated AI skills</StatLabel>
-            <StatSource>LinkedIn Work Trend Index, 2024</StatSource>
-          </StatBlock>
-        </StatsRow>
+          <StatsCol>
+            <StatCard>
+              <LinkedInRow>
+                <LinkedInIcon>in</LinkedInIcon>
+                <LinkedInLabel>Generative AI in job postings · LinkedIn</LinkedInLabel>
+              </LinkedInRow>
+              <BigStatValue>4× growth</BigStatValue>
+              <BigStatLabel>in job postings mentioning generative AI skills — since 2023</BigStatLabel>
+
+              <BarChart>
+                <BarRow>
+                  <BarYear>2022</BarYear>
+                  <Bar $width={25} />
+                  <BarLabel>1×</BarLabel>
+                </BarRow>
+                <BarRow>
+                  <BarYear>2023</BarYear>
+                  <Bar $width={50} />
+                  <BarLabel>2×</BarLabel>
+                </BarRow>
+                <BarRow>
+                  <BarYear>2024</BarYear>
+                  <Bar $width={75} />
+                  <BarLabel>3×</BarLabel>
+                </BarRow>
+                <BarRow>
+                  <BarYear $highlight>2025</BarYear>
+                  <Bar $width={100} $highlight />
+                  <BarLabel>4×</BarLabel>
+                </BarRow>
+              </BarChart>
+            </StatCard>
+
+            <SecondStatCard>
+              <SecondStatValue>66%</SecondStatValue>
+              <SecondStatLabel>of hiring managers won't hire engineers without demonstrated AI skills</SecondStatLabel>
+              <StatSource>
+                <LinkedInIcon style={{ width: 14, height: 14, fontSize: '0.5rem' }}>in</LinkedInIcon>
+                LinkedIn Work Trend Index, 2024
+              </StatSource>
+            </SecondStatCard>
+          </StatsCol>
+        </TwoCol>
       </Container>
     </Section>
   );

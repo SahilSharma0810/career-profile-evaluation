@@ -1,6 +1,6 @@
 import {
-  CaretLeft,
-  CaretRight
+  ArrowLeft,
+  ArrowRight
 } from 'phosphor-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +17,7 @@ import {
 import GroupedQuestionScreen from './GroupedQuestionScreen';
 
 const fadeIn = keyframes`
-  0% { opacity: 0; transform: translateY(20px); }
+  0% { opacity: 0; transform: translateY(16px); }
   100% { opacity: 1; transform: translateY(0); }
 `;
 
@@ -26,30 +26,11 @@ const scroll = keyframes`
   100% { transform: translateX(-50%); }
 `;
 
-/* ── Layout ────────────────────────────────────────────────── */
-
 const QuizContainer = styled.div`
   min-height: 100vh;
-  background: #ffffff;
+  background: var(--white);
   display: flex;
   flex-direction: column;
-`;
-
-const ProgressBarContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: #f1f5f9;
-  z-index: 300;
-`;
-
-const ProgressBarFill = styled.div`
-  height: 100%;
-  background: #0041ca;
-  transition: width 0.3s ease;
-  width: ${props => props.$progress}%;
 `;
 
 const MainLayout = styled.div`
@@ -65,14 +46,14 @@ const MainLayout = styled.div`
 /* ── Left Sidebar ──────────────────────────────────────────── */
 
 const Sidebar = styled.aside`
-  width: 340px;
+  width: 280px;
   flex-shrink: 0;
-  background: #fafbfc;
-  border-right: 1px solid #f1f5f9;
+  background: var(--navy);
+  color: var(--white);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 32px 32px 28px;
+  padding: 32px 28px 24px;
   position: sticky;
   top: 0;
   height: 100vh;
@@ -86,87 +67,151 @@ const Sidebar = styled.aside`
 const SidebarTop = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 32px;
 `;
 
-const LogoWrap = styled.div`
+const LogoRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--white);
+
   svg {
-    height: 28px;
+    height: 22px;
     width: auto;
+    filter: brightness(0) invert(1);
   }
 `;
 
-const SidebarStepLabel = styled.div`
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #94a3b8;
+const LogoDivider = styled.span`
+  color: rgba(255, 255, 255, 0.3);
+`;
+
+const StepDotsRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+
+const StepDot = styled.div`
+  height: 3px;
+  flex: 1;
+  background: ${props => props.$active ? 'var(--white)' : 'rgba(255, 255, 255, 0.2)'};
+  transition: background 0.3s ease;
+`;
+
+const StepIndicator = styled.div`
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+`;
+
+const SidebarCard = styled.div`
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+`;
+
+const WhyLabel = styled.div`
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.4);
   margin-bottom: 12px;
 `;
 
-const SidebarHeading = styled.div`
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: #475569;
+const WhyText = styled.div`
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.6;
+`;
+
+const WhyDetail = styled.div`
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.5;
+  margin-top: 10px;
+`;
+
+const SidebarTitle = styled.h2`
+  font-family: var(--serif);
+  font-size: 1.625rem;
+  font-weight: 500;
+  color: var(--white);
+  line-height: 1.25;
+  margin: 0;
+`;
+
+const SidebarDesc = styled.p`
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+  margin: 12px 0 0;
+`;
+
+const StatsColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+`;
+
+const StatCard = styled.div`
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px;
+`;
+
+const StatValue = styled.div`
+  font-family: var(--serif);
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: var(--white);
+`;
+
+const StatLabel = styled.div`
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.4;
+  margin-top: 2px;
 `;
 
 const SidebarBottom = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 `;
 
 const AlumniLabel = styled.div`
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+`;
+
+const CompanyPills = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+`;
+
+const CompanyPill = styled.div`
   font-size: 0.6875rem;
   font-weight: 600;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-align: center;
-`;
-
-const LogoTicker = styled.div`
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-
-  &::before,
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 40px;
-    z-index: 2;
-    pointer-events: none;
-  }
-  &::before {
-    left: 0;
-    background: linear-gradient(to right, #fafbfc, transparent);
-  }
-  &::after {
-    right: 0;
-    background: linear-gradient(to left, #fafbfc, transparent);
-  }
-`;
-
-const LogoTrack = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 36px;
-  padding-right: 36px;
-  animation: ${scroll} 25s linear infinite;
-  width: fit-content;
-  will-change: transform;
-`;
-
-const CompanyLogo = styled.img`
-  height: 28px;
-  width: auto;
-  object-fit: contain;
-  opacity: 0.6;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 5px 10px;
 `;
 
 /* ── Right Content ─────────────────────────────────────────── */
@@ -183,43 +228,102 @@ const ContentArea = styled.div`
   }
 `;
 
-const TopNav = styled.div`
-  position: sticky;
-  top: 0;
-  background: #ffffff;
-  z-index: 10;
-  padding: 16px 48px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #f1f5f9;
-
-  @media (max-width: 900px) {
-    padding: 12px 20px;
-  }
-`;
-
-const NavLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const MobileLogoWrap = styled.div`
+const MobileTopBar = styled.div`
   display: none;
   @media (max-width: 900px) {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--navy);
+
     svg {
-      height: 22px;
+      height: 20px;
       width: auto;
+      filter: brightness(0) invert(1);
     }
   }
 `;
 
-const StepLabel = styled.div`
-  font-size: 0.8125rem;
+const MobileStepText = styled.div`
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
+const ContentHeader = styled.div`
+  padding: 0 48px;
+  padding-top: 48px;
+  max-width: 720px;
+
+  @media (max-width: 900px) {
+    padding: 32px 20px 0;
+  }
+`;
+
+const StepMeta = styled.div`
+  font-family: var(--mono);
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--accent-eye);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+`;
+
+const ContentTitle = styled.h1`
+  font-family: var(--serif);
+  font-size: 2.25rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 40px;
+  line-height: 1.15;
+
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+    margin-bottom: 28px;
+  }
+`;
+
+const QuizContent = styled.div`
+  flex: 1;
+  padding: 0 48px 120px;
+  animation: ${fadeIn} 0.35s ease;
+
+  @media (max-width: 900px) {
+    padding: 0 20px 120px;
+  }
+`;
+
+/* ── Bottom Nav ────────────────────────────────────────────── */
+
+const BottomNav = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 280px;
+  right: 0;
+  background: var(--white);
+  border-top: 1px solid var(--line);
+  padding: 14px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+
+  @media (max-width: 900px) {
+    left: 0;
+    padding: 12px 20px;
+  }
+`;
+
+const BottomStepText = styled.div`
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink4);
+  letter-spacing: 0.5px;
 `;
 
 const NavButtons = styled.div`
@@ -228,46 +332,50 @@ const NavButtons = styled.div`
   gap: 10px;
 `;
 
-const NavBtn = styled.button`
-  background: ${props => props.$primary ? '#1e293b' : '#ffffff'};
-  color: ${props => props.$primary ? '#ffffff' : '#475569'};
-  border: 1.5px solid ${props => props.$primary ? '#1e293b' : '#e2e8f0'};
-  padding: ${props => props.$primary ? '10px 22px' : '10px 14px'};
+const BackBtn = styled.button`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  color: var(--ink3);
+  transition: all 0.15s ease;
+
+  &:hover:not(:disabled) {
+    border-color: var(--line2);
+    color: var(--ink);
+  }
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+`;
+
+const ContinueBtn = styled.button`
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  padding: 10px 24px;
+  font-family: var(--mono);
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: all 0.15s ease;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 
   &:hover:not(:disabled) {
-    background: ${props => props.$primary ? '#0f172a' : '#f8fafc'};
-    border-color: ${props => props.$primary ? '#0f172a' : '#cbd5e1'};
+    background: #1d4ed8;
   }
-
   &:disabled {
     opacity: 0.35;
     cursor: not-allowed;
-  }
-
-  @media (max-width: 900px) {
-    padding: ${props => props.$primary ? '12px 20px' : '12px 14px'};
-    font-size: 0.8125rem;
-  }
-`;
-
-const QuizContent = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 56px 48px 80px;
-  animation: ${fadeIn} 0.4s ease;
-
-  @media (max-width: 900px) {
-    padding: 32px 20px 100px;
   }
 `;
 
@@ -279,56 +387,34 @@ const MobileWelcome = styled.div`
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding: 24px 20px 120px;
-    background: #ffffff;
+    background: var(--navy);
+    color: var(--white);
   }
 `;
 
-const WelcomeContent = styled.div`
+const MobileWelcomeInner = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 16px;
+  padding: 32px 24px 120px;
+  gap: 20px;
 `;
 
-const WelcomeTitle = styled.h1`
+const MobileWelcomeTitle = styled.h1`
+  font-family: var(--serif);
   font-size: 2rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-weight: 500;
+  color: var(--white);
   margin: 0;
   line-height: 1.2;
 `;
 
-const WelcomeSubtitle = styled.p`
-  font-size: 1rem;
-  color: #64748b;
+const MobileWelcomeDesc = styled.p`
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.6);
   line-height: 1.6;
   margin: 0;
-`;
-
-const StatsRow = styled.div`
-  display: flex;
-  gap: 24px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-`;
-
-const StatItem = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const StatValue = styled.div`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
-`;
-
-const StatLabel = styled.div`
-  font-size: 0.75rem;
-  color: #94a3b8;
-  line-height: 1.3;
 `;
 
 const MobileBottomCTA = styled.button`
@@ -336,18 +422,20 @@ const MobileBottomCTA = styled.button`
   bottom: 20px;
   left: 20px;
   right: 20px;
-  background: #1e293b;
-  color: #ffffff;
+  background: var(--accent);
+  color: var(--white);
   border: none;
   padding: 16px 24px;
+  font-family: var(--mono);
   font-weight: 700;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   cursor: pointer;
   z-index: 100;
   letter-spacing: 0.5px;
+  text-transform: uppercase;
 
   &:hover {
-    background: #0f172a;
+    background: #1d4ed8;
   }
 `;
 
@@ -356,44 +444,56 @@ const MobileBottomCTA = styled.button`
 const SIDEBAR_TEXT = {
   start: {
     label: '',
-    text: 'Answer a few questions. Get a personalised report showing exactly where you stand — and what to do next.'
+    heading: 'Answer a few questions. Get a personalised report showing exactly where you stand — and what to do next.',
+    detail: ''
   },
   'who-you-are-tech': {
     label: 'Why we ask',
-    text: 'Your role shapes every gap, every recommendation, every alumni match in your report. We use this to pull the right data — not a generic readiness score.'
+    heading: 'Your role shapes every gap, every recommendation, every alumni match in your report.',
+    detail: 'We use this to pull the right data — not a generic readiness score.'
   },
   'where-you-want-to-go-tech': {
     label: 'Why we ask',
-    text: 'Your goal shapes the entire recommendation in your report. We match you with the right alumni stories, salary targets, and path forward.'
+    heading: 'Your goal shapes the entire recommendation in your report.',
+    detail: 'We match you with the right alumni stories, salary targets, and path forward.'
   },
   'your-readiness-tech': {
     label: 'Why we ask',
-    text: 'Fundamentals are still what separates candidates at the final round. Even in 2026, system design and problem solving come up in every senior interview.'
+    heading: 'Fundamentals are still what separates candidates at the final round.',
+    detail: 'Even in 2026, system design and problem solving come up in every senior interview.'
   },
   'who-you-are-nontech': {
     label: 'Why we ask',
-    text: 'Your background shapes the roadmap — not just your destination. Career switchers from sales, finance, and design all have different strengths to leverage.'
+    heading: 'Your background shapes the roadmap — not just your destination.',
+    detail: 'Career switchers from sales, finance, and design all have different strengths to leverage.'
   },
   'where-you-want-to-go-nontech': {
     label: 'Why we ask',
-    text: 'Tell us where you want to land — we\'ll show you who got there from where you are. We match you with real alumni who made the same switch.'
+    heading: "Tell us where you want to land — we'll show you who got there from where you are.",
+    detail: 'We match you with real alumni who made the same switch.'
   },
   'your-readiness-nontech': {
     label: 'Why we ask',
-    text: 'Knowing where you are helps us show you the shortest path forward. No worries if you\'re just getting started.'
+    heading: "Knowing where you are helps us show you the shortest path forward.",
+    detail: "No worries if you're just getting started."
   }
 };
 
-const COMPANIES = [
-  { name: 'Google', logo: 'https://cdn.brandfetch.io/google.com/w/400/h/400' },
-  { name: 'Amazon', logo: 'https://cdn.brandfetch.io/amazon.com/w/400/h/400' },
-  { name: 'Flipkart', logo: 'https://cdn.brandfetch.io/flipkart.com/w/400/h/400' },
-  { name: 'Microsoft', logo: 'https://cdn.brandfetch.io/microsoft.com/w/400/h/400' },
-  { name: 'Razorpay', logo: 'https://cdn.brandfetch.io/razorpay.com/w/400/h/400' },
-  { name: 'Swiggy', logo: 'https://cdn.brandfetch.io/swiggy.com/w/400/h/400' },
-  { name: 'CRED', logo: 'https://cdn.brandfetch.io/cred.club/w/400/h/400' },
-  { name: 'PhonePe', logo: 'https://cdn.brandfetch.io/phonepe.com/w/400/h/400' }
-];
+const COMPANIES = ['Razorpay', 'Swiggy', 'PhonePe', 'Uber', 'CRED', 'Google', 'Amazon', 'Flipkart'];
+
+const STEP_TITLES = {
+  'who-you-are': { tech: 'Your Profile', nontech: 'Your Background' },
+  'where-you-want-to-go': { tech: 'Your Aspirations', nontech: 'Your Aspirations' },
+  'your-readiness': { tech: 'Your Fundamentals', nontech: 'Where You Stand' },
+  'ai-fluency': { tech: 'AI Fluency', nontech: 'AI & Blockers' }
+};
+
+const SCREEN_HEADINGS = {
+  'who-you-are': { tech: 'Tell us about your current role', nontech: 'Where are you coming from?' },
+  'where-you-want-to-go': { tech: 'Where do you want to go?', nontech: 'Where do you want to go?' },
+  'your-readiness': { tech: 'Where do you stand today?', nontech: 'How far along are you?' },
+  'ai-fluency': { tech: 'How are you working with AI?', nontech: 'A couple more quick ones' }
+};
 
 /* ── Component ─────────────────────────────────────────────── */
 
@@ -521,13 +621,21 @@ const FinalModeQuiz = ({ onProgressChange }) => {
   const getStepTitle = () => {
     if (currentStep === 0) return null;
     const screenIndex = currentStep - 1;
-    const screenTitles = {
-      'who-you-are': background === 'tech' ? 'Your Profile' : 'Your Background',
-      'where-you-want-to-go': 'Your Aspirations',
-      'your-readiness': background === 'tech' ? 'Your Fundamentals' : 'Where You Stand'
-    };
     if (screenIndex >= 0 && screenIndex < quizScreens.length) {
-      return screenTitles[quizScreens[screenIndex].id] || '';
+      const screenId = quizScreens[screenIndex].id;
+      const variant = background === 'tech' ? 'tech' : 'nontech';
+      return STEP_TITLES[screenId]?.[variant] || '';
+    }
+    return '';
+  };
+
+  const getContentHeading = () => {
+    if (currentStep === 0) return null;
+    const screenIndex = currentStep - 1;
+    if (screenIndex >= 0 && screenIndex < quizScreens.length) {
+      const screenId = quizScreens[screenIndex].id;
+      const variant = background === 'tech' ? 'tech' : 'nontech';
+      return SCREEN_HEADINGS[screenId]?.[variant] || '';
     }
     return '';
   };
@@ -558,7 +666,7 @@ const FinalModeQuiz = ({ onProgressChange }) => {
           return question;
         });
 
-      let questionStartIndex = 2;
+      let questionStartIndex = 1;
       for (let i = 0; i < screenIndex; i++) {
         questionStartIndex += quizScreens[i].questions.length;
       }
@@ -583,36 +691,27 @@ const FinalModeQuiz = ({ onProgressChange }) => {
   const isLastStep = currentStep === totalSteps - 1;
   const sidebarContent = getSidebarContent();
   const stepTitle = getStepTitle();
+  const contentHeading = getContentHeading();
 
-  // Mobile welcome
   if (isMobile && showMobileWelcome && currentStep === 0) {
     return (
       <MobileWelcome>
-        <WelcomeContent>
-          <LogoWrap><ScalerLogo aria-label="Scaler" /></LogoWrap>
-          <div style={{ marginTop: '24px' }}>
-            <WelcomeTitle>Your AI Career Report</WelcomeTitle>
-            <WelcomeSubtitle style={{ marginTop: '12px' }}>
+        <MobileWelcomeInner>
+          <LogoRow>
+            <ScalerLogo aria-label="Scaler" />
+            <LogoDivider>/</LogoDivider>
+            <span>CPE</span>
+          </LogoRow>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontFamily: 'var(--mono)', fontSize: '0.625rem', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>Free · Takes 3 minutes</div>
+            <MobileWelcomeTitle>Your AI Career Report</MobileWelcomeTitle>
+            <MobileWelcomeDesc>
               Answer a few questions. Get a personalised report showing exactly where you stand — and what to do next.
-            </WelcomeSubtitle>
+            </MobileWelcomeDesc>
           </div>
-          <StatsRow>
-            <StatItem>
-              <StatValue>50K+</StatValue>
-              <StatLabel>profiles evaluated<br />in the last 12 months</StatLabel>
-            </StatItem>
-            <StatItem>
-              <StatValue>2.5×</StatValue>
-              <StatLabel>average salary jump<br />for Scaler alumni</StatLabel>
-            </StatItem>
-            <StatItem>
-              <StatValue>73%</StatValue>
-              <StatLabel>of backend roles now<br />require AI fluency</StatLabel>
-            </StatItem>
-          </StatsRow>
-        </WelcomeContent>
+        </MobileWelcomeInner>
         <MobileBottomCTA onClick={() => setShowMobileWelcome(false)}>
-          Get Started
+          Get Started →
         </MobileBottomCTA>
       </MobileWelcome>
     );
@@ -620,89 +719,118 @@ const FinalModeQuiz = ({ onProgressChange }) => {
 
   return (
     <QuizContainer>
-      <ProgressBarContainer>
-        <ProgressBarFill $progress={progress} />
-      </ProgressBarContainer>
-
       <MainLayout>
-        {/* Left sidebar */}
         <Sidebar>
           <SidebarTop>
-            <LogoWrap><ScalerLogo aria-label="Scaler" /></LogoWrap>
-            <div>
-              {currentStep === 0 ? (
-                <>
-                  <SidebarStepLabel>Free · Takes 3 minutes</SidebarStepLabel>
-                  <SidebarHeading>
-                    Answer a few questions. Get a personalised report showing exactly where you stand — and what to do next.
-                  </SidebarHeading>
-                  <StatsRow style={{ marginTop: '24px' }}>
-                    <StatItem>
-                      <StatValue>50K+</StatValue>
-                      <StatLabel>profiles evaluated</StatLabel>
-                    </StatItem>
-                    <StatItem>
-                      <StatValue>2.5×</StatValue>
-                      <StatLabel>avg salary jump</StatLabel>
-                    </StatItem>
-                  </StatsRow>
-                </>
-              ) : (
-                <>
-                  <SidebarStepLabel>{sidebarContent.label}</SidebarStepLabel>
-                  <SidebarHeading>{sidebarContent.text}</SidebarHeading>
-                </>
-              )}
-            </div>
+            <LogoRow>
+              <ScalerLogo aria-label="Scaler" />
+              <LogoDivider>/</LogoDivider>
+              <span>CPE</span>
+            </LogoRow>
+
+            {currentStep === 0 ? (
+              <div>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: '0.625rem', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'rgba(255,255,255,0.4)', marginBottom: '12px' }}>
+                  Free · Takes 3 minutes
+                </div>
+                <SidebarTitle>Your AI Career Report</SidebarTitle>
+                <SidebarDesc>
+                  Answer a few questions. Get a personalised report showing exactly where you stand — and what to do next.
+                </SidebarDesc>
+                <StatsColumn>
+                  <StatCard>
+                    <StatValue>50K+</StatValue>
+                    <StatLabel>profiles evaluated in the last 12 months</StatLabel>
+                  </StatCard>
+                  <StatCard>
+                    <StatValue>2.5×</StatValue>
+                    <StatLabel>average salary jump for Scaler alumni</StatLabel>
+                  </StatCard>
+                  <StatCard>
+                    <StatValue>73%</StatValue>
+                    <StatLabel>of backend roles now require AI fluency</StatLabel>
+                  </StatCard>
+                </StatsColumn>
+              </div>
+            ) : (
+              <div>
+                <StepIndicator>Step {currentStep} of {quizScreens.length}</StepIndicator>
+                <StepDotsRow>
+                  {quizScreens.map((_, i) => (
+                    <StepDot key={i} $active={i < currentStep} />
+                  ))}
+                </StepDotsRow>
+                <div style={{ marginTop: '24px' }}>
+                  <SidebarCard>
+                    <WhyLabel>{sidebarContent.label}</WhyLabel>
+                    <WhyText>{sidebarContent.heading}</WhyText>
+                    {sidebarContent.detail && (
+                      <WhyDetail>{sidebarContent.detail}</WhyDetail>
+                    )}
+                  </SidebarCard>
+                </div>
+              </div>
+            )}
           </SidebarTop>
+
           <SidebarBottom>
             <AlumniLabel>Alumni working at</AlumniLabel>
-            <LogoTicker>
-              <LogoTrack>
-                {COMPANIES.map((c, i) => (
-                  <CompanyLogo key={`a-${i}`} src={c.logo} alt={c.name} />
-                ))}
-                {COMPANIES.map((c, i) => (
-                  <CompanyLogo key={`b-${i}`} src={c.logo} alt={c.name} />
-                ))}
-              </LogoTrack>
-            </LogoTicker>
+            <CompanyPills>
+              {COMPANIES.map((name, i) => (
+                <CompanyPill key={i}>{name}</CompanyPill>
+              ))}
+            </CompanyPills>
           </SidebarBottom>
         </Sidebar>
 
-        {/* Right content */}
         <ContentArea>
-          <TopNav>
-            <NavLeft>
-              <MobileLogoWrap><ScalerLogo aria-label="Scaler" /></MobileLogoWrap>
-              {currentStep > 0 && (
-                <StepLabel>
-                  Step {currentStep} of {quizScreens.length}
-                  {stepTitle && ` — ${stepTitle}`}
-                </StepLabel>
-              )}
-            </NavLeft>
-            <NavButtons>
-              <NavBtn onClick={handlePrevious} disabled={currentStep === 0} aria-label="Back">
-                <CaretLeft size={18} weight="bold" />
-              </NavBtn>
-              {isLastStep ? (
-                <NavBtn $primary onClick={handleNext} disabled={!canProceed()}>
-                  See My Report
-                  <CaretRight size={16} weight="bold" />
-                </NavBtn>
-              ) : (
-                <NavBtn onClick={handleNext} disabled={!canProceed()}>
-                  Continue
-                  <CaretRight size={18} weight="bold" />
-                </NavBtn>
-              )}
-            </NavButtons>
-          </TopNav>
+          <MobileTopBar>
+            <ScalerLogo aria-label="Scaler" />
+            {currentStep > 0 && (
+              <MobileStepText>Step {currentStep} of {quizScreens.length}</MobileStepText>
+            )}
+          </MobileTopBar>
+
+          {currentStep > 0 && (
+            <ContentHeader>
+              <StepMeta>
+                Step {currentStep} of {quizScreens.length} — {stepTitle}
+              </StepMeta>
+              <ContentTitle>{contentHeading}</ContentTitle>
+            </ContentHeader>
+          )}
 
           <QuizContent key={currentStep}>
-            {renderContent()}
+            {currentStep === 0 ? (
+              <div style={{ padding: '48px 0 0' }}>
+                {renderContent()}
+              </div>
+            ) : (
+              renderContent()
+            )}
           </QuizContent>
+
+          <BottomNav>
+            <BottomStepText>
+              Step {Math.max(currentStep, 1)} of {quizScreens.length}
+            </BottomStepText>
+            <NavButtons>
+              <BackBtn onClick={handlePrevious} disabled={currentStep === 0} aria-label="Back">
+                <ArrowLeft size={18} />
+              </BackBtn>
+              {isLastStep ? (
+                <ContinueBtn onClick={handleNext} disabled={!canProceed()}>
+                  See My Report
+                  <ArrowRight size={14} />
+                </ContinueBtn>
+              ) : (
+                <ContinueBtn onClick={handleNext} disabled={!canProceed()}>
+                  Continue
+                  <ArrowRight size={14} />
+                </ContinueBtn>
+              )}
+            </NavButtons>
+          </BottomNav>
         </ContentArea>
       </MainLayout>
     </QuizContainer>

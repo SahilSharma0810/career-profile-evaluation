@@ -7,7 +7,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 560px;
+  max-width: 720px;
   gap: 40px;
 
   @media (max-width: 768px) {
@@ -18,62 +18,91 @@ const Container = styled.div`
 const QuestionGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 `;
 
 const QuestionNumber = styled.div`
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #94a3b8;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 `;
 
-const QuestionLabel = styled.div`
-  font-size: 1rem;
+const QNum = styled.span`
+  font-family: var(--sans);
+  font-size: 0.875rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--ink4);
+`;
+
+const QuestionLabel = styled.span`
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
   line-height: 1.5;
 `;
 
 const HelperText = styled.div`
   font-size: 0.8125rem;
-  color: #94a3b8;
+  color: var(--ink4);
   line-height: 1.4;
   margin-top: -4px;
 `;
 
 const OptionsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
   width: 100%;
-  max-width: 520px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const OptionButton = styled.button`
-  background: ${props => props.$selected ? '#f0f4ff' : '#ffffff'};
-  color: ${props => props.$selected ? '#0041ca' : '#1e293b'};
-  border: 1.5px solid ${props => props.$selected ? '#0041ca' : '#e2e8f0'};
-  padding: 14px 18px;
-  font-size: 0.9375rem;
+  background: ${props => props.$selected ? '#EFF4FF' : 'var(--white)'};
+  color: ${props => props.$selected ? 'var(--accent)' : 'var(--ink)'};
+  border: 1px solid ${props => props.$selected ? 'var(--accent)' : 'var(--line)'};
+  padding: 14px 16px;
+  font-family: var(--sans);
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
   text-align: left;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
 
   &:hover {
-    border-color: ${props => props.$selected ? '#0041ca' : '#cbd5e1'};
-    background: ${props => props.$selected ? '#f0f4ff' : '#fafbfc'};
+    border-color: ${props => props.$selected ? 'var(--accent)' : 'var(--line2)'};
+    background: ${props => props.$selected ? '#EFF4FF' : 'var(--bg)'};
   }
 
   &:focus {
     outline: none;
-    border-color: #0041ca;
-    box-shadow: 0 0 0 3px rgba(0, 65, 202, 0.08);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+  }
+`;
+
+const OptionIcon = styled.span`
+  font-size: 1rem;
+  flex-shrink: 0;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink4);
+
+  ${OptionButton}[data-selected="true"] & {
+    color: var(--accent);
   }
 `;
 
@@ -90,7 +119,7 @@ const CheckContainer = styled.span`
   align-items: center;
   justify-content: center;
   opacity: ${props => props.$visible ? 1 : 0};
-  color: #0041ca;
+  color: var(--accent);
   transition: opacity 0.15s ease;
 `;
 
@@ -180,9 +209,9 @@ const GroupedQuestionScreen = ({
       {questions.map((question, questionIndex) => (
         <QuestionGroup key={question.id} data-question-index={questionIndex}>
           <QuestionNumber>
-            {formatNumber(questionStartIndex + questionIndex)}
+            <QNum>{formatNumber(questionStartIndex + questionIndex)}</QNum>
+            <QuestionLabel>{question.question}</QuestionLabel>
           </QuestionNumber>
-          <QuestionLabel>{question.question}</QuestionLabel>
           {(question.helperText || question.helper) && (
             <HelperText>{question.helperText || question.helper}</HelperText>
           )}
@@ -193,11 +222,13 @@ const GroupedQuestionScreen = ({
                 <OptionButton
                   key={option.value}
                   $selected={isSelected}
+                  data-selected={isSelected}
                   onClick={() => handleOptionSelect(question, option, questionIndex)}
                 >
+                  {option.icon && <OptionIcon>{option.icon}</OptionIcon>}
                   <OptionLabel>{option.label}</OptionLabel>
                   <CheckContainer $visible={isSelected}>
-                    <Check size={18} weight="bold" />
+                    <Check size={16} weight="bold" />
                   </CheckContainer>
                 </OptionButton>
               );

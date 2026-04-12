@@ -5,94 +5,97 @@ import tracker from '../../utils/tracker';
 
 const Root = styled.div`
   width: 100%;
-  max-width: 560px;
+  max-width: 720px;
   display: flex;
   flex-direction: column;
   gap: 24px;
 `;
 
 const SectionLabel = styled.div`
-  font-size: 0.8125rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #94a3b8;
-  letter-spacing: 0.5px;
+  color: var(--accent-eye);
+  letter-spacing: 1px;
+  text-transform: uppercase;
 `;
 
 const Heading = styled.h2`
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--serif);
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: var(--ink);
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.15;
 
   @media (max-width: 768px) {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 `;
 
 const OptionsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 12px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const OptionCard = styled.button`
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  padding: 22px 24px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 28px 24px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
   width: 100%;
+  min-height: 160px;
 
   &:hover {
-    border-color: #0041ca;
-    box-shadow: 0 2px 8px rgba(0, 65, 202, 0.08);
+    border-color: var(--ink3);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   }
 
   &:focus {
     outline: none;
-    border-color: #0041ca;
-    box-shadow: 0 0 0 3px rgba(0, 65, 202, 0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
 
   @media (max-width: 768px) {
-    padding: 18px 20px;
+    padding: 22px 20px;
+    min-height: auto;
   }
 `;
 
-const OptionContent = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
 const OptionTitle = styled.div`
-  font-size: 1.0625rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
   line-height: 1.4;
 `;
 
 const OptionDescription = styled.div`
   font-size: 0.875rem;
-  color: #64748b;
-  line-height: 1.4;
+  color: var(--ink3);
+  line-height: 1.5;
+  margin-top: 4px;
 `;
 
 const Arrow = styled.div`
-  color: #94a3b8;
-  flex-shrink: 0;
+  color: var(--ink4);
   transition: color 0.2s ease, transform 0.2s ease;
 
   ${OptionCard}:hover & {
-    color: #0041ca;
+    color: var(--ink);
     transform: translateX(3px);
   }
 `;
@@ -133,26 +136,26 @@ const BackgroundSelectionSplit2 = ({ onSelect, onAutoAdvance, hideChat = false, 
 
       <OptionsContainer>
         <OptionCard onClick={() => handleBackgroundSelect('non-tech')}>
-          <OptionContent>
+          <div>
             <OptionTitle>Non-Tech / Career Switcher</OptionTitle>
             <OptionDescription>
               Looking to transition into tech from a non-technical background.
             </OptionDescription>
-          </OptionContent>
+          </div>
           <Arrow>
-            <ArrowRight size={22} weight="bold" />
+            <ArrowRight size={20} />
           </Arrow>
         </OptionCard>
 
         <OptionCard onClick={() => handleBackgroundSelect('tech')}>
-          <OptionContent>
+          <div>
             <OptionTitle>Software, Data & AI Professional</OptionTitle>
             <OptionDescription>
               Working in software, data, ML, AI, or DevOps — and looking to grow.
             </OptionDescription>
-          </OptionContent>
+          </div>
           <Arrow>
-            <ArrowRight size={22} weight="bold" />
+            <ArrowRight size={20} />
           </Arrow>
         </OptionCard>
       </OptionsContainer>

@@ -5,141 +5,221 @@ import AI_SHIFT_COMPANIES from '../../../data/ai_shift_content';
 
 const Section = styled.section`
   padding: 80px 0;
-  background: #ffffff;
-  border-bottom: 1px solid #f1f5f9;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
   @media (max-width: 768px) { padding: 48px 0; }
 `;
 
 const Container = styled.div`
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 40px;
+
+  @media (max-width: 768px) {
+    padding: 0 24px;
+  }
 `;
 
 const ChapterLabel = styled.div`
-  font-size: 0.8125rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--accent-eye);
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 16px;
 `;
 
 const Title = styled.h2`
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--serif);
+  font-size: 2.25rem;
+  font-weight: 500;
+  color: var(--ink);
   margin: 0 0 8px;
-  line-height: 1.3;
-  @media (max-width: 768px) { font-size: 1.375rem; }
+  line-height: 1.15;
+  @media (max-width: 768px) { font-size: 1.625rem; }
 `;
 
 const Subtitle = styled.p`
   font-size: 0.9375rem;
-  color: #64748b;
+  color: var(--ink3);
   margin: 0 0 36px;
   line-height: 1.5;
 `;
 
 const Card = styled.div`
-  background: #f8fafc;
-  border: 1px solid #f1f5f9;
-  padding: 32px;
-  @media (max-width: 768px) { padding: 24px; }
+  background: var(--navy);
+  color: var(--white);
+  padding: 40px;
+
+  @media (max-width: 768px) {
+    padding: 28px 24px;
+  }
+`;
+
+const CardInner = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+`;
+
+const CardLeft = styled.div``;
+
+const CompanyRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+`;
+
+const CompanyIcon = styled.div`
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
 `;
 
 const CompanyName = styled.div`
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 16px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
+const CompanyDivider = styled.div`
+  width: 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin-left: 8px;
 `;
 
 const QuoteText = styled.blockquote`
-  font-size: 1.0625rem;
-  font-weight: 600;
-  color: #1e293b;
-  line-height: 1.5;
-  margin: 0 0 12px;
-  font-style: italic;
-`;
-
-const Attribution = styled.div`
-  font-size: 0.8125rem;
-  color: #64748b;
-  line-height: 1.5;
-  margin-bottom: 8px;
-`;
-
-const Context = styled.div`
-  font-size: 0.8125rem;
-  color: #475569;
-  line-height: 1.5;
-  margin-bottom: 16px;
+  font-family: var(--serif);
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: var(--white);
+  line-height: 1.4;
+  margin: 0 0 24px;
 `;
 
 const BulletList = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 0 0 24px;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 `;
 
 const Bullet = styled.li`
   font-size: 0.8125rem;
-  color: #475569;
-  padding-left: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  padding-left: 16px;
   position: relative;
+  line-height: 1.5;
 
   &::before {
-    content: "•";
+    content: "—";
     position: absolute;
     left: 0;
-    color: #94a3b8;
+    color: rgba(255, 255, 255, 0.3);
   }
 `;
 
-const StatsRow = styled.div`
+const CardRight = styled.div`
   display: flex;
-  gap: 32px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 16px;
 `;
 
-const StatBlock = styled.div``;
+const ChartPlaceholder = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const ChartLabel = styled.div`
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
+const ChartLine = styled.div`
+  height: 2px;
+  background: linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0.4));
+  width: 100%;
+`;
+
+const ChartYear = styled.div`
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: right;
+`;
+
+const StatsRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+`;
+
+const StatBox = styled.div`
+  background: ${props => props.$variant === 'green' ? 'rgba(5, 150, 105, 0.12)' : 'rgba(37, 99, 235, 0.12)'};
+  border: 1px solid ${props => props.$variant === 'green' ? 'rgba(5, 150, 105, 0.2)' : 'rgba(37, 99, 235, 0.2)'};
+  padding: 18px;
+`;
 
 const StatValue = styled.div`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 6px;
 `;
 
 const StatLabel = styled.div`
-  font-size: 0.75rem;
-  color: #64748b;
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.4;
+  text-transform: uppercase;
 `;
 
 const StatSource = styled.div`
-  font-size: 0.625rem;
-  color: #94a3b8;
-  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  color: rgba(255, 255, 255, 0.25);
+  margin-top: 6px;
 `;
 
 const NavRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 20px;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
 `;
 
 const Counter = styled.div`
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #94a3b8;
-`;
-
-const NavBtns = styled.div`
-  display: flex;
-  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink4);
 `;
 
 const NavBtn = styled.button`
@@ -148,21 +228,28 @@ const NavBtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  background: var(--white);
+  border: 1px solid var(--line);
   cursor: pointer;
   transition: all 0.15s ease;
-  color: #475569;
+  color: var(--ink3);
 
   &:hover:not(:disabled) {
-    border-color: #cbd5e1;
-    background: #f8fafc;
+    border-color: var(--line2);
+    color: var(--ink);
   }
   &:disabled {
     opacity: 0.3;
     cursor: not-allowed;
   }
 `;
+
+const COMPANY_ICONS = {
+  Google: '🔍',
+  Amazon: '📦',
+  Meta: '🔵',
+  Klarna: '🟣'
+};
 
 const AIShiftChapter = () => {
   const [current, setCurrent] = useState(0);
@@ -178,42 +265,55 @@ const AIShiftChapter = () => {
         <Subtitle>The biggest companies already made the shift. This is what they now expect.</Subtitle>
 
         <Card>
-          <CompanyName>{item.company}</CompanyName>
-          <QuoteText>"{item.quote}"</QuoteText>
-          <Attribution>{item.attribution}</Attribution>
-          <Context>{item.context}</Context>
+          <CardInner>
+            <CardLeft>
+              <CompanyRow>
+                <CompanyIcon>{COMPANY_ICONS[item.company] || '🏢'}</CompanyIcon>
+                <CompanyName>{item.company}</CompanyName>
+                <CompanyDivider />
+              </CompanyRow>
 
-          {item.bullets.length > 0 && (
-            <BulletList>
-              {item.bullets.map((b, i) => (
-                <Bullet key={i}>{b}</Bullet>
-              ))}
-            </BulletList>
-          )}
+              <QuoteText>"{item.quote}"</QuoteText>
 
-          <StatsRow>
-            {item.stats.map((s, i) => (
-              <StatBlock key={i}>
-                <StatValue>{s.value}</StatValue>
-                <StatLabel>{s.label}</StatLabel>
-                <StatSource>{s.source}</StatSource>
-              </StatBlock>
-            ))}
-          </StatsRow>
+              {item.bullets.length > 0 && (
+                <BulletList>
+                  {item.bullets.map((b, i) => (
+                    <Bullet key={i}>{b}</Bullet>
+                  ))}
+                </BulletList>
+              )}
+            </CardLeft>
+
+            <CardRight>
+              <ChartPlaceholder>
+                <ChartLabel>Code Velocity</ChartLabel>
+                <ChartLine />
+                <ChartYear>2024+</ChartYear>
+              </ChartPlaceholder>
+
+              <StatsRow>
+                {item.stats.map((s, i) => (
+                  <StatBox key={i} $variant={i === 0 ? 'green' : 'blue'}>
+                    <StatValue>{s.value}</StatValue>
+                    <StatLabel>{s.label}</StatLabel>
+                    <StatSource>{s.source}</StatSource>
+                  </StatBox>
+                ))}
+              </StatsRow>
+            </CardRight>
+          </CardInner>
         </Card>
 
         <NavRow>
+          <NavBtn onClick={() => setCurrent(c => c - 1)} disabled={current === 0}>
+            <CaretLeft size={18} weight="bold" />
+          </NavBtn>
           <Counter>
             {String(current + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
           </Counter>
-          <NavBtns>
-            <NavBtn onClick={() => setCurrent(c => c - 1)} disabled={current === 0}>
-              <CaretLeft size={18} weight="bold" />
-            </NavBtn>
-            <NavBtn onClick={() => setCurrent(c => c + 1)} disabled={current === total - 1}>
-              <CaretRight size={18} weight="bold" />
-            </NavBtn>
-          </NavBtns>
+          <NavBtn onClick={() => setCurrent(c => c + 1)} disabled={current === total - 1}>
+            <CaretRight size={18} weight="bold" />
+          </NavBtn>
         </NavRow>
       </Container>
     </Section>

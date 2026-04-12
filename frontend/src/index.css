@@ -1,3 +1,21 @@
+:root {
+  --serif: 'Clash Grotesk', 'Source Serif 4', Georgia, sans-serif;
+  --sans: 'Plus Jakarta Sans', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+
+  --accent: #2563EB;
+  --accent-eye: #D44E0A;
+  --navy: #011A53;
+  --ink: #111111;
+  --ink2: #2A2A2A;
+  --ink3: #5A5A5A;
+  --ink4: #9A9A9A;
+  --white: #FFFFFF;
+  --bg: #F3F2EE;
+  --line: #DEDBD4;
+  --line2: #C4C0B6;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,21 +23,18 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
-  color: #1e293b;
+  background-color: var(--white);
+  color: var(--ink);
   line-height: 1.6;
   margin: 0;
   padding: 0;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: var(--mono);
 }
 
 .container {
@@ -43,12 +58,12 @@ code {
 }
 
 .btn-primary {
-  background-color: #e11d48;
+  background-color: var(--accent);
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #be185d;
+  background-color: #1d4ed8;
   transform: translateY(-1px);
 }
 
@@ -66,7 +81,7 @@ code {
   border-radius: 0;
   padding: 24px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--line);
 }
 
 .progress-bar {
@@ -79,7 +94,7 @@ code {
 
 .progress-fill {
   height: 100%;
-  background-color: #e11d48;
+  background-color: var(--accent);
   transition: width 0.3s ease;
 }
 

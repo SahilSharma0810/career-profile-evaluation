@@ -1,103 +1,115 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Clock } from 'phosphor-react';
+import { Clock, Target } from 'phosphor-react';
 
 const Section = styled.section`
   padding: 80px 0;
-  background: #ffffff;
-  border-bottom: 1px solid #f1f5f9;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
   @media (max-width: 768px) { padding: 48px 0; }
 `;
 
 const Container = styled.div`
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 40px;
+
+  @media (max-width: 768px) {
+    padding: 0 24px;
+  }
 `;
 
 const ChapterLabel = styled.div`
-  font-size: 0.8125rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--accent-eye);
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 16px;
 `;
 
 const Title = styled.h2`
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 8px;
-  line-height: 1.3;
-  @media (max-width: 768px) { font-size: 1.375rem; }
-`;
-
-const Subtitle = styled.p`
-  font-size: 0.9375rem;
-  color: #64748b;
+  font-family: var(--serif);
+  font-size: 2.25rem;
+  font-weight: 500;
+  color: var(--ink);
   margin: 0 0 40px;
-  line-height: 1.5;
+  line-height: 1.15;
+  @media (max-width: 768px) { font-size: 1.625rem; }
 `;
 
-const RolesList = styled.div`
+const RolesGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+`;
+
+const RoleCard = styled.div`
+  border: 1px solid ${props => props.$primary ? '#86efac' : 'var(--line)'};
+  background: var(--white);
   display: flex;
   flex-direction: column;
-  gap: 40px;
 `;
 
-const RoleBlock = styled.div`
-  border: 1px solid ${props => props.$primary ? '#86efac' : '#e2e8f0'};
-  background: ${props => props.$primary ? '#f0fdf4' : '#ffffff'};
+const RoleCardHeader = styled.div`
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid ${props => props.$primary ? '#dcfce7' : 'var(--line)'};
 `;
-
-const RoleHeader = styled.div`
-  padding: 24px 28px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  flex-wrap: wrap;
-  border-bottom: 1px solid ${props => props.$primary ? '#bbf7d0' : '#f1f5f9'};
-`;
-
-const RoleHeaderLeft = styled.div``;
 
 const RoleCategory = styled.div`
-  font-size: 0.6875rem;
-  font-weight: 700;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: ${props => props.$primary ? '#059669' : '#64748b'};
-  margin-bottom: 6px;
+  letter-spacing: 1.5px;
+  color: ${props => props.$primary ? '#059669' : props.$orange ? 'var(--accent-eye)' : 'var(--ink4)'};
+  margin-bottom: 8px;
 `;
 
 const RoleTitle = styled.h3`
+  font-family: var(--serif);
   font-size: 1.125rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 4px;
+  line-height: 1.25;
 `;
 
-const RoleTimeline = styled.div`
+const RoleSubtitle = styled.div`
+  font-size: 0.75rem;
+  color: var(--ink4);
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #475569;
-  white-space: nowrap;
+  gap: 4px;
 `;
 
-const Milestones = styled.div`
-  display: flex;
-  flex-direction: column;
+const TimelineBadge = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: ${props => props.$primary ? '#059669' : 'var(--ink3)'};
+  padding: 10px 20px;
+  border-bottom: 1px solid ${props => props.$primary ? '#dcfce7' : 'var(--line)'};
+`;
+
+const MilestonesBody = styled.div`
+  flex: 1;
 `;
 
 const Milestone = styled.div`
-  padding: 20px 28px;
+  padding: 14px 20px;
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: flex-start;
-  border-bottom: 1px solid ${props => props.$primary ? '#dcfce7' : '#f1f5f9'};
+  border-bottom: 1px solid ${props => props.$primary ? '#dcfce7' : 'var(--line)'};
 
   &:last-child {
     border-bottom: none;
@@ -105,27 +117,31 @@ const Milestone = styled.div`
 `;
 
 const MilestoneBadge = styled.div`
-  background: ${props => props.$primary ? '#059669' : '#64748b'};
-  color: #ffffff;
-  font-size: 0.6875rem;
+  background: ${props => props.$primary ? '#059669' : 'var(--ink4)'};
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.5625rem;
   font-weight: 700;
-  padding: 4px 8px;
+  padding: 3px 7px;
   flex-shrink: 0;
   margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 `;
 
 const MilestoneContent = styled.div``;
 
 const MilestoneTitle = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 4px;
+  color: var(--ink);
+  margin-bottom: 2px;
+  line-height: 1.3;
 `;
 
 const MilestoneDesc = styled.div`
-  font-size: 0.8125rem;
-  color: #64748b;
+  font-size: 0.75rem;
+  color: var(--ink3);
   line-height: 1.4;
 `;
 
@@ -135,6 +151,12 @@ const CARD_LABELS = {
   alternative_2_different_role: 'Alternative Path',
   intern_explore_1: 'Explore Path',
   intern_explore_2: 'Explore Path'
+};
+
+const CARD_SUBTITLES = {
+  target: 'Primary focus area',
+  alternative_1_easier_company: 'Faster path to your goal',
+  alternative_2_different_role: 'New specialisation'
 };
 
 const DEFAULT_MILESTONES = [
@@ -149,13 +171,13 @@ const TimelineChapter = ({ recommendedRoles }) => {
       <Container>
         <ChapterLabel>05 · Career Timeline</ChapterLabel>
         <Title>Realistic timelines to achieve your target roles based on current skill gaps</Title>
-        <Subtitle />
 
-        <RolesList>
+        <RolesGrid>
           {recommendedRoles.slice(0, 3).map((role, index) => {
             const isPrimary = index === 0;
             const cardType = role.card_type || 'target';
             const label = CARD_LABELS[cardType] || (index === 0 ? 'Your Target Role' : index === 1 ? 'Easier Path' : 'Alternative Path');
+            const subtitle = CARD_SUBTITLES[cardType] || '';
             const timeline = role.timeline_text || `${role.min_months || 4}–${role.max_months || 6} months`;
 
             const milestones = (role.milestones && role.milestones.length > 0)
@@ -167,18 +189,22 @@ const TimelineChapter = ({ recommendedRoles }) => {
               : DEFAULT_MILESTONES;
 
             return (
-              <RoleBlock key={index} $primary={isPrimary}>
-                <RoleHeader $primary={isPrimary}>
-                  <RoleHeaderLeft>
-                    <RoleCategory $primary={isPrimary}>{label}</RoleCategory>
-                    <RoleTitle>{role.title}</RoleTitle>
-                  </RoleHeaderLeft>
-                  <RoleTimeline>
-                    <Clock size={16} weight="bold" />
-                    {timeline}
-                  </RoleTimeline>
-                </RoleHeader>
-                <Milestones>
+              <RoleCard key={index} $primary={isPrimary}>
+                <RoleCardHeader $primary={isPrimary}>
+                  <RoleCategory $primary={isPrimary} $orange={index === 1}>{label}</RoleCategory>
+                  <RoleTitle>{role.title}</RoleTitle>
+                  {subtitle && (
+                    <RoleSubtitle>
+                      <Target size={12} weight="bold" />
+                      {subtitle}
+                    </RoleSubtitle>
+                  )}
+                </RoleCardHeader>
+                <TimelineBadge $primary={isPrimary}>
+                  <Clock size={14} weight="bold" />
+                  {timeline}
+                </TimelineBadge>
+                <MilestonesBody>
                   {milestones.map((m, mi) => (
                     <Milestone key={mi} $primary={isPrimary}>
                       <MilestoneBadge $primary={isPrimary}>{m.badge}</MilestoneBadge>
@@ -188,11 +214,11 @@ const TimelineChapter = ({ recommendedRoles }) => {
                       </MilestoneContent>
                     </Milestone>
                   ))}
-                </Milestones>
-              </RoleBlock>
+                </MilestonesBody>
+              </RoleCard>
             );
           })}
-        </RolesList>
+        </RolesGrid>
       </Container>
     </Section>
   );
