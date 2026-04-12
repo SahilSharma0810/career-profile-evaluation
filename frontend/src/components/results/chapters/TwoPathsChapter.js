@@ -242,7 +242,6 @@ const MCImageFallback = styled.div`
 `;
 
 const MCBadge = styled.div`
-  position: absolute;
   top: 12px;
   left: 12px;
   font-family: var(--mono);
@@ -253,7 +252,7 @@ const MCBadge = styled.div`
   padding: 5px 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  max-width: calc(100% - 24px);
+  width: fit-content;
   line-height: 1.25;
   box-shadow: 0 2px 8px rgba(17, 17, 17, 0.12);
 `;
