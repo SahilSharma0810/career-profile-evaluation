@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { 
-  User, 
-  Envelope, 
-  Phone, 
-  CaretDown, 
-  CheckCircle, 
-  WarningCircle, 
+import {
+  User,
+  Envelope,
+  Phone,
+  CaretDown,
+  CheckCircle,
+  WarningCircle,
   GraduationCap
 } from 'phosphor-react';
 import { PrimaryButton, LoadingSpinner } from './ui';
@@ -21,24 +21,16 @@ const shake = keyframes`
 `;
 
 const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
 const FormContainer = styled.div`
   width: 100%;
   max-width: 460px;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-  padding: 28px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 32px;
   animation: ${fadeIn} 0.4s ease-out;
 
   @media (max-width: 540px) {
@@ -48,21 +40,21 @@ const FormContainer = styled.div`
 `;
 
 const FormHeader = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   text-align: center;
 `;
 
 const FormTitle = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 8px 0;
-  letter-spacing: -0.5px;
+  font-family: var(--serif);
+  font-size: 1.625rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 6px 0;
 `;
 
 const FormSubtitle = styled.p`
-  font-size: 0.9rem;
-  color: #64748b;
+  font-size: 0.875rem;
+  color: var(--ink3);
   margin: 0;
   line-height: 1.5;
 `;
@@ -79,29 +71,18 @@ const FieldGroup = styled.div`
   gap: 6px;
 `;
 
-const FieldRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
 const Label = styled.label`
-  font-size: 0.8125rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--ink3);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   display: flex;
   align-items: center;
   gap: 4px;
 
-  span.required {
-    color: #dc2626;
-  }
+  span.required { color: #dc2626; }
 `;
 
 const InputWrapper = styled.div`
@@ -116,7 +97,7 @@ const InputIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${props => props.hasError ? '#dc2626' : props.focused ? '#b30158' : '#94a3b8'};
+  color: ${props => props.hasError ? '#dc2626' : props.focused ? 'var(--accent)' : 'var(--ink4)'};
   transition: color 0.2s ease;
   pointer-events: none;
   z-index: 1;
@@ -125,29 +106,22 @@ const InputIcon = styled.div`
 const Input = styled.input`
   width: 100%;
   padding: 12px 14px 12px 46px;
-  border: 2px solid ${props => props.hasError ? '#dc2626' : '#e2e8f0'};
-  border-radius: 0;
-  background: #ffffff;
-  font-size: 0.9rem;
-  color: #1e293b;
-  font-family: inherit;
+  border: 1px solid ${props => props.hasError ? '#dc2626' : 'var(--line)'};
+  background: var(--white);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  color: var(--ink);
   transition: all 0.2s ease;
   box-sizing: border-box;
 
   &:focus {
     outline: none;
-    border-color: ${props => props.hasError ? '#dc2626' : '#b30158'};
-    box-shadow: 0 0 0 3px ${props => props.hasError ? 'rgba(220, 38, 38, 0.1)' : 'rgba(179, 1, 88, 0.1)'};
+    border-color: ${props => props.hasError ? '#dc2626' : 'var(--accent)'};
+    box-shadow: 0 0 0 3px ${props => props.hasError ? 'rgba(220, 38, 38, 0.08)' : 'rgba(37, 99, 235, 0.08)'};
   }
 
-  &::placeholder {
-    color: #94a3b8;
-  }
-
-  &:disabled {
-    background: #f8fafc;
-    cursor: not-allowed;
-  }
+  &::placeholder { color: var(--ink4); }
+  &:disabled { background: var(--bg); cursor: not-allowed; }
 `;
 
 const SelectWrapper = styled.div`
@@ -159,12 +133,11 @@ const SelectWrapper = styled.div`
 const Select = styled.select`
   width: 100%;
   padding: 12px 40px 12px ${props => props.hasIcon ? '46px' : '16px'};
-  border: 2px solid ${props => props.hasError ? '#dc2626' : '#e2e8f0'};
-  border-radius: 0;
-  background: #ffffff;
-  font-size: 0.9rem;
-  color: ${props => props.value ? '#1e293b' : '#94a3b8'};
-  font-family: inherit;
+  border: 1px solid ${props => props.hasError ? '#dc2626' : 'var(--line)'};
+  background: var(--white);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  color: ${props => props.value ? 'var(--ink)' : 'var(--ink4)'};
   transition: all 0.2s ease;
   box-sizing: border-box;
   cursor: pointer;
@@ -174,22 +147,14 @@ const Select = styled.select`
 
   &:focus {
     outline: none;
-    border-color: ${props => props.hasError ? '#dc2626' : '#b30158'};
-    box-shadow: 0 0 0 3px ${props => props.hasError ? 'rgba(220, 38, 38, 0.1)' : 'rgba(179, 1, 88, 0.1)'};
+    border-color: ${props => props.hasError ? '#dc2626' : 'var(--accent)'};
+    box-shadow: 0 0 0 3px ${props => props.hasError ? 'rgba(220, 38, 38, 0.08)' : 'rgba(37, 99, 235, 0.08)'};
   }
 
-  &:disabled {
-    background: #f8fafc;
-    cursor: not-allowed;
-  }
+  &:disabled { background: var(--bg); cursor: not-allowed; }
 
-  option {
-    color: #1e293b;
-  }
-
-  option[value=""] {
-    color: #94a3b8;
-  }
+  option { color: var(--ink); }
+  option[value=""] { color: var(--ink4); }
 `;
 
 const SelectIcon = styled.div`
@@ -198,9 +163,8 @@ const SelectIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #64748b;
+  color: var(--ink3);
   pointer-events: none;
-  transition: transform 0.2s ease;
 `;
 
 const PhoneInputWrapper = styled.div`
@@ -212,11 +176,10 @@ const CountryCode = styled.div`
   display: flex;
   align-items: center;
   padding: 12px 14px;
-  border: 2px solid #e2e8f0;
-  border-radius: 0;
-  background: #f8fafc;
-  font-size: 0.9rem;
-  color: #1e293b;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  font-size: 0.875rem;
+  color: var(--ink);
   font-weight: 500;
   white-space: nowrap;
 `;
@@ -234,9 +197,7 @@ const ErrorMessage = styled.div`
   color: #dc2626;
   animation: ${shake} 0.3s ease-in-out;
 
-  svg {
-    flex-shrink: 0;
-  }
+  svg { flex-shrink: 0; }
 `;
 
 const SuccessMessage = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
@@ -246,8 +207,7 @@ const SuccessMessage = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' }
   padding: 12px 14px;
   background: #dcfce7;
   border: 1px solid #86efac;
-  border-radius: 0;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: #166534;
   font-weight: 500;
   margin-bottom: 16px;
@@ -260,9 +220,8 @@ const ErrorBanner = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
   padding: 12px 14px;
   background: #fee2e2;
   border: 1px solid #fca5a5;
-  border-left: 4px solid #dc2626;
-  border-radius: 0;
-  font-size: 0.9rem;
+  border-left: 3px solid #dc2626;
+  font-size: 0.875rem;
   color: #991b1b;
   font-weight: 500;
   animation: ${shake} 0.4s ease-in-out;
@@ -279,52 +238,29 @@ const ButtonGroup = styled.div`
 const SecondaryLink = styled.button`
   background: transparent;
   border: none;
-  color: #64748b;
-  font-size: 0.875rem;
+  color: var(--ink3);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
   padding: 8px;
   transition: color 0.2s ease;
   text-align: center;
 
-  &:hover {
-    color: #b30158;
-  }
-
-  span {
-    color: #b30158;
-    font-weight: 600;
-  }
-`;
-
-const SectionDivider = styled.div`
-  height: 1px;
-  background: #e2e8f0;
-  margin: 8px 0;
-`;
-
-const SectionTitle = styled.div`
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
+  &:hover { color: var(--accent); }
+  span { color: var(--accent); font-weight: 600; }
 `;
 
 const generateGradYearOptions = () => {
   const currentYear = new Date().getFullYear();
   const years = [];
   years.push({ value: '', label: 'Select year' });
-  
   for (let year = currentYear + 5; year >= currentYear; year--) {
     years.push({ value: year.toString(), label: year.toString() });
   }
-  
   for (let year = currentYear - 1; year >= currentYear - 15; year--) {
     years.push({ value: year.toString(), label: year.toString() });
   }
-  
   return years;
 };
 
@@ -349,9 +285,7 @@ const SignUpForm = ({
   const [touched, setTouched] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [turnstileToken, setTurnstileToken] = useState('');
-  const [
-    turnstileAppearance, setTurnstileAppearance
-  ] = useState('interaction-only');
+  const [turnstileAppearance, setTurnstileAppearance] = useState('interaction-only');
   const turnstileRef = useRef(null);
 
   const isLoading = submitStatus === 'loading';
@@ -360,10 +294,7 @@ const SignUpForm = ({
 
   const handleChange = useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
   }, [errors]);
 
   const handleBlur = useCallback((field) => {
@@ -393,9 +324,7 @@ const SignUpForm = ({
         break;
     }
 
-    if (error) {
-      setErrors(prev => ({ ...prev, [field]: error }));
-    }
+    if (error) setErrors(prev => ({ ...prev, [field]: error }));
   }, [formData]);
 
   const handleFocus = useCallback((field) => {
@@ -405,45 +334,25 @@ const SignUpForm = ({
   const validateForm = useCallback(() => {
     const newErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
-    }
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    else if (formData.name.trim().length < 2) newErrors.name = 'Name must be at least 2 characters';
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!validateEmail(formData.email)) newErrors.email = 'Please enter a valid email';
 
-    if (!formData.phone_number.trim()) {
-      newErrors.phone_number = 'Phone number is required';
-    } else if (!validatePhone(formData.phone_number)) {
-      newErrors.phone_number = 'Please enter a valid 10-digit phone number';
-    }
+    if (!formData.phone_number.trim()) newErrors.phone_number = 'Phone number is required';
+    else if (!validatePhone(formData.phone_number)) newErrors.phone_number = 'Please enter a valid 10-digit phone number';
 
-    if (!formData.grad_year) {
-      newErrors.grad_year = 'Please select graduation year';
-    }
+    if (!formData.grad_year) newErrors.grad_year = 'Please select graduation year';
 
     setErrors(newErrors);
-    setTouched({
-      name: true,
-      email: true,
-      phone_number: true,
-      grad_year: true
-    });
-
+    setTouched({ name: true, email: true, phone_number: true, grad_year: true });
     return Object.keys(newErrors).length === 0;
   }, [formData]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     if (!turnstileToken) {
       setTurnstileAppearance('always');
@@ -451,19 +360,16 @@ const SignUpForm = ({
     }
 
     const cleanedPhone = formData.phone_number.replace(/\D/g, '');
-    
     onSubmit?.({
       ...formData,
       phone_number: cleanedPhone,
       turnstile_token: turnstileToken
     });
-    if (turnstileRef.current
-      && typeof turnstileRef.current.reset === 'function'
-    ) {
+    if (turnstileRef.current && typeof turnstileRef.current.reset === 'function') {
       turnstileRef.current.reset();
     }
     setTurnstileToken('');
-  }, [formData, validateForm, onSubmit]);
+  }, [formData, validateForm, onSubmit, turnstileToken]);
 
   const handlePhoneInput = useCallback((e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 10);
@@ -481,31 +387,29 @@ const SignUpForm = ({
 
       {isSuccess && successMessage && (
         <SuccessMessage>
-          <CheckCircle size={20} weight="fill" />
+          <CheckCircle size={18} weight="fill" />
           {successMessage}
         </SuccessMessage>
       )}
 
       {isError && errorMessage && (
         <ErrorBanner>
-          <WarningCircle size={20} weight="fill" />
+          <WarningCircle size={18} weight="fill" />
           {errorMessage}
         </ErrorBanner>
       )}
 
       <Form onSubmit={handleSubmit}>
-        
-
         <FieldGroup>
           <Label htmlFor="name">
             Full Name <span className="required">*</span>
           </Label>
           <InputWrapper>
-            <InputIcon 
+            <InputIcon
               hasError={touched.name && errors.name}
               focused={focusedField === 'name'}
             >
-              <User size={20} weight="regular" />
+              <User size={18} weight="regular" />
             </InputIcon>
             <Input
               id="name"
@@ -516,10 +420,7 @@ const SignUpForm = ({
               onBlur={(e) => {
                 handleBlur('name');
                 if (e.target.value) {
-                  tracker.click({
-                    click_type: 'signup_name_filled',
-                    click_text: e.target.value
-                  });
+                  tracker.click({ click_type: 'signup_name_filled', click_text: e.target.value });
                 }
               }}
               onFocus={() => handleFocus('name')}
@@ -541,11 +442,11 @@ const SignUpForm = ({
             Email Address <span className="required">*</span>
           </Label>
           <InputWrapper>
-            <InputIcon 
+            <InputIcon
               hasError={touched.email && errors.email}
               focused={focusedField === 'email'}
             >
-              <Envelope size={20} weight="regular" />
+              <Envelope size={18} weight="regular" />
             </InputIcon>
             <Input
               id="email"
@@ -556,10 +457,7 @@ const SignUpForm = ({
               onBlur={(e) => {
                 handleBlur('email');
                 if (e.target.value) {
-                  tracker.click({
-                    click_type: 'signup_email_filled',
-                    click_text: e.target.value
-                  });
+                  tracker.click({ click_type: 'signup_email_filled', click_text: e.target.value });
                 }
               }}
               onFocus={() => handleFocus('email')}
@@ -585,12 +483,12 @@ const SignUpForm = ({
               <span role="img" aria-label="India">🇮🇳</span>&nbsp;+91
             </CountryCode>
             <InputWrapper style={{ flex: 1 }}>
-              <InputIcon 
+              <InputIcon
                 hasError={touched.phone_number && errors.phone_number}
                 focused={focusedField === 'phone_number'}
                 style={{ left: 14 }}
               >
-                <Phone size={20} weight="regular" />
+                <Phone size={18} weight="regular" />
               </InputIcon>
               <PhoneInput
                 id="phone"
@@ -601,17 +499,12 @@ const SignUpForm = ({
                 onBlur={(e) => {
                   handleBlur('phone_number');
                   if (e.target.value) {
-                    tracker.click({
-                      click_type: 'signup_phone_number_filled',
-                      click_text: e.target.value
-                    });
+                    tracker.click({ click_type: 'signup_phone_number_filled', click_text: e.target.value });
                   }
                 }}
                 onFocus={() => {
                   handleFocus('phone_number');
-                  if (!turnstileToken) {
-                    setTurnstileAppearance('always');
-                  }
+                  if (!turnstileToken) setTurnstileAppearance('always');
                 }}
                 hasError={touched.phone_number && errors.phone_number}
                 disabled={isLoading || isSuccess}
@@ -628,17 +521,17 @@ const SignUpForm = ({
             </ErrorMessage>
           )}
         </FieldGroup>
-                
+
         <FieldGroup>
           <Label htmlFor="grad_year">
-                  Graduation Year <span className="required">*</span>
+            Graduation Year <span className="required">*</span>
           </Label>
           <SelectWrapper>
-            <InputIcon 
+            <InputIcon
               hasError={touched.grad_year && errors.grad_year}
               focused={focusedField === 'grad_year'}
             >
-              <GraduationCap size={20} weight="regular" />
+              <GraduationCap size={18} weight="regular" />
             </InputIcon>
             <Select
               id="grad_year"
@@ -647,10 +540,7 @@ const SignUpForm = ({
               onBlur={(e) => {
                 handleBlur('grad_year');
                 if (e.target.value) {
-                  tracker.click({
-                    click_type: 'signup_grad_year_filled',
-                    click_text: e.target.value
-                  });
+                  tracker.click({ click_type: 'signup_grad_year_filled', click_text: e.target.value });
                 }
               }}
               onFocus={() => handleFocus('grad_year')}
@@ -665,7 +555,7 @@ const SignUpForm = ({
               ))}
             </Select>
             <SelectIcon>
-              <CaretDown size={20} weight="bold" />
+              <CaretDown size={18} weight="bold" />
             </SelectIcon>
           </SelectWrapper>
           {touched.grad_year && errors.grad_year && (
@@ -683,20 +573,11 @@ const SignUpForm = ({
         />
 
         <ButtonGroup>
-          <PrimaryButton 
-            type="submit" 
-            disabled={isLoading || isSuccess}
-          >
+          <PrimaryButton type="submit" disabled={isLoading || isSuccess}>
             {isLoading ? (
-              <>
-                <LoadingSpinner />
-                Creating Account...
-              </>
+              <><LoadingSpinner /> Creating Account...</>
             ) : isSuccess ? (
-              <>
-                <CheckCircle size={20} weight="fill" />
-                Account Created
-              </>
+              <><CheckCircle size={18} weight="fill" /> Account Created</>
             ) : (
               'Create Account'
             )}

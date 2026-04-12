@@ -20,11 +20,9 @@ const fadeIn = keyframes`
 const FormContainer = styled.div`
   width: 100%;
   max-width: 420px;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-  padding: 28px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 32px;
   animation: ${fadeIn} 0.4s ease-out;
 
   @media (max-width: 540px) {
@@ -35,33 +33,33 @@ const FormContainer = styled.div`
 
 const FormHeader = styled.div`
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 `;
 
 const IconWrapper = styled.div`
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
-  border: 2px solid #f9a8d4;
+  width: 52px;
+  height: 52px;
+  background: #EFF4FF;
+  border: 1px solid #BFDBFE;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 12px;
-  color: #b30158;
+  margin: 0 auto 14px;
+  color: var(--accent);
 `;
 
 const FormTitle = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 8px 0;
-  letter-spacing: -0.5px;
+  font-family: var(--serif);
+  font-size: 1.625rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 6px 0;
 `;
 
 const FormSubtitle = styled.p`
-  font-size: 0.9rem;
-  color: #64748b;
+  font-size: 0.875rem;
+  color: var(--ink3);
   margin: 0;
   line-height: 1.5;
 `;
@@ -75,15 +73,16 @@ const Form = styled.form`
 const FieldGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 `;
 
 const Label = styled.label`
-  font-size: 0.8125rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--ink3);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -103,7 +102,7 @@ const InputIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${props => props.hasError ? '#dc2626' : props.focused ? '#b30158' : '#94a3b8'};
+  color: ${props => props.hasError ? '#dc2626' : props.focused ? 'var(--accent)' : 'var(--ink4)'};
   transition: color 0.2s ease;
   pointer-events: none;
   z-index: 1;
@@ -112,23 +111,22 @@ const InputIcon = styled.div`
 const Input = styled.input`
   width: 100%;
   padding: 12px 44px 12px 44px;
-  border: 2px solid ${props => props.hasError ? '#dc2626' : '#e2e8f0'};
-  border-radius: 0;
-  background: #ffffff;
-  font-size: 0.95rem;
-  color: #1e293b;
-  font-family: inherit;
+  border: 1px solid ${props => props.hasError ? '#dc2626' : 'var(--line)'};
+  background: var(--white);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  color: var(--ink);
   transition: all 0.2s ease;
   box-sizing: border-box;
 
   &:focus {
     outline: none;
-    border-color: ${props => props.hasError ? '#dc2626' : '#b30158'};
-    box-shadow: 0 0 0 3px ${props => props.hasError ? 'rgba(220, 38, 38, 0.1)' : 'rgba(179, 1, 88, 0.1)'};
+    border-color: ${props => props.hasError ? '#dc2626' : 'var(--accent)'};
+    box-shadow: 0 0 0 3px ${props => props.hasError ? 'rgba(220, 38, 38, 0.08)' : 'rgba(37, 99, 235, 0.08)'};
   }
 
-  &::placeholder { color: #94a3b8; }
-  &:disabled { background: #f8fafc; cursor: not-allowed; }
+  &::placeholder { color: var(--ink4); }
+  &:disabled { background: var(--bg); cursor: not-allowed; }
 `;
 
 const ToggleVisibility = styled.button`
@@ -136,11 +134,14 @@ const ToggleVisibility = styled.button`
   right: 12px;
   background: transparent;
   border: none;
-  color: #64748b;
+  color: var(--ink3);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover { color: var(--ink); }
 `;
 
 const ErrorMessage = styled.div`
@@ -161,8 +162,7 @@ const SuccessMessage = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' }
   padding: 12px 14px;
   background: #dcfce7;
   border: 1px solid #86efac;
-  border-radius: 0;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: #166534;
   font-weight: 500;
 `;
@@ -174,9 +174,8 @@ const ErrorBanner = styled.div.attrs({ role: 'alert', 'aria-live': 'polite' })`
   padding: 12px 14px;
   background: #fee2e2;
   border: 1px solid #fca5a5;
-  border-left: 4px solid #dc2626;
-  border-radius: 0;
-  font-size: 0.9rem;
+  border-left: 3px solid #dc2626;
+  font-size: 0.875rem;
   color: #991b1b;
   font-weight: 500;
   animation: ${shake} 0.4s ease-in-out;
@@ -192,16 +191,17 @@ const ButtonGroup = styled.div`
 const SecondaryLink = styled.button`
   background: transparent;
   border: none;
-  color: #64748b;
-  font-size: 0.875rem;
+  color: var(--ink3);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
   padding: 8px;
   transition: color 0.2s ease;
   text-align: center;
 
-  &:hover { color: #b30158; }
-  span { color: #b30158; font-weight: 600; }
+  &:hover { color: var(--accent); }
+  span { color: var(--accent); font-weight: 600; }
 `;
 
 const EmailPasswordLoginForm = ({
@@ -248,20 +248,16 @@ const EmailPasswordLoginForm = ({
     } else {
       setPasswordError('');
     }
-
     return valid;
   }, [email, password]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-
     if (!turnstileToken) {
       setTurnstileAppearance('always');
       return;
     }
-
     if (!validateFields()) return;
-
     onSubmit?.(email.trim(), password, turnstileToken);
     if (turnstileRef.current && typeof turnstileRef.current.reset === 'function') {
       turnstileRef.current.reset();
@@ -276,7 +272,7 @@ const EmailPasswordLoginForm = ({
     <FormContainer>
       <FormHeader>
         <IconWrapper>
-          <SignIn size={32} weight="fill" />
+          <SignIn size={28} weight="fill" />
         </IconWrapper>
         <FormTitle>Log in with Email</FormTitle>
         <FormSubtitle>Use your email and password to continue</FormSubtitle>
@@ -284,14 +280,14 @@ const EmailPasswordLoginForm = ({
 
       {isSuccess && successMessage && (
         <SuccessMessage>
-          <CheckCircle size={20} weight="fill" />
+          <CheckCircle size={18} weight="fill" />
           {successMessage}
         </SuccessMessage>
       )}
 
       {isError && errorMessage && !displayEmailError && !displayPasswordError && (
         <ErrorBanner>
-          <WarningCircle size={20} weight="fill" />
+          <WarningCircle size={18} weight="fill" />
           {errorMessage}
         </ErrorBanner>
       )}
@@ -301,7 +297,7 @@ const EmailPasswordLoginForm = ({
           <Label htmlFor="email">Email Address <span className="required">*</span></Label>
           <InputWrapper>
             <InputIcon hasError={displayEmailError} focused={emailFocused}>
-              <Envelope size={20} weight="regular" />
+              <Envelope size={18} weight="regular" />
             </InputIcon>
             <Input
               id="email"
@@ -311,14 +307,11 @@ const EmailPasswordLoginForm = ({
               onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
               onBlur={(e) => {
                 if (!validateEmail(email)) {
-                  setEmailError('Please enter a valid email'); 
+                  setEmailError('Please enter a valid email');
                   setEmailFocused(false);
                 }
                 if (e.target.value) {
-                  tracker.click({
-                    click_type: 'email_login_email_filled',
-                    click_text: e.target.value
-                  });
+                  tracker.click({ click_type: 'email_login_email_filled', click_text: e.target.value });
                 }
               }}
               onFocus={() => { setEmailFocused(true); if (!turnstileToken) setTurnstileAppearance('always'); }}
@@ -339,7 +332,7 @@ const EmailPasswordLoginForm = ({
           <Label htmlFor="password">Password <span className="required">*</span></Label>
           <InputWrapper>
             <InputIcon hasError={displayPasswordError} focused={passwordFocused}>
-              <Lock size={20} weight="regular" />
+              <Lock size={18} weight="regular" />
             </InputIcon>
             <Input
               id="password"
@@ -349,14 +342,11 @@ const EmailPasswordLoginForm = ({
               onChange={(e) => { setPassword(e.target.value); if (passwordError) setPasswordError(''); }}
               onBlur={(e) => {
                 if (!password) {
-                  setPasswordError('Password is required'); 
-                  setPasswordFocused(false); 
+                  setPasswordError('Password is required');
+                  setPasswordFocused(false);
                 }
                 if (e.target.value) {
-                  tracker.click({
-                    click_type: 'email_login_password_filled',
-                    click_text: e.target.value
-                  });
+                  tracker.click({ click_type: 'email_login_password_filled', click_text: e.target.value });
                 }
               }}
               onFocus={() => setPasswordFocused(true)}
@@ -390,15 +380,9 @@ const EmailPasswordLoginForm = ({
         <ButtonGroup>
           <PrimaryButton type="submit" disabled={isLoading || isSuccess}>
             {isLoading ? (
-              <>
-                <LoadingSpinner />
-                Signing in...
-              </>
+              <><LoadingSpinner /> Signing in...</>
             ) : isSuccess ? (
-              <>
-                <CheckCircle size={20} weight="fill" />
-                Signed in
-              </>
+              <><CheckCircle size={18} weight="fill" /> Signed in</>
             ) : (
               'Log in'
             )}
@@ -416,5 +400,3 @@ const EmailPasswordLoginForm = ({
 };
 
 export default EmailPasswordLoginForm;
-
-
