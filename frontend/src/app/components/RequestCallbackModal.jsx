@@ -79,15 +79,15 @@ const Button = styled.a`
   text-transform: uppercase;
   letter-spacing: 1px;
   text-decoration: none;
-  background: #b30158;
+  background: var(--accent-eye);
   color: white;
 
   &:hover {
-    background: #8a0145;
+    background: #b3420a;
   }
 
   &:active {
-    background: #700038;
+    background: #943508;
   }
 `;
 
@@ -127,7 +127,7 @@ const LoadingSpinner = styled.div`
   height: 40px;
   border: 3px solid #e2e8f0;
   border-radius: 50%;
-  border-top-color: #b30158;
+  border-top-color: var(--accent-eye);
   animation: spin 0.6s linear infinite;
 
   @keyframes spin {

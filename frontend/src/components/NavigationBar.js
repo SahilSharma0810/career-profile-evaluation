@@ -65,7 +65,7 @@ const NavActions = styled.div`
 `;
 
 const CTAButton = styled.button`
-  background: #b30158;
+  background: var(--accent-eye);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -78,7 +78,7 @@ const CTAButton = styled.button`
   letter-spacing: 1px;
 
   &:hover {
-    background: #8a0145;
+    background: #b3420a;
   }
 
   @media (max-width: 768px) {
