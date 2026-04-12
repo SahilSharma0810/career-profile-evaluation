@@ -1,78 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import styled, { createGlobalStyle, keyframes } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { MagnifyingGlass, FileText, CheckCircle, House } from 'phosphor-react';
-import ProfileMatchHeroV2 from '../results/ProfileMatchHeroV2';
+import ReportPage from '../results/ReportPage';
 import BasicAuthModal from '../auth/BasicAuthModal';
 import { fetchAdminResponse } from '../../utils/adminAuth';
 
-const PrintStyles = createGlobalStyle`
-  @media print {
-    @page {
-      margin: 12mm;
-    }
-
-    body {
-      background: white !important;
-      color: #1e293b;
-    }
-  }
-`;
-
 const pulse = keyframes`
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.4; }
 `;
 
-const ResultsContainer = styled.div`
-  min-height: calc(100vh - 70px);
-  background: #f8fafc;
-  padding: 40px 20px;
-
-  @media (max-width: 768px) {
-    padding: 24px 0;
-  }
-
-  @media print {
-    min-height: auto;
-    background: white;
-    padding: 0;
-  }
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: #ffffff;
 `;
 
 const Container = styled.div`
-  max-width: 1400px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0 100px;
-
-  @media (max-width: 1024px) {
-    padding: 0 40px;
-  }
-
-  @media (max-width: 768px) {
-    padding: 0 16px;
-  }
-
-  @media print {
-    max-width: none;
-    margin: 0;
-    padding: 0 24px;
-  }
+  padding: 0 32px;
 `;
 
 const PageHeader = styled.div`
-  background: white;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 24px;
-  margin-bottom: 32px;
+  background: #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 20px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    gap: 16px;
-    padding: 16px;
+    gap: 12px;
+    padding: 16px 20px;
   }
 
   @media print {
@@ -81,40 +42,65 @@ const PageHeader = styled.div`
 `;
 
 const PageTitle = styled.h1`
-  font-size: 1.25rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  color: #1e293b;
+  color: #64748b;
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 1px;
 `;
 
-const Section = styled.div`
-  background: white;
-  padding: 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+const QASection = styled.div`
+  background: #ffffff;
+  padding: 32px;
+  border-bottom: 1px solid #f1f5f9;
 `;
 
-const SectionTitle = styled.h2`
-  font-size: 0.875rem;
+const QATitle = styled.h3`
+  font-size: 0.8125rem;
   font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #e2e8f0;
+  color: #94a3b8;
+  margin: 0 0 20px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
-const LoadingContainer = styled.div`
+const QAList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const QAItem = styled.div`
+  padding: 14px 16px;
+  background: #f8fafc;
+  border-left: 3px solid #0041ca;
+`;
+
+const QuestionText = styled.div`
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+`;
+
+const AnswerText = styled.div`
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #1e293b;
+`;
+
+const LoadingWrapper = styled.div`
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
-  max-width: 600px;
-  margin: 0 auto;
   padding: 40px 20px;
 `;
 
@@ -123,7 +109,6 @@ const LoadingContent = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  margin-bottom: 32px;
   animation: ${pulse} 2s ease-in-out infinite;
 `;
 
@@ -135,75 +120,68 @@ const LoadingIcon = styled.div`
   height: 48px;
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
-  color: #c71f69;
-  flex-shrink: 0;
+  color: #64748b;
 `;
 
 const LoadingText = styled.div`
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #1e293b;
   text-align: center;
 `;
 
-const LoadingSubtext = styled.div`
-  font-size: 0.875rem;
-  color: #64748b;
-  margin-top: 4px;
-  text-align: center;
+const LoadingSub = styled.div`
+  font-size: 0.8125rem;
+  color: #94a3b8;
 `;
 
-const ProgressBarContainer = styled.div`
-  width: 100%;
-  height: 8px;
-  background: #e2e8f0;
+const ProgressTrack = styled.div`
+  width: 240px;
+  height: 3px;
+  background: #f1f5f9;
   overflow: hidden;
-  margin-top: 24px;
+  margin-top: 16px;
 `;
 
-const ProgressBarFill = styled.div`
+const ProgressFill = styled.div`
   height: 100%;
-  background: linear-gradient(90deg, #c71f69 0%, #e11d48 100%);
+  background: #1e293b;
   transition: width 0.3s ease;
-  width: ${props => props.progress}%;
+  width: ${props => props.$progress}%;
 `;
 
-const ErrorContainer = styled(LoadingContainer)`
-  flex-direction: column;
+const ErrorWrapper = styled(LoadingWrapper)`
   gap: 16px;
-  color: #dc2626;
-  text-align: center;
 `;
 
 const ErrorTitle = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
   margin: 0;
-  color: #b91c1c;
 `;
 
 const ErrorMessage = styled.p`
-  font-size: 0.95rem;
-  color: #7f1d1d;
+  font-size: 0.9375rem;
+  color: #64748b;
   margin: 0;
 `;
 
 const PrimaryButton = styled.button`
-  background: #c71f69;
-  color: white;
+  background: #1e293b;
+  color: #ffffff;
   border: none;
   padding: 12px 24px;
   font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: background 0.15s ease;
 
   &:hover {
-    background: #a01855;
+    background: #0f172a;
   }
 
   @media print {
@@ -211,78 +189,20 @@ const PrimaryButton = styled.button`
   }
 `;
 
-const SecondaryButton = styled.button`
-  background: transparent;
-  color: #c71f69;
-  border: 2px solid #c71f69;
-  padding: 10px 22px;
+const EvalSection = styled.div`
+  border-top: 1px solid #f1f5f9;
+`;
+
+const EvalLabel = styled.div`
+  padding: 20px 32px;
+  font-size: 0.8125rem;
   font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  &:hover {
-    background: #c71f69;
-    color: white;
-  }
-
-  @media print {
-    display: none;
-  }
-`;
-
-const QASection = styled.div`
-  background: white;
-  padding: 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-`;
-
-const QATitle = styled.h3`
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 20px 0;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #e2e8f0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const QAList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const QAItem = styled.div`
-  padding: 16px;
-  background: #f8fafc;
-  border-left: 3px solid #c71f69;
-`;
-
-const QuestionText = styled.div`
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #475569;
-  margin-bottom: 8px;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  background: #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
 `;
-
-const AnswerText = styled.div`
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: #1e293b;
-`;
-
 
 const AdminViewPage = () => {
   const { response_id } = useParams();
@@ -296,12 +216,11 @@ const AdminViewPage = () => {
   const [loadingStep, setLoadingStep] = useState(0);
 
   const loadingSteps = [
-    { icon: <MagnifyingGlass size={28} weight="bold" />, text: 'Authenticating...', subtext: 'Verifying your credentials' },
-    { icon: <FileText size={28} weight="bold" />, text: 'Loading response data...', subtext: 'Fetching user profile evaluation' },
-    { icon: <CheckCircle size={28} weight="bold" />, text: 'Preparing results...', subtext: 'Almost there!' }
+    { icon: <MagnifyingGlass size={24} weight="bold" />, text: 'Authenticating...', sub: 'Verifying credentials' },
+    { icon: <FileText size={24} weight="bold" />, text: 'Loading response...', sub: 'Fetching evaluation' },
+    { icon: <CheckCircle size={24} weight="bold" />, text: 'Preparing results...', sub: 'Almost there' }
   ];
 
-  // Loading animation effect
   useEffect(() => {
     if (loading && !showAuthModal) {
       setLoadingProgress(0);
@@ -309,57 +228,42 @@ const AdminViewPage = () => {
 
       const progressInterval = setInterval(() => {
         setLoadingProgress(prev => {
-          if (prev >= 95) {
-            clearInterval(progressInterval);
-            return 95;
-          }
+          if (prev >= 95) { clearInterval(progressInterval); return 95; }
           return prev + 2;
         });
       }, 100);
 
       const stepInterval = setInterval(() => {
         setLoadingStep(prev => {
-          if (prev >= loadingSteps.length - 1) {
-            clearInterval(stepInterval);
-            return prev;
-          }
+          if (prev >= loadingSteps.length - 1) { clearInterval(stepInterval); return prev; }
           return prev + 1;
         });
       }, 1500);
 
-      return () => {
-        clearInterval(progressInterval);
-        clearInterval(stepInterval);
-      };
+      return () => { clearInterval(progressInterval); clearInterval(stepInterval); };
     }
   }, [loading, showAuthModal]);
 
-  // Fetch response data using the admin auth utility
   const fetchResponse = async (authUsername, authPassword) => {
     setError(null);
     setAuthError('');
 
-    await fetchAdminResponse(
-      response_id,
-      authUsername,
-      authPassword,
-      {
-        onLoadingChange: setLoading,
-        onSuccess: (result) => {
-          setData(result);
-          setShowAuthModal(false);
-          setAuthError('');
-        },
-        onError: (errorJson) => {
-          setShowAuthModal(false);
-          setError(errorJson.detail || 'Response not found for the given ID.');
-        },
-        onAuthError: (errorJson) => {
-          setShowAuthModal(true);
-          setAuthError(errorJson.detail || 'Invalid username or password. Please try again.');
-        }
+    await fetchAdminResponse(response_id, authUsername, authPassword, {
+      onLoadingChange: setLoading,
+      onSuccess: (result) => {
+        setData(result);
+        setShowAuthModal(false);
+        setAuthError('');
+      },
+      onError: (errorJson) => {
+        setShowAuthModal(false);
+        setError(errorJson.detail || 'Response not found for the given ID.');
+      },
+      onAuthError: (errorJson) => {
+        setShowAuthModal(true);
+        setAuthError(errorJson.detail || 'Invalid username or password. Please try again.');
       }
-    );
+    });
   };
 
   useEffect(() => {
@@ -396,83 +300,62 @@ const AdminViewPage = () => {
   if (loading) {
     const currentStep = loadingSteps[loadingStep];
     return (
-      <ResultsContainer>
-        <Container>
-          <LoadingContainer>
-            <LoadingContent>
-              <LoadingIcon>
-                {currentStep.icon}
-              </LoadingIcon>
-              <div>
-                <LoadingText>{currentStep.text}</LoadingText>
-                <LoadingSubtext>{currentStep.subtext}</LoadingSubtext>
-              </div>
-            </LoadingContent>
-            <ProgressBarContainer>
-              <ProgressBarFill progress={loadingProgress} />
-            </ProgressBarContainer>
-          </LoadingContainer>
-        </Container>
-      </ResultsContainer>
+      <LoadingWrapper>
+        <LoadingContent>
+          <LoadingIcon>{currentStep.icon}</LoadingIcon>
+          <div>
+            <LoadingText>{currentStep.text}</LoadingText>
+            <LoadingSub>{currentStep.sub}</LoadingSub>
+          </div>
+        </LoadingContent>
+        <ProgressTrack>
+          <ProgressFill $progress={loadingProgress} />
+        </ProgressTrack>
+      </LoadingWrapper>
     );
   }
 
   if (error) {
     return (
-      <ResultsContainer>
-        <Container>
-          <ErrorContainer>
-            <ErrorTitle>We ran into a problem</ErrorTitle>
-            <ErrorMessage>{error}</ErrorMessage>
-            <PrimaryButton onClick={() => navigate('/')}>
-              <House size={20} weight="bold" />
-              Back to Home
-            </PrimaryButton>
-          </ErrorContainer>
-        </Container>
-      </ResultsContainer>
+      <ErrorWrapper>
+        <ErrorTitle>We ran into a problem</ErrorTitle>
+        <ErrorMessage>{error}</ErrorMessage>
+        <PrimaryButton onClick={() => navigate('/')}>
+          <House size={18} weight="bold" /> Back to Home
+        </PrimaryButton>
+      </ErrorWrapper>
     );
   }
 
   if (!data || !data.response?.profile_evaluation) {
     return (
-      <ResultsContainer>
-        <Container>
-          <ErrorContainer>
-            <ErrorTitle>Invalid Data Format</ErrorTitle>
-            <ErrorMessage>Unable to display evaluation results. The response data may be corrupted.</ErrorMessage>
-            <PrimaryButton onClick={() => navigate('/')}>
-              <House size={20} weight="bold" />
-              Back to Home
-            </PrimaryButton>
-          </ErrorContainer>
-        </Container>
-      </ResultsContainer>
+      <ErrorWrapper>
+        <ErrorTitle>Invalid Data Format</ErrorTitle>
+        <ErrorMessage>Unable to display evaluation results. The response data may be corrupted.</ErrorMessage>
+        <PrimaryButton onClick={() => navigate('/')}>
+          <House size={18} weight="bold" /> Back to Home
+        </PrimaryButton>
+      </ErrorWrapper>
     );
   }
 
   const evaluationResults = data.response.profile_evaluation;
   const userInput = data.user_input || {};
-  const background = userInput.background || 'non-tech';
+  const adminBackground = userInput.background || 'non-tech';
   const quizResponses = userInput.quizResponses || {};
-  const goals = userInput.goals || {};
-
-  // Use questionsAndAnswers directly from the payload
-  const qaPairs = Array.isArray(userInput.questionsAndAnswers)
-    ? userInput.questionsAndAnswers
-    : [];
+  const adminGoals = userInput.goals || {};
+  const qaPairs = Array.isArray(userInput.questionsAndAnswers) ? userInput.questionsAndAnswers : [];
 
   return (
-    <ResultsContainer>
-      <PrintStyles />
-      <Container>
-        <PageHeader>
-          <PageTitle>Admin Response Viewer</PageTitle>
-        </PageHeader>
+    <PageWrapper>
+      <PageHeader>
+        <PageTitle>Admin Response Viewer</PageTitle>
+      </PageHeader>
 
-        <QASection>
+      <QASection>
+        <Container>
           <QATitle>
-            <FileText size={20} weight="bold" color="#c71f69" />
+            <FileText size={18} weight="bold" color="#0041ca" />
             Quiz Questions & Answers
           </QATitle>
           <QAList>
@@ -483,25 +366,21 @@ const AdminViewPage = () => {
               </QAItem>
             ))}
           </QAList>
-        </QASection>
+        </Container>
+      </QASection>
 
-        <Section>
-          <SectionTitle>Evaluation Output</SectionTitle>
-          <ProfileMatchHeroV2
-            score={evaluationResults.profile_strength_score}
-            notes={evaluationResults.profile_strength_notes}
-            badges={evaluationResults.badges}
-            evaluationResults={evaluationResults}
-            background={background}
-            quizResponses={quizResponses}
-            goals={goals}
-            hideCTAs={true}
-          />
-        </Section>
-      </Container>
-    </ResultsContainer>
+      <EvalSection>
+        <EvalLabel>Evaluation Output</EvalLabel>
+        <ReportPage
+          evaluationResults={evaluationResults}
+          background={adminBackground}
+          quizResponses={quizResponses}
+          goals={adminGoals}
+          hideCTAs={true}
+        />
+      </EvalSection>
+    </PageWrapper>
   );
 };
 
 export default AdminViewPage;
-

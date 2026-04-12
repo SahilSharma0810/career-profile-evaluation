@@ -1,169 +1,69 @@
-import { ArrowsClockwise, Desktop } from 'phosphor-react';
-import React, { useState } from 'react';
-import styled, { keyframes } from 'styled-components';
-import chatBot from '../../assets/ChatBot.png';
+import React from 'react';
+import styled from 'styled-components';
+import { ArrowRight } from 'phosphor-react';
 import tracker from '../../utils/tracker';
 
-const slideInFromLeft = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const Container = styled.div`
+const Root = styled.div`
+  width: 100%;
+  max-width: 560px;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 600px;
   gap: 24px;
+`;
+
+const SectionLabel = styled.div`
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+`;
+
+const Heading = styled.h2`
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.3;
 
   @media (max-width: 768px) {
-    gap: 0;
-    max-width: 100%;
+    font-size: 1.5rem;
   }
-`;
-
-const ChatHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
-  margin-bottom: 0;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const BotAvatar = styled.div`
-  width: 100px;
-  height: 100px;
-  border-radius: 0;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-`;
-
-const BotImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-`;
-
-const ChatBubble = styled.div`
-  background: #fefce8;
-  border: 2px solid #fde047;
-  border-radius: 0;
-  padding: 16px 20px;
-  position: relative;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  max-width: fit-content;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: -14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-top: 12px solid transparent;
-    border-bottom: 12px solid transparent;
-    border-right: 14px solid #fde047;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 12px solid #fefce8;
-  }
-`;
-
-const ChatText = styled.div`
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #1e293b;
-  line-height: 1.5;
-  animation: ${slideInFromLeft} 0.6s ease-out;
-`;
-
-const QuestionSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const QuestionLabel = styled.div`
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1e293b;
-  line-height: 1.5;
 `;
 
 const OptionsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 600px;
+  gap: 14px;
+  margin-top: 8px;
 `;
 
 const OptionCard = styled.button`
-  background: #FFFFFF;
-  border: 2px solid #e2e8f0;
-  border-radius: 0;
-  padding: 20px 24px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  padding: 22px 24px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  gap: 20px;
   width: 100%;
 
   &:hover {
-    border-color: #0041CA;
-    background: #FFFFFF;
+    border-color: #0041ca;
+    box-shadow: 0 2px 8px rgba(0, 65, 202, 0.08);
   }
 
   &:focus {
     outline: none;
-    border-color: #0041CA;
+    border-color: #0041ca;
     box-shadow: 0 0 0 3px rgba(0, 65, 202, 0.1);
   }
 
-  &:active {
-    transform: translateY(0);
+  @media (max-width: 768px) {
+    padding: 18px 20px;
   }
-`;
-
-const OptionIconWrapper = styled.div`
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 0;
-  background: #f1f5f9;
-  color: #64748b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
 `;
 
 const OptionContent = styled.div`
@@ -174,24 +74,31 @@ const OptionContent = styled.div`
 `;
 
 const OptionTitle = styled.div`
-  font-size: 1rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
   color: #1e293b;
-  font-weight: 600;
   line-height: 1.4;
 `;
 
 const OptionDescription = styled.div`
   font-size: 0.875rem;
   color: #64748b;
-  line-height: 1.3;
+  line-height: 1.4;
+`;
+
+const Arrow = styled.div`
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+
+  ${OptionCard}:hover & {
+    color: #0041ca;
+    transform: translateX(3px);
+  }
 `;
 
 const BackgroundSelectionSplit2 = ({ onSelect, onAutoAdvance, hideChat = false, onChatTextChange }) => {
-  const [chatText, setChatText] = useState("Let's get started with your profile");
-
   const handleBackgroundSelect = (background) => {
-    // Don't update chat text to prevent jarring transition before auto-advance
-    // Just trigger the selection and advance
     onSelect(background);
 
     tracker.click({
@@ -212,7 +119,6 @@ const BackgroundSelectionSplit2 = ({ onSelect, onAutoAdvance, hideChat = false, 
       }
     });
 
-    // Auto-advance after selection
     if (onAutoAdvance) {
       setTimeout(() => {
         onAutoAdvance();
@@ -221,47 +127,36 @@ const BackgroundSelectionSplit2 = ({ onSelect, onAutoAdvance, hideChat = false, 
   };
 
   return (
-    <Container>
-      <ChatHeader>
-        <BotAvatar>
-          <BotImage src={chatBot} alt="Scaler Bot" />
-        </BotAvatar>
-        <ChatBubble>
-          <ChatText key={chatText}>{chatText}</ChatText>
-        </ChatBubble>
-      </ChatHeader>
+    <Root>
+      <SectionLabel>01 · Start</SectionLabel>
+      <Heading>What's your current background?</Heading>
 
-      <QuestionSection>
-        <QuestionLabel>
-          What's your current background?
-        </QuestionLabel>
-        <OptionsContainer>
-          <OptionCard onClick={() => handleBackgroundSelect('non-tech')}>
-            <OptionIconWrapper>
-              <ArrowsClockwise size={24} weight="duotone" />
-            </OptionIconWrapper>
-            <OptionContent>
-              <OptionTitle>Non-Tech / Career Switcher</OptionTitle>
-              <OptionDescription>
-                Looking to transition into tech
-              </OptionDescription>
-            </OptionContent>
-          </OptionCard>
+      <OptionsContainer>
+        <OptionCard onClick={() => handleBackgroundSelect('non-tech')}>
+          <OptionContent>
+            <OptionTitle>Non-Tech / Career Switcher</OptionTitle>
+            <OptionDescription>
+              Looking to transition into tech from a non-technical background.
+            </OptionDescription>
+          </OptionContent>
+          <Arrow>
+            <ArrowRight size={22} weight="bold" />
+          </Arrow>
+        </OptionCard>
 
-          <OptionCard onClick={() => handleBackgroundSelect('tech')}>
-            <OptionIconWrapper>
-              <Desktop size={24} weight="duotone" />
-            </OptionIconWrapper>
-            <OptionContent>
-              <OptionTitle>Tech Professional</OptionTitle>
-              <OptionDescription>
-                Already working in tech
-              </OptionDescription>
-            </OptionContent>
-          </OptionCard>
-        </OptionsContainer>
-      </QuestionSection>
-    </Container>
+        <OptionCard onClick={() => handleBackgroundSelect('tech')}>
+          <OptionContent>
+            <OptionTitle>Software, Data & AI Professional</OptionTitle>
+            <OptionDescription>
+              Working in software, data, ML, AI, or DevOps — and looking to grow.
+            </OptionDescription>
+          </OptionContent>
+          <Arrow>
+            <ArrowRight size={22} weight="bold" />
+          </Arrow>
+        </OptionCard>
+      </OptionsContainer>
+    </Root>
   );
 };
 

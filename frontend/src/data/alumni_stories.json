@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Ankur Prakash",
+    "initial": "A",
+    "currentTitle": "Senior Data Scientist",
+    "currentCompany": "Fractal.AI",
+    "beforeCompany": "TCS",
+    "afterCompany": "Fractal.AI",
+    "quote": "As someone who has been working as a software developer for almost 7 long years, I was eager to enhance my skills and strengthen my fundamentals. Scaler was recommended to me by a friend who was already riding the wave.",
+    "rating": 5,
+    "tags": ["data-ml", "backend"]
+  },
+  {
+    "name": "Priya Nair",
+    "initial": "P",
+    "currentTitle": "SDE-2",
+    "currentCompany": "Amazon",
+    "beforeCompany": "TCS",
+    "afterCompany": "Amazon",
+    "quote": "Mock interviews were brutal at first — I was humbled. By the fourth one, hard problems started feeling familiar. Amazon called two months after I finished the program.",
+    "rating": 5,
+    "tags": ["backend", "fullstack", "senior-backend"]
+  },
+  {
+    "name": "Rahul Sharma",
+    "initial": "R",
+    "currentTitle": "Backend SDE-2",
+    "currentCompany": "Flipkart",
+    "beforeCompany": "Infosys",
+    "afterCompany": "Flipkart",
+    "quote": "3 years at a service company and I was stuck. Scaler's system design curriculum was the unlock — Flipkart called in month 8. I went from 8 LPA to 28 LPA.",
+    "rating": 5,
+    "tags": ["backend", "senior-backend", "swe-service"]
+  },
+  {
+    "name": "Sneha Iyer",
+    "initial": "S",
+    "currentTitle": "Backend Engineer",
+    "currentCompany": "Razorpay",
+    "beforeCompany": "Wipro",
+    "afterCompany": "Razorpay",
+    "quote": "I had zero product-company exposure. Scaler's placement team got me a direct hiring-manager intro at Razorpay — no cold applications, no middlemen.",
+    "rating": 5,
+    "tags": ["backend", "fullstack", "swe-service"]
+  },
+  {
+    "name": "Deepak Verma",
+    "initial": "D",
+    "currentTitle": "Senior Full-Stack Engineer",
+    "currentCompany": "Swiggy",
+    "beforeCompany": "Cognizant",
+    "afterCompany": "Swiggy",
+    "quote": "The structured curriculum and peer learning made all the difference. I never thought I'd make it to a top startup, but here I am — 3× my previous CTC.",
+    "rating": 5,
+    "tags": ["fullstack", "senior-fullstack", "frontend"]
+  },
+  {
+    "name": "Kavya Reddy",
+    "initial": "K",
+    "currentTitle": "ML Engineer",
+    "currentCompany": "Google",
+    "beforeCompany": "Accenture",
+    "afterCompany": "Google",
+    "quote": "Coming from a service company, I didn't think FAANG was possible. Scaler's mentors showed me it was about preparation, not pedigree.",
+    "rating": 5,
+    "tags": ["data-ml", "ai-ml-engineer"]
+  },
+  {
+    "name": "Arjun Menon",
+    "initial": "A",
+    "currentTitle": "DevOps Lead",
+    "currentCompany": "Atlassian",
+    "beforeCompany": "HCL",
+    "afterCompany": "Atlassian",
+    "quote": "I was pigeonholed in ops. Scaler helped me bridge the gap to DevOps engineering with real projects and system design depth.",
+    "rating": 5,
+    "tags": ["devops-sre", "devops"]
+  },
+  {
+    "name": "Neha Gupta",
+    "initial": "N",
+    "currentTitle": "Frontend Engineer",
+    "currentCompany": "CRED",
+    "beforeCompany": "Non-Tech (Marketing)",
+    "afterCompany": "CRED",
+    "quote": "Career switcher here — marketing to frontend in 10 months. The structured path and mentor support made the impossible feel systematic.",
+    "rating": 5,
+    "tags": ["frontend", "non-tech", "fullstack"]
+  }
+]
