@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import { Phone } from 'phosphor-react';
+import { Phone, Lock } from 'phosphor-react';
 import { HeroBackground } from '../HeroBackground';
 
 const Section = styled.section`
@@ -215,7 +215,7 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, i
   const roleName = ROLE_DISPLAY_NAMES[targetRole] || 'Software Engineer';
 
   const animateScore = useCallback(() => {
-    if (!score || hasAnimated.current) return;
+    if (!score || hasAnimated.current || isPreview) return;
     hasAnimated.current = true;
     const duration = 1800;
     const steps = 60;
@@ -239,7 +239,7 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, i
   const now = new Date();
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  const pct = displayScore / 100;
+  const pct = isPreview ? 0.65 : displayScore / 100;
   const radius = 76;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference * (1 - pct * 0.75);
@@ -307,8 +307,14 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, i
                 />
               </svg>
               <ScoreNumber>
-                <ScoreValue>{displayScore}</ScoreValue>
-                <ScoreOutOf>out of 100</ScoreOutOf>
+                {isPreview ? (
+                  <Lock size={40} weight="fill" color="rgba(255,255,255,0.5)" />
+                ) : (
+                  <>
+                    <ScoreValue>{displayScore}</ScoreValue>
+                    <ScoreOutOf>out of 100</ScoreOutOf>
+                  </>
+                )}
               </ScoreNumber>
             </ScoreGauge>
             <ScoreBadge>Career & AI Readiness</ScoreBadge>
