@@ -110,36 +110,43 @@ const StatPill = styled.div`
   }
 `;
 
-const FinalCTAChapter = ({ targetRole, onCTAClick }) => {
+const FinalCTAChapter = ({ targetRole, isPreview, onCTAClick }) => {
   return (
     <Section>
       <Container>
         <BadgeRow>
           <Badge>
             <Warning size={14} weight="bold" />
-            One last thing
+            {isPreview ? 'Sample Report' : 'One last thing'}
           </Badge>
         </BadgeRow>
 
-        <Title>You've seen the report. Now make the move.</Title>
+        <Title>
+          {isPreview
+            ? 'Like what you see? Get your own report.'
+            : "You've seen the report. Now make the move."}
+        </Title>
         <Subtitle>
-          30 minutes with a Scaler counsellor. They'll read your profile and tell you exactly what to do next.
+          {isPreview
+            ? 'Complete the quiz to receive a personalized career evaluation tailored to your profile, skills, and goals.'
+            : "30 minutes with a Scaler counsellor. They'll read your profile and tell you exactly what to do next."}
         </Subtitle>
 
         <CTAButton onClick={onCTAClick}>
-          <Phone size={18} weight="fill" />
-          Get free consultation →
+          {isPreview ? 'Back to Quiz' : (<><Phone size={18} weight="fill" /> Get free consultation →</>)}
         </CTAButton>
-        <CTASub>30 min · No card · No pressure</CTASub>
+        {!isPreview && <CTASub>30 min · No card · No pressure</CTASub>}
 
-        <StatsFooter>
-          <StatPill $highlight="green">
-            Backend roles saw <strong>+22% competition</strong> in 2025
-          </StatPill>
-          <StatPill $highlight="blue">
-            AI-fluent devs earn <strong>1.4× more</strong>
-          </StatPill>
-        </StatsFooter>
+        {!isPreview && (
+          <StatsFooter>
+            <StatPill $highlight="green">
+              Backend roles saw <strong>+22% competition</strong> in 2025
+            </StatPill>
+            <StatPill $highlight="blue">
+              AI-fluent devs earn <strong>1.4× more</strong>
+            </StatPill>
+          </StatsFooter>
+        )}
       </Container>
     </Section>
   );
