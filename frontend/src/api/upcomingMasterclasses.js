@@ -1,25 +1,83 @@
-import { apiRequest, generateJWT } from '../utils/api';
+import { apiRequest } from '../utils/api';
 
-/** Program keys from {@link getProgramKeyForTargetRole} → event_group slug for v4 API */
-const PROGRAM_TO_SLUG = {
-  software_development: 'software-engineering',
-  data_science: 'data-science',
-  devops: 'devops',
-  ai_ml: 'ai-machine-learning'
-};
+/**
+ * @typedef {object} UpcomingEventAttributes
+ * @property {number} id
+ * @property {string} title
+ * @property {string} start_time
+ * @property {string} end_time
+ * @property {string} status
+ * @property {string} event_type
+ * @property {string} slug
+ * @property {string} [instructor_name]
+ * @property {number} registration_count
+ * @property {object} [custom_data]
+ * @property {string} [custom_data.image]
+ * @property {string} [custom_data.mobile_image]
+ * @property {string} [custom_data.subtitle]
+ * @property {Array<{ name: string, position?: string, media_url?: string }>} [custom_data.instructors]
+ */
 
-const DEFAULT_SLUG = PROGRAM_TO_SLUG.software_development;
+/**
+ * @typedef {object} UpcomingEventItem
+ * @property {string} id
+ * @property {string} type
+ * @property {UpcomingEventAttributes} attributes
+ */
 
-export function getEventGroupSlugForProgram(programKey) {
-  return PROGRAM_TO_SLUG[programKey] || DEFAULT_SLUG;
+/**
+ * @typedef {object} UpcomingEventsResponse
+ * @property {UpcomingEventItem[]} data
+ * @property {number} [total]
+ * @property {number} [current_page]
+ */
+
+/**
+ * @param {number} [limit]
+ * @param {string} [program] — passed as `program` query param when set
+ * @returns {Promise<UpcomingEventsResponse>}
+ */
+export async function fetchUpcomingEvents(limit = 8, program) {
+  let url = `/api/v4/events?event_type[]=company&distributor=scaler&type=upcoming&serializer_mode=L2&limit=${limit}`;
+  if (program) {
+    url += `&program=${encodeURIComponent(program)}`;
+  }
+  return apiRequest('GET', url, null, {});
 }
 
-function extractEventsList(response) {
-  if (!response || typeof response !== 'object') return [];
-  const top = response.data;
-  if (Array.isArray(top)) return top;
-  if (top && typeof top === 'object' && Array.isArray(top.data)) return top.data;
-  return [];
+function formatTimeRange(startDate, endDate) {
+  const fmt = (d) =>
+    d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  return `${fmt(startDate)} - ${fmt(endDate)}`;
+}
+
+/**
+ * @param {UpcomingEventItem[]} events
+ * @returns {Array<{ id: string, title: string, startDate: Date, endDate: Date, formattedTime: string, bannerUrl?: string, registeredCount?: string, ctaHref: string }>}
+ */
+export function formatEventData(events) {
+  if (!Array.isArray(events)) return [];
+  return events.map((event) => {
+    const { attributes } = event;
+    const startDate = new Date(attributes.start_time);
+    const endDate = new Date(attributes.end_time);
+
+    const registeredCount =
+      attributes.registration_count > 0
+        ? `${attributes.registration_count.toLocaleString()}+`
+        : undefined;
+
+    return {
+      id: event.id,
+      title: attributes.title,
+      startDate,
+      endDate,
+      formattedTime: formatTimeRange(startDate, endDate),
+      bannerUrl: attributes.custom_data?.image,
+      registeredCount,
+      ctaHref: `https://www.scaler.com/event/${attributes.slug}`
+    };
+  });
 }
 
 function formatDayAndTime(isoString) {
@@ -37,8 +95,8 @@ function formatDayAndTime(isoString) {
 }
 
 /**
- * Normalizes JSON:API-style or flat event payloads into report card fields.
- * @param {object} item — `{ id, attributes }` or a flat event object
+ * Maps JSON:API event items to TwoPaths masterclass card fields.
+ * @param {UpcomingEventItem | object} item
  */
 export function mapUpcomingEventToCard(item) {
   if (!item || typeof item !== 'object') return null;
@@ -79,33 +137,14 @@ export function mapUpcomingEventToCard(item) {
 }
 
 /**
- * @param {string} programKey — e.g. software_development
+ * @param {string} programKey — e.g. from {@link getProgramKeyForTargetRole}
  * @param {number} [limit]
- * @returns {Promise<Array<{ title: string, speaker: string, speakerTitle: string, day: string, time: string, url: string }>>}
  */
 export async function fetchUpcomingMasterclassCards(programKey, limit = 3) {
-  const slug = getEventGroupSlugForProgram(programKey);
-  let jwt;
-  try {
-    jwt = await generateJWT();
-  } catch {
-    jwt = null;
-  }
-
-  const response = await apiRequest(
-    'GET',
-    `/api/v4/event_groups/upcoming_classes/${slug}`,
-    null,
-    {
-      params: { page_limit: limit },
-      ...(jwt ? { headers: { 'X-User-Token': jwt } } : {})
-    }
-  );
-
-  const events = extractEventsList(response);
-  const cards = events
+  const response = await fetchUpcomingEvents(limit, programKey);
+  const events = Array.isArray(response?.data) ? response.data : [];
+  return events
     .map((ev) => mapUpcomingEventToCard(ev))
-    .filter(Boolean);
-
-  return cards.slice(0, limit);
+    .filter(Boolean)
+    .slice(0, limit);
 }
