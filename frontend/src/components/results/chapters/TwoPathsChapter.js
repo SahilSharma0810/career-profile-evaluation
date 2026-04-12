@@ -222,14 +222,12 @@ const MCCard = styled.article`
 
 const MCImageWrap = styled.div`
   position: relative;
-  aspect-ratio: 16 / 10;
   background: var(--bg);
 `;
 
 const MCImage = styled.img`
   width: 100%;
-  height: 100%;
-  object-fit: fill;
+  object-fit: contain;
   display: block;
 `;
 
