@@ -129,16 +129,12 @@ export function mapUpcomingEventToCard(item) {
   const cd = attributes.custom_data && typeof attributes.custom_data === 'object'
     ? attributes.custom_data
     : {};
-  const mobileImage = typeof cd.mobile_image === 'string' && cd.mobile_image ? cd.mobile_image : null;
   const customDesktopImage = typeof cd.image === 'string' && cd.image ? cd.image : null;
   const attrImage = typeof attributes.image_url === 'string' && attributes.image_url
     ? attributes.image_url
     : null;
-  const desktopBanner = customDesktopImage || attrImage;
-  /** Prefer mobile art for cards; optional wider banner for large viewports */
-  const imageUrl = mobileImage || desktopBanner;
-  const imageWideUrl =
-    mobileImage && desktopBanner && desktopBanner !== mobileImage ? desktopBanner : null;
+  /** Desktop banner only (custom_data.image, then image_url) — same asset on all viewports */
+  const imageUrl = customDesktopImage || attrImage;
 
   const idFromItem = item.id !== undefined && item.id !== null ? String(item.id) : '';
   const idFromAttrs =
@@ -152,8 +148,7 @@ export function mapUpcomingEventToCard(item) {
     day: day || '—',
     time: time || '',
     url,
-    imageUrl: imageUrl || undefined,
-    imageWideUrl: imageWideUrl || undefined
+    imageUrl: imageUrl || undefined
   };
 }
 

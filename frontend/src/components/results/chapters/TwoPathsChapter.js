@@ -224,13 +224,12 @@ const MCImageWrap = styled.div`
   position: relative;
   aspect-ratio: 16 / 10;
   background: var(--bg);
-  border-bottom: 1px solid var(--line);
 `;
 
 const MCImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
   display: block;
 `;
 
@@ -559,17 +558,7 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
               {masterclasses.map((mc, i) => (
                 <MCCard key={mc.id || `${mc.title}-${mc.url}-${i}`}>
                   <MCImageWrap>
-                    {mc.imageWideUrl ? (
-                      <picture>
-                        <source media="(min-width: 769px)" srcSet={mc.imageWideUrl} />
-                        <MCImage
-                          src={mc.imageUrl}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </picture>
-                    ) : mc.imageUrl ? (
+                    {mc.imageUrl ? (
                       <MCImage
                         src={mc.imageUrl}
                         alt=""
@@ -581,7 +570,6 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
                         <Play size={36} weight="duotone" />
                       </MCImageFallback>
                     )}
-                    <MCBadge>Live · {mc.day} · {mc.time}</MCBadge>
                   </MCImageWrap>
                   <MCCardBody>
                     <MCMeta>Free masterclass</MCMeta>
@@ -590,6 +578,7 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
                       {mc.speaker}
                       {mc.speakerTitle ? ` · ${mc.speakerTitle}` : ''}
                     </MCSpeaker>
+                    <MCBadge>Live · {mc.day} · {mc.time}</MCBadge>
                   </MCCardBody>
                   <MCLink href={mc.url} target="_blank" rel="noopener noreferrer">
                     Save my seat →
