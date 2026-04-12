@@ -15,6 +15,7 @@ import {
   TECH_QUIZ_SCREENS
 } from './ChattyQuizScreens';
 import GroupedQuestionScreen from './GroupedQuestionScreen';
+import SampleReportModal from './SampleReportModal';
 
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(16px); }
@@ -212,6 +213,28 @@ const CompanyPill = styled.div`
   color: rgba(255, 255, 255, 0.7);
   background: rgba(255, 255, 255, 0.08);
   padding: 5px 10px;
+`;
+
+const SampleReportBtn = styled.button`
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
 `;
 
 /* ── Right Content ─────────────────────────────────────────── */
@@ -519,6 +542,7 @@ const FinalModeQuiz = ({ onProgressChange }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
   const [showMobileWelcome, setShowMobileWelcome] = useState(true);
+  const [showSampleReport, setShowSampleReport] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 900);
@@ -718,6 +742,7 @@ const FinalModeQuiz = ({ onProgressChange }) => {
   }
 
   return (
+    <>
     <QuizContainer>
       <MainLayout>
         <Sidebar>
@@ -774,6 +799,9 @@ const FinalModeQuiz = ({ onProgressChange }) => {
           </SidebarTop>
 
           <SidebarBottom>
+            <SampleReportBtn onClick={() => setShowSampleReport(true)}>
+              View Sample Report
+            </SampleReportBtn>
             <AlumniLabel>Alumni working at</AlumniLabel>
             <CompanyPills>
               {COMPANIES.map((name, i) => (
@@ -834,6 +862,10 @@ const FinalModeQuiz = ({ onProgressChange }) => {
         </ContentArea>
       </MainLayout>
     </QuizContainer>
+    {showSampleReport && (
+      <SampleReportModal onClose={() => setShowSampleReport(false)} />
+    )}
+    </>
   );
 };
 
