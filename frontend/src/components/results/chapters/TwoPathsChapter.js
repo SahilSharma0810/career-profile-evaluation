@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
+import { useStore } from '@nanostores/react';
 import { ArrowRight, ArrowUpRight, Check, Play } from 'phosphor-react';
 import { getCoursesForRole, getMasterclasses } from '../../../data/courses_by_role';
+import { getProgramKeyForTargetRole } from '../../../utils/evaluationLogic';
+import { createUpcomingMasterclassesStore } from '../../../store/upcomingMasterclasses';
 
 const Section = styled.section`
   padding: 80px 0;
@@ -469,7 +472,16 @@ const VideoCaption = styled.div`
 
 const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
   const courses = getCoursesForRole(targetRole);
-  const masterclasses = getMasterclasses();
+  const programKey = getProgramKeyForTargetRole(targetRole);
+  const $upcomingMc = useMemo(
+    () => createUpcomingMasterclassesStore(programKey, 3),
+    [programKey]
+  );
+  const { data: upcomingList } = useStore($upcomingMc);
+  const masterclasses =
+    Array.isArray(upcomingList) && upcomingList.length > 0
+      ? upcomingList
+      : getMasterclasses();
 
   return (
     <Section id="cpe-two-paths">
@@ -509,7 +521,7 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
           <MCLabel>Free masterclasses — Picked for your gaps</MCLabel>
           <MCGrid>
             {masterclasses.map((mc, i) => (
-              <MCCard key={i}>
+              <MCCard key={`${mc.title}-${mc.url}-${i}`}>
                 <MCCardTop>
                   <MCBadge>Live · {mc.day} {mc.time}</MCBadge>
                   <MCIcon>((•))</MCIcon>
