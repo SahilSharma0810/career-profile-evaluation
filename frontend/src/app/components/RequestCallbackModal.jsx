@@ -3,9 +3,6 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import { useProfile } from '../../context/ProfileContext';
-import { getAdminPageLink } from '../../utils/evaluationLogic';
-
 const OVERLAY_ID = "request-callback-modal";
 
 const Overlay = styled.div`
@@ -33,18 +30,7 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Title = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
+  text-align: center;
 `;
 
 const CloseButton = styled.button`
@@ -56,10 +42,22 @@ const CloseButton = styled.button`
   line-height: 1;
   padding: 4px;
   transition: color 0.2s ease;
+  align-self: flex-end;
 
   &:hover {
     color: #1e293b;
   }
+`;
+
+const StatusIcon = styled.div`
+  font-size: 3rem;
+  line-height: 1;
+`;
+
+const Title = styled.h2`
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
 `;
 
 const Description = styled.p`
@@ -69,49 +67,45 @@ const Description = styled.p`
   line-height: 1.6;
 `;
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const Field = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-`;
-
-const Select = styled.select`
-  border: 1px solid #cbd5e1;
-  background: white;
-  color: #1e293b;
+const Button = styled.a`
+  display: inline-block;
+  border: none;
   border-radius: 0;
-  height: 46px;
-  padding: 0 16px;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s ease;
-
-  &:focus {
-    border-color: #b30158;
-    box-shadow: 0 0 0 1px #b30158;
-  }
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  background: #b30158;
+  color: white;
 
   &:hover {
-    border-color: #94a3b8;
+    background: #8a0145;
+  }
+
+  &:active {
+    background: #700038;
   }
 `;
 
-const Actions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+const ErrorMessage = styled.div`
+  padding: 12px 16px;
+  border-radius: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid #fca5a5;
+  background: #fee2e2;
+  color: #dc2626;
 `;
 
-const Button = styled.button`
-  border: none;
+const RetryButton = styled.button`
+  border: 1px solid #cbd5e1;
+  background: transparent;
+  color: #64748b;
   border-radius: 0;
   padding: 10px 20px;
   font-weight: 600;
@@ -121,97 +115,37 @@ const Button = styled.button`
   text-transform: uppercase;
   letter-spacing: 1px;
 
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`;
-
-const SecondaryButton = styled(Button)`
-  background: transparent;
-  color: #64748b;
-  border: 1px solid #cbd5e1;
-
   &:hover {
     color: #1e293b;
     background: #f8fafc;
   }
 `;
 
-const PrimaryButton = styled(Button)`
-  background: #b30158;
-  color: white;
-
-  &:hover:not(:disabled) {
-    background: #8a0145;
-  }
-
-  &:active:not(:disabled) {
-    background: #700038;
-  }
-`;
-
-const StatusMessage = styled.div`
-  padding: 12px 16px;
-  border-radius: 0;
-  font-size: 0.95rem;
-  font-weight: 500;
-  text-align: center;
-  border: 1px solid;
-`;
-
-const SuccessMessage = styled(StatusMessage)`
-  background: #dcfce7;
-  color: #166534;
-  border-color: #86efac;
-`;
-
-const ErrorMessage = styled(StatusMessage)`
-  background: #fee2e2;
-  color: #dc2626;
-  border-color: #fca5a5;
-`;
-
 const LoadingSpinner = styled.div`
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
   border-radius: 50%;
-  border-top-color: white;
+  border-top-color: #b30158;
   animation: spin 0.6s linear infinite;
-  margin-right: 8px;
 
   @keyframes spin {
     to {
-;      transform: rotate(360deg);
+      transform: rotate(360deg);
     }
   }
 `;
 
-const programOptions = [
-  { value: '', label: 'Select a program' },
-  { value: 'data_science', label: 'Data Science' },
-  { value: 'academy', label: 'Software Development' },
-  { value: 'devops', label: 'DevOps' },
-  { value: 'ai_ml', label: 'AI/ML' }
-];
-
 const RequestCallbackModal = ({
   isOpen,
-  program,
-  onChangeField,
   onClose,
-  onSubmit,
-  submissionStatus = 'idle',
-  errorMessage = ''
+  onRetry,
+  submissionStatus = 'loading',
+  errorMessage = '',
+  programName = '',
+  programUrl = ''
 }) => {
-  const isLoading = submissionStatus === "loading";
-  const isSuccess = submissionStatus === "success";
-  const isError = submissionStatus === "error";
-
-  const { evaluationResults } = useProfile();
-
   useEffect(() => {
     if (!isOpen) {
       return undefined;
@@ -234,83 +168,72 @@ const RequestCallbackModal = ({
     };
   }, [isOpen, onClose]);
 
-  const submitHandler = useCallback((event) => {
-    event.preventDefault();
-    
-    const adminPageLink = getAdminPageLink(evaluationResults?.response_id);
-    onSubmit(adminPageLink);
-  }, [onSubmit, evaluationResults]);
+  const handleOverlayClick = useCallback((event) => {
+    if (event.target.id === OVERLAY_ID) {
+      onClose();
+    }
+  }, [onClose]);
 
   if (!isOpen) {
     return null;
   }
 
+  const isLoading = submissionStatus === 'loading';
+  const isSuccess = submissionStatus === 'success';
+  const isError = submissionStatus === 'error';
+
   const content = (
     <Overlay
       id={OVERLAY_ID}
       role="presentation"
-      onClick={(event) => {
-        if (event.target.id === OVERLAY_ID) {
-          onClose();
-        }
-      }}
+      onClick={handleOverlayClick}
     >
       <Modal role="dialog" aria-modal="true" aria-labelledby="callback-title">
-        <Header>
-          <Title id="callback-title">Request a callback</Title>
+        {!isLoading && (
           <CloseButton type="button" aria-label="Close" onClick={onClose}>
-            ×
+            &times;
           </CloseButton>
-        </Header>
-        <Description>
-          Share a few details and we'll reach out with tailored guidance for
-          your goals.
-        </Description>
+        )}
+
+        {isLoading && (
+          <>
+            <LoadingSpinner />
+            <Title id="callback-title">Requesting callback...</Title>
+            <Description>
+              We're setting things up. This will only take a moment.
+            </Description>
+          </>
+        )}
+
         {isSuccess && (
-          <SuccessMessage>
-            ✓ Request submitted successfully! We'll reach out soon.
-          </SuccessMessage>
+          <>
+            <StatusIcon>&#10003;</StatusIcon>
+            <Title id="callback-title">You're all set!</Title>
+            <Description>
+              Our team will reach out to you shortly with tailored guidance for your goals.
+            </Description>
+            {programUrl && (
+              <Button
+                href={programUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {programName ? `Explore ${programName}` : 'Explore the program'} &rarr;
+              </Button>
+            )}
+          </>
         )}
+
         {isError && (
-          <ErrorMessage>
-            {errorMessage || 'Something went wrong. Please try again.'}
-          </ErrorMessage>
+          <>
+            <ErrorMessage>
+              {errorMessage || 'Something went wrong. Please try again.'}
+            </ErrorMessage>
+            <RetryButton type="button" onClick={onRetry}>
+              Try again
+            </RetryButton>
+          </>
         )}
-        <Form
-          onSubmit={submitHandler}
-        >
-          <Field>
-            Program
-            <Select
-              value={program}
-              onChange={(event) => onChangeField('program', event.target.value)}
-              required
-              disabled={isLoading || isSuccess}
-            >
-              {programOptions.map((option) => (
-                <option key={option.value || 'empty'} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </Field>
-          <Actions>
-            <SecondaryButton
-              type="button"
-              onClick={onClose}
-              disabled={isLoading}
-            >
-              Cancel
-            </SecondaryButton>
-            <PrimaryButton
-              type="submit"
-              disabled={!program || isLoading || isSuccess}
-            >
-              {isLoading && <LoadingSpinner />}
-              {isLoading ? 'Submitting...' : 'Request callback'}
-            </PrimaryButton>
-          </Actions>
-        </Form>
       </Modal>
     </Overlay>
   );
@@ -320,12 +243,12 @@ const RequestCallbackModal = ({
 
 RequestCallbackModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  program: PropTypes.string.isRequired,
-  onChangeField: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  submissionStatus: PropTypes.oneOf(['idle', 'loading', 'success', 'error']),
-  errorMessage: PropTypes.string
+  onRetry: PropTypes.func.isRequired,
+  submissionStatus: PropTypes.oneOf(['loading', 'success', 'error']),
+  errorMessage: PropTypes.string,
+  programName: PropTypes.string,
+  programUrl: PropTypes.string
 };
 
 export default RequestCallbackModal;
