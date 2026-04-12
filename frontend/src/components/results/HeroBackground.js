@@ -1,11 +1,21 @@
-'use client';
-
 import * as React from 'react';
+import styled from 'styled-components';
 
-/**
- * Hero AI background — vertical curved conduit lines with packets (matches scaler3 wireframe).
- * @see https://scaler3.up.railway.app/hero-ai-bg.js
- */
+/** Curved conduit + packet animation; styled-components used so layout works without Tailwind. */
+const HeroCanvas = styled.canvas`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+
+  @media (prefers-reduced-motion: reduce) {
+    display: none !important;
+  }
+`;
+
 export function HeroBackground() {
   const canvasRef = React.useRef(null);
   const rafRef = React.useRef(0);
@@ -215,11 +225,5 @@ export function HeroBackground() {
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden
-      className="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-0 [@media(prefers-reduced-motion:reduce)]:hidden"
-    />
-  );
+  return <HeroCanvas ref={canvasRef} aria-hidden />;
 }

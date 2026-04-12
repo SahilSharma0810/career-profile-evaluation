@@ -4,6 +4,8 @@ import { Phone } from 'phosphor-react';
 import { HeroBackground } from '../HeroBackground';
 
 const Section = styled.section`
+  position: relative;
+  overflow: hidden;
   background: var(--navy);
   color: var(--white);
   padding: 80px 0 56px;
@@ -14,6 +16,8 @@ const Section = styled.section`
 `;
 
 const Container = styled.div`
+  position: relative;
+  z-index: 1;
   max-width: 900px;
   margin: 0 auto;
   padding: 0 40px;
