@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { useStore } from '@nanostores/react';
-import { ArrowRight, ArrowUpRight, Check, Play } from 'phosphor-react';
-import { getCoursesForRole, getMasterclasses } from '../../../data/courses_by_role';
+import { ArrowUpRight, Check, Play } from 'phosphor-react';
+import { getCoursesForRole } from '../../../data/courses_by_role';
 import { getProgramKeyForTargetRole } from '../../../utils/evaluationLogic';
 import { createUpcomingMasterclassesStore } from '../../../store/upcomingMasterclasses';
 
@@ -206,55 +206,92 @@ const MCGrid = styled.div`
   }
 `;
 
-const MCCard = styled.div`
-  background: var(--ink);
-  color: var(--white);
+const MCCard = styled.article`
+  background: var(--white);
+  border: 1px solid var(--line);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: var(--line2);
+    box-shadow: 0 10px 28px rgba(17, 17, 17, 0.06);
+  }
 `;
 
-const MCCardTop = styled.div`
-  padding: 16px 20px;
+const MCImageWrap = styled.div`
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+`;
+
+const MCImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+`;
+
+const MCImageFallback = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink4);
+  background: linear-gradient(145deg, var(--bg) 0%, #e8eaef 100%);
 `;
 
 const MCBadge = styled.div`
-  display: inline-block;
+  position: absolute;
+  top: 12px;
+  left: 12px;
   font-family: var(--mono);
   font-size: 0.5625rem;
   font-weight: 700;
   color: var(--white);
   background: var(--accent);
-  padding: 4px 10px;
+  padding: 5px 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 16px;
-`;
-
-const MCIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 2rem;
+  max-width: calc(100% - 24px);
+  line-height: 1.25;
+  box-shadow: 0 2px 8px rgba(17, 17, 17, 0.12);
 `;
 
 const MCCardBody = styled.div`
-  padding: 0 20px 20px;
+  padding: 20px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 `;
 
-const MCTitle = styled.div`
-  font-size: 0.875rem;
+const MCMeta = styled.div`
+  font-family: var(--mono);
+  font-size: 0.625rem;
   font-weight: 600;
-  color: var(--white);
-  margin-bottom: 4px;
-  line-height: 1.3;
+  color: var(--accent-eye);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+`;
+
+const MCTitle = styled.h3`
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.35;
 `;
 
 const MCSpeaker = styled.div`
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8125rem;
+  color: var(--ink3);
+  line-height: 1.4;
+  margin-top: 2px;
 `;
 
 const MCLink = styled.a`
@@ -262,18 +299,18 @@ const MCLink = styled.a`
   align-items: center;
   justify-content: space-between;
   padding: 14px 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--line);
   font-family: var(--mono);
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--white);
+  color: var(--ink);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: background 0.15s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg);
   }
 `;
 
@@ -479,9 +516,7 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
   );
   const { data: upcomingList } = useStore($upcomingMc);
   const masterclasses =
-    Array.isArray(upcomingList) && upcomingList.length > 0
-      ? upcomingList
-      : getMasterclasses();
+    Array.isArray(upcomingList) && upcomingList.length > 0 ? upcomingList : [];
 
   return (
     <Section id="cpe-two-paths">
@@ -517,27 +552,54 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
           ))}
         </CourseGrid>
 
-        <MCSection>
-          <MCLabel>Free masterclasses — Picked for your gaps</MCLabel>
-          <MCGrid>
-            {masterclasses.map((mc, i) => (
-              <MCCard key={`${mc.title}-${mc.url}-${i}`}>
-                <MCCardTop>
-                  <MCBadge>Live · {mc.day} {mc.time}</MCBadge>
-                  <MCIcon>((•))</MCIcon>
-                </MCCardTop>
-                <MCCardBody>
-                  <MCTitle>{mc.title}</MCTitle>
-                  <MCSpeaker>{mc.speaker} · {mc.speakerTitle}</MCSpeaker>
-                </MCCardBody>
-                <MCLink href={mc.url} target="_blank" rel="noopener noreferrer">
-                  Save my seat →
-                  <ArrowUpRight size={14} />
-                </MCLink>
-              </MCCard>
-            ))}
-          </MCGrid>
-        </MCSection>
+        {masterclasses.length > 0 && (
+          <MCSection>
+            <MCLabel>Free masterclasses — Picked for your gaps</MCLabel>
+            <MCGrid>
+              {masterclasses.map((mc, i) => (
+                <MCCard key={mc.id || `${mc.title}-${mc.url}-${i}`}>
+                  <MCImageWrap>
+                    {mc.imageWideUrl ? (
+                      <picture>
+                        <source media="(min-width: 769px)" srcSet={mc.imageWideUrl} />
+                        <MCImage
+                          src={mc.imageUrl}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </picture>
+                    ) : mc.imageUrl ? (
+                      <MCImage
+                        src={mc.imageUrl}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <MCImageFallback aria-hidden>
+                        <Play size={36} weight="duotone" />
+                      </MCImageFallback>
+                    )}
+                    <MCBadge>Live · {mc.day} · {mc.time}</MCBadge>
+                  </MCImageWrap>
+                  <MCCardBody>
+                    <MCMeta>Free masterclass</MCMeta>
+                    <MCTitle>{mc.title}</MCTitle>
+                    <MCSpeaker>
+                      {mc.speaker}
+                      {mc.speakerTitle ? ` · ${mc.speakerTitle}` : ''}
+                    </MCSpeaker>
+                  </MCCardBody>
+                  <MCLink href={mc.url} target="_blank" rel="noopener noreferrer">
+                    Save my seat →
+                    <ArrowUpRight size={14} />
+                  </MCLink>
+                </MCCard>
+              ))}
+            </MCGrid>
+          </MCSection>
+        )}
 
         <Divider />
 

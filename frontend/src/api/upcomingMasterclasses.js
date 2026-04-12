@@ -126,13 +126,34 @@ export function mapUpcomingEventToCard(item) {
     ? `https://www.scaler.com/event/${slug}`
     : 'https://www.scaler.com/events/';
 
+  const cd = attributes.custom_data && typeof attributes.custom_data === 'object'
+    ? attributes.custom_data
+    : {};
+  const mobileImage = typeof cd.mobile_image === 'string' && cd.mobile_image ? cd.mobile_image : null;
+  const customDesktopImage = typeof cd.image === 'string' && cd.image ? cd.image : null;
+  const attrImage = typeof attributes.image_url === 'string' && attributes.image_url
+    ? attributes.image_url
+    : null;
+  const desktopBanner = customDesktopImage || attrImage;
+  /** Prefer mobile art for cards; optional wider banner for large viewports */
+  const imageUrl = mobileImage || desktopBanner;
+  const imageWideUrl =
+    mobileImage && desktopBanner && desktopBanner !== mobileImage ? desktopBanner : null;
+
+  const idFromItem = item.id !== undefined && item.id !== null ? String(item.id) : '';
+  const idFromAttrs =
+    attributes.id !== undefined && attributes.id !== null ? String(attributes.id) : '';
+
   return {
+    id: idFromItem || idFromAttrs,
     title,
     speaker,
     speakerTitle,
     day: day || '—',
     time: time || '',
-    url
+    url,
+    imageUrl: imageUrl || undefined,
+    imageWideUrl: imageWideUrl || undefined
   };
 }
 
