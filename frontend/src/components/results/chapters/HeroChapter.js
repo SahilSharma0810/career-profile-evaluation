@@ -208,7 +208,7 @@ const ROLE_DISPLAY_NAMES = {
   'not-sure': 'Software Engineer'
 };
 
-const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, onCTAClick }) => {
+const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, isPreview, onCTAClick }) => {
   const [displayScore, setDisplayScore] = useState(0);
   const hasAnimated = useRef(false);
 
@@ -265,10 +265,18 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, o
             {!hideCTAs && (
               <>
                 <CTAButton onClick={onCTAClick}>
-                  <Phone size={18} weight="fill" />
-                  Get a Free Career Consultation
+                  {isPreview ? (
+                    'Complete the quiz to get yours'
+                  ) : (
+                    <>
+                      <Phone size={18} weight="fill" />
+                      Get a Free Career Consultation
+                    </>
+                  )}
                 </CTAButton>
-                <CTASub>30 min · Free · Senior mentor</CTASub>
+                {!isPreview && (
+                  <CTASub>30 min · Free · Senior mentor</CTASub>
+                )}
               </>
             )}
           </HeroLeft>
