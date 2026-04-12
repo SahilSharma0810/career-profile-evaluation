@@ -53,25 +53,7 @@ const MASTERCLASS_PLACEHOLDER = [
 ];
 
 const PROGRAMS = {
-  'software-engineering': {
-    name: 'Scaler Software Engineering',
-    description: 'The fastest proven path from "stuck" to hired at a product company. Built by engineers who\'ve been on both sides of the interview table.',
-    stats: [
-      { value: '8 mo', label: 'Job-ready' },
-      { value: '900+', label: 'Placed alumni' },
-      { value: '2.5×', label: 'Avg salary jump' }
-    ],
-    features: [
-      '1:1 mentors from Google, Amazon, Flipkart',
-      '20+ mock interviews with sharp feedback',
-      '5 production-grade resume projects',
-      'Direct referrals to 400+ companies',
-      'Pay after placement (income share)'
-    ],
-    primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/software-engineering/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/courses/software-engineering/' }
-  },
-  'academy-course': {
+  'academy': {
     name: 'Scaler Academy',
     description: 'A structured program for early-career engineers to build strong CS fundamentals and land their first product company role.',
     stats: [
@@ -86,8 +68,8 @@ const PROGRAMS = {
       'Direct referrals to 400+ companies',
       'Pay after placement (income share)'
     ],
-    primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/academy-course/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/courses/academy-course/' }
+    primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/academy/' },
+    secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/academy/' }
   },
   'data-science-course': {
     name: 'Scaler Data Science & ML',
@@ -125,7 +107,7 @@ const PROGRAMS = {
     primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/devops-course/' },
     secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/courses/devops-course/' }
   },
-  'ai-ml-course': {
+  'ai-machine-learning-course': {
     name: 'Scaler AI & ML',
     description: 'Build production AI systems — from classical ML to LLMs. Mentored by engineers shipping AI at scale.',
     stats: [
@@ -140,24 +122,24 @@ const PROGRAMS = {
       'Direct referrals to 400+ companies',
       'Pay after placement (income share)'
     ],
-    primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/ai-ml-course/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/courses/ai-ml-course/' }
+    primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/ai-machine-learning-course/' },
+    secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/courses/ai-machine-learning-course/' }
   }
 };
 
 const ROLE_TO_PROGRAM = {
-  'senior-backend': 'software-engineering',
-  'senior-fullstack': 'software-engineering',
-  'backend-sde': 'software-engineering',
-  'fullstack-sde': 'software-engineering',
-  'tech-lead': 'software-engineering',
+  'senior-backend': 'academy',
+  'senior-fullstack': 'academy',
+  'backend-sde': 'academy',
+  'fullstack-sde': 'academy',
+  'tech-lead': 'academy',
   'data-ml': 'data-science-course',
   'devops-sre': 'devops-course',
-  'ai-ml-engineer': 'ai-ml-course'
+  'ai-ml-engineer': 'ai-machine-learning-course'
 };
 
 export const getStructuredProgramForRole = (targetRole) => {
-  const programKey = ROLE_TO_PROGRAM[targetRole] || 'software-engineering';
+  const programKey = ROLE_TO_PROGRAM[targetRole] || 'academy';
   return PROGRAMS[programKey];
 };
 
