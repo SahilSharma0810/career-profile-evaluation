@@ -120,7 +120,9 @@ const ReportPage = ({
   background,
   quizResponses,
   goals,
-  hideCTAs = false
+  hideCTAs = false,
+  isPreview = false,
+  onPreviewCTAClick = null
 }) => {
   const { open: openCallbackModal } = useRequestCallback();
 
@@ -136,15 +138,19 @@ const ReportPage = ({
   ], []);
 
   useSectionViewTracking(sectionTrackingConfig, {
-    enabled: !!evaluationResults,
+    enabled: !isPreview && !!evaluationResults,
     customAttributes: { page: 'cpe_results' }
   });
 
   const handleCTAClick = useCallback((source) => {
+    if (isPreview) {
+      onPreviewCTAClick?.();
+      return;
+    }
     tracker.click({ click_type: 'rcb_btn_clicked', custom: { source } });
     tracker.ctaClick({ click_type: 'rcb_btn_clicked', custom: { source } });
     openCallbackModal?.({ source });
-  }, [openCallbackModal]);
+  }, [isPreview, onPreviewCTAClick, openCallbackModal]);
 
   const score = evaluationResults?.profile_strength_score || 0;
   const strengths = evaluationResults?.skill_analysis?.strengths || [];
@@ -161,6 +167,7 @@ const ReportPage = ({
         quizResponses={quizResponses}
         background={background}
         hideCTAs={hideCTAs}
+        isPreview={isPreview}
         onCTAClick={() => handleCTAClick('report_hero_cta')}
       />
 
@@ -193,6 +200,7 @@ const ReportPage = ({
       {!hideCTAs && (
         <FinalCTAChapter
           targetRole={targetRole}
+          isPreview={isPreview}
           onCTAClick={() => handleCTAClick('report_final_cta')}
         />
       )}
@@ -201,12 +209,24 @@ const ReportPage = ({
         <>
           <StickyBottom>
             <StickyText>
-              <StickyTitle>One move can change your trajectory.</StickyTitle>
-              <StickySubtitle>30 min with a senior Scaler mentor. Free. Tailored to your profile.</StickySubtitle>
+              <StickyTitle>
+                {isPreview ? 'This is a sample report.' : 'One move can change your trajectory.'}
+              </StickyTitle>
+              <StickySubtitle>
+                {isPreview
+                  ? 'Complete the quiz to get your personalized report.'
+                  : '30 min with a senior Scaler mentor. Free. Tailored to your profile.'}
+              </StickySubtitle>
             </StickyText>
             <StickyBtn onClick={() => handleCTAClick('report_sticky_cta')}>
-              <Phone size={14} weight="fill" />
-              Get free consultation
+              {isPreview ? (
+                'Back to Quiz'
+              ) : (
+                <>
+                  <Phone size={14} weight="fill" />
+                  Get free consultation
+                </>
+              )}
             </StickyBtn>
           </StickyBottom>
           <BottomSpacer />
