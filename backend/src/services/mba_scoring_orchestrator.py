@@ -98,77 +98,12 @@ def _calculate_experience_score(experience: str) -> int:
 
 
 def _calculate_role_maturity(role: str, responses: Dict[str, Any]) -> int:
-    """
-    Calculate role-specific maturity based on answer patterns
-    Higher scores for strategic/systems thinking answers
-    """
-    if role == 'product-manager':
-        return _score_pm_maturity(responses)
-    elif role == 'finance':
-        return _score_finance_maturity(responses)
-    elif role == 'sales':
-        return _score_sales_maturity(responses)
-    elif role == 'marketing':
-        return _score_marketing_maturity(responses)
-    elif role == 'operations':
-        return _score_operations_maturity(responses)
-    elif role == 'founder':
-        return _score_founder_maturity(responses)
-    elif role == 'tech':
-        return _score_tech_maturity(responses)
-    else:
-        return 50  # Default for student/other
-
-
-def _score_pm_maturity(responses: Dict[str, Any]) -> int:
-    """Score PM based on strategic depth - experience-based questions"""
-    from .mba_skill_scoring_maps import ANSWER_SCORES
-    
-    score = 50  # Base score
-    experience = responses.get('experience', '')
-    
-    # Map experience to level
-    experience_level = _map_experience_to_level(experience)
-    
-    # Score based on experience level
-    if experience_level == '0-3':
-        # Entry level questions (PM-E1 to PM-E6)
-        # Exclude E4 (ownership) and E5 (AI) as they're used in separate calculations
-        questions = ['pm-e1', 'pm-e2', 'pm-e3', 'pm-e6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                # Convert 1-5 score to maturity points (max 10 points per question)
-                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
-    
-    elif experience_level == '3-8':
-        # Mid level questions (PM-M1 to PM-M6)
-        # Exclude M3 (AI) and M4 (ownership) as they're used in separate calculations
-        questions = ['pm-m1', 'pm-m2', 'pm-m5', 'pm-m6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    elif experience_level == '8+':
-        # Senior level questions (PM-S1 to PM-S6)
-        # Exclude S1 (AI) and S3 (ownership) as they're used in separate calculations
-        questions = ['pm-s2', 'pm-s4', 'pm-s5', 'pm-s6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    return min(score, 100)
+    """Calculate role-specific maturity based on answer patterns."""
+    return _score_role_maturity(role, responses)
 
 
 def _map_experience_to_level(experience: str) -> str:
     """Map experience string to level (0-3, 3-8, 8+)"""
-    # Frontend now sends values directly as '0-3', '3-8', '8+'
-    # Keep backward compatibility with old values for any cached data
     if experience in ['0-3', '0-1', '1-3', '0-2', '2-5']:
         return '0-3'
     elif experience in ['3-8', '3-6', '6-10', '5-8', '8-12']:
@@ -176,275 +111,68 @@ def _map_experience_to_level(experience: str) -> str:
     elif experience in ['8+', '10+', '12+']:
         return '8+'
     else:
-        # Default to mid-level if unknown
         return '3-8'
 
 
-def _score_finance_maturity(responses: Dict[str, Any]) -> int:
-    """Score Finance based on strategic depth - experience-based questions"""
+# Role maturity question configs: role -> {experience_level -> (question_keys, score_multiplier)}
+# Multiplier converts answer scores (1-5 or 1-4) to maturity points
+_ROLE_MATURITY_QUESTIONS: Dict[str, Dict[str, tuple]] = {
+    'product-manager': {
+        '0-3': (['pm-e1', 'pm-e2', 'pm-e3', 'pm-e6'], 2.5),
+        '3-8': (['pm-m1', 'pm-m2', 'pm-m5', 'pm-m6'], 2.5),
+        '8+':  (['pm-s2', 'pm-s4', 'pm-s5', 'pm-s6'], 2.5),
+    },
+    'finance': {
+        '0-3': (['fm-e1', 'fm-e2', 'fm-e3', 'fm-e5'], 2.5),
+        '3-8': (['fm-m1', 'fm-m2', 'fm-m3', 'fm-m4'], 2.5),
+        '8+':  (['fm-s1', 'fm-s2', 'fm-s5', 'fm-s6'], 2.5),
+    },
+    'sales': {
+        '0-3': (['sm-e1', 'sm-e2', 'sm-e3', 'sm-e6'], 2.5),
+        '3-8': (['sm-m1', 'sm-m2', 'sm-m3', 'sm-m6'], 2.5),
+        '8+':  (['sm-s1', 'sm-s2', 'sm-s3', 'sm-s6'], 2.5),
+    },
+    'marketing': {
+        '0-3': (['mm-e1', 'mm-e2', 'mm-e3', 'mm-e5'], 2.5),
+        '3-8': (['mm-m1', 'mm-m2', 'mm-m3', 'mm-m5'], 2.5),
+        '8+':  (['mm-s1', 'mm-s2', 'mm-s3', 'mm-s5'], 2.5),
+    },
+    'operations': {
+        '0-3': (['om-e1', 'om-e2', 'om-e3', 'om-e4'], 2.5),
+        '3-8': (['om-m1', 'om-m2', 'om-m3', 'om-m5'], 2.5),
+        '8+':  (['om-s1', 'om-s2', 'om-s5', 'om-s6'], 2.5),
+    },
+    'founder': {
+        '0-3': (['sf-e1', 'sf-e2', 'sf-e3', 'sf-e4'], 3.33),
+        '3-8': (['sf-m1', 'sf-m2', 'sf-m4', 'sf-m6'], 3.33),
+        '8+':  (['sf-s1', 'sf-s2', 'sf-s4', 'sf-s6'], 3.33),
+    },
+    'tech': {
+        '0-3': (['tm-e1', 'tm-e2', 'tm-e3', 'tm-e4'], 2.5),
+        '3-8': (['tm-m1', 'tm-m2', 'tm-m3', 'tm-m6'], 2.5),
+        '8+':  (['tm-s1', 'tm-s2', 'tm-s3', 'tm-s6'], 2.5),
+    },
+}
+
+
+def _score_role_maturity(role: str, responses: Dict[str, Any]) -> int:
+    """Score role maturity based on experience-level-specific questions."""
     from .mba_skill_scoring_maps import ANSWER_SCORES
-    
+
+    role_config = _ROLE_MATURITY_QUESTIONS.get(role)
+    if not role_config:
+        return 50
+
+    experience_level = _map_experience_to_level(responses.get('experience', ''))
+    questions, multiplier = role_config.get(experience_level, ([], 2.5))
+
     score = 50  # Base score
-    experience = responses.get('experience', '')
-    
-    # Map experience to level
-    experience_level = _map_experience_to_level(experience)
-    
-    # Score based on experience level
-    if experience_level == '0-3':
-        # Entry level questions (FM-E1 to FM-E6)
-        # Exclude E4 (AI) and E6 (ownership) as they're used in separate calculations
-        questions = ['fm-e1', 'fm-e2', 'fm-e3', 'fm-e5']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                # Convert 1-5 score to maturity points (max 10 points per question)
-                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
-    
-    elif experience_level == '3-8':
-        # Mid level questions (FM-M1 to FM-M6)
-        # Exclude M5 (AI) and M6 (ownership) as they're used in separate calculations
-        questions = ['fm-m1', 'fm-m2', 'fm-m3', 'fm-m4']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    elif experience_level == '8+':
-        # Senior level questions (FM-S1 to FM-S6)
-        # Exclude S3 (AI) and S4 (ownership) as they're used in separate calculations
-        questions = ['fm-s1', 'fm-s2', 'fm-s5', 'fm-s6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    return min(score, 100)
+    for q_key in questions:
+        answer = responses.get(q_key)
+        if answer and q_key in ANSWER_SCORES:
+            answer_score = ANSWER_SCORES[q_key].get(answer, 0)
+            score += (answer_score - 1) * multiplier
 
-
-def _score_sales_maturity(responses: Dict[str, Any]) -> int:
-    """Score Sales based on strategic depth - experience-based questions"""
-    from .mba_skill_scoring_maps import ANSWER_SCORES
-    
-    score = 50  # Base score
-    experience = responses.get('experience', '')
-    
-    # Map experience to level
-    experience_level = _map_experience_to_level(experience)
-    
-    # Score based on experience level
-    if experience_level == '0-3':
-        # Entry level questions (SM-E1 to SM-E6)
-        # Exclude E4 (AI) and E5 (ownership) as they're used in separate calculations
-        questions = ['sm-e1', 'sm-e2', 'sm-e3', 'sm-e6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                # Convert 1-5 score to maturity points (max 10 points per question)
-                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
-    
-    elif experience_level == '3-8':
-        # Mid level questions (SM-M1 to SM-M6)
-        # Exclude M4 (AI) and M5 (ownership) as they're used in separate calculations
-        questions = ['sm-m1', 'sm-m2', 'sm-m3', 'sm-m6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    elif experience_level == '8+':
-        # Senior level questions (SM-S1 to SM-S6)
-        # Exclude S4 (AI) and S5 (ownership) as they're used in separate calculations
-        questions = ['sm-s1', 'sm-s2', 'sm-s3', 'sm-s6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    return min(score, 100)
-
-
-def _score_marketing_maturity(responses: Dict[str, Any]) -> int:
-    """Score Marketing based on strategic depth - experience-based questions"""
-    from .mba_skill_scoring_maps import ANSWER_SCORES
-    
-    score = 50  # Base score
-    experience = responses.get('experience', '')
-    
-    # Map experience to level
-    experience_level = _map_experience_to_level(experience)
-    
-    # Score based on experience level
-    if experience_level == '0-3':
-        # Entry level questions (MM-E1 to MM-E6)
-        # Exclude E4 (AI) and E6 (ownership) as they're used in separate calculations
-        questions = ['mm-e1', 'mm-e2', 'mm-e3', 'mm-e5']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                # Convert 1-5 score to maturity points (max 10 points per question)
-                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
-    
-    elif experience_level == '3-8':
-        # Mid level questions (MM-M1 to MM-M6)
-        # Exclude M4 (AI) and M6 (ownership) as they're used in separate calculations
-        questions = ['mm-m1', 'mm-m2', 'mm-m3', 'mm-m5']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    elif experience_level == '8+':
-        # Senior level questions (MM-S1 to MM-S6)
-        # Exclude S4 (AI) and S6 (ownership) as they're used in separate calculations
-        questions = ['mm-s1', 'mm-s2', 'mm-s3', 'mm-s5']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    return min(score, 100)
-
-
-def _score_operations_maturity(responses: Dict[str, Any]) -> int:
-    """Score Operations based on strategic depth - experience-based questions"""
-    from .mba_skill_scoring_maps import ANSWER_SCORES
-    
-    score = 50  # Base score
-    experience = responses.get('experience', '')
-    
-    # Map experience to level
-    experience_level = _map_experience_to_level(experience)
-    
-    # Score based on experience level
-    if experience_level == '0-3':
-        # Entry level questions (OM-E1 to OM-E6)
-        # Exclude E5 (AI) and E6 (ownership) as they're used in separate calculations
-        questions = ['om-e1', 'om-e2', 'om-e3', 'om-e4']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                # Convert 1-5 score to maturity points (max 10 points per question)
-                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
-    
-    elif experience_level == '3-8':
-        # Mid level questions (OM-M1 to OM-M6)
-        # Exclude M4 (AI) and M6 (ownership) as they're used in separate calculations
-        questions = ['om-m1', 'om-m2', 'om-m3', 'om-m5']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    elif experience_level == '8+':
-        # Senior level questions (OM-S1 to OM-S6)
-        # Exclude S3 (AI) and S4 (ownership) as they're used in separate calculations
-        questions = ['om-s1', 'om-s2', 'om-s5', 'om-s6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    return min(score, 100)
-
-
-def _score_founder_maturity(responses: Dict[str, Any]) -> int:
-    """Score Founder based on strategic depth - experience-based questions"""
-    from .mba_skill_scoring_maps import ANSWER_SCORES
-    
-    score = 50  # Base score
-    experience = responses.get('experience', '')
-    
-    # Map experience to level
-    experience_level = _map_experience_to_level(experience)
-    
-    # Score based on experience level
-    if experience_level == '0-3':
-        # Entry level questions (SF-E1 to SF-E6)
-        # Exclude E5 (AI) and E6 (ownership) as they're used in separate calculations
-        questions = ['sf-e1', 'sf-e2', 'sf-e3', 'sf-e4']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                # Convert 1-4 score to maturity points (max 10 points per question)
-                score += (answer_score - 1) * 3.33  # 1→0, 2→3.33, 3→6.67, 4→10
-    elif experience_level == '3-8':
-        # Mid level questions (SF-M1 to SF-M6)
-        # Exclude M3 (ownership) and M5 (AI) as they're used in separate calculations
-        questions = ['sf-m1', 'sf-m2', 'sf-m4', 'sf-m6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 3.33
-    elif experience_level == '8+':
-        # Senior level questions (SF-S1 to SF-S6)
-        # Exclude S3 (ownership) and S5 (AI) as they're used in separate calculations
-        questions = ['sf-s1', 'sf-s2', 'sf-s4', 'sf-s6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 3.33
-    
-    return min(score, 100)
-
-
-def _score_tech_maturity(responses: Dict[str, Any]) -> int:
-    """Score Tech/Engineering based on strategic depth - experience-based questions"""
-    from .mba_skill_scoring_maps import ANSWER_SCORES
-    
-    score = 50  # Base score
-    experience = responses.get('experience', '')
-    
-    # Map experience to level
-    experience_level = _map_experience_to_level(experience)
-    
-    # Score based on experience level
-    if experience_level == '0-3':
-        # Entry level questions (TM-E1 to TM-E6)
-        # Exclude E5 (AI) and E6 (ownership) as they're used in separate calculations
-        questions = ['tm-e1', 'tm-e2', 'tm-e3', 'tm-e4']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                # Convert 1-5 score to maturity points (max 10 points per question)
-                score += (answer_score - 1) * 2.5  # 1→0, 2→2.5, 3→5, 4→7.5, 5→10
-    
-    elif experience_level == '3-8':
-        # Mid level questions (TM-M1 to TM-M6)
-        # Exclude M4 (ownership) and M5 (AI) as they're used in separate calculations
-        questions = ['tm-m1', 'tm-m2', 'tm-m3', 'tm-m6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
-    elif experience_level == '8+':
-        # Senior level questions (TM-S1 to TM-S6)
-        # Exclude S4 (ownership) and S5 (AI) as they're used in separate calculations
-        questions = ['tm-s1', 'tm-s2', 'tm-s3', 'tm-s6']
-        for q_key in questions:
-            answer = responses.get(q_key)
-            if answer and q_key in ANSWER_SCORES:
-                answer_score = ANSWER_SCORES[q_key].get(answer, 0)
-                score += (answer_score - 1) * 2.5
-    
     return min(score, 100)
 
 

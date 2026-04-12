@@ -10,7 +10,7 @@ from src.config.logging_config import get_logger
 logger = get_logger(__name__)
 
 
-def load_personas() -> Dict[str, Any]:
+def _load_personas() -> Dict[str, Any]:
     """Load persona definitions from JSON file"""
     personas_file = os.path.join(
         os.path.dirname(__file__),
@@ -18,6 +18,9 @@ def load_personas() -> Dict[str, Any]:
     )
     with open(personas_file, 'r') as f:
         return json.load(f)
+
+
+PERSONAS = _load_personas()
 
 
 def match_persona(role: str, readiness: Dict[str, Any]) -> Dict[str, Any]:
@@ -44,7 +47,7 @@ def match_persona(role: str, readiness: Dict[str, Any]) -> Dict[str, Any]:
         }
     """
     try:
-        personas = load_personas()
+        personas = PERSONAS
 
         # Default to pm if role not found
         persona_def = personas['personas'].get(role, personas['personas']['pm'])

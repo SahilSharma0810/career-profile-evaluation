@@ -117,28 +117,18 @@ class CacheRepository:
 
     def get_by_key(self, cache_key: str, model: str) -> Optional[Dict[str, Any]]:
         """
-        Get full cache entry including user_input and response_json.
-        Reuses the same query pattern as get() but returns additional metadata.
-        
-        Args:
-            cache_key: The cache key
-            model: The model name
-            
-        Returns:
-            Dictionary with response_json, user_input, created_at, updated_at, or None if not found
+        Get full cache entry including user_input, response_json, and timestamps
+        in a single query.
         """
-        # First check if entry exists using get() - reuse the same logic
-        response_json_str = self.get(cache_key, model)
-        if not response_json_str:
+        if self._disabled or not settings.cache_enabled:
             return None
 
-        # If entry exists, fetch additional fields (user_input, timestamps)
         try:
             with self._get_connection() as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
                     cur.execute(
                         """
-                        SELECT user_input, created_at, updated_at
+                        SELECT response_json, user_input, created_at, updated_at
                         FROM response_cache
                         WHERE cache_key = %s AND model = %s
                         """,
@@ -146,23 +136,27 @@ class CacheRepository:
                     )
                     result = cur.fetchone()
 
-                    if result:
-                        # Parse response_json from get() result
+                    if not result:
+                        return None
+
+                    response_data = result['response_json']
+                    if isinstance(response_data, dict):
+                        response_json = response_data
+                    else:
                         try:
-                            response_json = json.loads(response_json_str) if isinstance(response_json_str, str) else response_json_str
+                            response_json = json.loads(response_data)
                         except (json.JSONDecodeError, TypeError):
-                            response_json = response_json_str
-                        
-                        return {
-                            "response_json": response_json,
-                            "user_input": result['user_input'],
-                            "created_at": result['created_at'].isoformat() if result['created_at'] else None,
-                            "updated_at": result['updated_at'].isoformat() if result['updated_at'] else None,
-                        }
-                    return None
+                            response_json = response_data
+
+                    return {
+                        "response_json": response_json,
+                        "user_input": result['user_input'],
+                        "created_at": result['created_at'].isoformat() if result['created_at'] else None,
+                        "updated_at": result['updated_at'].isoformat() if result['updated_at'] else None,
+                    }
 
         except Exception as exc:
-            logger.warning(f"Failed to get cache metadata: {exc}")
+            logger.warning(f"Failed to get cache entry: {exc}")
             return None
 
     def backfill_user_input(self, cache_key: str, model: str, user_input: Dict[str, Any]) -> bool:

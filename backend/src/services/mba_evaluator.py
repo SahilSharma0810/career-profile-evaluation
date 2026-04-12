@@ -30,6 +30,9 @@ def _load_transformation_companies() -> Dict[str, Any]:
         return json.load(f)
 
 
+_TRANSFORMATION_COMPANIES = _load_transformation_companies()
+
+
 def _get_role_display_name(role: str) -> str:
     """Convert role key to display name"""
     role_mapping = {
@@ -91,7 +94,7 @@ def evaluate_mba_readiness(quiz_responses: Dict[str, Any]) -> Dict[str, Any]:
     peer_comparison = _generate_peer_comparison(readiness)
 
     # 8. Select 3 random companies for transformation stories
-    transformation_companies_data = _load_transformation_companies()
+    transformation_companies_data = _TRANSFORMATION_COMPANIES
 
     # Map role to company list key
     role_mapping = {

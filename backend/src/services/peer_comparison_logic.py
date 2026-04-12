@@ -3,13 +3,13 @@ from src.utils.label_mappings import get_role_label, get_company_label, get_expe
 
 
 def _get_seniority_description(experience: str, current_role: str) -> str:
-    if experience in ["8+"]:
+    if experience == "8+":
         return "Senior"
-    elif experience in ["5-8"]:
+    elif experience == "5-8":
         return "Mid to Senior-level"
-    elif experience in ["3-5"]:
+    elif experience == "3-5":
         return "Mid-level"
-    elif experience in ["0-2", "0"]:
+    elif experience in ("0-2", "0"):
         return "Junior to Mid-level"
     return "Mid-level"
 

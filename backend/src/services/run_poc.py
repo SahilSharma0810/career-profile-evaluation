@@ -1,12 +1,9 @@
-import hashlib
 import asyncio
 import json
-import logging
 import os
 import sys
 from typing import Any, Dict, Optional
 
-from dotenv import load_dotenv
 from openai import AsyncOpenAI
 from pydantic import ValidationError
 from src.repositories.cache_repository import get_cache_repository
@@ -20,12 +17,11 @@ from src.services.tools_logic import generate_tool_recommendations
 from src.services.profile_notes_logic import generate_profile_strength_notes
 from src.services.current_profile_summary import generate_current_profile_summary
 from src.services.peer_comparison_logic import generate_peer_group_description, calculate_potential_percentile
-from src.utils.label_mappings import get_role_label, get_company_label
+from src.utils.label_mappings import get_company_label
+from src.config.logging_config import get_logger
 from src.config.telemetry import get_tracer
 
-load_dotenv()
-
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 _tracer = get_tracer(__name__)
 
 
@@ -54,130 +50,6 @@ DEFAULT_INPUT: Dict[str, Any] = {
 
 def _normalise_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     return json.loads(json.dumps(payload, sort_keys=True))
-
-
-def _filter_and_rerank_roles(
-    recommended_roles: list,
-    current_role: str,
-    target_role: str,
-    experience: str
-) -> list:
-    """
-    Filter and rerank recommended roles based on:
-    1. Current role domain (DevOps users should see DevOps-relevant roles)
-    2. Target role (Data Analytics users should see data-focused roles)
-    3. Experience level (8+ years should see Staff/Principal/EM roles)
-    """
-    if not recommended_roles:
-        return recommended_roles
-
-    # Score each role based on how well it matches user profile
-    scored_roles = []
-
-    for role in recommended_roles:
-        score = 0
-        title_lower = role.get("title", "").lower()
-        seniority_raw = role.get("seniority", "")
-        # Convert Enum to string if needed
-        seniority = str(seniority_raw).lower() if seniority_raw else ""
-
-        # 1. TARGET ROLE MATCHING (HIGHEST PRIORITY - user's explicit choice)
-        if target_role:
-            target_lower = target_role.lower()
-
-            # Data Analytics/ML target → Data Engineer, Data Analyst, ML Engineer (NOT generic engineer roles)
-            if "data" in target_lower or "ml" in target_lower or "analytics" in target_lower:
-                if any(x in title_lower for x in ["data engineer", "data analyst", "ml engineer", "machine learning", "analytics engineer"]):
-                    score += 30  # HIGHEST - user's explicit target
-
-            # Backend target → Backend, Full-Stack, Senior Backend
-            if "backend" in target_lower:
-                if any(x in title_lower for x in ["backend", "api", "full-stack"]):
-                    score += 25  # HIGHEST - user's explicit target
-
-            # Frontend target → Frontend, Full-Stack
-            if "frontend" in target_lower:
-                if any(x in title_lower for x in ["frontend", "full-stack", "react", "angular", "vue"]):
-                    score += 25  # HIGHEST - user's explicit target
-
-            # DevOps/SRE target → DevOps, SRE, Cloud, Infrastructure
-            if "devops" in target_lower or "sre" in target_lower or "infrastructure" in target_lower:
-                if any(x in title_lower for x in ["devops", "sre", "cloud", "infrastructure", "platform", "reliability engineer", "site reliability"]):
-                    score += 30  # HIGHEST - user's explicit target
-
-            # Tech Lead/Manager target → Tech Lead, Manager, Director
-            if "tech-lead" in target_lower or "lead" in target_lower or "manager" in target_lower:
-                if any(x in title_lower for x in ["tech lead", "engineering manager", "director", "manager"]):
-                    score += 30  # HIGHEST - user's explicit target
-
-            # Staff/Principal target → Staff, Principal, Architect
-            if "staff" in target_lower or "principal" in target_lower or "architect" in target_lower:
-                if any(x in title_lower for x in ["staff", "principal", "architect"]):
-                    score += 30  # HIGHEST - user's explicit target
-
-        # 2. CURRENT ROLE DOMAIN MATCHING (secondary priority)
-        if current_role:
-            current_lower = current_role.lower()
-
-            # DevOps users → DevOps/SRE/Platform/Infrastructure roles
-            if "devops" in current_lower or "infra" in current_lower or "cloud" in current_lower:
-                if any(x in title_lower for x in ["devops", "sre", "cloud", "infrastructure", "platform", "reliability engineer", "site reliability"]):
-                    score += 15  # Good match (but lower than target role)
-
-            # QA/Support users → QA Automation, Test Engineer, Backend roles
-            if "qa" in current_lower or "support" in current_lower:
-                if any(x in title_lower for x in ["qa", "automation", "test", "backend", "engineer"]):
-                    score += 12  # Good match
-
-            # SWE-Product users → Backend, Full-Stack, Senior roles (stay in product world)
-            if "product" in current_lower:
-                if any(x in title_lower for x in ["backend", "fullstack", "full-stack", "senior", "staff"]):
-                    score += 12  # Good match
-
-            # SWE-Service users → can transition to Product roles
-            if "service" in current_lower:
-                if any(x in title_lower for x in ["backend", "fullstack", "senior"]):
-                    score += 10  # Moderate match
-
-        # 3. EXPERIENCE LEVEL MATCHING (third priority)
-        if experience:
-            # 8+ years → Staff, Principal, Engineering Manager, Architect, Tech Lead
-            if experience == "8+":
-                if any(x in title_lower for x in ["staff", "principal", "engineering manager", "architect", "tech lead", "director"]) or \
-                   any(x in seniority for x in ["staff", "principal", "principal engineer", "engineering manager", "director"]):
-                    score += 18  # Strong match for senior roles
-                # Regular engineer roles should be lower priority
-                elif any(x in title_lower for x in ["senior", "lead"]) or \
-                     "senior" in seniority or "principal" in seniority:
-                    score += 10
-
-            # 5-8 years → Senior, Tech Lead, Staff (if strong coding)
-            elif experience == "5-8":
-                if any(x in title_lower for x in ["senior", "tech lead", "staff", "architect"]) or \
-                   any(x in seniority for x in ["senior", "staff", "architect", "tech lead"]):
-                    score += 15
-
-            # 3-5 years → Mid-level, Senior (lower-bound)
-            elif experience == "3-5":
-                if any(x in title_lower for x in ["senior", "mid-level", "sde-2"]) or \
-                   any(x in seniority for x in ["mid-senior", "senior", "mid-level"]):
-                    score += 10
-
-            # 0-2 years → Junior, Entry-level, SDE-1
-            elif experience in ["0-2", "0"]:
-                if any(x in title_lower for x in ["junior", "entry", "sde-1", "graduate", "intern"]) or \
-                   any(x in seniority for x in ["junior", "entry-level"]):
-                    score += 12
-
-        # 4. GENERAL RELEVANCE BOOST (baseline for all roles)
-        if any(x in title_lower for x in ["engineer", "developer", "architect", "lead"]):
-            score += 5  # All technical roles get small boost
-
-        scored_roles.append((role, score))
-
-    # Sort by score (descending) and return just the roles
-    sorted_roles = sorted(scored_roles, key=lambda x: x[1], reverse=True)
-    return [role for role, score in sorted_roles]
 
 
 async def call_openai_structured(
@@ -647,7 +519,6 @@ async def run_poc(
     # Calculate interview readiness independently (not dependent on profile strength score)
     interview_readiness_result = calculate_interview_readiness(background, quiz_responses)
 
-    from src.utils.label_mappings import get_company_label
     target_company = quiz_responses.get("targetCompany", "")
     target_company_label = quiz_responses.get("targetCompanyLabel") or get_company_label(target_company)
 
@@ -699,20 +570,6 @@ async def run_poc(
     peer_comparison["peer_group_description"] = peer_group_desc
     peer_comparison["potential_percentile"] = potential_percentile
 
-    target_role = quiz_responses.get("targetRole", "")
-    target_company = quiz_responses.get("targetCompany", "")
-    current_role = quiz_responses.get("currentRole", "")
-    experience = quiz_responses.get("experience", "")
-    recommended_roles = result_dict["profile_evaluation"]["recommended_roles_based_on_interests"]
-
-    # Filter and rerank roles based on current role, target role, and experience
-    recommended_roles = _filter_and_rerank_roles(
-        recommended_roles,
-        current_role,
-        target_role,
-        experience
-    )
-
     # Use v3 system: Generate recommended roles with timeline, copy, goals, and action items
     recommended_roles_v3 = generate_recommended_roles(
         background=background,
@@ -727,12 +584,11 @@ async def run_poc(
     result = FullProfileEvaluationResponse.model_validate(result_dict)
 
     result_json = result.model_dump_json()
-    cache_repo.set(cache_key, model_name, result_json, user_input=original_payload)  # Store original payload with questionsAndAnswers
+    cache_repo.set(cache_key, model_name, result_json, user_input=original_payload)
     logger.info("💾 Response cached successfully - next identical request will be instant!")
 
-    final_result = FullProfileEvaluationResponse.model_validate_json(result_json)
-    final_result.response_id = cache_key
-    return final_result
+    result.response_id = cache_key
+    return result
 
 
 def main() -> int:
