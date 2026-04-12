@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { useStore } from '@nanostores/react';
 import { ArrowUpRight, Check, Play } from 'phosphor-react';
-import { getCoursesForRole } from '../../../data/courses_by_role';
+import { getCoursesForRole, getStructuredProgramForRole } from '../../../data/courses_by_role';
 import { getProgramKeyForTargetRole } from '../../../utils/evaluationLogic';
 import { createUpcomingMasterclassesStore } from '../../../store/upcomingMasterclasses';
 
@@ -505,6 +505,7 @@ const VideoCaption = styled.div`
 
 const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
   const courses = getCoursesForRole(targetRole);
+  const program = getStructuredProgramForRole(targetRole);
   const programKey = getProgramKeyForTargetRole(targetRole);
   const $upcomingMc = useMemo(
     () => createUpcomingMasterclassesStore(programKey, 3),
@@ -599,41 +600,31 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
         <StructuredCard>
           <StructuredInner>
             <StructuredLeft>
-              <ProgramName>Scaler Software Engineering</ProgramName>
-              <ProgramDesc>
-                The fastest proven path from "stuck" to hired at a product company. Built by engineers who've been on both sides of the interview table.
-              </ProgramDesc>
+              <ProgramName>{program.name}</ProgramName>
+              <ProgramDesc>{program.description}</ProgramDesc>
 
               <ProgramStats>
-                <ProgramStat>
-                  <ProgramStatVal>8 mo</ProgramStatVal>
-                  <ProgramStatLabel>Job-ready</ProgramStatLabel>
-                </ProgramStat>
-                <ProgramStat>
-                  <ProgramStatVal>900+</ProgramStatVal>
-                  <ProgramStatLabel>Placed alumni</ProgramStatLabel>
-                </ProgramStat>
-                <ProgramStat>
-                  <ProgramStatVal>2.5×</ProgramStatVal>
-                  <ProgramStatLabel>Avg salary jump</ProgramStatLabel>
-                </ProgramStat>
+                {program.stats.map((stat, i) => (
+                  <ProgramStat key={i}>
+                    <ProgramStatVal>{stat.value}</ProgramStatVal>
+                    <ProgramStatLabel>{stat.label}</ProgramStatLabel>
+                  </ProgramStat>
+                ))}
               </ProgramStats>
 
               <FeatureList>
-                <Feature><Check size={14} weight="bold" color="#059669" />1:1 mentors from Google, Amazon, Flipkart</Feature>
-                <Feature><Check size={14} weight="bold" color="#059669" />20+ mock interviews with sharp feedback</Feature>
-                <Feature><Check size={14} weight="bold" color="#059669" />5 production-grade resume projects</Feature>
-                <Feature><Check size={14} weight="bold" color="#059669" />Direct referrals to 400+ companies</Feature>
-                <Feature><Check size={14} weight="bold" color="#059669" />Pay after placement (income share)</Feature>
+                {program.features.map((feature, i) => (
+                  <Feature key={i}><Check size={14} weight="bold" color="#059669" />{feature}</Feature>
+                ))}
               </FeatureList>
 
               {!hideCTAs && (
                 <ButtonRow>
-                  <PrimaryBtn href="https://www.scaler.com/courses/software-engineering/" target="_blank" rel="noopener noreferrer">
-                    Go to program page →
+                  <PrimaryBtn href={program.primaryCta.url} target="_blank" rel="noopener noreferrer">
+                    {program.primaryCta.label}
                   </PrimaryBtn>
-                  <OutlineBtn href="https://www.scaler.com/courses/software-engineering/" target="_blank" rel="noopener noreferrer">
-                    Download curriculum
+                  <OutlineBtn href={program.secondaryCta.url} target="_blank" rel="noopener noreferrer">
+                    {program.secondaryCta.label}
                   </OutlineBtn>
                 </ButtonRow>
               )}
