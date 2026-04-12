@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { getTenXContent } from '../../../data/tenx_by_role';
 
 const Section = styled.section`
   padding: 80px 0;
@@ -229,50 +230,23 @@ const StatSource = styled.div`
   margin-top: 10px;
 `;
 
-const ROLE_NAMES = {
-  'senior-backend': 'Backend Engineer',
-  'senior-fullstack': 'Full-Stack Engineer',
-  'backend-sde': 'Backend Engineer',
-  'fullstack-sde': 'Full-Stack Engineer',
-  'data-ml': 'Data Science Engineer',
-  'devops-sre': 'DevOps Engineer',
-  'ai-ml-engineer': 'AI / ML Engineer',
-  'tech-lead': 'Tech Lead',
-  backend: 'Backend Engineer',
-  fullstack: 'Full-Stack Engineer',
-  frontend: 'Frontend Engineer',
-  'not-sure': 'Software Engineer'
-};
-
 const TenXEngineerChapter = ({ targetRole }) => {
-  const roleName = ROLE_NAMES[targetRole] || 'Software Engineer';
+  const content = getTenXContent(targetRole);
 
   return (
     <Section id="cpe-10x-section">
       <Container>
         <ChapterLabel>02 · The 10× Engineer</ChapterLabel>
-        <Title>What a 10× {roleName} actually looks like in 2026.</Title>
-        <Subtitle>
-          Not a unicorn. A real engineer who uses AI as leverage — every single day.
-        </Subtitle>
+        <Title>{content.title}</Title>
+        <Subtitle>{content.subtitle}</Subtitle>
 
         <TwoCol>
           <PointsList>
-            <Point>
-              <PointText>Uses <strong>Cursor or Copilot</strong> for every feature — not just autocomplete, full refactors</PointText>
-            </Point>
-            <Point>
-              <PointText>Reviews <strong>AI-generated code critically</strong> — catches hallucinations before they ship</PointText>
-            </Point>
-            <Point>
-              <PointText>Ships <strong>AI-integrated features</strong>: RAG pipelines, agents, AI-assisted workflows</PointText>
-            </Point>
-            <Point>
-              <PointText>Designs <strong>systems with AI in the architecture</strong> — not bolted on after</PointText>
-            </Point>
-            <Point>
-              <PointText>Answers <strong>"how would AI change your design?"</strong> in interviews without hesitation</PointText>
-            </Point>
+            {content.points.map((point, index) => (
+              <Point key={index}>
+                <PointText dangerouslySetInnerHTML={{ __html: point.text }} />
+              </Point>
+            ))}
           </PointsList>
 
           <StatsCol>
