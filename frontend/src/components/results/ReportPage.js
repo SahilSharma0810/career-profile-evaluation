@@ -155,12 +155,6 @@ const ReportPage = ({
 
   return (
     <PageWrapper>
-      <TopBar>
-        <ScalerLogo aria-label="Scaler" />
-        <TopBarDivider>/</TopBarDivider>
-        <TopBarLabel>Career Report</TopBarLabel>
-      </TopBar>
-
       <HeroChapter
         score={score}
         targetRole={targetRole}
