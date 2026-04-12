@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import { Phone } from 'phosphor-react';
+import { HeroBackground } from '../HeroBackground';
 
 const Section = styled.section`
   background: var(--navy);
@@ -241,6 +242,7 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, o
 
   return (
     <Section id="cpe-hero-section">
+      <HeroBackground />
       <Container>
         <Meta>Career Profile Evaluation · {monthNames[now.getMonth()]} {now.getFullYear()}</Meta>
 
