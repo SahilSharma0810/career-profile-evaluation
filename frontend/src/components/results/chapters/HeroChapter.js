@@ -275,7 +275,7 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, i
                   )}
                 </CTAButton>
                 {!isPreview && (
-                  <CTASub>30 min · Free · Senior mentor</CTASub>
+                  <CTASub>30 min · Free · Senior consuellort</CTASub>
                 )}
               </>
             )}
