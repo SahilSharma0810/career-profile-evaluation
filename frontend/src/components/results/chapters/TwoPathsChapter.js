@@ -309,11 +309,7 @@ const StructuredCard = styled.div`
 
 const StructuredInner = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: 1fr;
 `;
 
 const StructuredLeft = styled.div`
@@ -321,24 +317,6 @@ const StructuredLeft = styled.div`
 
   @media (max-width: 768px) {
     padding: 24px;
-  }
-`;
-
-const StructuredRight = styled.div`
-  background: var(--bg);
-  border-left: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 36px;
-  min-height: 240px;
-
-  @media (max-width: 768px) {
-    border-left: none;
-    border-top: 1px solid var(--line);
-    padding: 24px;
-    min-height: 180px;
   }
 `;
 
@@ -442,44 +420,6 @@ const OutlineBtn = styled.a`
   transition: all 0.15s ease;
 
   &:hover { border-color: var(--line2); }
-`;
-
-const WalkthroughBtn = styled.button`
-  background: var(--white);
-  border: 1px solid var(--line);
-  padding: 10px 18px;
-  font-family: var(--mono);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--ink3);
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 20px;
-`;
-
-const PlayButton = styled.div`
-  width: 64px;
-  height: 64px;
-  background: var(--ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--white);
-  cursor: pointer;
-  transition: background 0.15s ease;
-
-  &:hover { background: var(--ink2); }
-`;
-
-const VideoCaption = styled.div`
-  font-family: var(--mono);
-  font-size: 0.5625rem;
-  color: var(--ink4);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 12px;
-  text-align: center;
 `;
 
 const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
@@ -603,13 +543,6 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
                 </ButtonRow>
               )}
             </StructuredLeft>
-            <StructuredRight>
-              <WalkthroughBtn>2 min · Walkthrough</WalkthroughBtn>
-              <PlayButton>
-                <Play size={28} weight="fill" />
-              </PlayButton>
-              <VideoCaption>Hear from Anshuman in 2 minutes</VideoCaption>
-            </StructuredRight>
           </StructuredInner>
         </StructuredCard>
       </Container>
