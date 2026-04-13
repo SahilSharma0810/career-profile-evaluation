@@ -993,7 +993,7 @@ const CTAText = styled.p`
 `;
 
 const CTAButton = styled.button`
-  background: #c71f69;
+  background: var(--accent-eye);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -1006,7 +1006,7 @@ const CTAButton = styled.button`
   white-space: nowrap;
 
   &:hover {
-    background: #a01855;
+    background: #b3420a;
   }
 
   &:active {

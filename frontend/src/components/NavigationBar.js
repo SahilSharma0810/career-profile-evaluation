@@ -65,7 +65,7 @@ const NavActions = styled.div`
 `;
 
 const CTAButton = styled.button`
-  background: #b30158;
+  background: var(--accent-eye);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -78,7 +78,7 @@ const CTAButton = styled.button`
   letter-spacing: 1px;
 
   &:hover {
-    background: #8a0145;
+    background: #b3420a;
   }
 
   @media (max-width: 768px) {
@@ -314,7 +314,7 @@ const CSATText = styled.span`
   font-size: 0.875rem;
   color: #ffffff;
   font-weight: 500;
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--sans);
 
   @media (max-width: 768px) {
     font-size: 0.8125rem;
@@ -326,7 +326,7 @@ const CSATLink = styled.span`
   color: #ffffff;
   font-weight: 600;
   text-decoration: underline;
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--sans);
 
   @media (max-width: 768px) {
     font-size: 0.8125rem;

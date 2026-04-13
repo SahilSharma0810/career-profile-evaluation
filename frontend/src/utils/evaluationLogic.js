@@ -140,18 +140,32 @@ const normaliseGoals = (goals = {}) => ({
     : []
 });
 
-/**
- * Derive program for attribution from quiz responses (target role and related fields).
- * Maps to: software_development | data_science | devops | ai_ml
- */
-const deriveProgramFromQuizResponses = (quizResponses = {}) => {
-  const targetRole = quizResponses.targetRole || '';
+/** Maps quiz `targetRole` to Scaler program keys (attribution + event groups). */
+export const getProgramKeyForTargetRole = (targetRole = '') => {
   const roleToProgram = {
     'data-ml': 'data_science',
     'devops-sre': 'devops',
     'ai-ml-engineer': 'ai_ml'
   };
   return roleToProgram[targetRole] || 'software_development';
+};
+
+/** Maps quiz `targetRole` to RCB modal program option values. */
+export const getRCBProgramForTargetRole = (targetRole = '') => {
+  const roleToProgram = {
+    'data-ml': 'data_science',
+    'devops-sre': 'devops',
+    'ai-ml-engineer': 'ai_ml'
+  };
+  return roleToProgram[targetRole] || 'academy';
+};
+
+/**
+ * Derive program for attribution from quiz responses (target role and related fields).
+ * Maps to: software_development | data_science | devops | ai_ml
+ */
+const deriveProgramFromQuizResponses = (quizResponses = {}) => {
+  return getProgramKeyForTargetRole(quizResponses.targetRole || '');
 };
 
 const buildEvaluationPayload = (quizResponses, goals, background, questionsAndAnswers = []) => {
