@@ -63,21 +63,6 @@ const Card = styled.div`
   overflow: hidden;
 `;
 
-const AvatarBlock = styled.div`
-  height: 120px;
-  background: var(--ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const AvatarLetter = styled.div`
-  font-family: var(--serif);
-  font-size: 3.5rem;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.15);
-`;
-
 const CardBody = styled.div`
   padding: 24px;
 `;
@@ -207,9 +192,6 @@ const AlumniChapter = ({ targetRole }) => {
         <CardsRow>
           {visibleStories.map((story, i) => (
             <Card key={startIdx + i}>
-              <AvatarBlock>
-                <AvatarLetter>{story.initial}</AvatarLetter>
-              </AvatarBlock>
               <CardBody>
                 <NameRow>
                   <div>
