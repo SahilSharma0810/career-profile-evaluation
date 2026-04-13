@@ -17,7 +17,7 @@ const Section = styled.section`
 `;
 
 const Container = styled.div`
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 40px;
 
@@ -97,27 +97,6 @@ const CourseCard = styled.div`
   border: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-`;
-
-const CourseCardTop = styled.div`
-  height: 80px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CourseTopDots = styled.div`
-  display: flex;
-  gap: 6px;
-
-  span {
-    width: 8px;
-    height: 12px;
-    background: var(--line2);
-    border-radius: 1px;
-  }
 `;
 
 const CourseCardBody = styled.div`
@@ -530,11 +509,6 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
         <CourseGrid>
           {courses.map((course, i) => (
             <CourseCard key={i}>
-              <CourseCardTop>
-                <CourseTopDots>
-                  <span /><span /><span />
-                </CourseTopDots>
-              </CourseCardTop>
               <CourseCardBody>
                 <CourseSource>Scaler Topics</CourseSource>
                 <CourseName>{course.title}</CourseName>

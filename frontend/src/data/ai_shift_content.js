@@ -1,7 +1,7 @@
 const AI_SHIFT_COMPANIES = [
   {
     company: 'Google',
-    quote: 'In 2024, 25% of all new code at Google was written by AI — then reviewed and shipped by engineers.',
+    quote: 'In 2026, 25% of all new code at Google was written by AI — then reviewed and shipped by engineers.',
     attribution: 'Sundar Pichai confirmed this at Google I/O 2024.',
     context: 'The engineers reviewing that code are still employed; the ones who can\'t are not.',
     bullets: [
