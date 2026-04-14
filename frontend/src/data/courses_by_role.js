@@ -87,7 +87,7 @@ const PROGRAMS = {
       'Pay after placement (income share)'
     ],
     primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/data-science-course/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/courses/data-science-course/' }
+    secondaryCta: { label: 'Download curriculum', url: 'https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/105/157/original/DSML_Brochure_2024_compressed.pdf?1738001683' }
   },
   'devops-course': {
     name: 'Scaler DevOps & SRE',
@@ -105,7 +105,7 @@ const PROGRAMS = {
       'Pay after placement (income share)'
     ],
     primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/devops-course/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/courses/devops-course/' }
+    secondaryCta: { label: 'Download curriculum', url: 'https://content.interviewbit.com/devops_brochure.pdf' }
   },
   'ai-machine-learning-course': {
     name: 'Scaler AI & ML',
@@ -123,7 +123,7 @@ const PROGRAMS = {
       'Pay after placement (income share)'
     ],
     primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/ai-machine-learning-course/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/courses/ai-machine-learning-course/' }
+    secondaryCta: { label: 'Download curriculum', url: 'https://content.interviewbit.com/AI-Ml-Brochure.pdf' }
   }
 };
 
