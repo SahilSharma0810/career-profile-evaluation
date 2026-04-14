@@ -69,7 +69,7 @@ const PROGRAMS = {
       'Pay after placement (income share)'
     ],
     primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/academy/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://www.scaler.com/academy/' }
+    secondaryCta: { label: 'Download curriculum', url: 'https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/124/701/original/Academy-Broucher-12-05-24.pdf?1747034174' }
   },
   'data-science-course': {
     name: 'Scaler Data Science & ML',
