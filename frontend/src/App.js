@@ -21,6 +21,16 @@ import { getPathWithQueryParams } from './utils/url';
 import '@vectord/ui/dist/style.css';
 import '@vectord/fp-styles';
 
+function AuthRoutes() {
+  return (
+    <Routes>
+      <Route path="/login" element={<AuthSplitPage initialMode="login" />} />
+      <Route path="/signup" element={<AuthSplitPage initialMode="signup" />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
+  );
+}
+
 // MBA App Content - separate from main app with isolated context
 function MBAAppContent() {
   const [quizProgress, setQuizProgress] = useState(0);
@@ -42,7 +52,7 @@ function MBAAppContent() {
   );
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthSplitPage />;
+  if (!data?.isLoggedIn) return <AuthRoutes />;
 
   return (
     <MBAProfileProvider>
@@ -103,8 +113,8 @@ function AppContent() {
   }, []);
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthSplitPage />;
-  
+  if (!data?.isLoggedIn) return <AuthRoutes />;
+
   // Route to MBA app for /business-and-ai-readiness/* paths
   if (isMBARoute) {
     return <MBAAppContent />;
