@@ -103,17 +103,29 @@ function AppContent() {
   }, []);
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthSplitPage />;
+  if (!data?.isLoggedIn) {
+    return (
+      <div className={isMBARoute ? 'mba-cpe-theme' : 'cpe-theme'}>
+        <AuthSplitPage />
+      </div>
+    );
+  }
   
   // Route to MBA app for /business-and-ai-readiness/* paths
   if (isMBARoute) {
-    return <MBAAppContent />;
+    return (
+      <div className="mba-cpe-theme">
+        <MBAAppContent />
+      </div>
+    );
   }
 
   return (
-    <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
-      <AppRoutes onQuizProgressChange={setQuizProgress} {...{ quizMode }} />
-    </AppLayout>
+    <div className="cpe-theme">
+      <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
+        <AppRoutes onQuizProgressChange={setQuizProgress} {...{ quizMode }} />
+      </AppLayout>
+    </div>
   );
 }
 

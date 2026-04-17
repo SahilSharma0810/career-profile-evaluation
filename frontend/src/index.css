@@ -1,6 +1,6 @@
 :root {
   --serif: 'Clash Grotesk', 'Source Serif 4', Georgia, sans-serif;
-  --sans: 'Clash Grotesk', 'Plus Jakarta Sans', sans-serif;
+  --sans: 'Plus Jakarta Sans', sans-serif;
   --mono: 'IBM Plex Mono', monospace;
 
   --accent: #2563EB;
@@ -31,6 +31,34 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
+}
+
+/* Normal CPE typography (quiz/results/login): clash for titles, jakarta for body text */
+.cpe-theme {
+  --serif: 'Clash Grotesk', 'Source Serif 4', Georgia, sans-serif;
+  --sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+.cpe-theme,
+.cpe-theme button,
+.cpe-theme input,
+.cpe-theme textarea,
+.cpe-theme select {
+  font-family: var(--sans);
+}
+
+.cpe-theme h1,
+.cpe-theme h2,
+.cpe-theme h3,
+.cpe-theme h4,
+.cpe-theme h5,
+.cpe-theme h6 {
+  font-family: var(--serif);
+}
+
+/* Keep Online MBA CPE typography unchanged */
+.mba-cpe-theme {
+  --sans: 'Clash Grotesk', 'Plus Jakarta Sans', sans-serif;
 }
 
 code {
