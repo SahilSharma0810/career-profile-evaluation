@@ -285,12 +285,6 @@ const AIShiftChapter = () => {
             </CardLeft>
 
             <CardRight>
-              <ChartPlaceholder>
-                <ChartLabel>Code Velocity</ChartLabel>
-                <ChartLine />
-                <ChartYear>2024+</ChartYear>
-              </ChartPlaceholder>
-
               <StatsRow>
                 {item.stats.map((s, i) => (
                   <StatBox key={i} $variant={i === 0 ? 'green' : 'blue'}>

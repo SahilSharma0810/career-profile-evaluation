@@ -21,7 +21,7 @@ const PageContainer = styled.div`
 /* ── Left Panel (Navy) ─────────────────────────────────────── */
 
 const LeftPanel = styled.div`
-  width: 320px;
+  width: 400px;
   flex-shrink: 0;
   background: var(--navy);
   color: var(--white);
@@ -407,7 +407,7 @@ const AuthSplitPage = () => {
               Get a comprehensive evaluation of your profile for tech roles. Discover strengths, identify gaps, and get a personalized roadmap.
             </LeftDesc>
 
-            <StatsColumn>
+            {/* <StatsColumn>
               <StatCard>
                 <StatValue>50K+</StatValue>
                 <StatLabel>profiles evaluated in the last 12 months</StatLabel>
@@ -420,7 +420,7 @@ const AuthSplitPage = () => {
                 <StatValue>73%</StatValue>
                 <StatLabel>of backend roles now require AI fluency</StatLabel>
               </StatCard>
-            </StatsColumn>
+            </StatsColumn> */}
 
             <FeatureList>
               <Feature>

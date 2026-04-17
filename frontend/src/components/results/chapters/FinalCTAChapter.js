@@ -114,13 +114,6 @@ const FinalCTAChapter = ({ targetRole, isPreview, onCTAClick }) => {
   return (
     <Section>
       <Container>
-        <BadgeRow>
-          <Badge>
-            <Warning size={14} weight="bold" />
-            {isPreview ? 'Sample Report' : 'One last thing'}
-          </Badge>
-        </BadgeRow>
-
         <Title>
           {isPreview
             ? 'Like what you see? Get your own report.'
@@ -136,17 +129,6 @@ const FinalCTAChapter = ({ targetRole, isPreview, onCTAClick }) => {
           {isPreview ? 'Back to Quiz' : (<><Phone size={18} weight="fill" /> Get free consultation →</>)}
         </CTAButton>
         {!isPreview && <CTASub>30 min · No card · No pressure</CTASub>}
-
-        {!isPreview && (
-          <StatsFooter>
-            <StatPill $highlight="green">
-              Backend roles saw <strong>+22% competition</strong> in 2025
-            </StatPill>
-            <StatPill $highlight="blue">
-              AI-fluent devs earn <strong>1.4× more</strong>
-            </StatPill>
-          </StatsFooter>
-        )}
       </Container>
     </Section>
   );

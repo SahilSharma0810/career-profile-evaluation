@@ -24,16 +24,6 @@ const LoadingWrapper = styled.div`
   padding: 40px 20px;
 `;
 
-const LoadingBrand = styled.div`
-  font-family: var(--mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--ink4);
-  margin-bottom: 48px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-`;
-
 const LoadingText = styled.div`
   font-family: var(--serif);
   font-size: 1.75rem;
@@ -205,7 +195,6 @@ const ResultsPage = () => {
   if (isLoading) {
     return (
       <LoadingWrapper>
-        <LoadingBrand>Scaler · Profile Evaluation</LoadingBrand>
         <LoadingText>{LOADING_MESSAGES[loadingMsgIndex]}</LoadingText>
         <LoadingSubtext>This usually takes about 10 seconds</LoadingSubtext>
         <ProgressTrack>

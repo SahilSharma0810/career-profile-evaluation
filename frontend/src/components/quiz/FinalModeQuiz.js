@@ -497,7 +497,7 @@ const SIDEBAR_TEXT = {
   },
   'your-readiness-nontech': {
     label: 'Why we ask',
-    heading: "Knowing where you are helps us show you the shortest path forward.",
+    heading: 'Knowing where you are helps us show you the shortest path forward.',
     detail: "No worries if you're just getting started."
   }
 };
@@ -743,128 +743,128 @@ const FinalModeQuiz = ({ onProgressChange }) => {
 
   return (
     <>
-    <QuizContainer>
-      <MainLayout>
-        <Sidebar>
-          <SidebarTop>
-            <LogoRow>
-              <ScalerLogo aria-label="Scaler" />
-              <LogoDivider>/</LogoDivider>
-              <span>CPE</span>
-            </LogoRow>
+      <QuizContainer>
+        <MainLayout>
+          <Sidebar>
+            <SidebarTop>
+              <LogoRow>
+                <ScalerLogo aria-label="Scaler" />
+                <LogoDivider>/</LogoDivider>
+                <span>CPE</span>
+              </LogoRow>
 
-            {currentStep === 0 ? (
-              <div>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: '0.625rem', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'rgba(255,255,255,0.4)', marginBottom: '12px' }}>
+              {currentStep === 0 ? (
+                <div>
+                  <div style={{ fontFamily: 'var(--mono)', fontSize: '0.625rem', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'rgba(255,255,255,0.4)', marginBottom: '12px' }}>
                   Free · Takes 3 minutes
-                </div>
-                <SidebarTitle>Your AI Career Report</SidebarTitle>
-                <SidebarDesc>
+                  </div>
+                  <SidebarTitle>Your AI Career Report</SidebarTitle>
+                  <SidebarDesc>
                   Answer a few questions. Get a personalised report showing exactly where you stand — and what to do next.
-                </SidebarDesc>
-                <StatsColumn>
-                  <StatCard>
-                    <StatValue>50K+</StatValue>
-                    <StatLabel>profiles evaluated in the last 12 months</StatLabel>
-                  </StatCard>
-                  <StatCard>
-                    <StatValue>2.5×</StatValue>
-                    <StatLabel>average salary jump for Scaler alumni</StatLabel>
-                  </StatCard>
-                  <StatCard>
-                    <StatValue>73%</StatValue>
-                    <StatLabel>of backend roles now require AI fluency</StatLabel>
-                  </StatCard>
-                </StatsColumn>
-              </div>
-            ) : (
-              <div>
-                <StepIndicator>Step {currentStep} of {quizScreens.length}</StepIndicator>
-                <StepDotsRow>
-                  {quizScreens.map((_, i) => (
-                    <StepDot key={i} $active={i < currentStep} />
-                  ))}
-                </StepDotsRow>
-                <div style={{ marginTop: '24px' }}>
-                  <SidebarCard>
-                    <WhyLabel>{sidebarContent.label}</WhyLabel>
-                    <WhyText>{sidebarContent.heading}</WhyText>
-                    {sidebarContent.detail && (
-                      <WhyDetail>{sidebarContent.detail}</WhyDetail>
-                    )}
-                  </SidebarCard>
+                  </SidebarDesc>
+                  {/* <StatsColumn>
+                    <StatCard>
+                      <StatValue>50K+</StatValue>
+                      <StatLabel>profiles evaluated in the last 12 months</StatLabel>
+                    </StatCard>
+                    <StatCard>
+                      <StatValue>2.5×</StatValue>
+                      <StatLabel>average salary jump for Scaler alumni</StatLabel>
+                    </StatCard>
+                    <StatCard>
+                      <StatValue>73%</StatValue>
+                      <StatLabel>of backend roles now require AI fluency</StatLabel>
+                    </StatCard>
+                  </StatsColumn> */}
                 </div>
-              </div>
-            )}
-          </SidebarTop>
-
-          <SidebarBottom>
-            <SampleReportBtn onClick={() => setShowSampleReport(true)}>
-              View Sample Report
-            </SampleReportBtn>
-            <AlumniLabel>Alumni working at</AlumniLabel>
-            <CompanyPills>
-              {COMPANIES.map((name, i) => (
-                <CompanyPill key={i}>{name}</CompanyPill>
-              ))}
-            </CompanyPills>
-          </SidebarBottom>
-        </Sidebar>
-
-        <ContentArea>
-          <MobileTopBar>
-            <ScalerLogo aria-label="Scaler" />
-            {currentStep > 0 && (
-              <MobileStepText>Step {currentStep} of {quizScreens.length}</MobileStepText>
-            )}
-          </MobileTopBar>
-
-          {currentStep > 0 && (
-            <ContentHeader>
-              <StepMeta>
-                Step {currentStep} of {quizScreens.length} — {stepTitle}
-              </StepMeta>
-              <ContentTitle>{contentHeading}</ContentTitle>
-            </ContentHeader>
-          )}
-
-          <QuizContent key={currentStep}>
-            {currentStep === 0 ? (
-              <div style={{ padding: '48px 0 0' }}>
-                {renderContent()}
-              </div>
-            ) : (
-              renderContent()
-            )}
-          </QuizContent>
-
-          <BottomNav>
-            <BottomStepText>
-              Step {Math.max(currentStep, 1)} of {quizScreens.length}
-            </BottomStepText>
-            <NavButtons>
-              <BackBtn onClick={handlePrevious} disabled={currentStep === 0} aria-label="Back">
-                <ArrowLeft size={18} />
-              </BackBtn>
-              {isLastStep ? (
-                <ContinueBtn onClick={handleNext} disabled={!canProceed()}>
-                  See My Report
-                  <ArrowRight size={14} />
-                </ContinueBtn>
               ) : (
-                <ContinueBtn onClick={handleNext} disabled={!canProceed()}>
-                  Continue
-                  <ArrowRight size={14} />
-                </ContinueBtn>
+                <div>
+                  <StepIndicator>Step {currentStep} of {quizScreens.length}</StepIndicator>
+                  <StepDotsRow>
+                    {quizScreens.map((_, i) => (
+                      <StepDot key={i} $active={i < currentStep} />
+                    ))}
+                  </StepDotsRow>
+                  <div style={{ marginTop: '24px' }}>
+                    <SidebarCard>
+                      <WhyLabel>{sidebarContent.label}</WhyLabel>
+                      <WhyText>{sidebarContent.heading}</WhyText>
+                      {sidebarContent.detail && (
+                        <WhyDetail>{sidebarContent.detail}</WhyDetail>
+                      )}
+                    </SidebarCard>
+                  </div>
+                </div>
               )}
-            </NavButtons>
-          </BottomNav>
-        </ContentArea>
-      </MainLayout>
-    </QuizContainer>
-    {showSampleReport && (
-      <SampleReportModal onClose={() => setShowSampleReport(false)} />
-    )}
+            </SidebarTop>
+
+            <SidebarBottom>
+              <SampleReportBtn onClick={() => setShowSampleReport(true)}>
+              View Sample Report
+              </SampleReportBtn>
+              <AlumniLabel>Alumni working at</AlumniLabel>
+              <CompanyPills>
+                {COMPANIES.map((name, i) => (
+                  <CompanyPill key={i}>{name}</CompanyPill>
+                ))}
+              </CompanyPills>
+            </SidebarBottom>
+          </Sidebar>
+
+          <ContentArea>
+            <MobileTopBar>
+              <ScalerLogo aria-label="Scaler" />
+              {currentStep > 0 && (
+                <MobileStepText>Step {currentStep} of {quizScreens.length}</MobileStepText>
+              )}
+            </MobileTopBar>
+
+            {currentStep > 0 && (
+              <ContentHeader>
+                <StepMeta>
+                Step {currentStep} of {quizScreens.length} — {stepTitle}
+                </StepMeta>
+                <ContentTitle>{contentHeading}</ContentTitle>
+              </ContentHeader>
+            )}
+
+            <QuizContent key={currentStep}>
+              {currentStep === 0 ? (
+                <div style={{ padding: '48px 0 0' }}>
+                  {renderContent()}
+                </div>
+              ) : (
+                renderContent()
+              )}
+            </QuizContent>
+
+            <BottomNav>
+              <BottomStepText>
+              Step {Math.max(currentStep, 1)} of {quizScreens.length}
+              </BottomStepText>
+              <NavButtons>
+                <BackBtn onClick={handlePrevious} disabled={currentStep === 0} aria-label="Back">
+                  <ArrowLeft size={18} />
+                </BackBtn>
+                {isLastStep ? (
+                  <ContinueBtn onClick={handleNext} disabled={!canProceed()}>
+                  See My Report
+                    <ArrowRight size={14} />
+                  </ContinueBtn>
+                ) : (
+                  <ContinueBtn onClick={handleNext} disabled={!canProceed()}>
+                  Continue
+                    <ArrowRight size={14} />
+                  </ContinueBtn>
+                )}
+              </NavButtons>
+            </BottomNav>
+          </ContentArea>
+        </MainLayout>
+      </QuizContainer>
+      {showSampleReport && (
+        <SampleReportModal onClose={() => setShowSampleReport(false)} />
+      )}
     </>
   );
 };
