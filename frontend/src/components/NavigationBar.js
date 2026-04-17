@@ -416,16 +416,16 @@ const NavigationBar = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isResultsPage]);
 
-  const handleReEvaluate = useCallback(() => {
-    tracker.click({
-      click_type: 're_evaluate_btn_clicked',
-      custom: {
-        source: 'navbar'
-      }
-    });
-    resetProfile?.();
-    navigate?.('/quiz');
-  }, [resetProfile, navigate]);
+  // const handleReEvaluate = useCallback(() => {
+  //   tracker.click({
+  //     click_type: 're_evaluate_btn_clicked',
+  //     custom: {
+  //       source: 'navbar'
+  //     }
+  //   });
+  //   resetProfile?.();
+  //   navigate?.('/quiz');
+  // }, [resetProfile, navigate]);
 
   return (
     <StickyWrapper>
@@ -487,7 +487,7 @@ const NavigationBar = ({
             </SegmentedControl>
           )}
           <NavActions>
-            {isResultsPage && evaluationResults && (
+            {/* {isResultsPage && evaluationResults && (
               <>
                 <TextReEvaluateButton onClick={handleReEvaluate}>
                   Re-evaluate
@@ -496,7 +496,7 @@ const NavigationBar = ({
                   <ArrowClockwise size={20} weight="bold" />
                 </IconButton>
               </>
-            )}
+            )} */}
             <CTAButton onClick={handleRCBClick}>Talk to an advisor ↗</CTAButton>
           </NavActions>
         </NavContent>
