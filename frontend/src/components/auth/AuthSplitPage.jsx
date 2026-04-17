@@ -1,6 +1,14 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
+import amazonLogo from '../../assets/logos/amazon.svg';
+import flipkartLogo from '../../assets/logos/flipkart.svg';
+import googleLogo from '../../assets/logos/google.svg';
+import klarnaLogo from '../../assets/logos/klarna.svg';
+import metaLogo from '../../assets/logos/meta.svg';
+import razorpayLogo from '../../assets/logos/razorpay.svg';
+import swiggyLogo from '../../assets/logos/swiggy.svg';
+import uberLogo from '../../assets/logos/uber.svg';
 import { AuthFlow } from './index';
 
 const fadeIn = keyframes`
@@ -164,11 +172,22 @@ const CompanyPills = styled.div`
 `;
 
 const CompanyPill = styled.div`
-  font-size: 0.625rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.08);
+  height: 28px;
+  min-width: 74px;
+  max-width: 106px;
   padding: 4px 9px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(17, 24, 39, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+`;
+
+const CompanyLogo = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 `;
 
 /* ── Right Panel ───────────────────────────────────────────── */
@@ -329,7 +348,16 @@ const ModalBody = styled.div`
   }
 `;
 
-const COMPANIES = ['Google', 'Amazon', 'Flipkart', 'Razorpay', 'Swiggy', 'PhonePe', 'CRED', 'Uber'];
+const COMPANIES = [
+  { name: 'Google', logo: googleLogo },
+  { name: 'Amazon', logo: amazonLogo },
+  { name: 'Flipkart', logo: flipkartLogo },
+  { name: 'Razorpay', logo: razorpayLogo },
+  { name: 'Swiggy', logo: swiggyLogo },
+  { name: 'Uber', logo: uberLogo },
+  { name: 'Meta', logo: metaLogo },
+  { name: 'Klarna', logo: klarnaLogo }
+];
 
 const AuthSplitPage = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -446,8 +474,10 @@ const AuthSplitPage = () => {
         <LeftBottom>
           <AlumniLabel>Alumni working at</AlumniLabel>
           <CompanyPills>
-            {COMPANIES.map((name, i) => (
-              <CompanyPill key={i}>{name}</CompanyPill>
+            {COMPANIES.map((company) => (
+              <CompanyPill key={company.name}>
+                <CompanyLogo src={company.logo} alt={company.name} loading="lazy" />
+              </CompanyPill>
             ))}
           </CompanyPills>
         </LeftBottom>

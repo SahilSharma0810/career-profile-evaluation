@@ -6,6 +6,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
+import amazonLogo from '../../assets/logos/amazon.svg';
+import flipkartLogo from '../../assets/logos/flipkart.svg';
+import googleLogo from '../../assets/logos/google.svg';
+import klarnaLogo from '../../assets/logos/klarna.svg';
+import metaLogo from '../../assets/logos/meta.svg';
+import razorpayLogo from '../../assets/logos/razorpay.svg';
+import swiggyLogo from '../../assets/logos/swiggy.svg';
+import uberLogo from '../../assets/logos/uber.svg';
 import { useProfile } from '../../context/ProfileContext';
 import tracker from '../../utils/tracker';
 import { getPathWithQueryParams } from '../../utils/url';
@@ -208,11 +216,22 @@ const CompanyPills = styled.div`
 `;
 
 const CompanyPill = styled.div`
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.08);
-  padding: 5px 10px;
+  height: 30px;
+  min-width: 78px;
+  max-width: 110px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(17, 24, 39, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+`;
+
+const CompanyLogo = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 `;
 
 const SampleReportBtn = styled.button`
@@ -502,7 +521,16 @@ const SIDEBAR_TEXT = {
   }
 };
 
-const COMPANIES = ['Razorpay', 'Swiggy', 'PhonePe', 'Uber', 'CRED', 'Google', 'Amazon', 'Flipkart'];
+const COMPANIES = [
+  { name: 'Razorpay', logo: razorpayLogo },
+  { name: 'Swiggy', logo: swiggyLogo },
+  { name: 'Uber', logo: uberLogo },
+  { name: 'Google', logo: googleLogo },
+  { name: 'Amazon', logo: amazonLogo },
+  { name: 'Flipkart', logo: flipkartLogo },
+  { name: 'Meta', logo: metaLogo },
+  { name: 'Klarna', logo: klarnaLogo }
+];
 
 const STEP_TITLES = {
   'who-you-are': { tech: 'Your Profile', nontech: 'Your Background' },
@@ -804,8 +832,10 @@ const FinalModeQuiz = ({ onProgressChange }) => {
               </SampleReportBtn>
               <AlumniLabel>Alumni working at</AlumniLabel>
               <CompanyPills>
-                {COMPANIES.map((name, i) => (
-                  <CompanyPill key={i}>{name}</CompanyPill>
+                {COMPANIES.map((company) => (
+                  <CompanyPill key={company.name}>
+                    <CompanyLogo src={company.logo} alt={company.name} loading="lazy" />
+                  </CompanyPill>
                 ))}
               </CompanyPills>
             </SidebarBottom>
