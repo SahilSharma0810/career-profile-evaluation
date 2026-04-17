@@ -65,20 +65,24 @@ const NavActions = styled.div`
 `;
 
 const CTAButton = styled.button`
-  background: var(--accent-eye);
+  background: #0052ff;
   color: white;
-  border: none;
-  padding: 10px 20px;
+  border: 1px solid #0052ff;
+  padding: 9px 16px;
   border-radius: 0;
-  font-weight: 600;
-  font-size: 0.875rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  font-family: var(--mono);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
+  line-height: 1;
+  white-space: nowrap;
 
   &:hover {
-    background: #b3420a;
+    background: #0047de;
+    border-color: #0047de;
   }
 
   @media (max-width: 768px) {
@@ -493,7 +497,7 @@ const NavigationBar = ({
                 </IconButton>
               </>
             )}
-            <CTAButton onClick={handleRCBClick}>Book Free 1:1 Career Call</CTAButton>
+            <CTAButton onClick={handleRCBClick}>Talk to an advisor ↗</CTAButton>
           </NavActions>
         </NavContent>
         {showProgress && (

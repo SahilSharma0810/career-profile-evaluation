@@ -16,12 +16,16 @@ const pulse = keyframes`
 
 const LoadingWrapper = styled.div`
   min-height: 100vh;
+  min-height: 100svh;
   background: var(--white);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   padding: 40px 20px;
+  box-sizing: border-box;
+  overflow: hidden;
 `;
 
 const LoadingText = styled.div`
