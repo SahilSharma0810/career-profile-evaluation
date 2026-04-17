@@ -275,7 +275,7 @@ const MCLink = styled.a`
   justify-content: space-between;
   padding: 14px 20px;
   border-top: 1px solid var(--line);
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink);
@@ -392,7 +392,7 @@ const PrimaryBtn = styled.a`
   background: var(--accent);
   color: var(--white);
   padding: 12px 24px;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-weight: 700;
   font-size: 0.75rem;
   text-decoration: none;
