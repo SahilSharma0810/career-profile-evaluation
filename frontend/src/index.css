@@ -37,6 +37,7 @@ body {
 .cpe-theme {
   --serif: 'Clash Grotesk', 'Source Serif 4', Georgia, sans-serif;
   --sans: 'Plus Jakarta Sans', sans-serif;
+  --bg: #f0f0f0;
 }
 
 .cpe-theme,
