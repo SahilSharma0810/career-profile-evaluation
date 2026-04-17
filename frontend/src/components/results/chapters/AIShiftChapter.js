@@ -90,6 +90,13 @@ const CompanyIcon = styled.div`
   font-size: 0.875rem;
 `;
 
+const CompanyLogo = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+`;
+
 const CompanyName = styled.div`
   font-family: var(--mono);
   font-size: 0.75rem;
@@ -272,8 +279,13 @@ const AIShiftChapter = () => {
           <CardInner>
             <CardLeft>
               <CompanyRow>
-                <CompanyIcon>{COMPANY_ICONS[item.company] || '🏢'}</CompanyIcon>
-                <CompanyName>{item.company}</CompanyName>
+                <CompanyIcon>
+                  {COMPANY_ICONS[item.company] ? (
+                    <CompanyLogo src={COMPANY_ICONS[item.company]} alt={`${item.company} logo`} />
+                  ) : (
+                    <CompanyName>{item.company}</CompanyName>
+                  )}
+                </CompanyIcon>
                 <CompanyDivider />
               </CompanyRow>
 
