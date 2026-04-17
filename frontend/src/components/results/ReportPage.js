@@ -168,6 +168,11 @@ const ReportPage = ({
     openCallbackModal?.({ source });
   }, [isPreview, onPreviewCTAClick, openCallbackModal]);
 
+  const handleResourceClick = useCallback((clickType, custom = {}) => {
+    tracker.click({ click_type: clickType, custom });
+    tracker.ctaClick({ click_type: clickType, custom });
+  }, []);
+
   const score = evaluationResults?.profile_strength_score || 0;
   const strengths = evaluationResults?.skill_analysis?.strengths || [];
   const areasToImprove = evaluationResults?.skill_analysis?.areas_to_develop || [];
@@ -199,6 +204,7 @@ const ReportPage = ({
       <TwoPathsChapter
         targetRole={targetRole}
         hideCTAs={hideCTAs}
+        onResourceClick={handleResourceClick}
       />
 
       {recommendedRoles.length > 0 && (

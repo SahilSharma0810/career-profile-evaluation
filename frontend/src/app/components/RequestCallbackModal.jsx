@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import tracker from "../../utils/tracker";
 
 const OVERLAY_ID = "request-callback-modal";
 
@@ -217,6 +218,16 @@ const RequestCallbackModal = ({
                 href={programUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => {
+                  tracker.click({
+                    click_type: 'rcb_success_program_cta_clicked',
+                    custom: { program_name: programName || 'default_program', program_url: programUrl }
+                  });
+                  tracker.ctaClick({
+                    click_type: 'rcb_success_program_cta_clicked',
+                    custom: { program_name: programName || 'default_program', program_url: programUrl }
+                  });
+                }}
               >
                 {programName ? `Explore ${programName}` : 'Explore the program'} &rarr;
               </Button>

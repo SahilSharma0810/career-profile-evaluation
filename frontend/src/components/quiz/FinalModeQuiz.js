@@ -722,7 +722,8 @@ const FinalModeQuiz = ({ onProgressChange }) => {
           return question;
         });
 
-      let questionStartIndex = 1;
+      // Background selection is tracked as question 1, so grouped screens start from 2.
+      let questionStartIndex = 2;
       for (let i = 0; i < screenIndex; i++) {
         questionStartIndex += quizScreens[i].questions.length;
       }

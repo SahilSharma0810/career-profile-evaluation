@@ -422,7 +422,7 @@ const OutlineBtn = styled.a`
   &:hover { border-color: var(--line2); }
 `;
 
-const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
+const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
   const courses = getCoursesForRole(targetRole);
   const program = getStructuredProgramForRole(targetRole);
   const programKey = getProgramKeyForTargetRole(targetRole);
@@ -455,7 +455,17 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
                 <CourseDesc>{course.description}</CourseDesc>
                 <CourseMeta>{course.type} · {course.duration} · Free</CourseMeta>
               </CourseCardBody>
-              <CourseLink href={course.url} target="_blank" rel="noopener noreferrer">
+              <CourseLink
+                href={course.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => onResourceClick?.('course_cta_clicked', {
+                  section: 'two_paths',
+                  resource_type: 'course',
+                  resource_title: course.title,
+                  resource_url: course.url
+                })}
+              >
                 Start learning →
                 <ArrowUpRight size={14} />
               </CourseLink>
@@ -492,7 +502,17 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
                     </MCSpeaker>
                     <MCBadge>Live · {mc.day} · {mc.time}</MCBadge>
                   </MCCardBody>
-                  <MCLink href={mc.url} target="_blank" rel="noopener noreferrer">
+                  <MCLink
+                    href={mc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => onResourceClick?.('masterclass_cta_clicked', {
+                      section: 'two_paths',
+                      resource_type: 'masterclass',
+                      resource_title: mc.title,
+                      resource_url: mc.url
+                    })}
+                  >
                     Save my seat →
                     <ArrowUpRight size={14} />
                   </MCLink>
@@ -534,10 +554,32 @@ const TwoPathsChapter = ({ targetRole, hideCTAs }) => {
 
               {!hideCTAs && (
                 <ButtonRow>
-                  <PrimaryBtn href={program.primaryCta.url} target="_blank" rel="noopener noreferrer">
+                  <PrimaryBtn
+                    href={program.primaryCta.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => onResourceClick?.('program_cta_clicked', {
+                      section: 'two_paths',
+                      resource_type: 'program',
+                      cta_type: 'primary',
+                      cta_label: program.primaryCta.label,
+                      resource_url: program.primaryCta.url
+                    })}
+                  >
                     {program.primaryCta.label}
                   </PrimaryBtn>
-                  <OutlineBtn href={program.secondaryCta.url} target="_blank" rel="noopener noreferrer">
+                  <OutlineBtn
+                    href={program.secondaryCta.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => onResourceClick?.('curriculum_cta_clicked', {
+                      section: 'two_paths',
+                      resource_type: 'program',
+                      cta_type: 'secondary',
+                      cta_label: program.secondaryCta.label,
+                      resource_url: program.secondaryCta.url
+                    })}
+                  >
                     {program.secondaryCta.label}
                   </OutlineBtn>
                 </ButtonRow>
