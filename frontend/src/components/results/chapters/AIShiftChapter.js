@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CaretLeft, CaretRight } from 'phosphor-react';
+import GoogleIcon from '../../../assets/logos/google.svg';
+import AmazonIcon from '../../../assets/logos/amazon.svg';
+import MetaIcon from '../../../assets/logos/meta.svg';
+import KlarnaIcon from '../../../assets/logos/klarna.svg';
 import AI_SHIFT_COMPANIES from '../../../data/ai_shift_content';
 
 const Section = styled.section`
@@ -245,10 +249,10 @@ const NavBtn = styled.button`
 `;
 
 const COMPANY_ICONS = {
-  Google: '🔍',
-  Amazon: '📦',
-  Meta: '🔵',
-  Klarna: '🟣'
+  Google: GoogleIcon,
+  Amazon: AmazonIcon,
+  Meta: MetaIcon,
+  Klarna: KlarnaIcon
 };
 
 const AIShiftChapter = () => {

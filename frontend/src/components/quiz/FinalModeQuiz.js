@@ -47,7 +47,7 @@ const MainLayout = styled.div`
 /* ── Left Sidebar ──────────────────────────────────────────── */
 
 const Sidebar = styled.aside`
-  width: 280px;
+  width: 400px;
   flex-shrink: 0;
   background: var(--navy);
   color: var(--white);
@@ -325,7 +325,7 @@ const QuizContent = styled.div`
 const BottomNav = styled.div`
   position: fixed;
   bottom: 0;
-  left: 280px;
+  left: 400px;
   right: 0;
   background: var(--white);
   border-top: 1px solid var(--line);
