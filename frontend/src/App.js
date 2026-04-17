@@ -16,6 +16,7 @@ import MBAQuiz from './components/quiz/MBAQuiz';
 import MBAResultsPage from './components/MBAResultsPage';
 import MBAAdminViewPage from './components/admin/MBAAdminViewPage';
 import MicrosoftClarity from './components/analytics/MicrosoftClarity';
+import tracker from './utils/tracker';
 import { getPathWithQueryParams } from './utils/url';
 
 import '@vectord/ui/dist/style.css';
@@ -82,6 +83,17 @@ function AppContent() {
   ) && !location.pathname.startsWith('/admin') && !isMBARoute;
 
   const isAdminRoute = location.pathname.startsWith('/admin');
+
+  useEffect(() => {
+    const pageUrl = new URL(window.location.href);
+    tracker.superAttributes = {
+      attributes: {
+        page_path: pageUrl.pathname,
+        page_url: pageUrl.href,
+        query_params: Object.fromEntries(pageUrl.searchParams.entries())
+      }
+    };
+  }, [location.pathname]);
 
   const navigationProps = useMemo(
     () => ({

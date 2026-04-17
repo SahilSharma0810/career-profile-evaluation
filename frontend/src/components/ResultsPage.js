@@ -15,8 +15,8 @@ const pulse = keyframes`
 `;
 
 const LoadingWrapper = styled.div`
-  min-height: 100vh;
-  min-height: 100svh;
+  min-height: calc(100vh - 92px);
+  min-height: calc(100svh - 92px);
   background: var(--white);
   display: flex;
   flex-direction: column;
@@ -26,6 +26,11 @@ const LoadingWrapper = styled.div`
   padding: 40px 20px;
   box-sizing: border-box;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    min-height: calc(100vh - 110px);
+    min-height: calc(100svh - 110px);
+  }
 `;
 
 const LoadingText = styled.div`

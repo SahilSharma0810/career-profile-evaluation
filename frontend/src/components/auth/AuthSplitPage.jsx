@@ -176,7 +176,7 @@ const CompanyPill = styled.div`
   min-width: 74px;
   max-width: 106px;
   padding: 4px 9px;
-  background: rgba(255, 255, 255, 0.95);
+  background: #ffffff;
   border: 1px solid rgba(17, 24, 39, 0.15);
   display: flex;
   align-items: center;
@@ -185,9 +185,13 @@ const CompanyPill = styled.div`
 `;
 
 const CompanyLogo = styled.img`
-  width: 100%;
-  height: 100%;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
+  object-position: center;
 `;
 
 /* ── Right Panel ───────────────────────────────────────────── */
