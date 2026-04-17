@@ -92,6 +92,20 @@ const CourseGrid = styled.div`
   }
 `;
 
+const CourseTitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const CourseIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+  margin-right: 12px;
+`;
+
 const CourseCard = styled.div`
   background: var(--white);
   border: 1px solid var(--line);
@@ -451,7 +465,10 @@ const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
             <CourseCard key={i}>
               <CourseCardBody>
                 <CourseSource>Scaler Topics</CourseSource>
-                <CourseName>{course.title}</CourseName>
+                <CourseTitleContainer>
+                  <CourseIcon src={course.icon} alt={course.title} />
+                  <CourseName>{course.title}</CourseName>
+                </CourseTitleContainer>
                 <CourseDesc>{course.description}</CourseDesc>
                 <CourseMeta>{course.type} · {course.duration} · Free</CourseMeta>
               </CourseCardBody>
