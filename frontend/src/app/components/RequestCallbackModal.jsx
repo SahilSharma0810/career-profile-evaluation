@@ -1,10 +1,10 @@
-import React, { useEffect, useCallback } from "react";
-import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import tracker from "../../utils/tracker";
+import React, { useEffect, useCallback } from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import tracker from '../../utils/tracker';
 
-const OVERLAY_ID = "request-callback-modal";
+const OVERLAY_ID = 'request-callback-modal';
 
 const Overlay = styled.div`
   position: fixed;
@@ -69,26 +69,33 @@ const Description = styled.p`
 `;
 
 const Button = styled.a`
-  display: inline-block;
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #0052ff;
   border-radius: 0;
-  padding: 12px 24px;
-  font-weight: 600;
-  font-size: 0.875rem;
+  padding: 9px 16px;
+  font-weight: 700;
+  font-size: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
+  line-height: 1;
+  white-space: nowrap;
   text-decoration: none;
-  background: var(--accent-eye);
+  font-family: var(--mono);
+  background: #0052ff;
   color: white;
 
   &:hover {
-    background: #b3420a;
+    background: #0047de;
+    border-color: #0047de;
   }
 
   &:active {
-    background: #943508;
+    background: #003fc7;
+    border-color: #003fc7;
   }
 `;
 
@@ -115,6 +122,7 @@ const RetryButton = styled.button`
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-family: var(--sans);
 
   &:hover {
     color: #1e293b;
