@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { Phone } from 'phosphor-react';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import { useRequestCallback } from '../../app/context/RequestCallbackContext';
 import tracker from '../../utils/tracker';
@@ -58,17 +57,20 @@ const StickyBottom = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 100;
-  background: var(--accent-eye);
-  padding: 12px 40px;
+  z-index: 110;
+  background: #002a86;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 10px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 14px;
 
   @media (max-width: 768px) {
-    padding: 10px 16px;
+    padding: 10px 14px;
     flex-direction: column;
-    gap: 8px;
+    align-items: stretch;
+    gap: 10px;
   }
 
   @media print {
@@ -78,41 +80,55 @@ const StickyBottom = styled.div`
 
 const StickyText = styled.div`
   color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  line-height: 1.2;
 `;
 
 const StickyTitle = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 700;
 `;
 
 const StickySubtitle = styled.div`
-  font-size: 0.75rem;
-  opacity: 0.8;
+  font-size: 0.8125rem;
+  opacity: 0.92;
 `;
 
 const StickyBtn = styled.button`
-  background: var(--white);
-  color: var(--accent-eye);
-  border: none;
-  padding: 10px 24px;
-  font-family: var(--mono);
+  background: transparent;
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  padding: 8px 12px;
+  font-family: var(--sans);
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: background 0.15s ease;
+  justify-content: center;
+  gap: 6px;
+  letter-spacing: 0.2px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 
   &:hover {
-    background: #f0f0f0;
+    background: rgba(255, 255, 255, 0.14);
+    border-color: var(--white);
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 
 const BottomSpacer = styled.div`
-  height: 56px;
+  height: 58px;
+  @media (max-width: 768px) {
+    height: 106px;
+  }
 `;
 
 const ReportPage = ({
@@ -152,6 +168,11 @@ const ReportPage = ({
     openCallbackModal?.({ source });
   }, [isPreview, onPreviewCTAClick, openCallbackModal]);
 
+  const handleResourceClick = useCallback((clickType, custom = {}) => {
+    tracker.click({ click_type: clickType, custom });
+    tracker.ctaClick({ click_type: clickType, custom });
+  }, []);
+
   const score = evaluationResults?.profile_strength_score || 0;
   const strengths = evaluationResults?.skill_analysis?.strengths || [];
   const areasToImprove = evaluationResults?.skill_analysis?.areas_to_develop || [];
@@ -183,6 +204,7 @@ const ReportPage = ({
       <TwoPathsChapter
         targetRole={targetRole}
         hideCTAs={hideCTAs}
+        onResourceClick={handleResourceClick}
       />
 
       {recommendedRoles.length > 0 && (
@@ -209,13 +231,11 @@ const ReportPage = ({
         <>
           <StickyBottom>
             <StickyText>
-              <StickyTitle>
-                {isPreview ? 'This is a sample report.' : 'One move can change your trajectory.'}
-              </StickyTitle>
+              <StickyTitle>{isPreview ? 'Sample report.' : 'Need help?'}</StickyTitle>
               <StickySubtitle>
                 {isPreview
                   ? 'Complete the quiz to get your personalized report.'
-                  : '30 min with a senior Scaler mentor. Free. Tailored to your profile.'}
+                  : 'Talk to us at 08047399623'}
               </StickySubtitle>
             </StickyText>
             <StickyBtn onClick={() => handleCTAClick('report_sticky_cta')}>
@@ -223,8 +243,8 @@ const ReportPage = ({
                 'Back to Quiz'
               ) : (
                 <>
-                  <Phone size={14} weight="fill" />
-                  Get free consultation
+                  Request a Call
+                  <span aria-hidden="true">↗</span>
                 </>
               )}
             </StickyBtn>

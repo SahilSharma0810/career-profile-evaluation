@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CaretLeft, CaretRight } from 'phosphor-react';
+import GoogleIcon from '../../../assets/logos/google.svg';
+import AmazonIcon from '../../../assets/logos/amazon.svg';
+import MetaIcon from '../../../assets/logos/meta.svg';
+import KlarnaIcon from '../../../assets/logos/klarna.svg';
 import AI_SHIFT_COMPANIES from '../../../data/ai_shift_content';
 
 const Section = styled.section`
@@ -84,6 +88,13 @@ const CompanyIcon = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.875rem;
+`;
+
+const CompanyLogo = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 `;
 
 const CompanyName = styled.div`
@@ -245,10 +256,10 @@ const NavBtn = styled.button`
 `;
 
 const COMPANY_ICONS = {
-  Google: '🔍',
-  Amazon: '📦',
-  Meta: '🔵',
-  Klarna: '🟣'
+  Google: GoogleIcon,
+  Amazon: AmazonIcon,
+  Meta: MetaIcon,
+  Klarna: KlarnaIcon
 };
 
 const AIShiftChapter = () => {
@@ -268,8 +279,13 @@ const AIShiftChapter = () => {
           <CardInner>
             <CardLeft>
               <CompanyRow>
-                <CompanyIcon>{COMPANY_ICONS[item.company] || '🏢'}</CompanyIcon>
-                <CompanyName>{item.company}</CompanyName>
+                <CompanyIcon>
+                  {COMPANY_ICONS[item.company] ? (
+                    <CompanyLogo src={COMPANY_ICONS[item.company]} alt={`${item.company} logo`} />
+                  ) : (
+                    <CompanyName>{item.company}</CompanyName>
+                  )}
+                </CompanyIcon>
                 <CompanyDivider />
               </CompanyRow>
 
@@ -285,12 +301,6 @@ const AIShiftChapter = () => {
             </CardLeft>
 
             <CardRight>
-              <ChartPlaceholder>
-                <ChartLabel>Code Velocity</ChartLabel>
-                <ChartLine />
-                <ChartYear>2024+</ChartYear>
-              </ChartPlaceholder>
-
               <StatsRow>
                 {item.stats.map((s, i) => (
                   <StatBox key={i} $variant={i === 0 ? 'green' : 'blue'}>

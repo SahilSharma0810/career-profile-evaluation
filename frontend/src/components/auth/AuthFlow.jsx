@@ -308,6 +308,7 @@ const AuthFlow = ({
           submitStatus={formState.otp.status}
           errorMessage={formState.otp.error}
           successMessage={formState.otp.status === 'success' ? 'Verified successfully!' : ''}
+          flowType={formState.authFlow}
         />
       )}
     </Container>
