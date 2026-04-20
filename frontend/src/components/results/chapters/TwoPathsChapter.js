@@ -684,7 +684,7 @@ const PrimaryBtn = styled.a`
   padding: 12px 24px;
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 1.125rem;
+  font-size: 1rem;
   text-decoration: none;
   letter-spacing: 0;
   transition: background 0.15s ease;
@@ -704,7 +704,7 @@ const OutlineBtn = styled.a`
   padding: 14px 24px;
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 1.125rem;
+  font-size: 1rem;
   text-decoration: none;
   letter-spacing: 0;
   width: 100%;
