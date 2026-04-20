@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import { AuthFlow } from './index';
+import tracker from '../../utils/tracker';
 
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(16px); }
@@ -336,6 +337,10 @@ const AuthSplitPage = ({ initialMode = 'login' }) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
+    const pageUrl = new URL(window.location.href);
+    tracker.pageview({
+      page_url: pageUrl
+    });
     const onResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);

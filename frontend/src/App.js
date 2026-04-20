@@ -103,12 +103,7 @@ function AppContent() {
         query_params: Object.fromEntries(pageUrl.searchParams.entries())
       }
     };
-    if (!loading) {
-      tracker.pageview({
-        page_url: pageUrl
-      });
-    }
-  }, [location.pathname, loading]);
+  }, [location.pathname]);
 
   const navigationProps = useMemo(
     () => ({
