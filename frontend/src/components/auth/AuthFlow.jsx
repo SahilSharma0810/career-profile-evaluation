@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 import SignUpForm from './SignUpForm';
 import LoginForm from './LoginForm';
@@ -31,6 +32,8 @@ const AuthFlow = ({
   onSuccess,
   reloadOnSuccess = true
 }) => {
+  const navigate = useNavigate();
+
   const [pendingData, setPendingData] = useState({
     phoneNumber: '',
     email: '',
@@ -38,8 +41,8 @@ const AuthFlow = ({
   });
 
   const [formState, setFormState] = useState({
-    step: 'login',
-    authFlow: 'login',
+    step: initialMode,
+    authFlow: initialMode === 'signup' ? 'signup' : 'login',
     signup: {
       status: 'idle',
       error: ''
@@ -236,27 +239,31 @@ const AuthFlow = ({
 
   const handleSwitchToSignUp = useCallback(() => {
     setFormState(prev => ({ ...prev, step: 'signup', login: { status: 'idle', error: '' } }));
-  }, []);
+    navigate('/signup', { replace: true });
+  }, [navigate]);
 
   const handleSwitchToLogin = useCallback(() => {
     setFormState(prev => ({ ...prev, step: 'login', signup: { status: 'idle', error: '' }, email_login: { status: 'idle', error: '' } }));
-  }, []);
+    navigate('/login', { replace: true });
+  }, [navigate]);
 
   const handleSwitchToEmailLogin = useCallback(() => {
     setFormState(prev => ({ ...prev, step: 'email_login', login: { status: 'idle', error: '' }, email_login: { status: 'idle', error: '' } }));
+    navigate('/login', { replace: true });
     tracker.click({
       click_type: 'switch_to_email_login_clicked',
       click_source: 'auth_flow'
     });
-  }, []);
+  }, [navigate]);
 
   const handleSwitchToPhoneLogin = useCallback(() => {
     setFormState(prev => ({ ...prev, step: 'login', signup: { status: 'idle', error: '' }, email_login: { status: 'idle', error: '' } }));
+    navigate('/login', { replace: true });
     tracker.click({
       click_type: 'switch_to_phone_login_clicked',
       click_source: 'auth_flow'
     });
-  }, []);
+  }, [navigate]);
 
   const displayPhoneNumber = pendingData.phoneNumber.replace('+91-', '');
 
