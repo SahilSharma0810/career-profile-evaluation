@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
+import { useStore } from '@nanostores/react';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import { useRequestCallback } from '../../app/context/RequestCallbackContext';
 import tracker from '../../utils/tracker';
 import useSectionViewTracking from '../../hooks/useSectionViewTracking';
+import { $initialData } from '../../store/initial-data';
 import HeroChapter from './chapters/HeroChapter';
 import TenXEngineerChapter from './chapters/TenXEngineerChapter';
 import SkillsChapter from './chapters/SkillsChapter';
@@ -63,7 +65,7 @@ const StickyBottom = styled.div`
   padding: 10px 28px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 14px;
 
   @media (max-width: 768px) {
@@ -141,6 +143,7 @@ const ReportPage = ({
   onPreviewCTAClick = null
 }) => {
   const { open: openCallbackModal } = useRequestCallback();
+  const { data: initialData } = useStore($initialData);
 
   const sectionTrackingConfig = useMemo(() => [
     { id: 'cpe-hero-section', name: 'CPE Hero Section' },
@@ -179,12 +182,16 @@ const ReportPage = ({
   const recommendedRoles = evaluationResults?.recommended_roles_based_on_interests || [];
   const tools = evaluationResults?.recommended_tools || [];
   const targetRole = quizResponses?.targetRole || quizResponses?.targetRoleLabel || '';
+  const userData = initialData?.userData;
+  const rawName = userData?.name || userData?.full_name || '';
+  const userFirstName = rawName.trim().split(/\s+/)[0] || 'There';
 
   return (
     <PageWrapper>
       <HeroChapter
         score={score}
         targetRole={targetRole}
+        userFirstName={userFirstName}
         quizResponses={quizResponses}
         background={background}
         hideCTAs={hideCTAs}

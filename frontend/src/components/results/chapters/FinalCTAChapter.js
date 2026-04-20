@@ -126,7 +126,7 @@ const FinalCTAChapter = ({ targetRole, isPreview, onCTAClick }) => {
         </Subtitle>
 
         <CTAButton onClick={onCTAClick}>
-          {isPreview ? 'Back to Quiz' : (<><Phone size={18} weight="fill" /> Get free consultation →</>)}
+          {isPreview ? 'Back to Quiz' : (<><Phone size={18} weight="fill" /> GET FREE 1:1 CAREER CALL →</>)}
         </CTAButton>
         {!isPreview && <CTASub>30 min · No card · No pressure</CTASub>}
       </Container>

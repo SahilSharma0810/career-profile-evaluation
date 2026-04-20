@@ -82,8 +82,7 @@ const CompanyRow = styled.div`
 `;
 
 const CompanyIcon = styled.div`
-  width: 24px;
-  height: 24px;
+  width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -208,7 +208,7 @@ const ROLE_DISPLAY_NAMES = {
   'not-sure': 'Software Engineer'
 };
 
-const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, isPreview, onCTAClick }) => {
+const HeroChapter = ({ score, targetRole, userFirstName = 'There', quizResponses, background, hideCTAs, isPreview, onCTAClick }) => {
   const [displayScore, setDisplayScore] = useState(0);
   const hasAnimated = useRef(false);
 
@@ -254,7 +254,7 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, i
         <HeroLayout>
           <HeroLeft>
             <Title>
-              Hey There,<br />
+              Hey {userFirstName},<br />
               Become an AI-Powered<br />
               10× {roleName}.
             </Title>
