@@ -31,49 +31,49 @@ import devopsAimlBackground from '../assets/program_banners/aiml_devops.png';
 
 const COURSES_BY_ROLE = {
   'senior-backend': [
-    { title: 'System Design Fundamentals', icon: SystemDesignFundamentals, description: 'Learn how to design scalable systems — your foundation needs work.', duration: '12 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Distributed Systems Primer', icon: DistributedSystemsPrimer, description: 'Understand how systems talk at scale — brush up on distributed fundamentals.', duration: '8 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Backend with Python & Django', icon: BackendWithPythonAndDjango, description: 'Build production-grade APIs — backend fundamentals in Python are a gap worth closing.', duration: '16 hrs', type: 'Self-paced', free: true, url: '#' }
+    { title: 'System Design Fundamentals', icon: SystemDesignFundamentals, description: 'Learn how to design scalable systems — your foundation needs work.', duration: '12 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/best-system-design-courses/' },
+    { title: 'Distributed Systems Primer', icon: DistributedSystemsPrimer, description: 'Understand how systems talk at scale — brush up on distributed fundamentals.', duration: '8 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/challenges-of-distributed-system/' },
+    { title: 'Backend with Python & Django', icon: BackendWithPythonAndDjango, description: 'Build production-grade APIs — backend fundamentals in Python are a gap worth closing.', duration: '16 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/python/' }
   ],
   'senior-fullstack': [
-    { title: 'Full-Stack Architecture', icon: FullStackArchitecture, description: 'Master end-to-end application design from frontend to backend.', duration: '14 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'React Advanced Patterns', icon: ReactAdvancedPatterns, description: 'Level up your React skills with production-grade patterns.', duration: '10 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'System Design Fundamentals', icon: SystemDesignFundamentals, description: 'Learn how to design scalable systems — essential for senior roles.', duration: '12 hrs', type: 'Self-paced', free: true, url: '#' }
+    { title: 'Full-Stack Architecture', icon: FullStackArchitecture, description: 'Master end-to-end application design from frontend to backend.', duration: '14 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/software-engineering/how-to-become-a-full-stack-developer/' },
+    { title: 'React Advanced Patterns', icon: ReactAdvancedPatterns, description: 'Level up your React skills with production-grade patterns.', duration: '10 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/react/' },
+    { title: 'System Design Fundamentals', icon: SystemDesignFundamentals, description: 'Learn how to design scalable systems — essential for senior roles.', duration: '12 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/best-system-design-courses/' }
   ],
   'backend-sde': [
-    { title: 'Backend with Python & Django', icon: BackendWithPythonAndDjango, description: 'Build production-grade APIs with Python.', duration: '16 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Database Design & SQL', icon: DatabaseDesignAndSQL, description: 'Master relational databases, indexing, and query optimization.', duration: '10 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'REST API Design Best Practices', icon: RESTAPIDesignBestPractices, description: 'Design robust, scalable APIs that teams love to work with.', duration: '8 hrs', type: 'Self-paced', free: true, url: '#' }
+    { title: 'Backend with Python & Django', icon: BackendWithPythonAndDjango, description: 'Build production-grade APIs with Python.', duration: '16 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/python/' },
+    { title: 'Database Design & SQL', icon: DatabaseDesignAndSQL, description: 'Master relational databases, indexing, and query optimization.', duration: '10 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/dbms/' },
+    { title: 'REST API Design Best Practices', icon: RESTAPIDesignBestPractices, description: 'Design robust, scalable APIs that teams love to work with.', duration: '8 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/what-is-rest-api/' }
   ],
   'fullstack-sde': [
-    { title: 'Full-Stack JavaScript', icon: FullStackJavaScript, description: 'Build full-stack applications with Node.js and React.', duration: '20 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Frontend Fundamentals', icon: FrontendFundamentals, description: 'HTML, CSS, JavaScript — the building blocks of every web app.', duration: '12 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Backend with Node.js', icon: BackendWithNodeJS, description: 'Build scalable server-side applications with Express and Node.', duration: '14 hrs', type: 'Self-paced', free: true, url: '#' }
+    { title: 'Full-Stack JavaScript', icon: FullStackJavaScript, description: 'Build full-stack applications with Node.js and React.', duration: '20 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/software-engineering/how-to-become-a-full-stack-developer/' },
+    { title: 'Frontend Fundamentals', icon: FrontendFundamentals, description: 'HTML, CSS, JavaScript — the building blocks of every web app.', duration: '12 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/javascript/' },
+    { title: 'Backend with Node.js', icon: BackendWithNodeJS, description: 'Build scalable server-side applications with Express and Node.', duration: '14 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/nodejs/' }
   ],
   'data-ml': [
-    { title: 'Python for Data Science', icon: PythonForDataScience, description: 'Master Python, pandas, and numpy for data analysis.', duration: '16 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Machine Learning Foundations', icon: MachineLearningFoundations, description: 'Understand ML algorithms from linear regression to neural networks.', duration: '20 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'SQL for Analytics', icon: SQLForAnalytics, description: 'Advanced SQL for data extraction, transformation, and analysis.', duration: '10 hrs', type: 'Self-paced', free: true, url: '#' }
+    { title: 'Python for Data Science', icon: PythonForDataScience, description: 'Master Python, pandas, and numpy for data analysis.', duration: '16 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/data-science/' },
+    { title: 'Machine Learning Foundations', icon: MachineLearningFoundations, description: 'Understand ML algorithms from linear regression to neural networks.', duration: '20 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/artificial-intelligence-tutorial/' },
+    { title: 'SQL for Analytics', icon: SQLForAnalytics, description: 'Advanced SQL for data extraction, transformation, and analysis.', duration: '10 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/sql/' }
   ],
   'devops-sre': [
-    { title: 'Docker & Kubernetes Fundamentals', icon: DockerAndKubernetesFundamentals, description: 'Master containerization and orchestration from scratch.', duration: '14 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'AWS Cloud Practitioner', icon: AWSCloudPractitioner, description: 'Build your cloud foundation with core AWS services.', duration: '12 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'CI/CD Pipeline Design', icon: CICDPipelineDesign, description: 'Automate your deployment workflow end to end.', duration: '8 hrs', type: 'Self-paced', free: true, url: '#' }
+    { title: 'Docker & Kubernetes Fundamentals', icon: DockerAndKubernetesFundamentals, description: 'Master containerization and orchestration from scratch.', duration: '14 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/docker/' },
+    { title: 'AWS Cloud Practitioner', icon: AWSCloudPractitioner, description: 'Build your cloud foundation with core AWS services.', duration: '12 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/aws/' },
+    { title: 'CI/CD Pipeline Design', icon: CICDPipelineDesign, description: 'Automate your deployment workflow end to end.', duration: '8 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/cloud-computing/' }
   ],
   'ai-ml-engineer': [
-    { title: 'LLM Fundamentals & Prompt Engineering', icon: LLMFundamentalsAndPromptEngineering, description: 'Understand large language models and how to work with them.', duration: '10 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'RAG Pipeline Design', icon: RAGPipelineDesign, description: 'Build retrieval-augmented generation systems for production.', duration: '12 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Machine Learning Foundations', icon: MachineLearningFoundations, description: 'Core ML concepts every AI engineer needs.', duration: '20 hrs', type: 'Self-paced', free: true, url: '#' }
+    { title: 'LLM Fundamentals & Prompt Engineering', icon: LLMFundamentalsAndPromptEngineering, description: 'Understand large language models and how to work with them.', duration: '10 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/generative-ai/' },
+    { title: 'RAG Pipeline Design', icon: RAGPipelineDesign, description: 'Build retrieval-augmented generation systems for production.', duration: '12 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/artificial-intelligence-tutorial/ibm-rag-and-agentic-ai-professional-certificate-what-is-it/' },
+    { title: 'Machine Learning Foundations', icon: MachineLearningFoundations, description: 'Core ML concepts every AI engineer needs.', duration: '20 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/machine-learning/' }
   ],
   'tech-lead': [
-    { title: 'System Design Masterclass', icon: SystemDesignMasterclass, description: 'Design systems at scale — the core skill for tech leads.', duration: '16 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Engineering Leadership', icon: EngineeringLeadership, description: 'Lead teams, run design reviews, and drive technical decisions.', duration: '10 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Architecture Patterns', icon: ArchitecturePatterns, description: 'Microservices, event-driven, CQRS — patterns that matter at scale.', duration: '12 hrs', type: 'Self-paced', free: true, url: '#' }
+    { title: 'System Design Masterclass', icon: SystemDesignMasterclass, description: 'Design systems at scale — the core skill for tech leads.', duration: '16 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/best-system-design-courses/' },
+    { title: 'Engineering Leadership', icon: EngineeringLeadership, description: 'Lead teams, run design reviews, and drive technical decisions.', duration: '10 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/software-engineering/senior-software-developer/' },
+    { title: 'Architecture Patterns', icon: ArchitecturePatterns, description: 'Microservices, event-driven, CQRS — patterns that matter at scale.', duration: '12 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/software-engineering/software-architecture/' }
   ],
   'default': [
-    { title: 'System Design Fundamentals', icon: SystemDesignFundamentals, description: 'Learn how to design scalable systems.', duration: '12 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Data Structures & Algorithms', icon: DataStructuresAndAlgorithms, description: 'Master DSA — the foundation of every technical interview.', duration: '20 hrs', type: 'Self-paced', free: true, url: '#' },
-    { title: 'Backend Development Basics', icon: BackendDevelopmentBasics, description: 'Build APIs and understand server-side programming.', duration: '16 hrs', type: 'Self-paced', free: true, url: '#' }
+    { title: 'System Design Fundamentals', icon: SystemDesignFundamentals, description: 'Learn how to design scalable systems.', duration: '12 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/best-system-design-courses/' },
+    { title: 'Data Structures & Algorithms', icon: DataStructuresAndAlgorithms, description: 'Master DSA — the foundation of every technical interview.', duration: '20 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/data-structures/' },
+    { title: 'Backend Development Basics', icon: BackendDevelopmentBasics, description: 'Build APIs and understand server-side programming.', duration: '16 hrs', type: 'Self-paced', free: true, url: 'https://www.scaler.com/topics/software-engineering/backend-developer-roadmap/' }
   ]
 };
 
