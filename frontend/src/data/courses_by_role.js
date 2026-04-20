@@ -143,7 +143,7 @@ const PROGRAMS = {
       'ML Engineers who develop, train, and optimize machine learning models for performance and scalability',
       'Decision Scientists who combine data, experimentation, and business context to drive high-impact decisions'
     ],
-    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/courses/data-science-course/' },
+    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/data-science-course/' },
     secondaryCta: { label: 'DOWNLOAD CURRICULUM', url: 'https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/105/157/original/DSML_Brochure_2024_compressed.pdf?1738001683' }
   },
   'devops-course': {
@@ -174,7 +174,7 @@ const PROGRAMS = {
       'Agentic Workflow Designers who design AI-powered workflows where agents collaborate to complete tasks end-to-end',
       'AI Gateway Engineers who build and manage secure, scalable interfaces that connect applications with AI models and services'
     ],
-    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/courses/devops-course/' },
+    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/devops-course/' },
     secondaryCta: { label: 'DOWNLOAD CURRICULUM', url: 'https://content.interviewbit.com/devops_brochure.pdf' }
   },
   'ai-machine-learning-course': {
@@ -205,7 +205,7 @@ const PROGRAMS = {
       'Agent Engineers who build autonomous AI agents that can reason, act, and execute tasks across tools and workflows',
       'MLOps Engineers who productionize, deploy, and maintain ML systems with reliable pipelines and monitoring'
     ],
-    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/courses/ai-machine-learning-course/' },
+    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/ai-machine-learning-course/' },
     secondaryCta: { label: 'DOWNLOAD CURRICULUM', url: 'https://content.interviewbit.com/AI-Ml-Brochure.pdf' }
   }
 };
