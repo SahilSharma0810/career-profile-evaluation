@@ -108,7 +108,7 @@ function AppContent() {
         page_url: pageUrl
       });
     }
-  }, [location.pathname]);
+  }, [location.pathname, loading]);
 
   const navigationProps = useMemo(
     () => ({
