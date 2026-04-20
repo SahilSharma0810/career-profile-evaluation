@@ -116,6 +116,19 @@ const CourseSource = styled.div`
   margin-bottom: 10px;
 `;
 
+const CourseTitleContainer = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const CourseIcon = styled.div`
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const CourseName = styled.div`
   font-family: var(--sans);
   font-size: 0.9375rem;
@@ -451,7 +464,12 @@ const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
             <CourseCard key={i}>
               <CourseCardBody>
                 <CourseSource>Scaler Topics</CourseSource>
-                <CourseName>{course.title}</CourseName>
+                <CourseTitleContainer>
+                  <CourseIcon>
+                    {course.icon}
+                  </CourseIcon>
+                  <CourseName>{course.title}</CourseName>
+                </CourseTitleContainer>
                 <CourseDesc>{course.description}</CourseDesc>
                 <CourseMeta>{course.type} · {course.duration} · Free</CourseMeta>
               </CourseCardBody>
