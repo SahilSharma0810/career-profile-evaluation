@@ -1,90 +1,129 @@
-[
-  {
-    "name": "Ankur Prakash",
-    "initial": "A",
-    "currentTitle": "Senior Data Scientist",
-    "currentCompany": "Fractal.AI",
-    "beforeCompany": "TCS",
-    "afterCompany": "Fractal.AI",
-    "quote": "As someone who has been working as a software developer for almost 7 long years, I was eager to enhance my skills and strengthen my fundamentals. Scaler was recommended to me by a friend who was already riding the wave.",
-    "rating": 5,
-    "tags": ["data-ml", "backend"]
-  },
-  {
-    "name": "Priya Nair",
-    "initial": "P",
-    "currentTitle": "SDE-2",
-    "currentCompany": "Amazon",
-    "beforeCompany": "TCS",
-    "afterCompany": "Amazon",
-    "quote": "Mock interviews were brutal at first — I was humbled. By the fourth one, hard problems started feeling familiar. Amazon called two months after I finished the program.",
-    "rating": 5,
-    "tags": ["backend", "fullstack", "senior-backend"]
-  },
-  {
-    "name": "Rahul Sharma",
-    "initial": "R",
-    "currentTitle": "Backend SDE-2",
-    "currentCompany": "Flipkart",
-    "beforeCompany": "Infosys",
-    "afterCompany": "Flipkart",
-    "quote": "3 years at a service company and I was stuck. Scaler's system design curriculum was the unlock — Flipkart called in month 8. I went from 8 LPA to 28 LPA.",
-    "rating": 5,
-    "tags": ["backend", "senior-backend", "swe-service"]
-  },
-  {
-    "name": "Sneha Iyer",
-    "initial": "S",
-    "currentTitle": "Backend Engineer",
-    "currentCompany": "Razorpay",
-    "beforeCompany": "Wipro",
-    "afterCompany": "Razorpay",
-    "quote": "I had zero product-company exposure. Scaler's placement team got me a direct hiring-manager intro at Razorpay — no cold applications, no middlemen.",
-    "rating": 5,
-    "tags": ["backend", "fullstack", "swe-service"]
-  },
-  {
-    "name": "Deepak Verma",
-    "initial": "D",
-    "currentTitle": "Senior Full-Stack Engineer",
-    "currentCompany": "Swiggy",
-    "beforeCompany": "Cognizant",
-    "afterCompany": "Swiggy",
-    "quote": "The structured curriculum and peer learning made all the difference. I never thought I'd make it to a top startup, but here I am — 3× my previous CTC.",
-    "rating": 5,
-    "tags": ["fullstack", "senior-fullstack", "frontend"]
-  },
-  {
-    "name": "Kavya Reddy",
-    "initial": "K",
-    "currentTitle": "ML Engineer",
-    "currentCompany": "Google",
-    "beforeCompany": "Accenture",
-    "afterCompany": "Google",
-    "quote": "Coming from a service company, I didn't think FAANG was possible. Scaler's mentors showed me it was about preparation, not pedigree.",
-    "rating": 5,
-    "tags": ["data-ml", "ai-ml-engineer"]
-  },
-  {
-    "name": "Arjun Menon",
-    "initial": "A",
-    "currentTitle": "DevOps Lead",
-    "currentCompany": "Atlassian",
-    "beforeCompany": "HCL",
-    "afterCompany": "Atlassian",
-    "quote": "I was pigeonholed in ops. Scaler helped me bridge the gap to DevOps engineering with real projects and system design depth.",
-    "rating": 5,
-    "tags": ["devops-sre", "devops"]
-  },
-  {
-    "name": "Neha Gupta",
-    "initial": "N",
-    "currentTitle": "Frontend Engineer",
-    "currentCompany": "CRED",
-    "beforeCompany": "Non-Tech (Marketing)",
-    "afterCompany": "CRED",
-    "quote": "Career switcher here — marketing to frontend in 10 months. The structured path and mentor support made the impossible feel systematic.",
-    "rating": 5,
-    "tags": ["frontend", "non-tech", "fullstack"]
-  }
-]
+{
+  "software_development": [
+    {
+      "name": "Subham Soni",
+      "currentTitle": "Backend Developer",
+      "currentCompany": "Google",
+      "beforeCompany": "Credit Suisse",
+      "afterCompany": "Google",
+      "quote": "Working at a top product company had been on my to-do list for a long time. My journey at Scaler helped me build the confidence and preparation to finally make that move.",
+      "rating": 5
+    },
+    {
+      "name": "Rishi Prakash",
+      "currentTitle": "Software Engineer 2",
+      "currentCompany": "Microsoft",
+      "beforeCompany": "Accenture",
+      "afterCompany": "Microsoft",
+      "quote": "I used to think top companies were only for students from elite colleges. With consistent preparation and the right mentorship, that belief changed completely.",
+      "rating": 4
+    },
+    {
+      "name": "Abinay Bingumalla",
+      "currentTitle": "Full Stack Engineer",
+      "currentCompany": "Microsoft",
+      "beforeCompany": "Reliance Infocomm Limited",
+      "afterCompany": "Microsoft",
+      "quote": "I had seen a gap between what we study and what product teams expect. Scaler helped bridge that gap with a practical, interview-focused learning path.",
+      "rating": 5
+    },
+    {
+      "name": "Bhaskar Shaw",
+      "currentTitle": "SDE 2",
+      "currentCompany": "Walmart",
+      "beforeCompany": "FarEye",
+      "afterCompany": "Walmart",
+      "quote": "One of the best decisions I made was investing in myself. The structure and accountability at Scaler turned that investment into clear career outcomes.",
+      "rating": 5
+    }
+  ],
+  "data_science": [
+    {
+      "name": "Rohit Kamra",
+      "currentTitle": "Data Scientist",
+      "currentCompany": "Brillio",
+      "beforeCompany": "Accenture",
+      "afterCompany": "Brillio",
+      "quote": "To do well in Data Science, effort and consistency matter more than anything. Scaler gave me the right roadmap and practical depth to break through.",
+      "rating": 4
+    },
+    {
+      "name": "Arjun Bhasin",
+      "currentTitle": "Senior Data Engineer",
+      "currentCompany": "Insurancedeko",
+      "beforeCompany": "Cians Analytics",
+      "afterCompany": "Insurancedeko",
+      "quote": "Being strong across multiple skills gave me an edge. Scaler helped me sharpen that edge and turn it into better opportunities.",
+      "rating": 5
+    },
+    {
+      "name": "Akshat",
+      "currentTitle": "AI/ML Scientist",
+      "currentCompany": "MindShare",
+      "beforeCompany": "HCL Tech",
+      "afterCompany": "MindShare",
+      "quote": "From fundamentals to advanced ML, the learning path was clear. I cracked my first placement just a few months after joining the program.",
+      "rating": 5
+    }
+  ],
+  "devops": [
+    {
+      "name": "Deepak Mulakala",
+      "currentTitle": "DevOps Engineer 1",
+      "currentCompany": "Incred",
+      "beforeCompany": "Amazon",
+      "afterCompany": "Incred",
+      "quote": "The transition into a stronger DevOps role became realistic once I followed a structured preparation plan and kept building consistently.",
+      "rating": 5
+    },
+    {
+      "name": "Biswaranjan Adhikary",
+      "currentTitle": "Senior Software Development Engineer",
+      "currentCompany": "Inmobi",
+      "beforeCompany": "Brillio",
+      "afterCompany": "Inmobi",
+      "quote": "The journey taught me that disciplined upskilling compounds quickly. Mentorship and practice made the jump to a stronger product role possible.",
+      "rating": 5
+    }
+  ],
+  "ai_ml": [
+    {
+      "name": "Akshat",
+      "currentTitle": "AI/ML Scientist",
+      "currentCompany": "MindShare",
+      "beforeCompany": "HCL Tech",
+      "afterCompany": "MindShare",
+      "quote": "Scaler gave me a structured AI/ML path from basics to practical depth. That helped me convert preparation into real placement outcomes quickly.",
+      "rating": 5
+    },
+    {
+      "name": "Balasubramanian R",
+      "currentTitle": "Data Engineer + ML Engineer",
+      "currentCompany": "Dun and Bradstreet",
+      "beforeCompany": "Oracle Cerner Corporation",
+      "afterCompany": "Dun and Bradstreet",
+      "quote": "A focused curriculum and consistent practice made it easier to move into roles that combine data engineering with applied machine learning.",
+      "rating": 5
+    }
+  ],
+  "default": [
+    {
+      "name": "Prakash Shukla",
+      "currentTitle": "Software Engineer",
+      "currentCompany": "Townscript",
+      "beforeCompany": "Self-employed",
+      "afterCompany": "Townscript",
+      "quote": "Joining Scaler was one of my best career decisions. The learning and support helped me move into a stronger software engineering role.",
+      "rating": 5
+    },
+    {
+      "name": "Krishna Chaitanya",
+      "currentTitle": "Software Engineer III",
+      "currentCompany": "Walmart",
+      "beforeCompany": "Innodatatics",
+      "afterCompany": "Walmart",
+      "quote": "I enrolled to stay current and keep learning. A few months later, that effort translated into a Software Engineer III role at Walmart.",
+      "rating": 5
+    }
+  ]
+}
