@@ -331,7 +331,7 @@ const ModalBody = styled.div`
 
 const COMPANIES = ['Google', 'Amazon', 'Flipkart', 'Razorpay', 'Swiggy', 'PhonePe', 'CRED', 'Uber'];
 
-const AuthSplitPage = () => {
+const AuthSplitPage = ({ initialMode = 'login' }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -373,12 +373,12 @@ const AuthSplitPage = () => {
           <ModalOverlay>
             <ModalCard role="dialog" aria-modal="true">
               <ModalHeader>
-                <ModalTitle>Continue to sign in</ModalTitle>
+                <ModalTitle>{initialMode === 'signup' ? 'Create your account' : 'Continue to sign in'}</ModalTitle>
                 <CloseButton aria-label="Close" onClick={closeAuth}>✕</CloseButton>
               </ModalHeader>
               <ModalBody>
                 <AuthFlow
-                  initialMode="login"
+                  initialMode={initialMode}
                   reloadOnSuccess={true}
                   showProfessionalFields={true}
                 />
@@ -456,7 +456,7 @@ const AuthSplitPage = () => {
       <RightPanel>
         <AuthCard>
           <AuthFlow
-            initialMode="login"
+            initialMode={initialMode}
             reloadOnSuccess={true}
           />
         </AuthCard>
