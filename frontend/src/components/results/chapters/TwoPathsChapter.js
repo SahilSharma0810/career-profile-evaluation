@@ -272,7 +272,7 @@ const MCMeta = styled.div`
 const MCTitle = styled.h3`
   font-family: var(--sans);
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--ink);
   margin: 0;
   line-height: 1.35;
