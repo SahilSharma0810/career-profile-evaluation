@@ -143,7 +143,7 @@ const ScoreGauge = styled.div`
 
 const ScoreNumber = styled.div`
   position: absolute;
-  top: 58%;
+  top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -153,7 +153,7 @@ const ScoreNumber = styled.div`
 
 const ScoreValue = styled.div`
   font-family: var(--serif);
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 500;
   color: var(--white);
   line-height: 1;
