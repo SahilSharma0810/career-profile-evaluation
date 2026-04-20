@@ -133,17 +133,17 @@ const ScoreSection = styled.div`
 const ScoreGauge = styled.div`
   position: relative;
   width: 180px;
-  height: 180px;
+  height: 116px;
 
   @media (max-width: 768px) {
     width: 140px;
-    height: 140px;
+    height: 92px;
   }
 `;
 
 const ScoreNumber = styled.div`
   position: absolute;
-  top: 50%;
+  top: 58%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -240,9 +240,10 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, i
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const pct = isPreview ? 0.65 : displayScore / 100;
+  const clampedPct = Math.max(0, Math.min(1, pct));
   const radius = 76;
-  const circumference = 2 * Math.PI * radius;
-  const dashOffset = circumference * (1 - pct * 0.75);
+  const semiCircumference = Math.PI * radius;
+  const filledArc = semiCircumference * clampedPct;
 
   return (
     <Section id="cpe-hero-section">
@@ -270,7 +271,7 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, i
                   ) : (
                     <>
                       <Phone size={18} weight="fill" />
-                      Get a Free Career Consultation
+                      BOOK FREE 1:1 CAREER CALL
                     </>
                   )}
                 </CTAButton>
@@ -283,27 +284,22 @@ const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, i
 
           <ScoreSection>
             <ScoreGauge>
-              <svg width="100%" height="100%" viewBox="0 0 180 180">
-                <circle
-                  cx="90" cy="90" r={radius}
+              <svg width="100%" height="100%" viewBox="0 0 180 116">
+                <path
+                  d={`M 14 104 A ${radius} ${radius} 0 0 1 166 104`}
                   fill="none"
                   stroke="rgba(255,255,255,0.08)"
                   strokeWidth="6"
-                  strokeDasharray={circumference * 0.75 + ' ' + circumference * 0.25}
-                  strokeDashoffset="0"
                   strokeLinecap="round"
-                  transform="rotate(135 90 90)"
                 />
-                <circle
-                  cx="90" cy="90" r={radius}
+                <path
+                  d={`M 14 104 A ${radius} ${radius} 0 0 1 166 104`}
                   fill="none"
                   stroke="var(--accent)"
                   strokeWidth="6"
-                  strokeDasharray={circumference * 0.75 + ' ' + circumference * 0.25}
-                  strokeDashoffset={dashOffset}
+                  strokeDasharray={`${filledArc} ${semiCircumference}`}
                   strokeLinecap="round"
-                  transform="rotate(135 90 90)"
-                  style={{ transition: 'stroke-dashoffset 1.5s ease-out' }}
+                  style={{ transition: 'stroke-dasharray 0.5s ease-out' }}
                 />
               </svg>
               <ScoreNumber>
