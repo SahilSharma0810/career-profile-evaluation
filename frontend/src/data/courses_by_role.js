@@ -23,6 +23,11 @@ import DataStructuresAndAlgorithms from '../assets/topics_icons/System-Design-Fu
 import BackendDevelopmentBasics from '../assets/topics_icons/Backend-Development-Basics.webp';
 
 
+import academyBackground from '../assets/program_banners/academy_bg.png';
+import dataScienceBackground from '../assets/program_banners/dsml.png';
+import devopsAimlBackground from '../assets/program_banners/aiml_devops.png';
+
+
 
 const COURSES_BY_ROLE = {
   'senior-backend': [
@@ -80,73 +85,125 @@ const MASTERCLASS_PLACEHOLDER = [
 
 const PROGRAMS = {
   'academy': {
-    name: 'Scaler Academy',
+    name: 'Modern Software & AI Engineering',
+    background: academyBackground,
     description: 'A structured program for early-career engineers to build strong CS fundamentals and land their first product company role.',
-    stats: [
-      { value: '8 mo', label: 'Job-ready' },
-      { value: '900+', label: 'Placed alumni' },
-      { value: '2.5×', label: 'Avg salary jump' }
-    ],
+    stats: {      
+      overallRating: '4.8+',
+      ratings: '25K+',
+      months: '12'
+    },
     features: [
-      '1:1 mentors from Google, Amazon, Flipkart',
-      '20+ mock interviews with sharp feedback',
-      '5 production-grade resume projects',
-      'Direct referrals to 400+ companies',
-      'Pay after placement (income share)'
+      {
+        title: 'Strong engineering fundamentals- ',
+        description: 'DSA, system design, and backend architecture built to the depth product company interviews demand.'
+      },
+      {
+        title: 'AI woven into every lab, assignment, and DSA problem - ',
+        description: 'with a 24×7 AI Companion that hints, critiques your approach, and pair-programs alongside you.'
+      },
+      {
+        title: 'Specialisation in Generative AI - ',
+        description: 'build, evaluate, and ship production AI systems as part of the programme'
+      }
+    ],
+    aiPanel: [
+      'Forward Deployed Engineers who embed with customers to build and deploy AI solutions directly within real-world business workflows',
+      'AI Solutions Engineers who design and implement end-to-end AI systems that solve specific business problems at scale',
+      'Agent Engineers who build autonomous AI agents that can reason, act, and execute tasks across tools and workflows'
     ],
     primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/academy/' },
     secondaryCta: { label: 'Download curriculum', url: 'https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/124/701/original/Academy-Broucher-12-05-24.pdf?1747034174' }
   },
   'data-science-course': {
-    name: 'Scaler Data Science & ML',
+    name: 'Modern Data Science and ML with Specialisation in AI',
+    background: dataScienceBackground,
     description: 'Go from data curiosity to data career. Industry mentors, real datasets, and a job guarantee that puts skin in the game.',
-    stats: [
-      { value: '11 mo', label: 'Job-ready' },
-      { value: '500+', label: 'Placed alumni' },
-      { value: '2.2×', label: 'Avg salary jump' }
-    ],
+    stats: {
+      overallRating: '4.7+',
+      ratings: '15K+',
+      months: '12'
+    },
     features: [
-      '1:1 mentors from Google, Amazon, Flipkart',
-      '15+ mock interviews with detailed feedback',
-      'Real-world capstone projects with industry data',
-      'Direct referrals to 400+ companies',
-      'Pay after placement (income share)'
+      {
+        title: 'Data science and ML fundamentals - ',
+        description: 'SQL, Python, statistics, machine learning, and MLOps taught as a connected system from raw data to deployed model, built to the depth the role and the market demand'
+      },
+      {
+        title: 'AI-native workflows integrated into every lab and project - ',
+        description: 'with a 24×7 AI Companion that trains you to generate, validate, and refine AI outputs at every stage of the work.'
+      },
+      {
+        title: 'Specialisation in Generative AI and AI Engineering - ',
+        description: 'build, evaluate, and deploy production AI systems as a core part of the programme.'
+      }
+    ],
+    aiPanel: [
+      'Data Scientists who analyze data and build models to uncover insights and inform decision-making',
+      'ML Engineers who develop, train, and optimize machine learning models for performance and scalability',
+      'Decision Scientists who combine data, experimentation, and business context to drive high-impact decisions'
     ],
     primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/data-science-course/' },
     secondaryCta: { label: 'Download curriculum', url: 'https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/105/157/original/DSML_Brochure_2024_compressed.pdf?1738001683' }
   },
   'devops-course': {
-    name: 'Scaler DevOps & SRE',
+    name: 'DevOps, Cloud & AI Platform Engineering specialisation in MLOps and Cybersecurity',
+    background: devopsAimlBackground,
     description: 'Master cloud infrastructure, CI/CD, and reliability engineering with mentors who\'ve scaled systems at top companies.',
-    stats: [
-      { value: '8 mo', label: 'Job-ready' },
-      { value: '900+', label: 'Placed alumni' },
-      { value: '2.5×', label: 'Avg salary jump' }
-    ],
+    stats: {
+      overallRating: '4.7+',
+      ratings: '8K+',
+      months: '12'
+    },
     features: [
-      '1:1 mentors from Google, Amazon, Flipkart',
-      '20+ mock interviews with sharp feedback',
-      '5 production-grade resume projects',
-      'Direct referrals to 400+ companies',
-      'Pay after placement (income share)'
+      {
+        title: 'DevOps and Cloud Engineering - ',
+        description: 'Linux to Kubernetes, CI/CD, Terraform, and AWS taught as one system for real-world deployment.'
+      },
+      {
+        title: 'AI-native operations across workflows - ',
+        description: 'Observability, anomaly detection, and agentic automation to run self-healing, intelligent systems'
+      },
+      {
+        title: 'Specialisation in AI-powered infrastructure - ',
+        description: 'Build and deploy AI systems using Kubeflow, KServe, LangChain, Bedrock, and modern cloud tooling'
+      }
+    ],
+    aiPanel: [
+      'AIOps Systems Architects who design AI-driven systems to monitor, automate, and optimize complex infrastructure',
+      'Agentic Workflow Designers who design AI-powered workflows where agents collaborate to complete tasks end-to-end',
+      'AI Gateway Engineers who build and manage secure, scalable interfaces that connect applications with AI models and services'
     ],
     primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/devops-course/' },
     secondaryCta: { label: 'Download curriculum', url: 'https://content.interviewbit.com/devops_brochure.pdf' }
   },
   'ai-machine-learning-course': {
-    name: 'Scaler AI & ML',
+    name: 'Advanced AIML with Specialisation in Agentic AI',
+    background: devopsAimlBackground,
     description: 'Build production AI systems — from classical ML to LLMs. Mentored by engineers shipping AI at scale.',
-    stats: [
-      { value: '11 mo', label: 'Job-ready' },
-      { value: '500+', label: 'Placed alumni' },
-      { value: '2.2×', label: 'Avg salary jump' }
-    ],
+    stats: {
+      overallRating: '4.6+',
+      ratings: '4K+',
+      months: '12'
+    },
     features: [
-      '1:1 mentors from Google, Amazon, Flipkart',
-      '15+ mock interviews with detailed feedback',
-      'Real-world capstone projects with industry data',
-      'Direct referrals to 400+ companies',
-      'Pay after placement (income share)'
+      {
+        title: 'ML fundamentals to full AI engineering - ',
+        description: 'Theory, deep learning, NLP, and computer vision, through to RAG pipelines, fine-tuning, and production deployment with observability and security built in.'
+      },
+      {
+        title: 'Agentic system design as a core discipline - ',
+        description: 'LangChain, LangGraph, CrewAI, and Autogen, with the judgement to know when to prompt, when to RAG, and when to fine-tune.'
+      },
+      {
+        title: 'One connected programme - ',
+        description: 'The complete AI lifecycle — owned end to end'
+      }
+    ],
+    aiPanel: [
+      'AI Engineers who build and integrate AI-powered features into products to deliver intelligent user experiences',
+      'Agent Engineers who build autonomous AI agents that can reason, act, and execute tasks across tools and workflows',
+      'MLOps Engineers who productionize, deploy, and maintain ML systems with reliable pipelines and monitoring'
     ],
     primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/ai-machine-learning-course/' },
     secondaryCta: { label: 'Download curriculum', url: 'https://content.interviewbit.com/AI-Ml-Brochure.pdf' }
