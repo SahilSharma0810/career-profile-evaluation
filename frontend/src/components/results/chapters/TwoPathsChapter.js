@@ -127,9 +127,9 @@ const CourseTitleContainer = styled.div`
 const CourseIcon = styled.img`
   width: 56px;
   height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
 `;
 
 const CourseName = styled.div`
@@ -803,9 +803,7 @@ const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
               <CourseCardBody>
                 <CourseSource>Scaler Topics</CourseSource>
                 <CourseTitleContainer>
-                  <CourseIcon>
-                    {course.icon}
-                  </CourseIcon>
+                  <CourseIcon src={course.icon} alt="" />
                   <CourseName>{course.title}</CourseName>
                 </CourseTitleContainer>
                 <CourseDesc>{course.description}</CourseDesc>
