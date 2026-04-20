@@ -112,8 +112,8 @@ const PROGRAMS = {
       'AI Solutions Engineers who design and implement end-to-end AI systems that solve specific business problems at scale',
       'Agent Engineers who build autonomous AI agents that can reason, act, and execute tasks across tools and workflows'
     ],
-    primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/academy/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/124/701/original/Academy-Broucher-12-05-24.pdf?1747034174' }
+    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/academy/' },
+    secondaryCta: { label: 'DOWNLOAD CURRICULUM', url: 'https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/124/701/original/Academy-Broucher-12-05-24.pdf?1747034174' }
   },
   'data-science-course': {
     name: 'Modern Data Science and ML with Specialisation in AI',
@@ -143,8 +143,8 @@ const PROGRAMS = {
       'ML Engineers who develop, train, and optimize machine learning models for performance and scalability',
       'Decision Scientists who combine data, experimentation, and business context to drive high-impact decisions'
     ],
-    primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/data-science-course/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/105/157/original/DSML_Brochure_2024_compressed.pdf?1738001683' }
+    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/courses/data-science-course/' },
+    secondaryCta: { label: 'DOWNLOAD CURRICULUM', url: 'https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/105/157/original/DSML_Brochure_2024_compressed.pdf?1738001683' }
   },
   'devops-course': {
     name: 'DevOps, Cloud & AI Platform Engineering specialisation in MLOps and Cybersecurity',
@@ -174,8 +174,8 @@ const PROGRAMS = {
       'Agentic Workflow Designers who design AI-powered workflows where agents collaborate to complete tasks end-to-end',
       'AI Gateway Engineers who build and manage secure, scalable interfaces that connect applications with AI models and services'
     ],
-    primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/devops-course/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://content.interviewbit.com/devops_brochure.pdf' }
+    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/courses/devops-course/' },
+    secondaryCta: { label: 'DOWNLOAD CURRICULUM', url: 'https://content.interviewbit.com/devops_brochure.pdf' }
   },
   'ai-machine-learning-course': {
     name: 'Advanced AIML with Specialisation in Agentic AI',
@@ -205,8 +205,8 @@ const PROGRAMS = {
       'Agent Engineers who build autonomous AI agents that can reason, act, and execute tasks across tools and workflows',
       'MLOps Engineers who productionize, deploy, and maintain ML systems with reliable pipelines and monitoring'
     ],
-    primaryCta: { label: 'Go to program page →', url: 'https://www.scaler.com/courses/ai-machine-learning-course/' },
-    secondaryCta: { label: 'Download curriculum', url: 'https://content.interviewbit.com/AI-Ml-Brochure.pdf' }
+    primaryCta: { label: 'GO TO PROGRAM PAGE →', url: 'https://www.scaler.com/courses/ai-machine-learning-course/' },
+    secondaryCta: { label: 'DOWNLOAD CURRICULUM', url: 'https://content.interviewbit.com/AI-Ml-Brochure.pdf' }
   }
 };
 

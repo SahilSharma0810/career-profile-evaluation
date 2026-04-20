@@ -378,9 +378,9 @@ const VisualTop = styled.div`
 `;
 
 const VisualLabel = styled.div`
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.625rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.82);
@@ -389,7 +389,7 @@ const VisualLabel = styled.div`
 const ProgramName = styled.h4`
   font-family: var(--sans);
   font-size: 2.25rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.1;
   margin: 0;
   color: var(--white);
@@ -482,7 +482,7 @@ const StructuredBody = styled.div`
   padding: 36px 36px 28px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 10px;
 
   @media (max-width: 768px) {
     padding: 24px 24px 20px;
@@ -490,12 +490,12 @@ const StructuredBody = styled.div`
 `;
 
 const BodyLabel = styled.div`
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.625rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--ink4);
   text-transform: uppercase;
-  letter-spacing: 1.4px;
+  letter-spacing: 0.5px;
 `;
 
 const FeatureList = styled.ul`
@@ -683,11 +683,12 @@ const PrimaryBtn = styled.a`
   color: var(--white);
   padding: 12px 24px;
   font-family: var(--sans);
-  font-weight: 700;
-  font-size: 0.75rem;
+  font-weight: 500;
+  font-size: 1.125rem;
   text-decoration: none;
   letter-spacing: 0;
   transition: background 0.15s ease;
+  width: 100%;
 
   &:hover { background: #1d4ed8; }
 `;
@@ -701,13 +702,12 @@ const OutlineBtn = styled.a`
   color: var(--ink);
   border: 1px solid #8b8b8b;
   padding: 14px 24px;
-  flex: 1;
-  min-width: 180px;
   font-family: var(--sans);
   font-weight: 500;
   font-size: 1.125rem;
   text-decoration: none;
   letter-spacing: 0;
+  width: 100%;
   transition: all 0.15s ease;
 
   &:hover { border-color: #4b5563; }
@@ -889,7 +889,7 @@ const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
           <StructuredInner>
             <StructuredVisual $bgUrl={program.background}>
               <VisualTop>
-                <VisualLabel>Structured program</VisualLabel>
+                <VisualLabel>For Engineers Building Apps & Systems</VisualLabel>
                 <ProgramName>{program.name}</ProgramName>
                 <ProgramDesc>{program.description}</ProgramDesc>
               </VisualTop>
@@ -931,7 +931,7 @@ const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
                 </FeatureList>
                 {aiPanelItems.length > 0 && (
                   <AIPanel>
-                    <AIPanelLabel>How AI is integrated?</AIPanelLabel>
+                    <AIPanelLabel>How roles evolve with AI?</AIPanelLabel>
                     <AIPanelBody>
                       <AIPanelSlideWrap aria-live="polite">
                         <AIPanelSlideText key={aiSlideIndex}>
