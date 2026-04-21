@@ -637,6 +637,13 @@ const MBAQuiz = ({ onProgressChange }) => {
   } = useMBAProfile();
 
   useEffect(() => {
+    const pageUrl = new URL(window.location.href);
+    tracker.pageview({
+      page_url: pageUrl
+    });
+  }, []);
+
+  useEffect(() => {
     if (evaluationResults) {
       tracker.click({
         click_type: 'mba_cpe_submitted',

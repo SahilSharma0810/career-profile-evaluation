@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import { AuthFlow } from './index';
+import tracker from '../../utils/tracker';
 
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(16px); }
@@ -21,7 +23,7 @@ const PageContainer = styled.div`
 /* ── Left Panel (Navy) ─────────────────────────────────────── */
 
 const LeftPanel = styled.div`
-  width: 320px;
+  width: 400px;
   flex-shrink: 0;
   background: var(--navy);
   color: var(--white);
@@ -331,11 +333,17 @@ const ModalBody = styled.div`
 
 const COMPANIES = ['Google', 'Amazon', 'Flipkart', 'Razorpay', 'Swiggy', 'PhonePe', 'CRED', 'Uber'];
 
-const AuthSplitPage = () => {
+const AuthSplitPage = ({ initialMode = 'login' }) => {
+  const location = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const successRedirectPath = new URLSearchParams(location.search).get('redirect') || '/quiz';
 
   useEffect(() => {
+    const pageUrl = new URL(window.location.href);
+    tracker.pageview({
+      page_url: pageUrl
+    });
     const onResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
@@ -373,13 +381,14 @@ const AuthSplitPage = () => {
           <ModalOverlay>
             <ModalCard role="dialog" aria-modal="true">
               <ModalHeader>
-                <ModalTitle>Continue to sign in</ModalTitle>
+                <ModalTitle>{initialMode === 'signup' ? 'Create your account' : 'Continue to sign in'}</ModalTitle>
                 <CloseButton aria-label="Close" onClick={closeAuth}>✕</CloseButton>
               </ModalHeader>
               <ModalBody>
                 <AuthFlow
-                  initialMode="login"
+                  initialMode={initialMode}
                   reloadOnSuccess={true}
+                  successRedirectPath={successRedirectPath}
                   showProfessionalFields={true}
                 />
               </ModalBody>
@@ -407,7 +416,7 @@ const AuthSplitPage = () => {
               Get a comprehensive evaluation of your profile for tech roles. Discover strengths, identify gaps, and get a personalized roadmap.
             </LeftDesc>
 
-            <StatsColumn>
+            {/* <StatsColumn>
               <StatCard>
                 <StatValue>50K+</StatValue>
                 <StatLabel>profiles evaluated in the last 12 months</StatLabel>
@@ -420,7 +429,7 @@ const AuthSplitPage = () => {
                 <StatValue>73%</StatValue>
                 <StatLabel>of backend roles now require AI fluency</StatLabel>
               </StatCard>
-            </StatsColumn>
+            </StatsColumn> */}
 
             <FeatureList>
               <Feature>
@@ -456,8 +465,9 @@ const AuthSplitPage = () => {
       <RightPanel>
         <AuthCard>
           <AuthFlow
-            initialMode="login"
+            initialMode={initialMode}
             reloadOnSuccess={true}
+            successRedirectPath={successRedirectPath}
           />
         </AuthCard>
       </RightPanel>

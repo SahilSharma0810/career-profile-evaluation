@@ -42,9 +42,6 @@ const InitialDataBootstrapper = ({
 
     attribution.setPlatform();
     attribution.setProduct(product);
-    tracker.pageview({
-      page_url: pageUrl
-    });
   }, [product, subProduct]);
 
   useEffect(() => {

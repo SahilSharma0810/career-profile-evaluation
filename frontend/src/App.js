@@ -16,10 +16,27 @@ import MBAQuiz from './components/quiz/MBAQuiz';
 import MBAResultsPage from './components/MBAResultsPage';
 import MBAAdminViewPage from './components/admin/MBAAdminViewPage';
 import MicrosoftClarity from './components/analytics/MicrosoftClarity';
+import tracker from './utils/tracker';
 import { getPathWithQueryParams } from './utils/url';
 
 import '@vectord/ui/dist/style.css';
 import '@vectord/fp-styles';
+
+function AuthRoutes() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const requestedRedirect = searchParams.get('redirect');
+  const redirectPath = requestedRedirect || `${location.pathname}${location.search}`;
+  const loginPath = `/login?redirect=${encodeURIComponent(redirectPath)}`;
+
+  return (
+    <Routes>
+      <Route path="/login" element={<AuthSplitPage initialMode="login" />} />
+      <Route path="/signup" element={<AuthSplitPage initialMode="signup" />} />
+      <Route path="*" element={<Navigate to={loginPath} replace />} />
+    </Routes>
+  );
+}
 
 // MBA App Content - separate from main app with isolated context
 function MBAAppContent() {
@@ -27,6 +44,7 @@ function MBAAppContent() {
   const { data, loading } = useStore($initialData);
   const location = useLocation();
   useGTMSectionTracking();
+  const isMBAAdminRoute = location.pathname.startsWith('/business-and-ai-readiness/admin');
   
   // Hide nav for MBA quiz page
   const shouldShowNav = !location.pathname.includes('/business-and-ai-readiness/quiz') && 
@@ -42,7 +60,7 @@ function MBAAppContent() {
   );
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthSplitPage />;
+  if (!data?.isLoggedIn && !isMBAAdminRoute) return <AuthRoutes />;
 
   return (
     <MBAProfileProvider>
@@ -82,6 +100,22 @@ function AppContent() {
   ) && !location.pathname.startsWith('/admin') && !isMBARoute;
 
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isMBAAdminRoute = location.pathname.startsWith('/business-and-ai-readiness/admin');
+  const isAnyAdminRoute = isAdminRoute || isMBAAdminRoute;
+  const redirectParam = new URLSearchParams(location.search).get('redirect');
+  const isAuthOrDefaultQuizRoute = ['/login', '/signup', '/quiz'].includes(location.pathname);
+  const hasSafeRedirect = Boolean(redirectParam?.startsWith('/'));
+
+  useEffect(() => {
+    const pageUrl = new URL(window.location.href);
+    tracker.superAttributes = {
+      attributes: {
+        page_path: pageUrl.pathname,
+        page_url: pageUrl.href,
+        query_params: Object.fromEntries(pageUrl.searchParams.entries())
+      }
+    };
+  }, [location.pathname]);
 
   const navigationProps = useMemo(
     () => ({
@@ -103,17 +137,32 @@ function AppContent() {
   }, []);
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthSplitPage />;
-  
+
+  if (data?.isLoggedIn && isAuthOrDefaultQuizRoute && hasSafeRedirect) {
+    return <Navigate to={redirectParam} replace />;
+  }
+
+  if (!data?.isLoggedIn && !isAnyAdminRoute) return (
+    <div className={isMBARoute ? 'mba-cpe-theme' : 'cpe-theme'}>
+      <AuthRoutes />
+    </div>
+  );
+
   // Route to MBA app for /business-and-ai-readiness/* paths
   if (isMBARoute) {
-    return <MBAAppContent />;
+    return (
+      <div className="mba-cpe-theme">
+        <MBAAppContent />
+      </div>
+    );
   }
 
   return (
-    <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
-      <AppRoutes onQuizProgressChange={setQuizProgress} {...{ quizMode }} />
-    </AppLayout>
+    <div className="cpe-theme">
+      <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
+        <AppRoutes onQuizProgressChange={setQuizProgress} {...{ quizMode }} />
+      </AppLayout>
+    </div>
   );
 }
 

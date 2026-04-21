@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CaretLeft, CaretRight, Star, Briefcase } from 'phosphor-react';
 import alumniData from '../../../data/alumni_stories.json';
+import { getProgramKeyForTargetRole } from '../../../utils/evaluationLogic';
 
 const Section = styled.section`
   padding: 80px 0;
@@ -173,9 +174,20 @@ const NavBtn = styled.button`
 
 const AlumniChapter = ({ targetRole }) => {
   const [page, setPage] = useState(0);
-  const stories = alumniData.length > 0 ? alumniData : [];
+  const programKey = getProgramKeyForTargetRole(targetRole);
+  const stories = alumniData[programKey] || alumniData.default || [];
   const cardsPerPage = 2;
   const totalPages = Math.ceil(stories.length / cardsPerPage);
+
+  useEffect(() => {
+    setPage(0);
+  }, [targetRole]);
+
+  useEffect(() => {
+    if (page >= totalPages && totalPages > 0) {
+      setPage(totalPages - 1);
+    }
+  }, [page, totalPages]);
 
   if (stories.length === 0) return null;
 

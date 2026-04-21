@@ -15,23 +15,22 @@ const pulse = keyframes`
 `;
 
 const LoadingWrapper = styled.div`
-  min-height: 100vh;
+  min-height: calc(100vh - 92px);
+  min-height: calc(100svh - 92px);
   background: var(--white);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   padding: 40px 20px;
-`;
+  box-sizing: border-box;
+  overflow: hidden;
 
-const LoadingBrand = styled.div`
-  font-family: var(--mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--ink4);
-  margin-bottom: 48px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  @media (max-width: 768px) {
+    min-height: calc(100vh - 110px);
+    min-height: calc(100svh - 110px);
+  }
 `;
 
 const LoadingText = styled.div`
@@ -126,6 +125,13 @@ const ResultsPage = () => {
   const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
 
   useEffect(() => {
+    const pageUrl = new URL(window.location.href);
+    tracker.pageview({
+      page_url: pageUrl
+    });
+  }, []);
+
+  useEffect(() => {
     if (isLoading) {
       setLoadingProgress(0);
       setLoadingMsgIndex(0);
@@ -205,7 +211,6 @@ const ResultsPage = () => {
   if (isLoading) {
     return (
       <LoadingWrapper>
-        <LoadingBrand>Scaler · Profile Evaluation</LoadingBrand>
         <LoadingText>{LOADING_MESSAGES[loadingMsgIndex]}</LoadingText>
         <LoadingSubtext>This usually takes about 10 seconds</LoadingSubtext>
         <ProgressTrack>
