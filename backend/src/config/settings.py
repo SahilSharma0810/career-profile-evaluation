@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     # Gemini is used as a fallback when OpenAI fails (rate limit, quota, outage, etc.).
     # If google_api_key is unset, the fallback is disabled and OpenAI errors propagate.
     google_api_key: Optional[str] = None
-    gemini_model: str = "gemini-2.0-flash"
+    gemini_model: str = "gemini-3-flash-preview"
     gemini_timeout: int = 60
     gemini_max_retries: int = 2
     database_url: str
