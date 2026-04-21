@@ -184,51 +184,7 @@ export const TECH_QUIZ_SCREENS = [
     }
   },
 
-  // Screen 3: AI FLUENCY
-  {
-    id: 'ai-fluency',
-    initialChatText: "Now let's understand your current AI fluency and practical exposure.",
-    questions: [
-      {
-        id: 'aiDailyUsage',
-        question: 'How does AI show up in your day-to-day work?',
-        options: [
-          { value: 'build-agents', label: 'I build agents or AI-powered features', icon: <Brain size={24} weight="duotone" /> },
-          { value: 'use-daily', label: 'I use Cursor / Copilot daily', icon: <Code size={24} weight="duotone" /> },
-          { value: 'specific-tasks', label: 'I use it for specific tasks (debugging/docs)', icon: <Wrench size={24} weight="duotone" /> },
-          { value: 'only-when-stuck', label: 'Only when stuck (quick ChatGPT help)', icon: <Lightbulb size={24} weight="duotone" /> },
-          { value: 'not-integrated', label: "Haven't integrated AI into workflow yet", icon: <Clock size={24} weight="duotone" /> }
-        ]
-      },
-      {
-        id: 'aiBuiltShipped',
-        question: 'What have you actually built or shipped using AI?',
-        options: [
-          { value: 'prod-feature', label: 'A production feature is live', icon: <Rocket size={24} weight="duotone" /> },
-          { value: 'internal-tool', label: 'Internal tool or side project using LLM API', icon: <Briefcase size={24} weight="duotone" /> },
-          { value: 'experimented', label: 'Experimented with prompts/scripts only', icon: <MonitorPlay size={24} weight="duotone" /> },
-          { value: 'nothing-yet', label: "Haven't built anything with AI yet", icon: <Timer size={24} weight="duotone" /> }
-        ]
-      }
-    ],
-    chatResponseMap: {
-      aiDailyUsage: {
-        'build-agents': 'Excellent! Shipping AI features is a strong differentiator in today’s engineering market.',
-        'use-daily': 'Great habit. Daily AI-assisted coding compounds productivity and learning speed.',
-        'specific-tasks': 'Solid start. The next step is moving from ad-hoc usage to repeatable workflows.',
-        'only-when-stuck': 'Common pattern. With structure, AI can become a proactive copilot, not just a rescue tool.',
-        'not-integrated': 'No worries. You can build AI fluency quickly with a few practical workflows.'
-      },
-      aiBuiltShipped: {
-        'prod-feature': 'Impressive! Real production AI experience significantly strengthens your profile.',
-        'internal-tool': 'Great signal. Shipping internal or side tools shows practical implementation ability.',
-        'experimented': 'Good exploration. Converting experiments into one shipped use case is the key unlock.',
-        'nothing-yet': 'That is okay. A small end-to-end AI project can quickly bridge this gap.'
-      }
-    }
-  },
-
-  // Screen 4: YOUR READINESS
+  // Screen 3: YOUR READINESS
   {
     id: 'your-readiness',
     initialChatText: "Almost there! Let's assess your current preparation level to identify focus areas.",
@@ -423,49 +379,7 @@ export const NON_TECH_QUIZ_SCREENS = [
     }
   },
 
-  // Screen 3: AI FLUENCY
-  {
-    id: 'ai-fluency',
-    initialChatText: "Great progress. Let's quickly understand your AI usage and current blockers.",
-    questions: [
-      {
-        id: 'aiUsageToday',
-        question: 'How do you use AI tools today?',
-        options: [
-          { value: 'work-usage', label: 'For work (writing, research, analysis)', icon: <BriefcaseAlt size={24} weight="duotone" /> },
-          { value: 'learn-tech', label: 'To learn tech and coding', icon: <Code size={24} weight="duotone" /> },
-          { value: 'occasional', label: 'Occasionally, nothing consistent', icon: <Timer size={24} weight="duotone" /> },
-          { value: 'not-started', label: "Haven't started using AI tools yet", icon: <Lightbulb size={24} weight="duotone" /> }
-        ]
-      },
-      {
-        id: 'biggestBlocker',
-        question: "What's been your biggest blocker?",
-        options: [
-          { value: 'learning-path', label: 'Finding the right learning path', icon: <Target size={24} weight="duotone" /> },
-          { value: 'can-i-code', label: 'Not sure if I can learn to code', icon: <Brain size={24} weight="duotone" /> },
-          { value: 'consistency', label: 'Consistency — I start and stop', icon: <ArrowsClockwise size={24} weight="duotone" /> },
-          { value: 'no-blocker', label: 'No major blocker yet', icon: <CheckCircle size={24} weight="duotone" /> }
-        ]
-      }
-    ],
-    chatResponseMap: {
-      aiUsageToday: {
-        'work-usage': 'Great baseline. You already have practical AI habits that can transfer to tech learning.',
-        'learn-tech': 'Excellent. Using AI for learning can significantly accelerate your transition.',
-        'occasional': 'Good starting point. Consistency in usage will make learning much more effective.',
-        'not-started': 'No problem. Starting with simple daily AI prompts can create momentum quickly.'
-      },
-      biggestBlocker: {
-        'learning-path': 'Very common and fixable. A structured roadmap removes most of this friction.',
-        'can-i-code': 'This is natural. Confidence grows fast once you start building small wins consistently.',
-        'consistency': 'You are not alone. Small weekly milestones usually solve this better than big plans.',
-        'no-blocker': 'Awesome. That gives you a strong runway to move faster than average.'
-      }
-    }
-  },
-
-  // Screen 4: YOUR READINESS
+  // Screen 3: YOUR READINESS
   {
     id: 'your-readiness',
     initialChatText: "Almost done! Let's assess where you are today to give you a realistic timeline and focus areas.",

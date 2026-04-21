@@ -65,24 +65,20 @@ const NavActions = styled.div`
 `;
 
 const CTAButton = styled.button`
-  background: #0052ff;
+  background: var(--accent-eye);
   color: white;
-  border: 1px solid #0052ff;
-  padding: 9px 16px;
+  border: none;
+  padding: 10px 20px;
   border-radius: 0;
-  font-weight: 700;
-  font-size: 0.75rem;
-  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  line-height: 1;
-  white-space: nowrap;
+  letter-spacing: 1px;
 
   &:hover {
-    background: #0047de;
-    border-color: #0047de;
+    background: #b3420a;
   }
 
   @media (max-width: 768px) {
@@ -416,16 +412,16 @@ const NavigationBar = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isResultsPage]);
 
-  // const handleReEvaluate = useCallback(() => {
-  //   tracker.click({
-  //     click_type: 're_evaluate_btn_clicked',
-  //     custom: {
-  //       source: 'navbar'
-  //     }
-  //   });
-  //   resetProfile?.();
-  //   navigate?.('/quiz');
-  // }, [resetProfile, navigate]);
+  const handleReEvaluate = useCallback(() => {
+    tracker.click({
+      click_type: 're_evaluate_btn_clicked',
+      custom: {
+        source: 'navbar'
+      }
+    });
+    resetProfile?.();
+    navigate?.('/quiz');
+  }, [resetProfile, navigate]);
 
   return (
     <StickyWrapper>
@@ -487,7 +483,7 @@ const NavigationBar = ({
             </SegmentedControl>
           )}
           <NavActions>
-            {/* {isResultsPage && evaluationResults && (
+            {isResultsPage && evaluationResults && (
               <>
                 <TextReEvaluateButton onClick={handleReEvaluate}>
                   Re-evaluate
@@ -496,8 +492,8 @@ const NavigationBar = ({
                   <ArrowClockwise size={20} weight="bold" />
                 </IconButton>
               </>
-            )} */}
-            <CTAButton onClick={handleRCBClick}>BOOK FREE 1:1 CAREER CALL</CTAButton>
+            )}
+            <CTAButton onClick={handleRCBClick}>Book Free 1:1 Career Call</CTAButton>
           </NavActions>
         </NavContent>
         {showProgress && (
