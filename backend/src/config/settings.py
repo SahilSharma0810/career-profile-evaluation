@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     openai_timeout: int = 60
     openai_max_retries: int = 3
     openai_retry_delay: float = 1.5
+    gemini_api_key: Optional[str] = None
+    gemini_model: str = "gemini-3-flash"
     database_url: str
     db_pool_size: int = 10
     db_max_overflow: int = 20

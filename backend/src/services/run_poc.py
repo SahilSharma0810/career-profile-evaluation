@@ -7,8 +7,8 @@ import sys
 from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
-from openai import AsyncOpenAI
 from pydantic import ValidationError
+from src.config.settings import settings
 from src.repositories.cache_repository import get_cache_repository
 from src.models import FullProfileEvaluationResponse, enrich_full_profile_evaluation
 from src.models.models_raw import FullProfileEvaluationResponseRaw
@@ -20,6 +20,7 @@ from src.services.tools_logic import generate_tool_recommendations
 from src.services.profile_notes_logic import generate_profile_strength_notes
 from src.services.current_profile_summary import generate_current_profile_summary
 from src.services.peer_comparison_logic import generate_peer_group_description, calculate_potential_percentile
+from src.services.langchain_llm_service import invoke_with_fallback_async
 from src.utils.label_mappings import get_role_label, get_company_label
 from src.config.telemetry import get_tracer
 
@@ -189,8 +190,6 @@ async def call_openai_structured(
     calculated_interview_readiness: Dict[str, Any],
     target_company_label: str,
 ) -> FullProfileEvaluationResponse:
-    client = AsyncOpenAI(api_key=api_key) if api_key else AsyncOpenAI()
-
     system_instruction = (
         "You are a career advisor specializing in the Indian tech market. Given the candidate's background, quiz responses, and goals, "
         "produce a structured FullProfileEvaluationResponse focusing on prospects, role fit, gaps, and a roadmap.\n\n"
@@ -534,15 +533,16 @@ async def call_openai_structured(
         completion = None
         try:
             with _tracer.start_as_current_span(
-                "openai.chat.completions",
+                "llm.chat.completions",
                 attributes={
-                    "openai.model": openai_model,
-                    "openai.attempt": attempt,
+                    "llm.model": openai_model,
+                    "llm.attempt": attempt,
                 },
             ):
-                completion = await client.chat.completions.create(
-                    model=openai_model,
+                llm_result = await invoke_with_fallback_async(
                     messages=messages,
+                    openai_model=openai_model,
+                    api_key=api_key,
                     response_format={
                         "type": "json_schema",
                         "json_schema": {
@@ -552,6 +552,7 @@ async def call_openai_structured(
                         },
                     },
                 )
+                completion = llm_result["content"]
         except Exception as exc:  # pragma: no cover - network/service errors
             if attempt == 3:
                 raise
@@ -564,9 +565,9 @@ async def call_openai_structured(
             await asyncio.sleep(1.5 * attempt)
             continue
 
-        content = completion.choices[0].message.content or ""
+        content = completion or ""
         if not content:
-            error_text = "Empty response from OpenAI chat.completions"
+            error_text = "Empty response from LLM chat completion"
         else:
             try:
                 raw_obj = json.loads(content)
@@ -632,11 +633,13 @@ async def run_poc(
         result.response_id = cache_key
         return result
 
-    logger.info("🔴 CACHE MISS - Calling OpenAI API (this will cost money and take 2-5 seconds)")
+    logger.info("🔴 CACHE MISS - Calling primary LLM (OpenAI with Gemini fallback)")
 
     api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set. Provide it via the environment variable.")
+    if not api_key and not settings.gemini_api_key:
+        raise RuntimeError(
+            "No LLM API key configured. Set OPENAI_API_KEY and/or GEMINI_API_KEY in environment."
+        )
 
     background = payload_for_cache.get("background", "")
     quiz_responses = payload_for_cache.get("quizResponses", {})
