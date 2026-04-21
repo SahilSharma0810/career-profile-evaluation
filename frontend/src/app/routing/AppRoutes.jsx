@@ -38,6 +38,7 @@ const AppRoutes = ({ quizMode, onQuizProgressChange }) => {
       />
       <Route path="/results" element={<ResultsPage />} />
       <Route path="/admin/view/response/:response_id" element={<AdminViewPage />} />
+      <Route path="*" element={<Navigate to={getPathWithQueryParams('/quiz')} replace />} />
     </Routes>
   );
 };

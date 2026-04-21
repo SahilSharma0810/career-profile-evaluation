@@ -16,10 +16,21 @@ import MBAQuiz from './components/quiz/MBAQuiz';
 import MBAResultsPage from './components/MBAResultsPage';
 import MBAAdminViewPage from './components/admin/MBAAdminViewPage';
 import MicrosoftClarity from './components/analytics/MicrosoftClarity';
+import tracker from './utils/tracker';
 import { getPathWithQueryParams } from './utils/url';
 
 import '@vectord/ui/dist/style.css';
 import '@vectord/fp-styles';
+
+function AuthRoutes() {
+  return (
+    <Routes>
+      <Route path="/login" element={<AuthSplitPage initialMode="login" />} />
+      <Route path="/signup" element={<AuthSplitPage initialMode="signup" />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
+  );
+}
 
 // MBA App Content - separate from main app with isolated context
 function MBAAppContent() {
@@ -42,7 +53,7 @@ function MBAAppContent() {
   );
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthSplitPage />;
+  if (!data?.isLoggedIn) return <AuthRoutes />;
 
   return (
     <MBAProfileProvider>
@@ -83,6 +94,17 @@ function AppContent() {
 
   const isAdminRoute = location.pathname.startsWith('/admin');
 
+  useEffect(() => {
+    const pageUrl = new URL(window.location.href);
+    tracker.superAttributes = {
+      attributes: {
+        page_path: pageUrl.pathname,
+        page_url: pageUrl.href,
+        query_params: Object.fromEntries(pageUrl.searchParams.entries())
+      }
+    };
+  }, [location.pathname]);
+
   const navigationProps = useMemo(
     () => ({
       progress: quizProgress,
@@ -103,17 +125,27 @@ function AppContent() {
   }, []);
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthSplitPage />;
-  
+  if (!data?.isLoggedIn) return (
+    <div className={isMBARoute ? 'mba-cpe-theme' : 'cpe-theme'}>
+      <AuthRoutes />
+    </div>
+  );
+
   // Route to MBA app for /business-and-ai-readiness/* paths
   if (isMBARoute) {
-    return <MBAAppContent />;
+    return (
+      <div className="mba-cpe-theme">
+        <MBAAppContent />
+      </div>
+    );
   }
 
   return (
-    <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
-      <AppRoutes onQuizProgressChange={setQuizProgress} {...{ quizMode }} />
-    </AppLayout>
+    <div className="cpe-theme">
+      <AppLayout showNavigation={shouldShowNav} navigationProps={navigationProps}>
+        <AppRoutes onQuizProgressChange={setQuizProgress} {...{ quizMode }} />
+      </AppLayout>
+    </div>
   );
 }
 
