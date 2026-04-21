@@ -538,8 +538,6 @@ async def call_openai_structured(
                 "llm.openai.structured_output",
                 attributes={"llm.provider": "openai", "llm.model": openai_model},
             ):
-                # TEMP: forced failure to verify Gemini fallback path. Remove after test.
-                raise RuntimeError("FORCED_OPENAI_FAILURE: simulating OpenAI outage for fallback test")
                 raw_instance = await primary.ainvoke(messages)
             logger.info("✅ OpenAI structured output succeeded (model=%s)", openai_model)
         except Exception as exc:  # pragma: no cover - network/service errors
