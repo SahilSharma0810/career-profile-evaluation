@@ -207,7 +207,7 @@ def _build_openai_structured_llm(
 
 def _build_gemini_structured_llm() -> Optional[Runnable]:
     """Build a LangChain structured-output runnable for Gemini, or None if no key."""
-    key = settings.google_api_key or os.environ.get("GOOGLE_API_KEY")
+    key = settings.gemini_api_key or os.environ.get("GEMINI_API_KEY")
     if not key:
         return None
     chat = ChatGoogleGenerativeAI(
@@ -557,7 +557,8 @@ async def call_openai_structured(
             if openai_error is not None:
                 raise openai_error
             raise RuntimeError(
-                "No LLM provider available: neither OPENAI_API_KEY nor GOOGLE_API_KEY is configured."
+                "No LLM provider available: neither OPENAI_API_KEY nor "
+                "GEMINI_API_KEY is configured."
             )
         try:
             with _tracer.start_as_current_span(
@@ -619,10 +620,10 @@ async def run_poc(
     logger.info("🔴 CACHE MISS - Calling LLM (OpenAI primary, Gemini fallback)")
 
     api_key = os.environ.get("OPENAI_API_KEY") or settings.openai_api_key
-    google_api_key = os.environ.get("GOOGLE_API_KEY") or settings.google_api_key
-    if not api_key and not google_api_key:
+    gemini_api_key = os.environ.get("GEMINI_API_KEY") or settings.gemini_api_key
+    if not api_key and not gemini_api_key:
         raise RuntimeError(
-            "Neither OPENAI_API_KEY nor GOOGLE_API_KEY is set. "
+            "Neither OPENAI_API_KEY nor GEMINI_API_KEY is set. "
             "Provide at least one via the environment variable."
         )
 
@@ -724,9 +725,9 @@ async def run_poc(
 
 
 def main() -> int:
-    if not os.environ.get("OPENAI_API_KEY") and not os.environ.get("GOOGLE_API_KEY"):
+    if not os.environ.get("OPENAI_API_KEY") and not os.environ.get("GEMINI_API_KEY"):
         print(
-            "Error: Neither OPENAI_API_KEY nor GOOGLE_API_KEY is set. "
+            "Error: Neither OPENAI_API_KEY nor GEMINI_API_KEY is set. "
             "Set at least one in your environment and re-run.",
             file=sys.stderr,
         )
