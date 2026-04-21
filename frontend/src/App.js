@@ -24,7 +24,9 @@ import '@vectord/fp-styles';
 
 function AuthRoutes() {
   const location = useLocation();
-  const redirectPath = `${location.pathname}${location.search}`;
+  const searchParams = new URLSearchParams(location.search);
+  const requestedRedirect = searchParams.get('redirect');
+  const redirectPath = requestedRedirect || `${location.pathname}${location.search}`;
   const loginPath = `/login?redirect=${encodeURIComponent(redirectPath)}`;
 
   return (
@@ -100,6 +102,9 @@ function AppContent() {
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isMBAAdminRoute = location.pathname.startsWith('/business-and-ai-readiness/admin');
   const isAnyAdminRoute = isAdminRoute || isMBAAdminRoute;
+  const redirectParam = new URLSearchParams(location.search).get('redirect');
+  const isAuthOrDefaultQuizRoute = ['/login', '/signup', '/quiz'].includes(location.pathname);
+  const hasSafeRedirect = Boolean(redirectParam?.startsWith('/'));
 
   useEffect(() => {
     const pageUrl = new URL(window.location.href);
@@ -132,6 +137,11 @@ function AppContent() {
   }, []);
 
   if (loading) return <LoadingScreen />;
+
+  if (data?.isLoggedIn && isAuthOrDefaultQuizRoute && hasSafeRedirect) {
+    return <Navigate to={redirectParam} replace />;
+  }
+
   if (!data?.isLoggedIn && !isAnyAdminRoute) return (
     <div className={isMBARoute ? 'mba-cpe-theme' : 'cpe-theme'}>
       <AuthRoutes />
