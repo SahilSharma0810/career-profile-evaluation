@@ -205,7 +205,8 @@ const OtpVerificationForm = ({
   onBack,
   submitStatus = 'idle',
   errorMessage = '',
-  successMessage = ''
+  successMessage = '',
+  flowType = 'login'
 }) => {
   const [otp, setOtp] = useState('');
   const [localError, setLocalError] = useState('');
@@ -313,7 +314,10 @@ const OtpVerificationForm = ({
             onChange={(e) => handleChange(e.target.value)}
             onBlur={(e) => {
               if (e.target.value) {
-                tracker.click({ click_type: 'otp_filled', click_text: e.target.value });
+                tracker.click({
+                  click_type: flowType === 'signup' ? 'signup_otp_filled' : 'login_otp_filled',
+                  click_text: e.target.value
+                });
               }
             }}
             onPaste={handlePaste}
