@@ -7,8 +7,11 @@ import sys
 from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
-from openai import AsyncOpenAI
-from pydantic import ValidationError
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.runnables import Runnable
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+
 from src.repositories.cache_repository import get_cache_repository
 from src.models import FullProfileEvaluationResponse, enrich_full_profile_evaluation
 from src.models.models_raw import FullProfileEvaluationResponseRaw
@@ -21,6 +24,7 @@ from src.services.profile_notes_logic import generate_profile_strength_notes
 from src.services.current_profile_summary import generate_current_profile_summary
 from src.services.peer_comparison_logic import generate_peer_group_description, calculate_potential_percentile
 from src.utils.label_mappings import get_role_label, get_company_label
+from src.config.settings import settings
 from src.config.telemetry import get_tracer
 
 load_dotenv()
@@ -180,6 +184,41 @@ def _filter_and_rerank_roles(
     return [role for role, score in sorted_roles]
 
 
+def _build_openai_structured_llm(
+    api_key: Optional[str],
+    openai_model: str,
+) -> Optional[Runnable]:
+    """Build a LangChain structured-output runnable for OpenAI, or None if no key."""
+    key = api_key or settings.openai_api_key or os.environ.get("OPENAI_API_KEY")
+    if not key:
+        return None
+    chat = ChatOpenAI(
+        model=openai_model,
+        api_key=key,
+        timeout=settings.openai_timeout,
+        max_retries=settings.openai_max_retries,
+    )
+    return chat.with_structured_output(
+        FullProfileEvaluationResponseRaw,
+        method="json_schema",
+        strict=True,
+    )
+
+
+def _build_gemini_structured_llm() -> Optional[Runnable]:
+    """Build a LangChain structured-output runnable for Gemini, or None if no key."""
+    key = settings.google_api_key or os.environ.get("GOOGLE_API_KEY")
+    if not key:
+        return None
+    chat = ChatGoogleGenerativeAI(
+        model=settings.gemini_model,
+        google_api_key=key,
+        timeout=settings.gemini_timeout,
+        max_retries=settings.gemini_max_retries,
+    )
+    return chat.with_structured_output(FullProfileEvaluationResponseRaw)
+
+
 async def call_openai_structured(
     *,
     api_key: Optional[str],
@@ -189,8 +228,6 @@ async def call_openai_structured(
     calculated_interview_readiness: Dict[str, Any],
     target_company_label: str,
 ) -> FullProfileEvaluationResponse:
-    client = AsyncOpenAI(api_key=api_key) if api_key else AsyncOpenAI()
-
     system_instruction = (
         "You are a career advisor specializing in the Indian tech market. Given the candidate's background, quiz responses, and goals, "
         "produce a structured FullProfileEvaluationResponse focusing on prospects, role fit, gaps, and a roadmap.\n\n"
@@ -479,128 +516,73 @@ async def call_openai_structured(
         "In your advice, acknowledge when values show limited exposure (e.g., not-yet, none, never) and tailor guidance for the user's background pivot."
     )
 
-    schema = FullProfileEvaluationResponseRaw.model_json_schema()
-
-    def _apply_json_schema_normalizers(node: Any) -> None:
-        if isinstance(node, dict):
-            # Ensure $ref nodes have no sibling keywords; OpenAI rejects any extras.
-            if "$ref" in node and len(node) > 1:
-                ref_value = node["$ref"]
-                node.clear()
-                node["$ref"] = ref_value
-
-            if node.get("type") == "object":
-                props = node.setdefault("properties", {})
-                if not isinstance(props, dict):
-                    raise TypeError("Object schema 'properties' must be a mapping")
-
-                node["additionalProperties"] = False
-                node["required"] = list(props.keys())
-
-                for child in props.values():
-                    _apply_json_schema_normalizers(child)
-            if "items" in node:
-                _apply_json_schema_normalizers(node["items"])
-            for key in ("oneOf", "anyOf", "allOf"):
-                if key in node and isinstance(node[key], list):
-                    for child in node[key]:
-                        _apply_json_schema_normalizers(child)
-            if "$defs" in node and isinstance(node["$defs"], dict):
-                for child in node["$defs"].values():
-                    _apply_json_schema_normalizers(child)
-            if "definitions" in node and isinstance(node["definitions"], dict):
-                for child in node["definitions"].values():
-                    _apply_json_schema_normalizers(child)
-        elif isinstance(node, list):
-            for child in node:
-                _apply_json_schema_normalizers(child)
-
-    _apply_json_schema_normalizers(schema)
-
-    base_messages = [
-        {"role": "system", "content": system_instruction},
-        {
-            "role": "user",
-            "content": (
+    messages = [
+        SystemMessage(content=system_instruction),
+        HumanMessage(
+            content=(
                 "Using this input JSON, return only a JSON object that matches FullProfileEvaluationResponse.\n\n"
                 + json.dumps(input_payload)
-            ),
-        },
+            )
+        ),
     ]
 
-    messages = list(base_messages)
+    primary = _build_openai_structured_llm(api_key, openai_model)
+    fallback = _build_gemini_structured_llm()
 
-    for attempt in range(1, 4):
-        completion = None
+    raw_instance: Optional[FullProfileEvaluationResponseRaw] = None
+    openai_error: Optional[BaseException] = None
+
+    if primary is not None:
         try:
             with _tracer.start_as_current_span(
-                "openai.chat.completions",
-                attributes={
-                    "openai.model": openai_model,
-                    "openai.attempt": attempt,
-                },
+                "llm.openai.structured_output",
+                attributes={"llm.provider": "openai", "llm.model": openai_model},
             ):
-                completion = await client.chat.completions.create(
-                    model=openai_model,
-                    messages=messages,
-                    response_format={
-                        "type": "json_schema",
-                        "json_schema": {
-                            "name": "FullProfileEvaluationResponse",
-                            "schema": schema,
-                            "strict": True,
-                        },
-                    },
-                )
+                raw_instance = await primary.ainvoke(messages)
+            logger.info("✅ OpenAI structured output succeeded (model=%s)", openai_model)
         except Exception as exc:  # pragma: no cover - network/service errors
-            if attempt == 3:
-                raise
-            await asyncio.sleep(1.5 * attempt)
-            continue
+            openai_error = exc
+            logger.warning(
+                "⚠️ OpenAI structured call failed (%s: %s). Attempting Gemini fallback...",
+                type(exc).__name__,
+                exc,
+            )
+    else:
+        logger.warning("⚠️ OPENAI_API_KEY not configured; skipping OpenAI and using Gemini fallback.")
 
-        if completion is None:
-            if attempt == 3:
-                raise RuntimeError("OpenAI completion failed without raising an exception")
-            await asyncio.sleep(1.5 * attempt)
-            continue
+    if raw_instance is None:
+        if fallback is None:
+            if openai_error is not None:
+                raise openai_error
+            raise RuntimeError(
+                "No LLM provider available: neither OPENAI_API_KEY nor GOOGLE_API_KEY is configured."
+            )
+        try:
+            with _tracer.start_as_current_span(
+                "llm.gemini.structured_output",
+                attributes={"llm.provider": "gemini", "llm.model": settings.gemini_model},
+            ):
+                raw_instance = await fallback.ainvoke(messages)
+            logger.info(
+                "✅ Gemini fallback succeeded (model=%s)", settings.gemini_model
+            )
+        except Exception as gemini_exc:
+            logger.error(
+                "❌ Gemini fallback also failed (%s: %s)",
+                type(gemini_exc).__name__,
+                gemini_exc,
+            )
+            if openai_error is not None:
+                raise RuntimeError(
+                    f"Both OpenAI and Gemini structured calls failed. "
+                    f"OpenAI error: {openai_error!r}. Gemini error: {gemini_exc!r}"
+                ) from gemini_exc
+            raise
 
-        content = completion.choices[0].message.content or ""
-        if not content:
-            error_text = "Empty response from OpenAI chat.completions"
-        else:
-            try:
-                raw_obj = json.loads(content)
-            except json.JSONDecodeError as exc:
-                error_text = (
-                    "Model response is not valid JSON: "
-                    f"{exc}\nResponse text: {content}"
-                )
-            else:
-                try:
-                    raw_instance = FullProfileEvaluationResponseRaw.model_validate(raw_obj)
-                except ValidationError as exc:
-                    error_text = (
-                        "Model response failed validation against FullProfileEvaluationResponse: "
-                        f"{exc}"
-                    )
-                else:
-                    return enrich_full_profile_evaluation(raw_instance)
+    if isinstance(raw_instance, dict):
+        raw_instance = FullProfileEvaluationResponseRaw.model_validate(raw_instance)
 
-        if attempt == 3:
-            raise RuntimeError(error_text)
-
-        correction_prompt = (
-            "The previous response did not satisfy the required schema. "
-            f"Error details:\n{error_text}\n\n"
-            "Please respond again with only a JSON object that strictly matches the schema."
-        )
-        messages = base_messages + [
-            {"role": "assistant", "content": content or ""},
-            {"role": "user", "content": correction_prompt},
-        ]
-        await asyncio.sleep(1.5 * attempt)
-
-    raise RuntimeError("Exhausted attempts without valid response")
+    return enrich_full_profile_evaluation(raw_instance)
 
 async def run_poc(
     *,
@@ -632,11 +614,15 @@ async def run_poc(
         result.response_id = cache_key
         return result
 
-    logger.info("🔴 CACHE MISS - Calling OpenAI API (this will cost money and take 2-5 seconds)")
+    logger.info("🔴 CACHE MISS - Calling LLM (OpenAI primary, Gemini fallback)")
 
-    api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set. Provide it via the environment variable.")
+    api_key = os.environ.get("OPENAI_API_KEY") or settings.openai_api_key
+    google_api_key = os.environ.get("GOOGLE_API_KEY") or settings.google_api_key
+    if not api_key and not google_api_key:
+        raise RuntimeError(
+            "Neither OPENAI_API_KEY nor GOOGLE_API_KEY is set. "
+            "Provide at least one via the environment variable."
+        )
 
     background = payload_for_cache.get("background", "")
     quiz_responses = payload_for_cache.get("quizResponses", {})
@@ -736,9 +722,10 @@ async def run_poc(
 
 
 def main() -> int:
-    if not os.environ.get("OPENAI_API_KEY"):
+    if not os.environ.get("OPENAI_API_KEY") and not os.environ.get("GOOGLE_API_KEY"):
         print(
-            "Error: OPENAI_API_KEY is not set. Set it in your environment and re-run.",
+            "Error: Neither OPENAI_API_KEY nor GOOGLE_API_KEY is set. "
+            "Set at least one in your environment and re-run.",
             file=sys.stderr,
         )
         return 2

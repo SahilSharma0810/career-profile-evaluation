@@ -20,6 +20,12 @@ class Settings(BaseSettings):
     openai_timeout: int = 60
     openai_max_retries: int = 3
     openai_retry_delay: float = 1.5
+    # Gemini is used as a fallback when OpenAI fails (rate limit, quota, outage, etc.).
+    # If google_api_key is unset, the fallback is disabled and OpenAI errors propagate.
+    google_api_key: Optional[str] = None
+    gemini_model: str = "gemini-2.0-flash"
+    gemini_timeout: int = 60
+    gemini_max_retries: int = 2
     database_url: str
     db_pool_size: int = 10
     db_max_overflow: int = 20
