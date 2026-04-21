@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import SignUpForm from './SignUpForm';
 import LoginForm from './LoginForm';
@@ -30,9 +30,15 @@ const Container = styled.div`
 const AuthFlow = ({
   initialMode = 'login',
   onSuccess,
-  reloadOnSuccess = true
+  reloadOnSuccess = true,
+  successRedirectPath = '/quiz'
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectPath = useMemo(
+    () => successRedirectPath || new URLSearchParams(location.search).get('redirect') || '/quiz',
+    [location.search, successRedirectPath]
+  );
 
   const [pendingData, setPendingData] = useState({
     phoneNumber: '',
@@ -167,7 +173,7 @@ const AuthFlow = ({
 
       if (reloadOnSuccess) {
         setTimeout(() => {
-          window.location.reload();
+          window.location.assign(redirectPath);
         }, 500);
       }
     } else {
@@ -179,7 +185,7 @@ const AuthFlow = ({
     }
 
     return result;
-  }, [onSuccess, reloadOnSuccess]);
+  }, [onSuccess, redirectPath, reloadOnSuccess]);
 
   const handleVerifyOtp = useCallback(async (otp) => {
     setFormState(prev => ({ ...prev, otp: { status: 'loading', error: '' } }));
@@ -223,7 +229,7 @@ const AuthFlow = ({
 
       if (reloadOnSuccess) {
         setTimeout(() => {
-          window.location.reload();
+          window.location.assign(redirectPath);
         }, 500);
       }
     } else {
@@ -231,7 +237,7 @@ const AuthFlow = ({
     }
 
     return result;
-  }, [formState.authFlow, pendingData, onSuccess, reloadOnSuccess]);
+  }, [formState.authFlow, pendingData, onSuccess, redirectPath, reloadOnSuccess]);
 
   const handleBackFromOtp = useCallback(() => {
     setFormState(prev => ({ ...prev, step: formState.authFlow, otp: { status: 'idle', error: '' } }));
@@ -239,31 +245,31 @@ const AuthFlow = ({
 
   const handleSwitchToSignUp = useCallback(() => {
     setFormState(prev => ({ ...prev, step: 'signup', login: { status: 'idle', error: '' } }));
-    navigate('/signup', { replace: true });
-  }, [navigate]);
+    navigate(`/signup?redirect=${encodeURIComponent(redirectPath)}`, { replace: true });
+  }, [navigate, redirectPath]);
 
   const handleSwitchToLogin = useCallback(() => {
     setFormState(prev => ({ ...prev, step: 'login', signup: { status: 'idle', error: '' }, email_login: { status: 'idle', error: '' } }));
-    navigate('/login', { replace: true });
-  }, [navigate]);
+    navigate(`/login?redirect=${encodeURIComponent(redirectPath)}`, { replace: true });
+  }, [navigate, redirectPath]);
 
   const handleSwitchToEmailLogin = useCallback(() => {
     setFormState(prev => ({ ...prev, step: 'email_login', login: { status: 'idle', error: '' }, email_login: { status: 'idle', error: '' } }));
-    navigate('/login', { replace: true });
+    navigate(`/login?redirect=${encodeURIComponent(redirectPath)}`, { replace: true });
     tracker.click({
       click_type: 'switch_to_email_login_clicked',
       click_source: 'auth_flow'
     });
-  }, [navigate]);
+  }, [navigate, redirectPath]);
 
   const handleSwitchToPhoneLogin = useCallback(() => {
     setFormState(prev => ({ ...prev, step: 'login', signup: { status: 'idle', error: '' }, email_login: { status: 'idle', error: '' } }));
-    navigate('/login', { replace: true });
+    navigate(`/login?redirect=${encodeURIComponent(redirectPath)}`, { replace: true });
     tracker.click({
       click_type: 'switch_to_phone_login_clicked',
       click_source: 'auth_flow'
     });
-  }, [navigate]);
+  }, [navigate, redirectPath]);
 
   const displayPhoneNumber = pendingData.phoneNumber.replace('+91-', '');
 

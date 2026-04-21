@@ -23,11 +23,15 @@ import '@vectord/ui/dist/style.css';
 import '@vectord/fp-styles';
 
 function AuthRoutes() {
+  const location = useLocation();
+  const redirectPath = `${location.pathname}${location.search}`;
+  const loginPath = `/login?redirect=${encodeURIComponent(redirectPath)}`;
+
   return (
     <Routes>
       <Route path="/login" element={<AuthSplitPage initialMode="login" />} />
       <Route path="/signup" element={<AuthSplitPage initialMode="signup" />} />
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to={loginPath} replace />} />
     </Routes>
   );
 }
