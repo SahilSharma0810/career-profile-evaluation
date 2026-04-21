@@ -125,6 +125,13 @@ const ResultsPage = () => {
   const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
 
   useEffect(() => {
+    const pageUrl = new URL(window.location.href);
+    tracker.pageview({
+      page_url: pageUrl
+    });
+  }, []);
+
+  useEffect(() => {
     if (isLoading) {
       setLoadingProgress(0);
       setLoadingMsgIndex(0);

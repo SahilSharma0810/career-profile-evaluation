@@ -1,10 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useStore } from '@nanostores/react';
-import { ArrowUpRight, Check, Play } from 'phosphor-react';
+import { ArrowUpRight, Play } from 'phosphor-react';
 import { getCoursesForRole, getStructuredProgramForRole } from '../../../data/courses_by_role';
 import { getProgramKeyForTargetRole } from '../../../utils/evaluationLogic';
 import { createUpcomingMasterclassesStore } from '../../../store/upcomingMasterclasses';
+import grainLeftSrc from '../../../assets/program_banners/grain-1.svg';
+import grainRightSrc from '../../../assets/program_banners/grain-2.svg';
+import aiPanelBackground from '../../../assets/program_banners/ai-background.png';
 
 const Section = styled.section`
   padding: 80px 0;
@@ -114,6 +117,19 @@ const CourseSource = styled.div`
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 10px;
+`;
+
+const CourseTitleContainer = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const CourseIcon = styled.img`
+  width: 56px;
+  height: 56px;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
 `;
 
 const CourseName = styled.div`
@@ -256,7 +272,7 @@ const MCMeta = styled.div`
 const MCTitle = styled.h3`
   font-family: var(--sans);
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--ink);
   margin: 0;
   line-height: 1.35;
@@ -275,6 +291,7 @@ const MCLink = styled.a`
   justify-content: space-between;
   padding: 14px 20px;
   border-top: 1px solid var(--line);
+  font-family: var(--sans);
   font-family: var(--sans);
   font-size: 0.75rem;
   font-weight: 600;
@@ -301,126 +318,426 @@ const Divider = styled.hr`
 const StructuredCard = styled.div`
   background: var(--white);
   border: 1px solid var(--line);
+  overflow: hidden;
 
   @media (max-width: 768px) {
-    flex-direction: column;
+    border-radius: 0;
   }
 `;
 
 const StructuredInner = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
-`;
+  grid-template-columns: minmax(260px, 34%) 1fr;
 
-const StructuredLeft = styled.div`
-  padding: 36px;
-
-  @media (max-width: 768px) {
-    padding: 24px;
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
   }
 `;
 
-const ProgramName = styled.div`
-  font-family: var(--serif);
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: var(--ink);
-  margin-bottom: 12px;
-`;
-
-const ProgramDesc = styled.div`
-  font-size: 0.875rem;
-  color: var(--ink3);
-  line-height: 1.6;
-  margin-bottom: 24px;
-`;
-
-const ProgramStats = styled.div`
-  display: flex;
-  gap: 28px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-`;
-
-const ProgramStat = styled.div`
+const StructuredVisual = styled.div`
+  position: relative;
+  min-height: 520px;
+  padding: 36px 28px;
+  color: var(--white);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+
+  ${(p) =>
+    p.$bgUrl
+      ? `
+    background-color: #0d4f78;
+    background-image:
+      linear-gradient(
+        168deg,
+        rgba(6, 55, 90, 0.78) 0%,
+        rgba(15, 70, 140, 0.72) 50%,
+        rgba(25, 55, 150, 0.74) 100%
+      ),
+      url(${p.$bgUrl});
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat;
+  `
+      : `
+    background:
+      radial-gradient(125% 120% at 16% 0%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 44%),
+      linear-gradient(168deg, #0a8fbf 0%, #1f8fc8 42%, #245fdd 100%);
+  `}
+
+  @media (max-width: 768px) {
+    padding: 24px;
+    min-height: 360px;
+  }
 `;
 
-const ProgramStatVal = styled.div`
-  font-family: var(--serif);
-  font-size: 1.375rem;
+const VisualTop = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+
+const VisualLabel = styled.div`
+  font-family: var(--sans);
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+`;
+
+const ProgramName = styled.h4`
+  font-family: var(--sans);
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--white);
+
+  @media (max-width: 768px) {
+    font-size: 1.875rem;
+  }
+`;
+
+const ProgramDesc = styled.p`
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+`;
+
+const ProgramStatsRow = styled.div`
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  padding-top: 8px;
+`;
+
+const ProgramStatColumn = styled.div`
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 12px;
+`;
+
+const ProgramStatMainRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`;
+
+const LaurelImg = styled.img`
+  width: 22px;
+  height: 40px;
+  flex: 0 0 auto;
+  display: block;
+  object-fit: contain;
+`;
+
+const ProgramStatBig = styled.div`
+  font-family: var(--sans);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.05;
+`;
+
+const ProgramStatSub = styled.div`
+  font-family: var(--sans);
+  font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--ink);
+  color: rgba(255, 255, 255, 0.72);
+  margin-top: 6px;
 `;
 
-const ProgramStatLabel = styled.div`
-  font-family: var(--mono);
-  font-size: 0.5625rem;
+const ProgramStatsDivider = styled.div`
+  width: 1px;
+  align-self: stretch;
+  min-height: 52px;
+  background: rgba(255, 255, 255, 0.38);
+  flex: 0 0 auto;
+  margin: 4px 8px;
+`;
+
+const StructuredRight = styled.div`
+  background: #f8f8f8;
+  border-left: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 900px) {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+`;
+
+const StructuredBody = styled.div`
+  padding: 36px 36px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  @media (max-width: 768px) {
+    padding: 24px 24px 20px;
+  }
+`;
+
+const BodyLabel = styled.div`
+  font-family: var(--sans);
+  font-size: 0.625rem;
+  font-weight: 400;
   color: var(--ink4);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 `;
 
 const FeatureList = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 0 0 28px;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 `;
 
 const Feature = styled.li`
-  font-size: 0.8125rem;
+  font-size: 1.125rem;
   color: var(--ink2);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.4;
+`;
+
+const FeatureGrain = styled.img`
+  width: 20px;
+  height: auto;
+  flex: 0 0 20px;
+  object-fit: contain;
+  opacity: 0.88;
+  margin-top: 3px;
+`;
+
+const FeatureCore = styled.div`
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+`;
+
+const FeatureIndex = styled.span`
+  font-family: var(--mono);
+  font-size: 1.125rem;
+  color: #4b5563;
+  width: 26px;
+  flex: 0 0 26px;
+`;
+
+const FeatureText = styled.span`
+  flex: 1;
+`;
+
+const FeatureStrong = styled.span`
+  font-weight: 700;
+  color: var(--ink);
+`;
+
+const FeatureLite = styled.span`
+  color: var(--ink3);
+`;
+
+const AI_CAROUSEL_MS = 5200;
+
+const AIPanel = styled.div`
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background-color: #e8f2fb;
+  background-image: url(${aiPanelBackground});
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: min(58%, 320px) auto;
+  padding: 22px 24px 18px;
+  min-height: 176px;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 600px) {
+    background-size: min(72%, 260px) auto;
+    min-height: 200px;
+  }
+`;
+
+const AIPanelLabel = styled.div`
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 1.35px;
+  margin-bottom: 10px;
+`;
+
+const AIPanelBody = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+`;
+
+const AIPanelSlideWrap = styled.div`
+  flex: 1;
+  position: relative;
+  min-height: 4.5rem;
+`;
+
+const AIPanelSlideText = styled.p`
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: #0f172a;
+  line-height: 1.45;
+  max-width: min(100%, 42rem);
+  animation: aiPanelSlideIn 0.38s ease;
+
+  @keyframes aiPanelSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const AIPanelDots = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-top: auto;
+  padding-top: 16px;
+`;
+
+const AIPanelDot = styled.button`
+  display: block;
+  border: none;
+  padding: 0;
+  height: 5px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: width 0.28s ease, background 0.28s ease, opacity 0.28s ease;
+
+  ${(p) =>
+    p.$active
+      ? `
+    width: 32px;
+    background: #0f172a;
+    opacity: 1;
+  `
+      : `
+    width: 14px;
+    background: #94a3b8;
+    opacity: 0.45;
+  `}
+
+  &:hover {
+    opacity: ${(p) => (p.$active ? 1 : 0.75)};
+  }
+
+  &:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
 `;
 
 const ButtonRow = styled.div`
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 14px;
+  padding: 20px 36px 28px;
+  margin-top: auto;
+
+  @media (max-width: 768px) {
+    padding: 18px 24px 24px;
+    flex-wrap: wrap;
+  }
 `;
 
 const PrimaryBtn = styled.a`
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  background: var(--accent);
+  background: #1e57f0;
   color: var(--white);
   padding: 12px 24px;
   font-family: var(--sans);
-  font-weight: 700;
-  font-size: 0.75rem;
+  font-weight: 500;
+  font-size: 1rem;
   text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
   transition: background 0.15s ease;
+  width: 100%;
 
   &:hover { background: #1d4ed8; }
 `;
 
 const OutlineBtn = styled.a`
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  background: var(--white);
+  background: transparent;
   color: var(--ink);
-  border: 1px solid var(--line);
-  padding: 12px 24px;
+  border: 1px solid #8b8b8b;
+  padding: 14px 24px;
   font-family: var(--sans);
-  font-weight: 700;
-  font-size: 0.75rem;
+  font-weight: 500;
+  font-size: 1rem;
   text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
+  width: 100%;
   transition: all 0.15s ease;
 
-  &:hover { border-color: var(--line2); }
+  &:hover { border-color: #4b5563; }
 `;
+
+const normalizeProgramStats = (raw) => {
+  if (!raw) {
+    return { rating: '—', ratingsLine: '(— Ratings)', months: '—' };
+  }
+  if (Array.isArray(raw)) {
+    const rating = raw[0]?.value ?? '—';
+    const months = raw[1]?.value ?? raw[0]?.value ?? '—';
+    const label =
+      raw[0]?.label === undefined || raw[0]?.label === null ? '' : String(raw[0].label);
+    const paren = label.match(/\(([^)]+)\)/);
+    const ratingsLine = paren ? `(${paren[1]})` : '(Ratings)';
+    return { rating, ratingsLine, months };
+  }
+  const ratings =
+    raw.ratings === undefined || raw.ratings === null ? '' : String(raw.ratings).trim();
+  const ratingsLine = ratings ? `(${ratings} Ratings)` : '(Ratings)';
+  return {
+    rating:
+      raw.overallRating === undefined || raw.overallRating === null
+        ? '—'
+        : String(raw.overallRating),
+    ratingsLine,
+    months: raw.months === undefined || raw.months === null ? '—' : String(raw.months)
+  };
+};
 
 const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
   const courses = getCoursesForRole(targetRole);
@@ -433,6 +750,40 @@ const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
   const { data: upcomingList } = useStore($upcomingMc);
   const masterclasses =
     Array.isArray(upcomingList) && upcomingList.length > 0 ? upcomingList : [];
+  const structuredFeatures = program.features;
+  const aiPanel = program.aiPanel;
+  const aiPanelItems = Array.isArray(aiPanel) ? aiPanel : [];
+  const programStats = normalizeProgramStats(program.stats);
+  const [aiSlideIndex, setAiSlideIndex] = useState(0);
+
+  useEffect(() => {
+    setAiSlideIndex(0);
+  }, [programKey]);
+
+  useEffect(() => {
+    if (aiPanelItems.length <= 1) {
+      return undefined;
+    }
+    const id = window.setInterval(() => {
+      setAiSlideIndex((i) => (i + 1) % aiPanelItems.length);
+    }, AI_CAROUSEL_MS);
+    return () => window.clearInterval(id);
+  }, [aiPanelItems.length]);
+
+  const getFeatureParts = (featureText) => {
+    const normalized = String(featureText || '').trim();
+    const separatorIndex = normalized.search(/\s[-:]\s/);
+    if (separatorIndex === -1) {
+      return {
+        lead: normalized,
+        detail: ''
+      };
+    }
+    return {
+      lead: normalized.slice(0, separatorIndex).trim(),
+      detail: normalized.slice(separatorIndex + 3).trim()
+    };
+  };
 
   return (
     <Section id="cpe-two-paths">
@@ -451,7 +802,10 @@ const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
             <CourseCard key={i}>
               <CourseCardBody>
                 <CourseSource>Scaler Topics</CourseSource>
-                <CourseName>{course.title}</CourseName>
+                <CourseTitleContainer>
+                  <CourseIcon src={course.icon} alt="" />
+                  <CourseName>{course.title}</CourseName>
+                </CourseTitleContainer>
                 <CourseDesc>{course.description}</CourseDesc>
                 <CourseMeta>{course.type} · {course.duration} · Free</CourseMeta>
               </CourseCardBody>
@@ -533,24 +887,76 @@ const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
 
         <StructuredCard>
           <StructuredInner>
-            <StructuredLeft>
-              <ProgramName>{program.name}</ProgramName>
-              <ProgramDesc>{program.description}</ProgramDesc>
+            <StructuredVisual $bgUrl={program.background}>
+              <VisualTop>
+                <VisualLabel>For Engineers Building Apps & Systems</VisualLabel>
+                <ProgramName>{program.name}</ProgramName>
+                <ProgramDesc>{program.description}</ProgramDesc>
+              </VisualTop>
+              <ProgramStatsRow>
+                <ProgramStatColumn>
+                  <ProgramStatMainRow>
+                    <LaurelImg src={grainLeftSrc} alt="" aria-hidden />
+                    <ProgramStatBig>{programStats.rating}</ProgramStatBig>
+                    <LaurelImg src={grainRightSrc} alt="" aria-hidden />
+                  </ProgramStatMainRow>
+                  <ProgramStatSub>{programStats.ratingsLine}</ProgramStatSub>
+                </ProgramStatColumn>
+                <ProgramStatsDivider aria-hidden />
+                <ProgramStatColumn>
+                  <ProgramStatBig>{programStats.months}</ProgramStatBig>
+                  <ProgramStatSub>Months</ProgramStatSub>
+                </ProgramStatColumn>
+              </ProgramStatsRow>
+            </StructuredVisual>
 
-              <ProgramStats>
-                {program.stats.map((stat, i) => (
-                  <ProgramStat key={i}>
-                    <ProgramStatVal>{stat.value}</ProgramStatVal>
-                    <ProgramStatLabel>{stat.label}</ProgramStatLabel>
-                  </ProgramStat>
-                ))}
-              </ProgramStats>
-
-              <FeatureList>
-                {program.features.map((feature, i) => (
-                  <Feature key={i}><Check size={14} weight="bold" color="#059669" />{feature}</Feature>
-                ))}
-              </FeatureList>
+            <StructuredRight>
+              <StructuredBody>
+                <BodyLabel>What you'll build</BodyLabel>
+                <FeatureList>
+                  {structuredFeatures.map((feature, i) => {
+                    const { title, description } = feature;
+                    return (
+                      <Feature key={i}>
+                        <FeatureCore>
+                          <FeatureIndex>{String(i + 1).padStart(2, '0')}</FeatureIndex>
+                          <FeatureText>
+                            <FeatureStrong>{title}</FeatureStrong>
+                            <FeatureLite>{description}</FeatureLite>
+                          </FeatureText>
+                        </FeatureCore>                        
+                      </Feature>
+                    );
+                  })}
+                </FeatureList>
+                {aiPanelItems.length > 0 && (
+                  <AIPanel>
+                    <AIPanelLabel>How roles evolve with AI?</AIPanelLabel>
+                    <AIPanelBody>
+                      <AIPanelSlideWrap aria-live="polite">
+                        <AIPanelSlideText key={aiSlideIndex}>
+                          {aiPanelItems[aiSlideIndex]}
+                        </AIPanelSlideText>
+                      </AIPanelSlideWrap>
+                      {aiPanelItems.length > 1 && (
+                        <AIPanelDots role="tablist" aria-label="AI highlights">
+                          {aiPanelItems.map((_, i) => (
+                            <AIPanelDot
+                              key={i}
+                              type="button"
+                              role="tab"
+                              aria-selected={i === aiSlideIndex}
+                              aria-label={`Highlight ${i + 1} of ${aiPanelItems.length}`}
+                              $active={i === aiSlideIndex}
+                              onClick={() => setAiSlideIndex(i)}
+                            />
+                          ))}
+                        </AIPanelDots>
+                      )}
+                    </AIPanelBody>
+                  </AIPanel>
+                )}
+              </StructuredBody>
 
               {!hideCTAs && (
                 <ButtonRow>
@@ -584,7 +990,7 @@ const TwoPathsChapter = ({ targetRole, hideCTAs, onResourceClick }) => {
                   </OutlineBtn>
                 </ButtonRow>
               )}
-            </StructuredLeft>
+            </StructuredRight>
           </StructuredInner>
         </StructuredCard>
       </Container>
