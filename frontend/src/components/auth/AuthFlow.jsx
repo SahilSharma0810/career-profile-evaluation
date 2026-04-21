@@ -39,6 +39,16 @@ const AuthFlow = ({
     () => successRedirectPath || new URLSearchParams(location.search).get('redirect') || '/quiz',
     [location.search, successRedirectPath]
   );
+  const resolvedRedirectUrl = useMemo(() => {
+    const appBasePath = '/career-profile-tool';
+    const sanitizedPath = redirectPath.startsWith('/') ? redirectPath : `/${redirectPath}`;
+
+    if (sanitizedPath.startsWith(`${appBasePath}/`)) {
+      return sanitizedPath;
+    }
+
+    return `${appBasePath}${sanitizedPath}`;
+  }, [redirectPath]);
 
   const [pendingData, setPendingData] = useState({
     phoneNumber: '',
@@ -173,7 +183,7 @@ const AuthFlow = ({
 
       if (reloadOnSuccess) {
         setTimeout(() => {
-          window.location.assign(redirectPath);
+          window.location.assign(resolvedRedirectUrl);
         }, 500);
       }
     } else {
@@ -185,7 +195,7 @@ const AuthFlow = ({
     }
 
     return result;
-  }, [onSuccess, redirectPath, reloadOnSuccess]);
+  }, [onSuccess, reloadOnSuccess, resolvedRedirectUrl]);
 
   const handleVerifyOtp = useCallback(async (otp) => {
     setFormState(prev => ({ ...prev, otp: { status: 'loading', error: '' } }));
@@ -229,7 +239,7 @@ const AuthFlow = ({
 
       if (reloadOnSuccess) {
         setTimeout(() => {
-          window.location.assign(redirectPath);
+          window.location.assign(resolvedRedirectUrl);
         }, 500);
       }
     } else {
@@ -237,7 +247,7 @@ const AuthFlow = ({
     }
 
     return result;
-  }, [formState.authFlow, pendingData, onSuccess, redirectPath, reloadOnSuccess]);
+  }, [formState.authFlow, pendingData, onSuccess, reloadOnSuccess, resolvedRedirectUrl]);
 
   const handleBackFromOtp = useCallback(() => {
     setFormState(prev => ({ ...prev, step: formState.authFlow, otp: { status: 'idle', error: '' } }));
