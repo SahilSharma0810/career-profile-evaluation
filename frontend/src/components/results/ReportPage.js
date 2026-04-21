@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { useStore } from '@nanostores/react';
+import { Phone } from 'phosphor-react';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import { useRequestCallback } from '../../app/context/RequestCallbackContext';
 import tracker from '../../utils/tracker';
 import useSectionViewTracking from '../../hooks/useSectionViewTracking';
-import { $initialData } from '../../store/initial-data';
 import HeroChapter from './chapters/HeroChapter';
 import TenXEngineerChapter from './chapters/TenXEngineerChapter';
 import SkillsChapter from './chapters/SkillsChapter';
@@ -59,20 +58,17 @@ const StickyBottom = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 110;
-  background: #002a86;
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-  padding: 10px 28px;
+  z-index: 100;
+  background: var(--accent-eye);
+  padding: 12px 40px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
+  justify-content: space-between;
 
   @media (max-width: 768px) {
-    padding: 10px 14px;
+    padding: 10px 16px;
     flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+    gap: 8px;
   }
 
   @media print {
@@ -82,55 +78,41 @@ const StickyBottom = styled.div`
 
 const StickyText = styled.div`
   color: var(--white);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.8125rem;
-  line-height: 1.2;
 `;
 
 const StickyTitle = styled.div`
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 700;
 `;
 
 const StickySubtitle = styled.div`
-  font-size: 0.8125rem;
-  opacity: 0.92;
+  font-size: 0.75rem;
+  opacity: 0.8;
 `;
 
 const StickyBtn = styled.button`
-  background: transparent;
-  color: var(--white);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  padding: 8px 12px;
-  font-family: var(--sans);
+  background: var(--white);
+  color: var(--accent-eye);
+  border: none;
+  padding: 10px 24px;
+  font-family: var(--mono);
   font-weight: 700;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  letter-spacing: 0.2px;
-  transition: all 0.15s ease;
-  white-space: nowrap;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background 0.15s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: var(--white);
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
+    background: #f0f0f0;
   }
 `;
 
 const BottomSpacer = styled.div`
-  height: 58px;
-  @media (max-width: 768px) {
-    height: 106px;
-  }
+  height: 56px;
 `;
 
 const ReportPage = ({
@@ -143,7 +125,6 @@ const ReportPage = ({
   onPreviewCTAClick = null
 }) => {
   const { open: openCallbackModal } = useRequestCallback();
-  const { data: initialData } = useStore($initialData);
 
   const sectionTrackingConfig = useMemo(() => [
     { id: 'cpe-hero-section', name: 'CPE Hero Section' },
@@ -171,27 +152,18 @@ const ReportPage = ({
     openCallbackModal?.({ source });
   }, [isPreview, onPreviewCTAClick, openCallbackModal]);
 
-  const handleResourceClick = useCallback((clickType, custom = {}) => {
-    tracker.click({ click_type: clickType, custom });
-    tracker.ctaClick({ click_type: clickType, custom });
-  }, []);
-
   const score = evaluationResults?.profile_strength_score || 0;
   const strengths = evaluationResults?.skill_analysis?.strengths || [];
   const areasToImprove = evaluationResults?.skill_analysis?.areas_to_develop || [];
   const recommendedRoles = evaluationResults?.recommended_roles_based_on_interests || [];
   const tools = evaluationResults?.recommended_tools || [];
   const targetRole = quizResponses?.targetRole || quizResponses?.targetRoleLabel || '';
-  const userData = initialData?.userData;
-  const rawName = userData?.name || userData?.full_name || '';
-  const userFirstName = rawName.trim().split(/\s+/)[0] || 'There';
 
   return (
     <PageWrapper>
       <HeroChapter
         score={score}
         targetRole={targetRole}
-        userFirstName={userFirstName}
         quizResponses={quizResponses}
         background={background}
         hideCTAs={hideCTAs}
@@ -211,7 +183,6 @@ const ReportPage = ({
       <TwoPathsChapter
         targetRole={targetRole}
         hideCTAs={hideCTAs}
-        onResourceClick={handleResourceClick}
       />
 
       {recommendedRoles.length > 0 && (
@@ -238,11 +209,13 @@ const ReportPage = ({
         <>
           <StickyBottom>
             <StickyText>
-              <StickyTitle>{isPreview ? 'Sample report.' : 'Need help?'}</StickyTitle>
+              <StickyTitle>
+                {isPreview ? 'This is a sample report.' : 'One move can change your trajectory.'}
+              </StickyTitle>
               <StickySubtitle>
                 {isPreview
                   ? 'Complete the quiz to get your personalized report.'
-                  : 'Talk to us at 08047399623'}
+                  : '30 min with a senior Scaler mentor. Free. Tailored to your profile.'}
               </StickySubtitle>
             </StickyText>
             <StickyBtn onClick={() => handleCTAClick('report_sticky_cta')}>
@@ -250,8 +223,8 @@ const ReportPage = ({
                 'Back to Quiz'
               ) : (
                 <>
-                  Request a Call
-                  <span aria-hidden="true">↗</span>
+                  <Phone size={14} weight="fill" />
+                  Get free consultation
                 </>
               )}
             </StickyBtn>

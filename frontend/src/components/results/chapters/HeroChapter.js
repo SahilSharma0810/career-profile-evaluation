@@ -133,17 +133,17 @@ const ScoreSection = styled.div`
 const ScoreGauge = styled.div`
   position: relative;
   width: 180px;
-  height: 116px;
+  height: 180px;
 
   @media (max-width: 768px) {
     width: 140px;
-    height: 92px;
+    height: 140px;
   }
 `;
 
 const ScoreNumber = styled.div`
   position: absolute;
-  top: 70%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -153,7 +153,7 @@ const ScoreNumber = styled.div`
 
 const ScoreValue = styled.div`
   font-family: var(--serif);
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 500;
   color: var(--white);
   line-height: 1;
@@ -208,7 +208,7 @@ const ROLE_DISPLAY_NAMES = {
   'not-sure': 'Software Engineer'
 };
 
-const HeroChapter = ({ score, targetRole, userFirstName = 'There', quizResponses, background, hideCTAs, isPreview, onCTAClick }) => {
+const HeroChapter = ({ score, targetRole, quizResponses, background, hideCTAs, isPreview, onCTAClick }) => {
   const [displayScore, setDisplayScore] = useState(0);
   const hasAnimated = useRef(false);
 
@@ -240,10 +240,9 @@ const HeroChapter = ({ score, targetRole, userFirstName = 'There', quizResponses
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const pct = isPreview ? 0.65 : displayScore / 100;
-  const clampedPct = Math.max(0, Math.min(1, pct));
   const radius = 76;
-  const semiCircumference = Math.PI * radius;
-  const filledArc = semiCircumference * clampedPct;
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference * (1 - pct * 0.75);
 
   return (
     <Section id="cpe-hero-section">
@@ -254,7 +253,7 @@ const HeroChapter = ({ score, targetRole, userFirstName = 'There', quizResponses
         <HeroLayout>
           <HeroLeft>
             <Title>
-              Hey {userFirstName},<br />
+              Hey There,<br />
               Become an AI-Powered<br />
               10× {roleName}.
             </Title>
@@ -271,7 +270,7 @@ const HeroChapter = ({ score, targetRole, userFirstName = 'There', quizResponses
                   ) : (
                     <>
                       <Phone size={18} weight="fill" />
-                      BOOK FREE 1:1 CAREER CALL
+                      Get a Free Career Consultation
                     </>
                   )}
                 </CTAButton>
@@ -284,22 +283,27 @@ const HeroChapter = ({ score, targetRole, userFirstName = 'There', quizResponses
 
           <ScoreSection>
             <ScoreGauge>
-              <svg width="100%" height="100%" viewBox="0 0 180 116">
-                <path
-                  d={`M 14 104 A ${radius} ${radius} 0 0 1 166 104`}
+              <svg width="100%" height="100%" viewBox="0 0 180 180">
+                <circle
+                  cx="90" cy="90" r={radius}
                   fill="none"
                   stroke="rgba(255,255,255,0.08)"
                   strokeWidth="6"
+                  strokeDasharray={circumference * 0.75 + ' ' + circumference * 0.25}
+                  strokeDashoffset="0"
                   strokeLinecap="round"
+                  transform="rotate(135 90 90)"
                 />
-                <path
-                  d={`M 14 104 A ${radius} ${radius} 0 0 1 166 104`}
+                <circle
+                  cx="90" cy="90" r={radius}
                   fill="none"
                   stroke="var(--accent)"
                   strokeWidth="6"
-                  strokeDasharray={`${filledArc} ${semiCircumference}`}
+                  strokeDasharray={circumference * 0.75 + ' ' + circumference * 0.25}
+                  strokeDashoffset={dashOffset}
                   strokeLinecap="round"
-                  style={{ transition: 'stroke-dasharray 0.5s ease-out' }}
+                  transform="rotate(135 90 90)"
+                  style={{ transition: 'stroke-dashoffset 1.5s ease-out' }}
                 />
               </svg>
               <ScoreNumber>

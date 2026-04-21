@@ -5,7 +5,6 @@ import FinalModeQuiz from './quiz/FinalModeQuiz';
 import attribution from '../utils/attribution';
 import { apiRequest, generateJWT } from '../utils/api';
 import { getURLWithUTMParams, getPathWithQueryParams } from '../utils/url';
-import tracker from '../utils/tracker';
 
 function QuizPage({ onProgressChange }) {
   const navigate = useNavigate();
@@ -44,13 +43,6 @@ function QuizPage({ onProgressChange }) {
     } catch (e) {
       // Silently fail
     }
-  }, []);
-
-  useEffect(() => {
-    const pageUrl = new URL(window.location.href);
-    tracker.pageview({
-      page_url: pageUrl
-    });
   }, []);
 
   useEffect(() => {

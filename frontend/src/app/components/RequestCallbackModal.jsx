@@ -1,10 +1,9 @@
-import React, { useEffect, useCallback } from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import tracker from '../../utils/tracker';
+import React, { useEffect, useCallback } from "react";
+import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
-const OVERLAY_ID = 'request-callback-modal';
+const OVERLAY_ID = "request-callback-modal";
 
 const Overlay = styled.div`
   position: fixed;
@@ -69,33 +68,26 @@ const Description = styled.p`
 `;
 
 const Button = styled.a`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #0052ff;
+  display: inline-block;
+  border: none;
   border-radius: 0;
-  padding: 9px 16px;
-  font-weight: 700;
-  font-size: 0.75rem;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  line-height: 1;
-  white-space: nowrap;
+  letter-spacing: 1px;
   text-decoration: none;
-  font-family: var(--mono);
-  background: #0052ff;
+  background: var(--accent-eye);
   color: white;
 
   &:hover {
-    background: #0047de;
-    border-color: #0047de;
+    background: #b3420a;
   }
 
   &:active {
-    background: #003fc7;
-    border-color: #003fc7;
+    background: #943508;
   }
 `;
 
@@ -122,7 +114,6 @@ const RetryButton = styled.button`
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-family: var(--sans);
 
   &:hover {
     color: #1e293b;
@@ -226,16 +217,6 @@ const RequestCallbackModal = ({
                 href={programUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => {
-                  tracker.click({
-                    click_type: 'rcb_success_program_cta_clicked',
-                    custom: { program_name: programName || 'default_program', program_url: programUrl }
-                  });
-                  tracker.ctaClick({
-                    click_type: 'rcb_success_program_cta_clicked',
-                    custom: { program_name: programName || 'default_program', program_url: programUrl }
-                  });
-                }}
               >
                 {programName ? `Explore ${programName}` : 'Explore the program'} &rarr;
               </Button>

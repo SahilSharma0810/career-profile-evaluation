@@ -111,23 +111,15 @@ const ToolCell = styled.div`
 const ToolIcon = styled.div`
   width: 32px;
   height: 32px;
-  background: ${props => props.$bg || 'var(--white)'};
+  background: ${props => props.$bg || 'var(--ink)'};
   border-radius: 6px;
-  border: 1px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--ink);
+  color: var(--white);
   font-weight: 700;
   font-size: 0.75rem;
-  overflow: hidden;
-`;
-
-const ToolLogo = styled.img`
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
 `;
 
 const ToolInfo = styled.div`
@@ -160,35 +152,15 @@ const ToolDesc = styled.div`
 `;
 
 const TOOL_ICONS = {
-  'GitHub Copilot': { src: 'https://cdn.simpleicons.org/githubcopilot/000000', bg: '#ffffff', label: 'GC' },
-  'Cursor': { src: 'https://cdn.simpleicons.org/cursor/000000', bg: '#ffffff', label: 'C' },
-  'ChatGPT + Excalidraw': { src: 'https://cdn.simpleicons.org/openai/10A37F', bg: '#ffffff', label: 'AI' },
-  'Datadog Watchdog': { src: 'https://cdn.simpleicons.org/datadog/632CA6', bg: '#ffffff', label: 'D' },
-  'Notion AI': { src: 'https://cdn.simpleicons.org/notion/000000', bg: '#ffffff', label: 'N' },
-  'CodeRabbit': { src: 'https://cdn.simpleicons.org/rabbitmq/FF6600', bg: '#ffffff', label: 'CR' },
-  'Perplexity': { src: 'https://cdn.simpleicons.org/perplexity/000000', bg: '#ffffff', label: 'P' },
-  'v0 / Bolt': { src: 'https://cdn.simpleicons.org/vercel/000000', bg: '#ffffff', label: 'v0' },
-  'Warp': { src: 'https://cdn.simpleicons.org/warp/01A4FF', bg: '#ffffff', label: 'W' }
-};
-
-const ToolIconContent = ({ toolName, iconConfig }) => {
-  const [hasLogoError, setHasLogoError] = React.useState(false);
-  const showLogo = Boolean(iconConfig.src) && !hasLogoError;
-
-  return (
-    <>
-      {showLogo ? (
-        <ToolLogo
-          src={iconConfig.src}
-          alt={`${toolName} logo`}
-          loading="lazy"
-          onError={() => setHasLogoError(true)}
-        />
-      ) : (
-        iconConfig.label
-      )}
-    </>
-  );
+  'GitHub Copilot': { bg: '#000000', label: '' },
+  'Cursor': { bg: '#7C3AED', label: '' },
+  'ChatGPT + Excalidraw': { bg: '#10A37F', label: '' },
+  'Datadog Watchdog': { bg: '#632CA6', label: '' },
+  'Notion AI': { bg: '#000000', label: 'N' },
+  'CodeRabbit': { bg: '#DC2626', label: '' },
+  'Perplexity': { bg: '#1a73e8', label: '' },
+  'v0 / Bolt': { bg: '#000000', label: '' },
+  'Warp': { bg: '#000000', label: '' }
 };
 
 const ToolsChapter = ({ tools }) => {
@@ -204,11 +176,11 @@ const ToolsChapter = ({ tools }) => {
         <Card>
           <Grid>
             {displayTools.map((tool, i) => {
-              const iconConfig = TOOL_ICONS[tool.name] || { bg: '#ffffff', label: tool.name.charAt(0) };
+              const iconConfig = TOOL_ICONS[tool.name] || { bg: 'var(--ink)', label: tool.name.charAt(0) };
               return (
                 <ToolCell key={i}>
                   <ToolIcon $bg={iconConfig.bg}>
-                    <ToolIconContent toolName={tool.name} iconConfig={iconConfig} />
+                    {iconConfig.label}
                   </ToolIcon>
                   <ToolInfo>
                     <ToolName>{tool.name}</ToolName>

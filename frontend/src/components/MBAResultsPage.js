@@ -1472,13 +1472,6 @@ const MBAResultsPage = () => {
     { id: 'mba-industry-stats', name: 'MBA Industry Stats' }
   ], []);
 
-  useEffect(() => {
-    const pageUrl = new URL(window.location.href);
-    tracker.pageview({
-      page_url: pageUrl
-    });
-  }, []);
-
   // Track section views
   useSectionViewTracking(sectionTrackingConfig, {
     enabled: !loading && !!results,
