@@ -23,11 +23,17 @@ import '@vectord/ui/dist/style.css';
 import '@vectord/fp-styles';
 
 function AuthRoutes() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const requestedRedirect = searchParams.get('redirect');
+  const redirectPath = requestedRedirect || `${location.pathname}${location.search}`;
+  const loginPath = `/login?redirect=${encodeURIComponent(redirectPath)}`;
+
   return (
     <Routes>
       <Route path="/login" element={<AuthSplitPage initialMode="login" />} />
       <Route path="/signup" element={<AuthSplitPage initialMode="signup" />} />
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to={loginPath} replace />} />
     </Routes>
   );
 }
@@ -38,6 +44,7 @@ function MBAAppContent() {
   const { data, loading } = useStore($initialData);
   const location = useLocation();
   useGTMSectionTracking();
+  const isMBAAdminRoute = location.pathname.startsWith('/business-and-ai-readiness/admin');
   
   // Hide nav for MBA quiz page
   const shouldShowNav = !location.pathname.includes('/business-and-ai-readiness/quiz') && 
@@ -53,7 +60,7 @@ function MBAAppContent() {
   );
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthRoutes />;
+  if (!data?.isLoggedIn && !isMBAAdminRoute) return <AuthRoutes />;
 
   return (
     <MBAProfileProvider>
@@ -93,6 +100,11 @@ function AppContent() {
   ) && !location.pathname.startsWith('/admin') && !isMBARoute;
 
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isMBAAdminRoute = location.pathname.startsWith('/business-and-ai-readiness/admin');
+  const isAnyAdminRoute = isAdminRoute || isMBAAdminRoute;
+  const redirectParam = new URLSearchParams(location.search).get('redirect');
+  const isAuthOrDefaultQuizRoute = ['/login', '/signup', '/quiz'].includes(location.pathname);
+  const hasSafeRedirect = Boolean(redirectParam?.startsWith('/'));
 
   useEffect(() => {
     const pageUrl = new URL(window.location.href);
@@ -125,7 +137,12 @@ function AppContent() {
   }, []);
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return (
+
+  if (data?.isLoggedIn && isAuthOrDefaultQuizRoute && hasSafeRedirect) {
+    return <Navigate to={redirectParam} replace />;
+  }
+
+  if (!data?.isLoggedIn && !isAnyAdminRoute) return (
     <div className={isMBARoute ? 'mba-cpe-theme' : 'cpe-theme'}>
       <AuthRoutes />
     </div>

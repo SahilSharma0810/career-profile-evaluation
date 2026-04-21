@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import { ReactComponent as ScalerLogo } from '../../assets/scaler-logo.svg';
 import { AuthFlow } from './index';
 import tracker from '../../utils/tracker';
@@ -333,8 +334,10 @@ const ModalBody = styled.div`
 const COMPANIES = ['Google', 'Amazon', 'Flipkart', 'Razorpay', 'Swiggy', 'PhonePe', 'CRED', 'Uber'];
 
 const AuthSplitPage = ({ initialMode = 'login' }) => {
+  const location = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const successRedirectPath = new URLSearchParams(location.search).get('redirect') || '/quiz';
 
   useEffect(() => {
     const pageUrl = new URL(window.location.href);
@@ -385,6 +388,7 @@ const AuthSplitPage = ({ initialMode = 'login' }) => {
                 <AuthFlow
                   initialMode={initialMode}
                   reloadOnSuccess={true}
+                  successRedirectPath={successRedirectPath}
                   showProfessionalFields={true}
                 />
               </ModalBody>
@@ -463,6 +467,7 @@ const AuthSplitPage = ({ initialMode = 'login' }) => {
           <AuthFlow
             initialMode={initialMode}
             reloadOnSuccess={true}
+            successRedirectPath={successRedirectPath}
           />
         </AuthCard>
       </RightPanel>
