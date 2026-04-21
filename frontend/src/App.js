@@ -38,6 +38,7 @@ function MBAAppContent() {
   const { data, loading } = useStore($initialData);
   const location = useLocation();
   useGTMSectionTracking();
+  const isMBAAdminRoute = location.pathname.startsWith('/business-and-ai-readiness/admin');
   
   // Hide nav for MBA quiz page
   const shouldShowNav = !location.pathname.includes('/business-and-ai-readiness/quiz') && 
@@ -53,7 +54,7 @@ function MBAAppContent() {
   );
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return <AuthRoutes />;
+  if (!data?.isLoggedIn && !isMBAAdminRoute) return <AuthRoutes />;
 
   return (
     <MBAProfileProvider>
@@ -93,6 +94,8 @@ function AppContent() {
   ) && !location.pathname.startsWith('/admin') && !isMBARoute;
 
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isMBAAdminRoute = location.pathname.startsWith('/business-and-ai-readiness/admin');
+  const isAnyAdminRoute = isAdminRoute || isMBAAdminRoute;
 
   useEffect(() => {
     const pageUrl = new URL(window.location.href);
@@ -125,7 +128,7 @@ function AppContent() {
   }, []);
 
   if (loading) return <LoadingScreen />;
-  if (!data?.isLoggedIn) return (
+  if (!data?.isLoggedIn && !isAnyAdminRoute) return (
     <div className={isMBARoute ? 'mba-cpe-theme' : 'cpe-theme'}>
       <AuthRoutes />
     </div>
