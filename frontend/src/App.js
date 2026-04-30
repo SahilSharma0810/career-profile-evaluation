@@ -12,6 +12,7 @@ import LoadingScreen from './app/screens/LoadingScreen';
 import { RequestCallbackProvider } from './app/context/RequestCallbackContext';
 import useGTMSectionTracking from './hooks/useGTMSectionTracking';
 import AuthSplitPage from './components/auth/AuthSplitPage';
+import MBALandingPage from './components/mba-landing/MBALandingPage';
 import MBAQuiz from './components/quiz/MBAQuiz';
 import MBAResultsPage from './components/MBAResultsPage';
 import MBAAdminViewPage from './components/admin/MBAAdminViewPage';
@@ -142,11 +143,20 @@ function AppContent() {
     return <Navigate to={redirectParam} replace />;
   }
 
-  if (!data?.isLoggedIn && !isAnyAdminRoute) return (
-    <div className={isMBARoute ? 'mba-cpe-theme' : 'cpe-theme'}>
-      <AuthRoutes />
-    </div>
-  );
+  if (!data?.isLoggedIn && !isAnyAdminRoute) {
+    if (isMBARoute) {
+      return (
+        <div className="mba-cpe-theme">
+          <MBALandingPage />
+        </div>
+      );
+    }
+    return (
+      <div className="cpe-theme">
+        <AuthRoutes />
+      </div>
+    );
+  }
 
   // Route to MBA app for /business-and-ai-readiness/* paths
   if (isMBARoute) {
