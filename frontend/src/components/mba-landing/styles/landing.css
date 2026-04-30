@@ -27,7 +27,11 @@
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
   width: 100%;
-  overflow-x: hidden;
+  /* `overflow-x: clip` prevents horizontal scrollbars without creating a
+     scroll-containing block — required so descendant `position: sticky`
+     elements (e.g. the scenarios stack) keep working. `hidden` would
+     break sticky. */
+  overflow-x: clip;
 }
 
 .mba-landing img { display: block; max-width: 100%; }
