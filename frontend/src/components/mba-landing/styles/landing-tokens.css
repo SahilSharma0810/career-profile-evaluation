@@ -14,27 +14,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500&family=Archivo:wght@400;600;700;800&display=swap');
 
 :root {
-  /* -------- Brand Colors -------- */
-  --brand-primary: #0055FF;           /* PRIMARY — bright, canonical brand blue */
-  --brand-primary-alt: #004CE5;       /* supporting fill (slightly deeper) */
-  --brand-primary-strong: #083CA0;    /* heavy buttons / strong blue blocks / hover */
-  --brand-navy: #011845;              /* darkest brand color */
-  --brand-navy-2: #011A53;           /* Navy step */
-  --brand-navy-3: #0B1529;           /* Near-black navy */
+  /* -------- Brand Colors --------
+     Aligned to CP (Career Profile) tokens so the LP → CP transition is seamless.
+     CP uses --accent-eye: #D44E0A (warm orange) as its primary action color
+     and --navy: #4A2236 for dark surfaces. Background is warm cream #F3F2EE. */
+  --brand-primary: #D44E0A;           /* PRIMARY — matches CP --accent-eye (orange) */
+  --brand-primary-alt: #B83E08;       /* supporting fill (deeper orange) */
+  --brand-primary-strong: #9A3306;    /* heavy CTAs / hover */
+  /* Originally CP --navy #4A2236. The MBA-CPE quiz the user lands in next
+     uses no navy at all — its dark colors live in the warm-plum family
+     (deep companions to the magenta primary #D70666 and orange #D55D26).
+     Swapped to deep warm plum/ink so dark surfaces, badges, buttons,
+     and gradients read as continuous with the quiz palette. */
+  /* Lifted plum tones — dark surfaces (hero, scenarios, footer) read as
+     deep but not crushing, so white text + accents stay readable. */
+  --brand-navy: #4A2236;              /* lifted warm plum (was #3D1A2E) */
+  --brand-navy-2: #5A2A41;            /* lifted hover step */
+  --brand-navy-3: #3D1A2E;            /* scenarios fold — slightly deeper */
 
-  /* Blue tints — used for soft hero panels, chip backgrounds */
-  --brand-blue-50:  #EBF8FF;
-  --brand-blue-100: #E6F0FF;
-  --brand-blue-200: #E9F1FF;
-  --brand-blue-300: #E3F1FF;
+  /* Soft surface tints — soft hero panels, chip backgrounds.
+     Variables still called --brand-blue-* for backwards compat with rules
+     referencing them, but values are now white / pale neutral so the soft
+     fills read as light surfaces, not coloured blocks. */
+  --brand-blue-50:  #FFFFFF;          /* pure white */
+  --brand-blue-100: #FAFAFA;          /* near-white */
+  --brand-blue-200: #F5F5F5;          /* pale neutral */
+  --brand-blue-300: #EFEFEF;          /* slightly cooler pale */
 
-  /* Accents observed in visual direction */
-  --accent-gold:    #E8B017;         /* Mustard-gold accent */
-  --accent-lime:    #C4FF00;         /* Lime — used inside radial gradient stars */
-  --accent-teal:    rgba(0, 225, 173, 0.5);
-  --accent-violet:  #8000FF;
-  --accent-violet-2: rgba(119, 81, 255, 0.5);
-  --accent-orange:  #ED7700;
+  /* Accents — aligned to MBA-CPE quiz palette (warm cream surface +
+     magenta primary + orange secondary). Variables keep their original
+     names for backwards compat with rules already using them, but the
+     values are now in the MBA-CPE family so the LP visually continues
+     into the quiz instead of clashing. */
+  --accent-gold:    #D55D26;         /* warm orange (matches MBA-CPE accent) */
+  --accent-lime:    #FFE066;         /* soft butter-yellow (replaces electric lime) */
+  --accent-teal:    rgba(213, 93, 38, 0.45);
+  --accent-violet:  #D70666;         /* magenta (MBA-CPE primary CTA) */
+  --accent-violet-2: rgba(215, 6, 102, 0.45);
+  --accent-orange:  #D55D26;
 
   /* -------- Neutrals -------- */
   --n-0:   #FFFFFF;
@@ -68,7 +85,11 @@
   --fg-link: var(--brand-primary);
   --fg-link-hover: var(--brand-primary-strong);
 
-  /* -------- Semantic surface -------- */
+  /* -------- Semantic surface --------
+     surface-page = warm cream from CP (--bg #F3F2EE). Used as the page
+     background so LP and CP share the same canvas. surface-0 stays white
+     for cards/forms that need to pop against the cream. */
+  --surface-page: #FFFFFF;        /* page bg → pure white for readability */
   --surface-0: #FFFFFF;
   --surface-1: #FAFAFA;
   --surface-2: #F5F5F5;
@@ -79,8 +100,8 @@
   /* -------- Shadows (flat, subtle) -------- */
   --shadow-xs: 0 1px 2px 0 rgba(26,26,26,0.05);
   --shadow-sm: 0 1px 2px 0 rgba(0,11,31,0.06), 0 1px 1px 0 rgba(0,11,31,0.04);
-  --shadow-md: 0 8px 24px -8px rgba(1,24,69,0.10), 0 2px 6px -2px rgba(1,24,69,0.06);
-  --shadow-lg: 0 24px 48px -12px rgba(1,24,69,0.18);
+  --shadow-md: 0 8px 24px -8px rgba(61,26,46,0.10), 0 2px 6px -2px rgba(61,26,46,0.06);
+  --shadow-lg: 0 24px 48px -12px rgba(61,26,46,0.18);
 
   /* -------- Radii --------
      BRAND RULE: no rounded corners anywhere. Ever. The only value is 0.
@@ -149,20 +170,24 @@
 
 /* ---------- Element defaults (scoped) ---------- */
 
-.mba-landing, .mba-landing {
+.mba-landing {
   font-family: var(--font-body);
-  color: var(--fg-1);
-  background: var(--surface-0);
+  color: var(--fg-2);
+  background: var(--surface-page);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
+/* NOTE: element defaults (h1-h6, p) intentionally do NOT set `color`.
+   Color is inherited from `.mba-landing` (--fg-1) and overridden by
+   section classes like `.hero__h1 { color: #fff }`. Setting color here
+   would beat those overrides on specificity (0,1,1 > 0,1,0) and break
+   the visual hierarchy that the original LP relied on. */
 .mba-landing h1, .mba-landing .t-h1 {
   font-family: var(--t-h1-family);
   font-size: var(--t-h1-size);
   line-height: var(--t-h1-lh);
   font-weight: var(--t-h1-weight);
-  color: var(--fg-1);
   letter-spacing: -0.01em;
   margin: 0;
 }
@@ -172,7 +197,6 @@
   font-size: var(--t-h2-size);
   line-height: var(--t-h2-lh);
   font-weight: var(--t-h2-weight);
-  color: var(--fg-1);
   margin: 0;
 }
 
@@ -181,7 +205,6 @@
   font-size: var(--t-h3-size);
   line-height: var(--t-h3-lh);
   font-weight: var(--t-h3-weight);
-  color: var(--fg-1);
   margin: 0;
 }
 
@@ -191,7 +214,6 @@
   line-height: var(--t-h4-lh);
   font-weight: var(--t-h4-weight);
   letter-spacing: -0.01em;
-  color: var(--fg-1);
   margin: 0;
 }
 
@@ -201,7 +223,6 @@
   line-height: var(--t-h5-lh);
   font-weight: var(--t-h5-weight);
   letter-spacing: -0.03em;
-  color: var(--brand-navy);
   margin: 0;
 }
 
@@ -211,7 +232,6 @@
   line-height: var(--t-hero-lh);
   font-weight: var(--t-hero-weight);
   letter-spacing: -0.01em;
-  color: var(--fg-1);
 }
 
 .mba-landing .t-display {
@@ -219,20 +239,18 @@
   font-size: var(--t-display-size);
   line-height: var(--t-display-lh);
   font-weight: var(--t-display-weight);
-  color: var(--fg-1);
 }
 
 .mba-landing p, .mba-landing .t-body {
   font-family: var(--font-body);
   font-size: var(--t-body-size);
   line-height: var(--t-body-lh);
-  color: var(--fg-2);
   margin: 0;
 }
 
 .mba-landing .t-body-lg { font-size: var(--t-body-lg-size); line-height: var(--t-body-lg-lh); }
-.mba-landing .t-body-sm { font-size: var(--t-body-sm-size); line-height: var(--t-body-sm-lh); color: var(--fg-2); }
-.mba-landing .t-caption { font-size: var(--t-caption-size); line-height: var(--t-caption-lh); color: var(--fg-3); }
+.mba-landing .t-body-sm { font-size: var(--t-body-sm-size); line-height: var(--t-body-sm-lh); }
+.mba-landing .t-caption { font-size: var(--t-caption-size); line-height: var(--t-caption-lh); }
 
 .mba-landing .t-eyebrow {
   font-family: var(--font-body);
@@ -286,7 +304,7 @@
   box-shadow: var(--shadow-xs);
 }
 .mba-landing .btn--primary:hover {
-  background: #1F6BFF;                  /* brighter step up from #0055FF */
+  background: #B83E08;                  /* deeper orange — hover step from --brand-primary */
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--brand-primary);
 }
 

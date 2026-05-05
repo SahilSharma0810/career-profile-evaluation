@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { signUp, verifySignUpOtp, resendOtp } from '../../api/authService';
+import { signUp, verifySignUpOtp, resendOtp, login, verifyLoginOtp } from '../../api/authService';
 import TurnstileWidget from '../../utils/Turnstile';
 import { validatePhone, validateEmail } from '../../utils/validation';
 import tracker from '../../utils/tracker';
@@ -27,15 +27,29 @@ const LeadCard = ({ formId }) => {
     grad_year: ''
   });
   const [errors, setErrors] = useState({});
-  const [otp, setOtp] = useState(['', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [otpError, setOtpError] = useState('');
   const [submitStatus, setSubmitStatus] = useState('idle');
   const [submitError, setSubmitError] = useState('');
   const [resendCooldown, setResendCooldown] = useState(0);
+  // 'signup' (new user, must verify via SIGN_UP_VERIFY) vs 'login' (existing
+  // user, must verify via LOGIN_VERIFY). Set when we transition to OTP step.
+  const [otpMode, setOtpMode] = useState('signup');
   const [turnstileToken, setTurnstileToken] = useState('');
-  const [turnstileAppearance, setTurnstileAppearance] = useState('interaction-only');
+  // Default to 'always' so users can see the verification widget upfront — avoids
+  // the dead-empty-space situation where 'interaction-only' renders 0px until
+  // the user touches a field, which makes the form look broken.
+  const [turnstileAppearance, setTurnstileAppearance] = useState('always');
   const turnstileRef = useRef(null);
   const otpRefs = useRef([]);
+
+  const handleTurnstileVerified = useCallback((token) => {
+    setTurnstileToken(token);
+    // Once Turnstile clears, drop any "please verify" message we may have shown.
+    setSubmitError(prev =>
+      prev && /verification|verify/i.test(prev) ? '' : prev
+    );
+  }, []);
 
   useEffect(() => {
     if (resendCooldown <= 0) return undefined;
@@ -68,13 +82,18 @@ const LeadCard = ({ formId }) => {
 
   const handleDetailsSubmit = useCallback(async (event) => {
     event.preventDefault();
-    if (!validateDetails()) return;
+    console.log('[LeadCard] submit clicked', { formData, hasTurnstileToken: Boolean(turnstileToken) });
+    const validationOk = validateDetails();
+    console.log('[LeadCard] validation result', { ok: validationOk });
+    if (!validationOk) return;
 
     if (!turnstileToken) {
+      console.log('[LeadCard] BLOCKED: no turnstile token');
       setTurnstileAppearance('always');
       setSubmitError('Please complete the verification.');
       return;
     }
+    console.log('[LeadCard] proceeding to API call');
 
     setSubmitStatus('loading');
     setSubmitError('');
@@ -84,7 +103,7 @@ const LeadCard = ({ formId }) => {
       click_source: `mba_landing_${formId}`
     });
 
-    const result = await signUp({
+    const signupResult = await signUp({
       name: formData.name,
       email: formData.email,
       phone_number: formData.phone,
@@ -92,13 +111,23 @@ const LeadCard = ({ formId }) => {
       turnstile_token: turnstileToken
     });
 
-    if (turnstileRef.current && typeof turnstileRef.current.reset === 'function') {
-      turnstileRef.current.reset();
+    // If the user already exists (403 = email taken, 409 = phone taken),
+    // transparently fall back to login: send OTP to their existing account.
+    let result = signupResult;
+    let mode = 'signup';
+    if (!signupResult.success && (signupResult.status === 403 || signupResult.status === 409)) {
+      const loginResult = await login(formData.phone, turnstileToken);
+      if (loginResult.success) {
+        result = loginResult;
+        mode = 'login';
+      } else {
+        result = loginResult;
+      }
     }
-    setTurnstileToken('');
 
     if (result.success) {
       setSubmitStatus('idle');
+      setOtpMode(mode);
       setStep('otp');
       setResendCooldown(30);
       setTimeout(() => {
@@ -107,9 +136,20 @@ const LeadCard = ({ formId }) => {
 
       tracker.click({
         click_type: 'mba_lp_otp_requested',
-        click_source: `mba_landing_${formId}`
+        click_source: `mba_landing_${formId}`,
+        custom: { otp_mode: mode }
       });
     } else {
+      // The Turnstile token is single-use on the backend — once we've sent it
+      // with a request that failed, we must visibly refresh the widget so the
+      // user can re-verify before retrying. Otherwise the next submit will
+      // either be blocked client-side ("Please complete the verification") or
+      // rejected server-side as a stale token.
+      if (turnstileRef.current && typeof turnstileRef.current.reset === 'function') {
+        turnstileRef.current.reset();
+      }
+      setTurnstileToken('');
+      setTurnstileAppearance('always');
       setSubmitStatus('error');
       setSubmitError(result.error || 'Could not send OTP. Please try again.');
     }
@@ -123,7 +163,7 @@ const LeadCard = ({ formId }) => {
       return next;
     });
     if (otpError) setOtpError('');
-    if (cleaned && idx < 3 && otpRefs.current[idx + 1]) {
+    if (cleaned && idx < 5 && otpRefs.current[idx + 1]) {
       otpRefs.current[idx + 1].focus();
     }
   }, [otpError]);
@@ -142,19 +182,19 @@ const LeadCard = ({ formId }) => {
   const handleOtpPaste = useCallback((e) => {
     e.preventDefault();
     const text = (e.clipboardData || window.clipboardData).getData('text');
-    const cleaned = text.replace(/\D/g, '').slice(0, 4);
-    const next = ['', '', '', ''];
+    const cleaned = text.replace(/\D/g, '').slice(0, 6);
+    const next = ['', '', '', '', '', ''];
     for (let i = 0; i < cleaned.length; i++) next[i] = cleaned[i];
     setOtp(next);
-    const focusIdx = Math.min(cleaned.length, 3);
+    const focusIdx = Math.min(cleaned.length, 5);
     if (otpRefs.current[focusIdx]) otpRefs.current[focusIdx].focus();
   }, []);
 
   const handleOtpSubmit = useCallback(async (event) => {
     event.preventDefault();
     const code = otp.join('');
-    if (code.length !== 4 || !/^\d{4}$/.test(code)) {
-      setOtpError('Enter the 4-digit code.');
+    if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+      setOtpError('Enter the 6-digit code.');
       return;
     }
     setOtpError('');
@@ -165,7 +205,10 @@ const LeadCard = ({ formId }) => {
       click_source: `mba_landing_${formId}`
     });
 
-    const result = await verifySignUpOtp(`+91-${formData.phone}`, code, formData.email);
+    const phoneFormatted = `+91-${formData.phone}`;
+    const result = otpMode === 'login'
+      ? await verifyLoginOtp(phoneFormatted, code)
+      : await verifySignUpOtp(phoneFormatted, code, formData.email);
 
     if (result.success) {
       setSubmitStatus('success');
@@ -188,20 +231,20 @@ const LeadCard = ({ formId }) => {
       setSubmitStatus('error');
       setOtpError(result.error || 'Invalid OTP. Please try again.');
     }
-  }, [otp, formData.phone, formData.email, formId]);
+  }, [otp, formData.phone, formData.email, formData.grad_year, formId, otpMode]);
 
   const handleResend = useCallback(async () => {
     if (resendCooldown > 0) return;
     setResendCooldown(30);
-    const result = await resendOtp(`+91-${formData.phone}`, 'signup');
+    const result = await resendOtp(`+91-${formData.phone}`, otpMode);
     if (!result.success) {
       setOtpError(result.error || 'Could not resend OTP.');
     }
-  }, [formData.phone, resendCooldown]);
+  }, [formData.phone, resendCooldown, otpMode]);
 
   const handleBack = useCallback(() => {
     setStep('details');
-    setOtp(['', '', '', '']);
+    setOtp(['', '', '', '', '', '']);
     setOtpError('');
     setSubmitStatus('idle');
   }, []);
@@ -217,7 +260,7 @@ const LeadCard = ({ formId }) => {
             </button>
             <p className="lead-card__eyebrow">Verify</p>
             <h2 className="lead-card__title">Enter the OTP</h2>
-            <p className="lead-card__sub">We sent a 4-digit code to <strong>{maskPhone(formData.phone)}</strong></p>
+            <p className="lead-card__sub">We sent a 6-digit code to <strong>{maskPhone(formData.phone)}</strong></p>
           </div>
 
           <form className="lead-form" onSubmit={handleOtpSubmit} noValidate>
@@ -307,6 +350,23 @@ const LeadCard = ({ formId }) => {
           </div>
 
           <div className="lead-form__field">
+            <label className="lead-form__label" htmlFor={`grad-${formId}`}>Year of graduation</label>
+            <select
+              id={`grad-${formId}`}
+              className="lead-phone-input"
+              value={formData.grad_year}
+              onChange={(e) => handleChange('grad_year', e.target.value)}
+              style={{ paddingLeft: 16, appearance: 'auto' }}
+            >
+              <option value="">Select year</option>
+              {GRAD_YEARS.map(y => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+            {errors.grad_year && <p className="lead-form__error" role="alert">{errors.grad_year}</p>}
+          </div>
+
+          <div className="lead-form__field">
             <label className="lead-form__label" htmlFor={`phone-${formId}`}>Mobile number</label>
             <div className="lead-phone-wrap">
               <span className="lead-phone-prefix" aria-hidden="true">+91</span>
@@ -327,26 +387,9 @@ const LeadCard = ({ formId }) => {
             {errors.phone && <p className="lead-form__error" role="alert">{errors.phone}</p>}
           </div>
 
-          <div className="lead-form__field">
-            <label className="lead-form__label" htmlFor={`grad-${formId}`}>Year of graduation</label>
-            <select
-              id={`grad-${formId}`}
-              className="lead-phone-input"
-              value={formData.grad_year}
-              onChange={(e) => handleChange('grad_year', e.target.value)}
-              style={{ paddingLeft: 16, appearance: 'auto' }}
-            >
-              <option value="">Select year</option>
-              {GRAD_YEARS.map(y => (
-                <option key={y} value={y}>{y}</option>
-              ))}
-            </select>
-            {errors.grad_year && <p className="lead-form__error" role="alert">{errors.grad_year}</p>}
-          </div>
-
           <TurnstileWidget
             ref={turnstileRef}
-            onTokenObtained={setTurnstileToken}
+            onTokenObtained={handleTurnstileVerified}
             appearance={turnstileAppearance}
           />
 

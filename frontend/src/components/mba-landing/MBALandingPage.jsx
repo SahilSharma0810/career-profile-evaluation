@@ -19,15 +19,20 @@ const Pointer = ({ children }) => (
   </li>
 );
 
+// Locally-hosted brand SVGs — sourced from simple-icons (open MIT-licensed
+// vector marks) and stored under public/mba-landing-logos/. CRED is a
+// hand-built wordmark since simple-icons doesn't carry it. Paths must be
+// prefixed with PUBLIC_URL because the app is mounted at /career-profile-tool.
+const LOGO_BASE = `${process.env.PUBLIC_URL || ''}/mba-landing-logos`;
 const HERO_LOGOS = [
-  { name: 'Razorpay', src: 'https://cdn.brandfetch.io/razorpay.com/w/200/h/80?c=1id_0gjOfcNF2y1j5n9' },
-  { name: 'Swiggy', src: 'https://cdn.brandfetch.io/swiggy.com/w/200/h/80?c=1id_0gjOfcNF2y1j5n9' },
-  { name: 'CRED', src: 'https://cdn.brandfetch.io/cred.club/w/200/h/80?c=1id_0gjOfcNF2y1j5n9' },
-  { name: 'PhonePe', src: 'https://cdn.brandfetch.io/phonepe.com/w/200/h/80?c=1id_0gjOfcNF2y1j5n9' },
-  { name: 'Zomato', src: 'https://cdn.brandfetch.io/zomato.com/w/200/h/80?c=1id_0gjOfcNF2y1j5n9' },
-  { name: 'Paytm', src: 'https://cdn.brandfetch.io/paytm.com/w/200/h/80?c=1id_0gjOfcNF2y1j5n9' },
-  { name: 'Zoho', src: 'https://cdn.brandfetch.io/zoho.com/w/200/h/80?c=1id_0gjOfcNF2y1j5n9' },
-  { name: 'Unacademy', src: 'https://cdn.brandfetch.io/unacademy.com/w/200/h/80?c=1id_0gjOfcNF2y1j5n9' }
+  { name: 'Razorpay',  src: `${LOGO_BASE}/razorpay.svg`  },
+  { name: 'Swiggy',    src: `${LOGO_BASE}/swiggy.svg`    },
+  { name: 'CRED',      src: `${LOGO_BASE}/cred.svg`      },
+  { name: 'PhonePe',   src: `${LOGO_BASE}/phonepe.svg`   },
+  { name: 'Zomato',    src: `${LOGO_BASE}/zomato.svg`    },
+  { name: 'Paytm',     src: `${LOGO_BASE}/paytm.svg`     },
+  { name: 'Zoho',      src: `${LOGO_BASE}/zoho.svg`      },
+  { name: 'Unacademy', src: `${LOGO_BASE}/unacademy.svg` }
 ];
 
 const MBALandingPage = () => {
@@ -40,6 +45,26 @@ const MBALandingPage = () => {
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+
+    // Mobile sticky CTA: hide while the hero form is in view (form is already
+    // visible there) and once the user is in the page footer.
+    let stickyObs;
+    const stickyCta = document.querySelector('.mobile-sticky-cta');
+    const heroForm  = document.getElementById('hero-form');
+    const footerEl  = document.querySelector('.mba-landing .footer');
+    if (stickyCta && 'IntersectionObserver' in window) {
+      stickyObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) stickyCta.classList.add('is-hidden');
+            else                       stickyCta.classList.remove('is-hidden');
+          });
+        },
+        { threshold: 0.25 }
+      );
+      if (heroForm) stickyObs.observe(heroForm);
+      if (footerEl) stickyObs.observe(footerEl);
+    }
 
     const revealEls = document.querySelectorAll('.mba-landing .reveal');
     if ('IntersectionObserver' in window && revealEls.length > 0) {
@@ -58,10 +83,14 @@ const MBALandingPage = () => {
       return () => {
         window.removeEventListener('scroll', onScroll);
         obs.disconnect();
+        if (stickyObs) stickyObs.disconnect();
       };
     }
 
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (stickyObs) stickyObs.disconnect();
+    };
   }, []);
 
   return (
@@ -72,12 +101,6 @@ const MBALandingPage = () => {
             <img src={logoColour} alt="Scaler" width="88" height="18" />
           </a>
           <div className="nav__cta">
-            <a
-              href="/career-profile-tool/login?redirect=%2Fbusiness-and-ai-readiness%2F"
-              className="btn btn--ghost btn--sm nav__login"
-            >
-              Login
-            </a>
             <a href="#hero-form" className="btn btn--primary btn--sm">Take the assessment</a>
           </div>
         </div>
@@ -85,7 +108,10 @@ const MBALandingPage = () => {
 
       <section className="hero" id="hero" aria-label="Hero">
         <div className="hero__bg" aria-hidden="true">
+          <div className="hero__bg-pattern" />
           <div className="hero__bg-gradient" />
+          <div className="hero__bg-rule" />
+          <img className="hero__bg-star" src={starOutline} alt="" role="presentation" loading="lazy" />
         </div>
 
         <div className="hero__inner container">
@@ -141,11 +167,11 @@ const MBALandingPage = () => {
                     <svg viewBox="0 0 88 88" width="88" height="88" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <circle cx="44" cy="44" r="36" stroke="#F5F5F5" strokeWidth="7" />
                       <circle cx="44" cy="44" r="36" stroke="url(#reportDial)" strokeWidth="7" strokeDasharray="226" strokeDashoffset="81" transform="rotate(-90 44 44)" />
-                      <text x="44" y="48" textAnchor="middle" fontFamily="'Plus Jakarta Sans',sans-serif" fontSize="18" fontWeight="800" fill="#0055FF">64</text>
+                      <text x="44" y="48" textAnchor="middle" fontFamily="'Plus Jakarta Sans',sans-serif" fontSize="18" fontWeight="800" fill="#D44E0A">64</text>
                       <defs>
                         <linearGradient id="reportDial" x1="0" y1="0" x2="88" y2="88" gradientUnits="userSpaceOnUse">
-                          <stop offset="0%" stopColor="#0055FF" />
-                          <stop offset="100%" stopColor="#C4FF00" />
+                          <stop offset="0%" stopColor="#D44E0A" />
+                          <stop offset="100%" stopColor="#FFE066" />
                         </linearGradient>
                       </defs>
                     </svg>
@@ -413,6 +439,13 @@ const MBALandingPage = () => {
           </div>
         </div>
       </footer>
+
+      <a href="#hero-form" className="mobile-sticky-cta" aria-label="Take the assessment">
+        <span className="mobile-sticky-cta__label">Take the assessment</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </a>
     </div>
   );
 };
