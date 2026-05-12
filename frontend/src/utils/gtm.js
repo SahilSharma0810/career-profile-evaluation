@@ -52,6 +52,14 @@ export default function lazyLoadGtm() {
   }
 }
 
+const SERVER_EVENT_TRANSFORMERS = {
+  set_user_attribute: (raw) => ({
+    event: raw.event,
+    action: raw.action,
+    userAttributes: raw.data || {}
+  })
+};
+
 export function pushServerEvents() {
   if (typeof window === 'undefined') return;
 
@@ -65,7 +73,13 @@ export function pushServerEvents() {
   if (!Array.isArray(events)) return;
 
   events.forEach((event) => {
-    tracker.pushRawEvent(JSON.parse(event));
+    const parsed = JSON.parse(event);
+    const transform = SERVER_EVENT_TRANSFORMERS[parsed.event];
+    if (transform) {
+      tracker.pushServerEvent(transform(parsed));
+    } else {
+      tracker.pushRawEvent(parsed);
+    }
   });
   deleteCookie(COOKIE_KEY);
 }

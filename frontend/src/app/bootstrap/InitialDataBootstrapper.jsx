@@ -21,7 +21,6 @@ const InitialDataBootstrapper = ({
   useEffect(() => {
     initializeUtmPropagation();
     lazyLoadGtm();
-    pushServerEvents();
   }, []);
 
   useEffect(() => {
@@ -43,6 +42,10 @@ const InitialDataBootstrapper = ({
     attribution.setPlatform();
     attribution.setProduct(product);
   }, [product, subProduct]);
+
+  useEffect(() => {
+    pushServerEvents();
+  }, []);
 
   useEffect(() => {
     if (isLoggedIn || error) {

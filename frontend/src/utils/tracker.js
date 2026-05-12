@@ -57,6 +57,8 @@ class Tracker {
     this._superAttributes = finalConfig.attributes || {};
     this._pendingList = [];
     this._pushToPendingList = false;
+    this._pageViewFired = false;
+    this._pendingServerEvents = [];
 
     this._initialiseDataLayer();
   }
@@ -160,6 +162,18 @@ class Tracker {
     } else {
       this._logEvent(eventPayload);
     }
+
+    if (event === GTMEventType.PAGE_VIEW && !this._pageViewFired) {
+      this._pageViewFired = true;
+      this._flushPendingServerEvents();
+    }
+  }
+
+  _flushPendingServerEvents() {
+    if (!this._pendingServerEvents.length) return;
+    const queued = this._pendingServerEvents;
+    this._pendingServerEvents = [];
+    queued.forEach((pushFn) => pushFn());
   }
 
   _createPageViewAttributes(attributes) {
@@ -175,7 +189,50 @@ class Tracker {
   }
 
   pushRawEvent(event) {
-    this._pushToDataLayer(event);
+    if (!this.isEnabled || this._isWindowUndefined()) return;
+
+    const pushFn = () => this._pushToDataLayer(event);
+    if (!this._pageViewFired) {
+      this._pendingServerEvents.push(pushFn);
+      return;
+    }
+    pushFn();
+  }
+
+  pushServerEvent({ event, action, userAttributes = {} }) {
+    if (!this.isEnabled || this._isWindowUndefined()) return;
+
+    const { attributes: superAttributes = {} } = this.superAttributes;
+    const filteredUserAttributes = Object.fromEntries(
+      Object.entries(userAttributes).filter(
+        ([, v]) => v !== null && !isUndefined(v)
+      )
+    );
+
+    const payload = {
+      event,
+      action,
+      label: undefined,
+      value: undefined,
+      category: undefined,
+      user_attributes: filteredUserAttributes,
+      attributes: {
+        ...superAttributes,
+        ...filteredUserAttributes
+      }
+    };
+
+    if (!this.shouldTrack) {
+      this._logEvent(payload);
+      return;
+    }
+
+    const pushFn = () => window.dataLayer.push(payload);
+    if (!this._pageViewFired) {
+      this._pendingServerEvents.push(pushFn);
+      return;
+    }
+    pushFn();
   }
 
   click(attributes) {
