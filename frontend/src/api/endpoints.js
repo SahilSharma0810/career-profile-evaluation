@@ -7,7 +7,9 @@ export const AUTH_ENDPOINTS = {
   
   LOGIN_VERIFY: '/users/v2/sessions/verify',
 
-  LOGIN_WITH_EMAIL_PASSWORD: '/users/sign_in'
+  LOGIN_WITH_EMAIL_PASSWORD: '/users/sign_in',
+
+  SIGN_OUT: '/users/sign_out'
 };
 
 export default AUTH_ENDPOINTS;
