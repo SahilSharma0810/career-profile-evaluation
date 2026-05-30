@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { ArrowClockwise } from 'phosphor-react';
+import { useStore } from '@nanostores/react';
+import { ArrowClockwise, CaretDown, SignOut } from 'phosphor-react';
 import { ReactComponent as ScalerLogo } from '../assets/scaler-logo.svg';
 import { useProfile } from '../context/ProfileContext';
 import { useRequestCallback } from '../app/context/RequestCallbackContext';
+import { $initialData } from '../store/initial-data';
+import authService from '../api/authService';
 import tracker from '../utils/tracker';
 
 const NavContainer = styled.nav`
@@ -62,6 +65,76 @@ const NavActions = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+`;
+
+const UserMenu = styled.div`
+  position: relative;
+`;
+
+const UserMenuTrigger = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-radius: 0;
+  padding: 7px 12px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+`;
+
+const UserName = styled.span`
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    max-width: 96px;
+  }
+`;
+
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  z-index: 900;
+`;
+
+const LogoutButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: transparent;
+  color: #b30158;
+  border: none;
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #fdf2f7;
+  }
 `;
 
 const CTAButton = styled.button`
@@ -337,6 +410,63 @@ const CSATLink = styled.span`
   }
 `;
 
+const UserDropdown = () => {
+  const { data } = useStore($initialData);
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [open]);
+
+  const handleLogout = useCallback(async () => {
+    tracker.click({
+      click_type: 'logout',
+      click_source: 'navbar'
+    });
+
+    try {
+      await authService.signOut();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+
+    window.location.reload();
+  }, []);
+
+  const userData = data?.userData;
+
+  if (!data?.isLoggedIn || !userData) return null;
+
+  const displayName = userData.name || userData.full_name || userData.email || 'Account';
+
+  return (
+    <UserMenu ref={menuRef}>
+      <UserMenuTrigger onClick={() => setOpen((prev) => !prev)}>
+        <UserName>{displayName}</UserName>
+        <CaretDown size={14} weight="bold" />
+      </UserMenuTrigger>
+      {open && (
+        <DropdownMenu>
+          <LogoutButton onClick={handleLogout}>
+            <SignOut size={16} weight="bold" />
+            Logout
+          </LogoutButton>
+        </DropdownMenu>
+      )}
+    </UserMenu>
+  );
+};
+
 const NavigationBar = ({
   progress = 0,
   quizMode = 'grouped',
@@ -498,6 +628,7 @@ const NavigationBar = ({
               </>
             )} */}
             <CTAButton onClick={handleRCBClick}>BOOK FREE 1:1 CAREER CALL</CTAButton>
+            <UserDropdown />
           </NavActions>
         </NavContent>
         {showProgress && (

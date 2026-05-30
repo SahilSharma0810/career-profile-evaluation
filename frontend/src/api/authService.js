@@ -178,11 +178,24 @@ export async function resendOtp(phoneNumber, type = 'signup') {
   }
 }
 
+export async function signOut() {
+  try {
+    await apiRequest('DELETE', AUTH_ENDPOINTS.SIGN_OUT);
+    return { success: true };
+
+  } catch (error) {
+    console.error('Sign out error:', error);
+    const { message } = resolveApiError(error, 'Failed to log out. Please try again.');
+    return { success: false, error: message };
+  }
+}
+
 export default {
   signUp,
   verifySignUpOtp,
   login,
   verifyLoginOtp,
   loginWithEmailPassword,
-  resendOtp
+  resendOtp,
+  signOut
 };
