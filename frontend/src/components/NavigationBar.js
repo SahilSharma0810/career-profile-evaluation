@@ -469,7 +469,7 @@ const UserDropdown = () => {
       console.error('Logout failed:', error);
     }
 
-    window.location.reload();
+    window.location.href = 'https://scaler.com';
   }, []);
 
   const userData = data?.userData;
