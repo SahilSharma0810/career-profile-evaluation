@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useStore } from '@nanostores/react';
@@ -105,15 +106,13 @@ const UserName = styled.span`
 `;
 
 const DropdownMenu = styled.div`
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
+  position: fixed;
   min-width: 180px;
   background: white;
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   padding: 6px;
-  z-index: 900;
+  z-index: 1000;
 `;
 
 const LogoutButton = styled.button`
@@ -413,20 +412,50 @@ const CSATLink = styled.span`
 const UserDropdown = () => {
   const { data } = useStore($initialData);
   const [open, setOpen] = useState(false);
+  const [menuPos, setMenuPos] = useState(null);
+  const triggerRef = useRef(null);
   const menuRef = useRef(null);
+
+  const updateMenuPos = useCallback(() => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setMenuPos({
+      top: rect.bottom + 8,
+      right: window.innerWidth - rect.right
+    });
+  }, []);
 
   useEffect(() => {
     if (!open) return undefined;
 
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      const insideTrigger =
+        triggerRef.current && triggerRef.current.contains(event.target);
+      const insideMenu = menuRef.current && menuRef.current.contains(event.target);
+      if (!insideTrigger && !insideMenu) {
         setOpen(false);
       }
     };
 
+    const handleReposition = () => updateMenuPos();
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [open]);
+    window.addEventListener('resize', handleReposition);
+    window.addEventListener('scroll', handleReposition, true);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('resize', handleReposition);
+      window.removeEventListener('scroll', handleReposition, true);
+    };
+  }, [open, updateMenuPos]);
+
+  const handleToggle = useCallback(() => {
+    setOpen((prev) => {
+      const next = !prev;
+      if (next) updateMenuPos();
+      return next;
+    });
+  }, [updateMenuPos]);
 
   const handleLogout = useCallback(async () => {
     tracker.click({
@@ -450,19 +479,24 @@ const UserDropdown = () => {
   const displayName = userData.name || userData.full_name || userData.email || 'Account';
 
   return (
-    <UserMenu ref={menuRef}>
-      <UserMenuTrigger onClick={() => setOpen((prev) => !prev)}>
+    <UserMenu>
+      <UserMenuTrigger ref={triggerRef} onClick={handleToggle}>
         <UserName>{displayName}</UserName>
         <CaretDown size={14} weight="bold" />
       </UserMenuTrigger>
-      {open && (
-        <DropdownMenu>
-          <LogoutButton onClick={handleLogout}>
-            <SignOut size={16} weight="bold" />
-            Logout
-          </LogoutButton>
-        </DropdownMenu>
-      )}
+      {open && menuPos &&
+        createPortal(
+          <DropdownMenu
+            ref={menuRef}
+            style={{ top: menuPos.top, right: menuPos.right }}
+          >
+            <LogoutButton onClick={handleLogout}>
+              <SignOut size={16} weight="bold" />
+              Logout
+            </LogoutButton>
+          </DropdownMenu>,
+          document.body
+        )}
     </UserMenu>
   );
 };
