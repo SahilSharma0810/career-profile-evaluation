@@ -50,13 +50,15 @@ const TopRightCluster = styled.div`
 `;
 
 // Mobile-only bar holding the profile/logout control, right-aligned.
+// No horizontal padding — RightPanel already pads 16px, so this keeps the
+// profile's right edge aligned with the page content.
 const MobileProfileBar = styled.div`
   display: none;
 
   @media (max-width: 768px) {
     display: flex;
     justify-content: flex-end;
-    padding: 10px 16px 0;
+    margin-bottom: 8px;
   }
 `;
 
@@ -394,6 +396,9 @@ const MobileWelcomeContainer = styled.div`
 
 const MobileWelcomeTop = styled.div`
   padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 `;
 
 const MobileWelcomeCenter = styled.div`
@@ -1005,9 +1010,11 @@ const MBAQuiz = ({ onProgressChange }) => {
       <LeftPanel>{renderLeftPanel()}</LeftPanel>
 
       <RightPanel>
-        <MobileProfileBar>
-          <UserDropdown />
-        </MobileProfileBar>
+        {currentStep !== 0 && (
+          <MobileProfileBar>
+            <UserDropdown />
+          </MobileProfileBar>
+        )}
         {!isMobile && (
           <TopNavigationWrapper>
             <DesktopNavigation>
@@ -1055,6 +1062,7 @@ const MBAQuiz = ({ onProgressChange }) => {
                   <ScalerLogo />
                 </Logo>
               </LogoContainer>
+              <UserDropdown />
             </MobileWelcomeTop>
             <MobileWelcomeCenter>
               <WelcomeTitle>Business {'<>'} AI Readiness</WelcomeTitle>
