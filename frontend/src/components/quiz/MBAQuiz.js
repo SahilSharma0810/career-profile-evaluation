@@ -42,16 +42,21 @@ const QuizContainer = styled.div`
   @media (max-width: 768px) { flex-direction: column; }
 `;
 
-// Floating profile/logout control, top-right on every quiz step.
-const ProfileSlot = styled.div`
-  position: fixed;
-  top: 12px;
-  right: 24px;
-  z-index: 100;
+// Desktop: groups the carousel dots + profile on the right of the top nav row.
+const TopRightCluster = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+// Mobile-only bar holding the profile/logout control, right-aligned.
+const MobileProfileBar = styled.div`
+  display: none;
 
   @media (max-width: 768px) {
-    top: 8px;
-    right: 12px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 16px 0;
   }
 `;
 
@@ -991,9 +996,6 @@ const MBAQuiz = ({ onProgressChange }) => {
 
   return (
     <QuizContainer>
-      <ProfileSlot>
-        <UserDropdown />
-      </ProfileSlot>
       {!(isMobile && currentStep === 0) && (
         <ProgressBarContainer>
           <ProgressBarFill progress={progress} />
@@ -1003,6 +1005,9 @@ const MBAQuiz = ({ onProgressChange }) => {
       <LeftPanel>{renderLeftPanel()}</LeftPanel>
 
       <RightPanel>
+        <MobileProfileBar>
+          <UserDropdown />
+        </MobileProfileBar>
         {!isMobile && (
           <TopNavigationWrapper>
             <DesktopNavigation>
@@ -1020,11 +1025,14 @@ const MBAQuiz = ({ onProgressChange }) => {
               )}
             </DesktopNavigation>
 
-            <CarouselDotsContainer>
-              {[...Array(totalSteps)].map((_, index) => (
-                <Dot key={index} active={index === currentStep} onClick={() => handleDotClick(index)} />
-              ))}
-            </CarouselDotsContainer>
+            <TopRightCluster>
+              <CarouselDotsContainer>
+                {[...Array(totalSteps)].map((_, index) => (
+                  <Dot key={index} active={index === currentStep} onClick={() => handleDotClick(index)} />
+                ))}
+              </CarouselDotsContainer>
+              <UserDropdown />
+            </TopRightCluster>
           </TopNavigationWrapper>
         )}
 

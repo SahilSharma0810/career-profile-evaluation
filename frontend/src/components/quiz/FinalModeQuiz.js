@@ -35,17 +35,24 @@ const QuizContainer = styled.div`
   flex-direction: column;
 `;
 
-// Floating profile/logout control, top-right on every quiz step.
-const ProfileSlot = styled.div`
-  position: fixed;
-  top: 12px;
+// Profile/logout control — top-right of the content area (desktop only;
+// on mobile it lives inside the navy MobileTopBar instead).
+const DesktopProfileSlot = styled.div`
+  position: absolute;
+  top: 16px;
   right: 24px;
-  z-index: 100;
+  z-index: 20;
 
   @media (max-width: 900px) {
-    top: 8px;
-    right: 12px;
+    display: none;
   }
+`;
+
+// Right-aligned group inside the mobile top bar (step text + profile).
+const MobileTopRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
 `;
 
 const MainLayout = styled.div`
@@ -757,9 +764,6 @@ const FinalModeQuiz = ({ onProgressChange }) => {
 
   return (
     <>
-      <ProfileSlot>
-        <UserDropdown />
-      </ProfileSlot>
       <QuizContainer>
         <MainLayout>
           <Sidebar>
@@ -829,11 +833,17 @@ const FinalModeQuiz = ({ onProgressChange }) => {
           </Sidebar>
 
           <ContentArea>
+            <DesktopProfileSlot>
+              <UserDropdown />
+            </DesktopProfileSlot>
             <MobileTopBar>
               <ScalerLogo aria-label="Scaler" />
-              {currentStep > 0 && (
-                <MobileStepText>Step {currentStep} of {quizScreens.length}</MobileStepText>
-              )}
+              <MobileTopRight>
+                {currentStep > 0 && (
+                  <MobileStepText>Step {currentStep} of {quizScreens.length}</MobileStepText>
+                )}
+                <UserDropdown light />
+              </MobileTopRight>
             </MobileTopBar>
 
             {currentStep > 0 && (

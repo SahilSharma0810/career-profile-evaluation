@@ -171,8 +171,8 @@ const UserMenuTrigger = styled.button`
   align-items: center;
   gap: 8px;
   background: transparent;
-  color: #1e293b;
-  border: 1px solid #e2e8f0;
+  color: ${(props) => (props.light ? '#ffffff' : '#1e293b')};
+  border: 1px solid ${(props) => (props.light ? 'rgba(255, 255, 255, 0.35)' : '#e2e8f0')};
   border-radius: 0;
   padding: 7px 12px;
   font-family: var(--sans);
@@ -183,8 +183,8 @@ const UserMenuTrigger = styled.button`
   line-height: 1;
 
   &:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
+    background: ${(props) => (props.light ? 'rgba(255, 255, 255, 0.12)' : '#f8fafc')};
+    border-color: ${(props) => (props.light ? 'rgba(255, 255, 255, 0.6)' : '#cbd5e1')};
   }
 `;
 
@@ -1021,7 +1021,7 @@ const MobileNav = () => {
   );
 };
 
-export const UserDropdown = () => {
+export const UserDropdown = ({ light = false } = {}) => {
   const { data } = useStore($initialData);
   const [open, setOpen] = useState(false);
   const [menuPos, setMenuPos] = useState(null);
@@ -1092,7 +1092,7 @@ export const UserDropdown = () => {
 
   return (
     <UserMenu>
-      <UserMenuTrigger ref={triggerRef} onClick={handleToggle}>
+      <UserMenuTrigger ref={triggerRef} onClick={handleToggle} light={light}>
         <UserName>{displayName}</UserName>
         <CaretDown size={14} weight="bold" />
       </UserMenuTrigger>
