@@ -16,6 +16,7 @@ import {
 } from './ChattyQuizScreens';
 import GroupedQuestionScreen from './GroupedQuestionScreen';
 import SampleReportModal from './SampleReportModal';
+import { UserDropdown } from '../NavigationBar';
 
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(16px); }
@@ -32,6 +33,19 @@ const QuizContainer = styled.div`
   background: var(--white);
   display: flex;
   flex-direction: column;
+`;
+
+// Floating profile/logout control, top-right on every quiz step.
+const ProfileSlot = styled.div`
+  position: fixed;
+  top: 12px;
+  right: 24px;
+  z-index: 100;
+
+  @media (max-width: 900px) {
+    top: 8px;
+    right: 12px;
+  }
 `;
 
 const MainLayout = styled.div`
@@ -743,6 +757,9 @@ const FinalModeQuiz = ({ onProgressChange }) => {
 
   return (
     <>
+      <ProfileSlot>
+        <UserDropdown />
+      </ProfileSlot>
       <QuizContainer>
         <MainLayout>
           <Sidebar>

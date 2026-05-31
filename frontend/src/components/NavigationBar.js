@@ -1021,7 +1021,7 @@ const MobileNav = () => {
   );
 };
 
-const UserDropdown = () => {
+export const UserDropdown = () => {
   const { data } = useStore($initialData);
   const [open, setOpen] = useState(false);
   const [menuPos, setMenuPos] = useState(null);

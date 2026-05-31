@@ -15,6 +15,7 @@ import { useMBAProfile } from '../../context/MBAProfileContext';
 import tracker from '../../utils/tracker';
 import { getPathWithQueryParams } from '../../utils/url';
 import MBAGroupedQuestionScreen from './MBAGroupedQuestionScreen';
+import { UserDropdown } from '../NavigationBar';
 import {
   MBA_INTAKE_SCREEN_1,
   MBA_INTAKE_SCREEN_2,
@@ -39,6 +40,19 @@ const QuizContainer = styled.div`
   position: relative;
   display: flex;
   @media (max-width: 768px) { flex-direction: column; }
+`;
+
+// Floating profile/logout control, top-right on every quiz step.
+const ProfileSlot = styled.div`
+  position: fixed;
+  top: 12px;
+  right: 24px;
+  z-index: 100;
+
+  @media (max-width: 768px) {
+    top: 8px;
+    right: 12px;
+  }
 `;
 
 const LeftPanel = styled.div`
@@ -977,6 +991,9 @@ const MBAQuiz = ({ onProgressChange }) => {
 
   return (
     <QuizContainer>
+      <ProfileSlot>
+        <UserDropdown />
+      </ProfileSlot>
       {!(isMobile && currentStep === 0) && (
         <ProgressBarContainer>
           <ProgressBarFill progress={progress} />
