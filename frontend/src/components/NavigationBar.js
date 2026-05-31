@@ -51,12 +51,12 @@ const PROGRAM_MENU = {
       items: [
         { label: 'Modern Software and AI Engineering Program', Icon: Code, href: 'https://www.scaler.com/academy/' },
         { label: 'Modern Data Science and ML with specialisation in AI', Icon: Database, href: 'https://www.scaler.com/data-science-course/' },
-        { label: 'Masters In Software Development', Icon: Medal, href: 'https://www.scaler.com/neovarsity/v2/' },
-        { label: 'Masters In Data Science', Icon: FileText, href: 'https://www.scaler.com/neovarsity/v2/' },
         { label: 'Advanced AIML with Specialisation in Agentic AI', Icon: Sparkle, href: 'https://www.scaler.com/ai-machine-learning-course/' },
         { label: 'DevOps, Cloud & AI Platform Engineering', Icon: Cloud, href: 'https://www.scaler.com/devops-course/' },
         { label: 'Online PGP in Business & AI', Icon: Briefcase, href: 'https://www.scaler.com/online-pgp-in-business-and-ai' },
-        { label: 'AI Engineering Advanced Certification by IIT-Roorkee, CEC', Icon: Bank, href: 'https://www.scaler.com/iit-roorkee-advanced-ai-engineering-course/' }
+        { label: 'AI Engineering Advanced Certification by IIT-Roorkee, CEC', Icon: Bank, href: 'https://www.scaler.com/iit-roorkee-advanced-ai-engineering-course/' },
+        { label: 'Masters In Software Development', Icon: Medal, href: 'https://www.scaler.com/neovarsity/v2/' },
+        { label: 'Masters In Data Science', Icon: FileText, href: 'https://www.scaler.com/neovarsity/v2/' }
       ]
     },
     {
@@ -1127,6 +1127,12 @@ const NavigationBar = ({
     location.pathname === '/quiz' || location.pathname === '/goals';
   const showModeToggle = location.pathname === '/quiz';
   const isResultsPage = ['/results/', '/results'].includes(location.pathname);
+  const isMBAResultsPage = [
+    '/business-and-ai-readiness/mba-results',
+    '/business-and-ai-readiness/mba-results/'
+  ].includes(location.pathname);
+  // Show the scaler center nav (mega-menus + CTA + profile) on both results pages.
+  const showCenterNav = isResultsPage || isMBAResultsPage;
 
   const [showCSATBanner, setShowCSATBanner] = useState(true);
   const lastScrollYRef = useRef(0);
@@ -1221,14 +1227,14 @@ const NavigationBar = ({
           </CSATContent>
         </CSATBanner>
       )}
-      <NavContainer showCSATBanner={isResultsPage && showCSATBanner}>
+      <NavContainer showCSATBanner={!isResultsPage || showCSATBanner}>
         <NavContent>
           <Link to="/" style={{ textDecoration: 'none' }}>
             <Logo>
               <LogoGraphic aria-label="Scaler" />
             </Logo>
           </Link>
-          {isResultsPage && <CenterNavLinks />}
+          {showCenterNav && <CenterNavLinks />}
           {showModeToggle && (
             <SegmentedControl>
               <SegmentButton
@@ -1274,9 +1280,11 @@ const NavigationBar = ({
                 </IconButton>
               </>
             )} */}
-            <CTAButton onClick={handleRCBClick}>BOOK FREE 1:1 CAREER CALL</CTAButton>
+            {!isMBAResultsPage && (
+              <CTAButton onClick={handleRCBClick}>BOOK FREE 1:1 CAREER CALL</CTAButton>
+            )}
             <UserDropdown />
-            {isResultsPage && <MobileNav />}
+            {showCenterNav && <MobileNav />}
           </NavActions>
         </NavContent>
         {showProgress && (
