@@ -16,6 +16,7 @@ import {
 } from './ChattyQuizScreens';
 import GroupedQuestionScreen from './GroupedQuestionScreen';
 import SampleReportModal from './SampleReportModal';
+import { UserDropdown } from '../NavigationBar';
 
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(16px); }
@@ -32,6 +33,26 @@ const QuizContainer = styled.div`
   background: var(--white);
   display: flex;
   flex-direction: column;
+`;
+
+// Profile/logout control — top-right of the content area (desktop only;
+// on mobile it lives inside the navy MobileTopBar instead).
+const DesktopProfileSlot = styled.div`
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  z-index: 20;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+// Right-aligned group inside the mobile top bar (step text + profile).
+const MobileTopRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
 `;
 
 const MainLayout = styled.div`
@@ -812,11 +833,17 @@ const FinalModeQuiz = ({ onProgressChange }) => {
           </Sidebar>
 
           <ContentArea>
+            <DesktopProfileSlot>
+              <UserDropdown />
+            </DesktopProfileSlot>
             <MobileTopBar>
               <ScalerLogo aria-label="Scaler" />
-              {currentStep > 0 && (
-                <MobileStepText>Step {currentStep} of {quizScreens.length}</MobileStepText>
-              )}
+              <MobileTopRight>
+                {currentStep > 0 && (
+                  <MobileStepText>Step {currentStep} of {quizScreens.length}</MobileStepText>
+                )}
+                <UserDropdown light />
+              </MobileTopRight>
             </MobileTopBar>
 
             {currentStep > 0 && (

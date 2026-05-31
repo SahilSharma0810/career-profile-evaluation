@@ -15,6 +15,7 @@ import { useMBAProfile } from '../../context/MBAProfileContext';
 import tracker from '../../utils/tracker';
 import { getPathWithQueryParams } from '../../utils/url';
 import MBAGroupedQuestionScreen from './MBAGroupedQuestionScreen';
+import { UserDropdown } from '../NavigationBar';
 import {
   MBA_INTAKE_SCREEN_1,
   MBA_INTAKE_SCREEN_2,
@@ -39,6 +40,26 @@ const QuizContainer = styled.div`
   position: relative;
   display: flex;
   @media (max-width: 768px) { flex-direction: column; }
+`;
+
+// Desktop: groups the carousel dots + profile on the right of the top nav row.
+const TopRightCluster = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+// Mobile-only bar holding the profile/logout control, right-aligned.
+// No horizontal padding — RightPanel already pads 16px, so this keeps the
+// profile's right edge aligned with the page content.
+const MobileProfileBar = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
 `;
 
 const LeftPanel = styled.div`
@@ -375,6 +396,9 @@ const MobileWelcomeContainer = styled.div`
 
 const MobileWelcomeTop = styled.div`
   padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 `;
 
 const MobileWelcomeCenter = styled.div`
@@ -986,6 +1010,11 @@ const MBAQuiz = ({ onProgressChange }) => {
       <LeftPanel>{renderLeftPanel()}</LeftPanel>
 
       <RightPanel>
+        {currentStep !== 0 && (
+          <MobileProfileBar>
+            <UserDropdown />
+          </MobileProfileBar>
+        )}
         {!isMobile && (
           <TopNavigationWrapper>
             <DesktopNavigation>
@@ -1003,11 +1032,14 @@ const MBAQuiz = ({ onProgressChange }) => {
               )}
             </DesktopNavigation>
 
-            <CarouselDotsContainer>
-              {[...Array(totalSteps)].map((_, index) => (
-                <Dot key={index} active={index === currentStep} onClick={() => handleDotClick(index)} />
-              ))}
-            </CarouselDotsContainer>
+            <TopRightCluster>
+              <CarouselDotsContainer>
+                {[...Array(totalSteps)].map((_, index) => (
+                  <Dot key={index} active={index === currentStep} onClick={() => handleDotClick(index)} />
+                ))}
+              </CarouselDotsContainer>
+              <UserDropdown />
+            </TopRightCluster>
           </TopNavigationWrapper>
         )}
 
@@ -1030,6 +1062,7 @@ const MBAQuiz = ({ onProgressChange }) => {
                   <ScalerLogo />
                 </Logo>
               </LogoContainer>
+              <UserDropdown />
             </MobileWelcomeTop>
             <MobileWelcomeCenter>
               <WelcomeTitle>Business {'<>'} AI Readiness</WelcomeTitle>
