@@ -1141,13 +1141,13 @@ export const UserDropdown = ({ light = false } = {}) => {
             ref={menuRef}
             style={{ top: menuPos.top, right: menuPos.right }}
           >
-            {userData.is_instructor === true && (
+            {userData?.is_instructor === true && (
               <DashboardLinkButton onClick={handleInstructorDashboard}>
                 <Chalkboard size={16} weight="bold" />
                 Instructor
               </DashboardLinkButton>
             )}
-            {userData.is_mentor === true && (
+            {userData?.is_mentor === true && (
               <DashboardLinkButton onClick={handleMentorDashboard}>
                 <Users size={16} weight="bold" />
                 Mentor
