@@ -7,6 +7,8 @@ import {
   ArrowClockwise,
   CaretDown,
   SignOut,
+  Chalkboard,
+  Users,
   Code,
   Database,
   Medal,
@@ -227,6 +229,27 @@ const LogoutButton = styled.button`
 
   &:hover {
     background: #fdf2f7;
+  }
+`;
+
+const DashboardLinkButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: transparent;
+  color: #1e293b;
+  border: none;
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #f8fafc;
   }
 `;
 
@@ -1084,6 +1107,22 @@ export const UserDropdown = ({ light = false } = {}) => {
     window.location.href = 'https://scaler.com';
   }, []);
 
+  const handleInstructorDashboard = useCallback(() => {
+    tracker.click({
+      click_type: 'instructor_dashboard',
+      click_source: 'navbar'
+    });
+    window.location.href = 'https://www.scaler.com/academy/instructor-dashboard/';
+  }, []);
+
+  const handleMentorDashboard = useCallback(() => {
+    tracker.click({
+      click_type: 'mentor_dashboard',
+      click_source: 'navbar'
+    });
+    window.location.href = 'https://www.scaler.com/academy/mentor-dashboard/';
+  }, []);
+
   const userData = data?.userData;
 
   if (!data?.isLoggedIn || !userData) return null;
@@ -1102,6 +1141,18 @@ export const UserDropdown = ({ light = false } = {}) => {
             ref={menuRef}
             style={{ top: menuPos.top, right: menuPos.right }}
           >
+            {userData?.is_instructor === true && (
+              <DashboardLinkButton onClick={handleInstructorDashboard}>
+                <Chalkboard size={16} weight="bold" />
+                Instructor
+              </DashboardLinkButton>
+            )}
+            {userData?.is_mentor === true && (
+              <DashboardLinkButton onClick={handleMentorDashboard}>
+                <Users size={16} weight="bold" />
+                Mentor
+              </DashboardLinkButton>
+            )}
             <LogoutButton onClick={handleLogout}>
               <SignOut size={16} weight="bold" />
               Logout
