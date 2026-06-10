@@ -1,0 +1,10 @@
+<!-- Replace with actual McKinsey & Company logo SVG -->
+<!-- Source: https://www.mckinsey.com/brand-assets or request from McKinsey press kit -->
+<!-- Render as white (fill="#fff") on dark navy backgrounds -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 32" fill="none">
+  <rect width="160" height="32" fill="none"/>
+  <!-- PLACEHOLDER: McKinsey & Company wordmark -->
+  <!-- Replace this SVG with the official McKinsey logo once available -->
+  <rect x="0" y="10" width="160" height="12" fill="rgba(255,255,255,0.25)" rx="0"/>
+  <text x="8" y="21" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,0.5)">McKinsey &amp; Company</text>
+</svg>

@@ -20,6 +20,7 @@ import {
   MBA_INTAKE_SCREEN_1,
   MBA_INTAKE_SCREEN_2,
   MBA_ROLE_SPECIFIC_SCREENS,
+  deriveExperienceFromGradYear,
   mapExperienceToLevel
 } from './MBAQuizScreens';
 
@@ -666,6 +667,16 @@ const MBAQuiz = ({ onProgressChange }) => {
       page_url: pageUrl
     });
   }, []);
+
+  useEffect(() => {
+    if (quizResponses?.experience) return;
+    const gradYear = localStorage.getItem('mba_lp_grad_year');
+    if (!gradYear) return;
+    const derived = deriveExperienceFromGradYear(gradYear);
+    if (!derived) return;
+    setQuizResponse('experience', derived);
+    addQAPair('Experience (derived from graduation year)', derived, 'experience');
+  }, [quizResponses?.experience, setQuizResponse, addQAPair]);
 
   useEffect(() => {
     if (evaluationResults) {

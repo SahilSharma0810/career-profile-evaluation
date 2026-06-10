@@ -29,7 +29,10 @@ import {
   Gear
 } from 'phosphor-react';
 
-// Screen 1: Current Role/Background + Experience
+// Screen 1: Current Role/Background
+// Note: `experience` is no longer asked here — it is derived from the
+// graduation year captured on the MBA landing page (see deriveExperienceFromGradYear
+// in this file) and pre-seeded into the quiz responses on quiz mount.
 export const MBA_INTAKE_SCREEN_1 = {
   id: 'current-role',
   initialChatText: "Welcome! Let's understand your professional background to personalize your Business <> AI assessment.",
@@ -46,15 +49,6 @@ export const MBA_INTAKE_SCREEN_1 = {
         { value: 'founder', label: 'Startup Founder / Entrepreneur', icon: <Lightbulb size={24} weight="duotone" /> },
         { value: 'tech', label: 'Engineering / DevOps / Tech Roles', icon: <Code size={24} weight="duotone" /> }
       ]
-    },
-    {
-      id: 'experience',
-      question: 'How many years of total work experience do you have?',
-      options: [
-        { value: '0-3', label: '0–3 years', icon: <Clock size={24} weight="duotone" /> },
-        { value: '3-8', label: '3–8 years', icon: <Briefcase size={24} weight="duotone" /> },
-        { value: '8+', label: '8+ years', icon: <Trophy size={24} weight="duotone" /> }
-      ]
     }
   ],
   chatResponseMap: {
@@ -66,13 +60,19 @@ export const MBA_INTAKE_SCREEN_1 = {
       'operations': 'Fantastic! Operations and strategy roles are being redefined by AI and automation.',
       'founder': 'Impressive! Founders who master AI have a massive competitive advantage in building and scaling.',
       'tech': 'Excellent! Engineers with business acumen and AI skills are becoming strategic leaders in tech companies.'
-    },
-    experience: {
-      '0-3': 'Early in your career - perfect time to build strong business + AI foundations!',
-      '3-8': "You're at an inflection point. AI skills can accelerate your path to senior/leadership roles.",
-      '8+': 'Seasoned professional! AI mastery will multiply your decades of business insight.'
     }
   }
+};
+
+// Maps a graduation year to the experience bucket the quiz expects.
+// 2026 grad → fresh (0-3), 2018 grad → 3-8, 2014 grad → 8+
+export const deriveExperienceFromGradYear = (gradYear) => {
+  const year = parseInt(gradYear, 10);
+  if (!year || Number.isNaN(year)) return null;
+  const yearsSince = new Date().getFullYear() - year;
+  if (yearsSince < 3) return '0-3';
+  if (yearsSince < 8) return '3-8';
+  return '8+';
 };
 
 // Screen 2: Career Goals (Multiselect)

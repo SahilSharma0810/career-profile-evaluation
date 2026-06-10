@@ -50,8 +50,12 @@ export async function signUp(userData) {
 
   } catch (error) {
     console.error('Sign up error:', error);
-    const { message } = resolveApiError(error);
-    return { success: false, error: message };
+    const { message, status } = resolveApiError(error);
+    // 403 = email already linked to an existing account.
+    // 409 = phone already linked to a different email.
+    // Surface the status so callers can route the user to the login flow
+    // instead of dead-ending on a "registered" error.
+    return { success: false, error: message, status };
   }
 }
 
